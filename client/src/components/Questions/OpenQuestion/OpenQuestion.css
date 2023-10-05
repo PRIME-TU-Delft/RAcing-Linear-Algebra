@@ -1,0 +1,308 @@
+@font-face {
+    font-family: "Century Gothic";
+    src: url("../../../fonts/CenturyGothic.ttf");
+}
+
+.question-container-open {
+    margin-top: 13px;
+    padding-top: 8px;
+    padding-bottom: 40px;
+    margin-right: 70px;
+    margin-left: 115px;
+    height: max-content;
+}
+
+.question-form {
+    text-align: left;
+    margin-top: 50px;
+
+    width: 60em;
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border: 1px solid #717171;
+    border-radius: 10px;
+    min-width: 300px;
+    max-width: 8000px;
+}
+
+.question-num-open {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    margin-right: 30px;
+    font-family: "Century Gothic", Arial, Helvetica, sans-serif;
+    margin-top: 20px;
+    opacity: 1;
+    font-family: Maven, Century Gothic;
+    border-radius: 20px;
+    padding: 10px;
+    width: 2.5em;
+    opacity: 0.9;
+}
+
+.boat-theme-num {
+    background: linear-gradient(to top, #78b1e3, #deefef);
+}
+
+.train-theme-num {
+    background: linear-gradient(to top, #e1ba90, #f09c53a3);
+}
+
+.question-block-container-open {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #c7c1c1;
+    border-radius: 30px;
+    margin: 0px;
+    padding: 30px;
+    border: 1px solid #717171;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.boat-theme-form,
+.boat-theme-container {
+    background: linear-gradient(to left, #91c9fa, #ffffff94);
+}
+
+.train-theme-form,
+.train-theme-container {
+    background: linear-gradient(to left, #e1ba90, #f09c53a3);
+}
+
+.question-text-container-open {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.question-container-open {
+    display: flex;
+    flex-direction: column;
+    align-items: first baseline;
+}
+
+.question-text-open {
+    text-align: left;
+    font-family: "CMU Bright", Helvetica, Arial, sans-serif;
+    font-size: 25px;
+    padding: 10px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.answer-form {
+    display: block;
+    width: 850px;
+    height: inherit;
+    min-height: 100px;
+    background-color: #f2f2f2;
+    border-color: #ccc;
+    border-width: 1px;
+    border-radius: 7px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    padding: 10px;
+}
+
+.buttons-flexbox {
+    display: flex;
+    justify-content: left;
+    margin-top: 7px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+}
+
+.mathquill-button {
+    height: 40px;
+    width: 40px;
+    border: 1px solid #a7a7a7;
+    border-radius: 2px;
+    background-color: #fafafa;
+    text-align: center;
+    font-size: 14px;
+    margin-left: 5px;
+    margin-top: 5px;
+    vertical-align: middle;
+    border-radius: 3px;
+}
+
+.mathquill-button:hover {
+    box-shadow: 0 0.5em 0.5em -0.4em #ebebeb;
+    transform: translateY(-0.1em);
+    background-color: #f0efef;
+}
+
+#fraction-button {
+    margin-left: 0px;
+}
+
+#matrix-button {
+    width: 90px;
+}
+
+.math-field-container {
+    display: flex;
+    align-items: center;
+}
+
+.submit {
+    width: 150px;
+    height: 60px;
+    margin-left: 50px;
+    background-color: white;
+    border-radius: 2px;
+    transition: 0.2s;
+}
+
+.train-theme-submit {
+    color: #f07d19;
+    border: 1px solid #f07d19;
+}
+.train-theme-submit:hover {
+    color: white;
+    border: 1px solid #ffffff;
+    box-shadow: inset 0 0 0 2em #f07d19;
+}
+.boat-theme-submit {
+    color: #3db0fd;
+    border: 1px solid #3db0fd;
+}
+.boat-theme-submit:hover {
+    color: white;
+    border: 1px solid #ffffff;
+    box-shadow: inset 0 0 0 2em #3db0fd;
+}
+
+.matrix-modal {
+    width: fit-content;
+    height: fit-content;
+    background-color: #ebebeb;
+    border-color: #ccc;
+    border-width: 1px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+    margin-top: 5px;
+    position: absolute;
+    left: 110%;
+    top: -15%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 7px;
+    border-radius: 3px;
+    background: linear-gradient(to left, #feffff, #ffffff94);
+    backdrop-filter: blur(10px);
+}
+
+.matrix-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-form {
+    width: 30px;
+    height: 30px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.modal-input {
+    width: 100%;
+    height: 100%;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.modal-confirm-button {
+    font-size: 10px;
+    width: 25px;
+    height: 25px;
+    background-color: green;
+    color: white;
+    margin-top: 3px;
+    border-radius: 50%;
+    border: 1px solid white;
+    position: absolute;
+    bottom: 10px;
+    right: 33px;
+}
+
+.matrix-default-buttons-grid {
+    display: grid;
+    grid-template-columns: 46px 46px;
+    grid-template-rows: 46px 46px;
+}
+
+.matrix-modal-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-button {
+    align-items: center;
+    height: 41px;
+    width: 41px;
+    font-size: 7px;
+    padding: 0;
+}
+
+.modal-X {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 1370px) {
+    .answer-form {
+        width: 500px;
+    }
+    .question-form {
+        width: 600px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .answer-form {
+        width: 500px;
+    }
+    .question-form {
+        width: 450px;
+    }
+    .question-text-open,
+    .question-num-open {
+        font-size: 20px;
+    }
+
+    .screen-button {
+        height: 30px;
+        width: 30px;
+        font-size: 12px;
+    }
+
+    #matrix-button {
+        width: 70px;
+    }
+
+    .modal-input {
+        margin: 0;
+        width: 80%;
+        height: 80%;
+    }
+
+    .question-block-container-open {
+        overflow: visible;
+    }
+    .modal-form {
+        margin: 0;
+        width: 30px;
+        height: 30px;
+        margin-left: 3px;
+    }
+    .modal-X {
+        margin: 0;
+        margin-right: 2px;
+    }
+}

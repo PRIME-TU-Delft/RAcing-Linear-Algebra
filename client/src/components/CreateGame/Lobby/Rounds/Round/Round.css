@@ -1,0 +1,86 @@
+@font-face {
+    font-family: "Mark Script";
+    src: url(../../../../../fonts/MarckScript-Regular.ttf);
+}
+
+.round-container {
+    display: inline-block;
+
+    height: 5em;
+    width: 13em;
+
+    margin-right: 1em;
+    margin-top: 1em;
+    border: 2px solid #0c2340;
+    position: relative;
+    transition-duration: 0.3s;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.left {
+    font-family: "Mark Script";
+    width: 35%;
+    float: left;
+    line-height: 5em;
+    transition-duration: 0.3s;
+    justify-content: center;
+}
+
+.right {
+    width: 65%;
+    float: right;
+    height: 100%;
+    padding: auto;
+    transition-duration: 0.3s;
+}
+
+.checked {
+    display: none;
+}
+
+.selected > .right > .checked {
+    display: block;
+    position: absolute;
+    z-index: 9999;
+    right: 0px;
+    top: 0px;
+}
+
+.round-container:hover {
+    border: 2px solid #00b8c8;
+    transition-duration: 0.3s;
+}
+
+.round-container:hover > .left {
+    color: #00b8c8;
+    transition-duration: 0.3s;
+}
+
+.selected > .left {
+    color: #00b8c8;
+}
+
+.selected {
+    border: 2px solid #00b8c8;
+}
+
+.round-title {
+    margin-top: 0.1em;
+    margin-right: 0.2em;
+    font-size: 18px;
+    font-weight: 600;
+    color: #0c2340;
+    text-align: left;
+}
+
+.long-topic-name {
+    font-size: 16px;
+}
+
+.img {
+    font-size: 60px;
+}

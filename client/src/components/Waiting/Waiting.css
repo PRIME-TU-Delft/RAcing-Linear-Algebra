@@ -1,0 +1,116 @@
+@font-face {
+    font-family: "Cherry Bomb";
+    src: url("../../fonts/CherryBombOne-Regular.ttf");
+}
+
+.waiting {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.waiting-title {
+    font-family: Cherry Bomb, sans-serif;
+    font-size: 50px;
+    color: white;
+    position: relative;
+}
+
+.waiting-title::after {
+    content: "\2026";
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    animation: dots steps(4, end) 2.5s infinite;
+    width: 0px;
+    position: absolute;
+}
+@keyframes dots {
+    to {
+        width: 45px;
+    }
+}
+
+.boat-container {
+    margin-top: 10em;
+}
+
+.custom-loader {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 8px solid;
+    border-color: #f4f4f4 #0000;
+    animation: s1 1s infinite;
+
+    margin: 25px;
+}
+@keyframes s1 {
+    to {
+        transform: rotate(0.5turn);
+    }
+}
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-arrow {
+    display: inline;
+    margin: 0;
+    font-size: 2em;
+    line-height: 1;
+    margin-bottom: 6px;
+    margin-left: 2px;
+}
+
+.tooltip-container {
+    position: absolute;
+    bottom: 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #c1ebeb;
+    opacity: 0.8;
+    width: 50%;
+    padding: 10px;
+    border-radius: 55px;
+}
+
+.tooltip-skip {
+    margin-left: 15px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.tooltip-skip:hover {
+    opacity: 0.4;
+}
+
+.tooltip-text {
+    font-size: 16px;
+    font-family: Cherry Bomb, sans-serif;
+    margin: 0;
+}
+
+.tooltip-right-arrow {
+    width: 20px;
+    height: 20px;
+}
+
+.tooltip-left-arrow {
+    width: 20px;
+    height: 20px;
+    transform: rotate(180deg);
+}

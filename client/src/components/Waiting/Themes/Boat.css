@@ -1,0 +1,42 @@
+.boat,
+#boat {
+    animation: boat 2s infinite ease-in-out alternate;
+}
+
+#wave1,
+#wave4 {
+    animation: wave 2s infinite ease-in-out alternate;
+}
+
+#wave2,
+#wave4,
+#wave3 {
+    animation: wave 2s infinite ease-in-out alternate;
+    animation-delay: 0s;
+}
+
+@keyframes boat {
+    0% {
+        transform: rotateZ(2deg);
+        transform: translateX(-25px);
+    }
+    50% {
+        transform: rotateZ(-3deg);
+    }
+    100% {
+        transform: translateX(25px);
+    }
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(-10px);
+    }
+    50% {
+        transform: rotateX(-30deg);
+        transform: rotateZ(-2deg);
+    }
+    100% {
+        transform: translateX(30px);
+    }
+}

@@ -1,0 +1,173 @@
+.lecturer-header {
+    height: 100px;
+    background-color: #00a6d6;
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.total-score {
+    position: absolute;
+    font-family: "Righteous", sans-serif;
+    font-size: xx-large;
+    right: 25px;
+}
+
+.t-name {
+    position: absolute;
+    font-family: "Righteous", sans-serif;
+    left: 25px;
+    font-size: xx-large;
+}
+
+.countdown {
+    font-family: "Righteous", sans-serif;
+    margin: auto;
+    font-size: xx-large;
+}
+
+.map {
+    z-index: 0;
+    position: relative;
+}
+.close-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 3em;
+    height: 3em;
+    background-color: #ffffff;
+    border: 2px solid #00a6d6;
+    color: #00a6d6;
+    transition-duration: 0.2s;
+}
+.close-btn:hover {
+    background-color: #00a6d6;
+    color: #ffffff;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+.next-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 2px solid #00a6d6;
+    color: #00a6d6;
+    transition-duration: 0.2s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.next-btn:hover {
+    background-color: #00a6d6;
+    color: #ffffff;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+.x {
+    display: inline;
+    margin: 0;
+    font-size: 20px;
+    line-height: 1;
+    margin-bottom: 2px;
+    margin-left: 2px;
+}
+.forward-arrow {
+    display: inline;
+    margin: 0;
+    font-size: 3em;
+    line-height: 1;
+    margin-bottom: 8px;
+    margin-left: 2px;
+}
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.popup.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+}
+
+.popup h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.popup p {
+    font-size: 30px;
+}
+
+.countdown-text {
+    font-weight: bold;
+    color: #0c2340;
+}
+.gameEnd {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.gameEnd.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.gameEnd-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 1000px;
+    text-align: center;
+}
+
+.gameEnd h1 {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.gameEnd p {
+    font-size: 100px;
+}
+.gameEnd-text {
+    font-weight: bold;
+    color: #0c2340;
+}

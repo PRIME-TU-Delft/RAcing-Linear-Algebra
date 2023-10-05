@@ -1,0 +1,31 @@
+.checkpoint-element {
+    position: absolute;
+    z-index: 9999;
+    offset-rotate: 0deg;
+}
+
+.checkpoint-element > div {
+    display: inline-block;
+}
+
+.checkpoint-element > .checkpoint-name {
+    text-align: left;
+    margin-top: auto;
+    margin-bottom: auto;
+    flex-wrap: wrap;
+
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 10px;
+}
+
+.checkpoint-element > .img-container {
+    text-align: right;
+}
+
+.checkpoint-element > .img-container > img {
+    margin-top: 5px;
+    width: 40px;
+    height: auto;
+    margin: auto;
+}

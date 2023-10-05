@@ -1,0 +1,167 @@
+@font-face {
+    font-family: "Maven";
+    src: url("../../../fonts/MavenPro-Variablet.ttf");
+}
+@font-face {
+    font-family: "CMU Bright";
+    src: url("../../../fonts/CMUBright.ttf");
+}
+@font-face {
+    font-family: "Century Gothic";
+    src: url("../../../fonts/CenturyGothic.ttf");
+}
+
+body {
+    font-family: "Century Gothic", Arial, Helvetica, sans-serif;
+}
+
+.question-container-mc {
+    margin-top: 13px;
+    padding-top: 8px;
+    padding-bottom: 40px;
+    margin-right: 70px;
+    margin-left: 70px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.question-container > * {
+    opacity: 1;
+}
+
+.question-num {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    margin-right: 30px;
+    font-family: "Century Gothic", Arial, Helvetica, sans-serif;
+    margin-top: 20px;
+    opacity: 1;
+    font-family: Maven, Century Gothic;
+    background: linear-gradient(to top, #78b1e3, #deefef);
+    border-radius: 20px;
+    padding: 10px;
+    width: 2.5em;
+    opacity: 0.9;
+}
+
+.question-text-container {
+    display: flex;
+    align-items: center;
+    background-color: #c7c1c1;
+    border-radius: 30px;
+    margin: 0px 140px 0px 140px;
+    padding: 30px;
+    background: linear-gradient(to left, #91c9fa, #ffffff94);
+    border: 1px solid #717171;
+    backdrop-filter: blur(10px);
+}
+
+.question-text {
+    text-align: left;
+    font-family: "CMU Bright", Helvetica, Arial, sans-serif;
+    font-size: 25px;
+    padding: 10px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 1300px) {
+    .question-text,
+    .question-num,
+    .answer-text {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .question-text,
+    .question-num,
+    .answer-text {
+        font-size: 10px;
+    }
+}
+
+.flexbox-answers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 70px;
+    margin-right: 70px;
+}
+
+.answer {
+    font-size: 22px;
+    font-family: "Century Gothic", sans-serif;
+    cursor: pointer;
+    border: 1px solid #717171;
+    padding: 10px;
+    width: 80%;
+    height: 60px;
+
+    text-align: left;
+    transition: all 0.2s ease-in-out;
+    margin: 5px 0px 5px 0px;
+    padding-left: 15px;
+
+    color: black;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+
+.answer-letter {
+    padding: 15px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.answer-text {
+    margin-left: 15px;
+}
+
+.answer:hover {
+    transform: scale(1.05);
+}
+
+#answer1 {
+    background-color: #00a6d6;
+    background: linear-gradient(to top, #42a7ff, #70fffa);
+}
+
+#answer2 {
+    background-color: #26c63b;
+    background: linear-gradient(to top, #279836, #27e64a);
+}
+
+#answer3 {
+    background-color: #f7c500;
+    background: linear-gradient(to top, #f7c500, #fff349);
+}
+
+#answer4 {
+    background: #ee6e37;
+    background: linear-gradient(to top, #e00909, #ee6e37);
+}
+
+#answer5 {
+    background-color: #ff00ff;
+    background: linear-gradient(to top, #ff00ff, #c035c0);
+}
+
+#answer6 {
+    background-color: #ff8000;
+    background: linear-gradient(to top, #ff8000, #dc852e);
+}

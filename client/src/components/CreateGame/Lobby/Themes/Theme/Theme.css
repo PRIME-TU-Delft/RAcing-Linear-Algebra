@@ -1,0 +1,87 @@
+.theme-container {
+    display: inline-block;
+
+    height: 5em;
+    width: 13em;
+
+    margin-right: 1em;
+    margin-top: 1em;
+    border: 2px solid #0c2340;
+    position: relative;
+    transition-duration: 0.3s;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left {
+    width: 40%;
+    float: left;
+    transition-duration: 0.3s;
+}
+
+.right {
+    width: 60%;
+    float: right;
+    height: 100%;
+    padding: auto;
+    transition-duration: 0.3s;
+}
+
+.theme-container:hover {
+    border: 2px solid #00b8c8;
+    transition-duration: 0.3s;
+}
+
+.theme-selected {
+    border: 2px solid #00b8c8;
+}
+
+.checked {
+    display: none;
+}
+
+.theme-selected > .right > .checked {
+    display: block;
+    position: absolute;
+    z-index: 9999;
+    right: 0px;
+    top: 0px;
+}
+
+.theme-container:hover > .right > .theme-title {
+    color: #00b8c8;
+    transition-duration: 0.3s;
+}
+
+.theme-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0c2340;
+    transition-duration: 0.3s;
+}
+
+.theme-selected > .right > .theme-title {
+    color: #00b8c8;
+}
+
+.theme-description {
+    margin-top: 0.3em;
+    font-size: 15px;
+    color: #0c2340;
+}
+
+.theme-img {
+    font-size: 15px;
+    margin: auto;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+}
+
+.lobby-icon {
+    width: 50px;
+    height: 100%;
+}

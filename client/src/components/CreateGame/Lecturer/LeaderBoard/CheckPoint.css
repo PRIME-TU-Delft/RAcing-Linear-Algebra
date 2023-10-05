@@ -1,0 +1,163 @@
+.checkpoint-title {
+    padding: 5px;
+    height: 70%;
+    width: 60%;
+    background-color: #0c2340;
+    color: black;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    border: 5px solid black;
+}
+
+.location {
+    font-family: "Righteous", sans-serif;
+    margin: auto;
+}
+.postion {
+    font-family: "Righteous", sans-serif;
+    margin: auto;
+}
+.your-score {
+    font-family: "Righteous", sans-serif;
+    margin: auto;
+}
+.leaderboard {
+    font-size: 60px;
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    top: 63%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #00a6d6;
+    border: 5px solid black;
+    display: flex;
+    justify-content: center;
+    margin: 0 20px;
+}
+
+.checkpoint-leaderboard-title {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.table {
+    width: 100%;
+    table-layout: fixed;
+}
+.table td,
+.table th {
+    font-size: 25px;
+}
+.table-medium {
+    width: 100%;
+    table-layout: fixed;
+}
+.table-medium td,
+.table-medium th {
+    font-size: 20px;
+}
+.table-small {
+    width: 100%;
+    table-layout: fixed;
+}
+.table-small td,
+.table-small th {
+    font-size: 15px;
+}
+
+.top-border {
+    top: 15px;
+    background-color: white;
+    border: 5px solid rgb(9, 8, 8);
+    width: 400px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    position: absolute;
+    display: block;
+    font-size: 25px;
+}
+.top-border-small {
+    top: 8px;
+    background-color: white;
+    border: 5px solid rgb(9, 8, 8);
+    width: 200px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    position: absolute;
+    display: block;
+    font-size: 10px;
+}
+.top-border-medium {
+    top: 12px;
+    background-color: white;
+    border: 5px solid rgb(9, 8, 8);
+    width: 300px;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+    position: absolute;
+    display: block;
+    font-size: 20px;
+}
+
+.table-container {
+    justify-content: center;
+    display: flex;
+}
+.table-wrapper {
+    border: 5px solid black;
+    border-radius: 4px;
+    margin: 17% auto;
+    display: flex;
+    background-color: wheat;
+}
+.table-column {
+    flex: 1;
+}
+
+.table-header th {
+    background-color: antiquewhite;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.table-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-row:nth-child(odd) {
+    background-color: #00b8c8;
+}
+.table-cell {
+    padding: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.team-score {
+    text-align: center;
+}
+@media (max-width: 600px) {
+    .table-header th,
+    .table-cell {
+        white-space: initial;
+        text-overflow: initial;
+    }
+
+    .table-container {
+        flex-direction: column;
+    }
+
+    .table-wrapper {
+        margin: 10px;
+    }
+}

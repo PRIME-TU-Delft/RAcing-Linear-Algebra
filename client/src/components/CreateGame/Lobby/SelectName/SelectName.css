@@ -1,0 +1,21 @@
+.team-name-input {
+    margin-top: 15px;
+    width: 250px;
+}
+
+.team-name-btn {
+    width: 100px;
+    height: 30px;
+    margin-left: 20px;
+    background-color: #ffffff;
+    border: 2px solid #00a6d6;
+    color: #00a6d6;
+    transition-duration: 0.3s;
+}
+
+.team-name-btn:hover {
+    background-color: #00a6d6;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    transition-duration: 0.3s;
+}

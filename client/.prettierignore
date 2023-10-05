@@ -1,0 +1,5 @@
+/build/
+/node_modules/
+/.gitlab-ci.yml
+/.gitignore
+/src/bootstrap/

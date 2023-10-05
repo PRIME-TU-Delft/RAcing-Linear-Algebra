@@ -1,0 +1,58 @@
+#wheel,
+#wheel2,
+#wheel3 {
+    animation: wheel 1s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+@keyframes wheel {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#cloud1 {
+    animation: cloud1 1s ease-out infinite;
+}
+
+@keyframes cloud1 {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        transform: translate3d(55px, -63px, 0);
+        opacity: 1;
+    }
+}
+
+#cloud2 {
+    animation: cloud2 1s ease-out infinite;
+}
+
+@keyframes cloud2 {
+    100% {
+        transform: translate3d(79px, -60px, 0);
+    }
+}
+
+#cloud3 {
+    animation: cloud3 1s linear infinite;
+}
+
+@keyframes cloud3 {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(88px, -60px, 0);
+    }
+}
+
+.train-svg {
+    margin-bottom: -40px;
+}

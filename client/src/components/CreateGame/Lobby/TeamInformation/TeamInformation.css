@@ -1,0 +1,25 @@
+.information {
+    height: 50%;
+    text-align: right;
+    margin-right: 5em;
+    font-family: "Plus Jakarta Sans";
+    font-weight: 500;
+}
+
+.information > * {
+    height: 50%;
+    line-height: 1em;
+}
+
+.team-name {
+    font-size: 22px;
+}
+
+.players {
+    font-size: 18px;
+}
+
+.pen-icon {
+    margin-left: 0.5em;
+    margin-bottom: 0.1em;
+}

@@ -1,0 +1,30 @@
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../../../fonts/PlusJakartaSans-VariableFont_wght.ttf");
+}
+
+.title {
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: 8em;
+    line-height: 8em;
+    text-align: left;
+    background-color: #00a6d6;
+    color: #ffffff;
+}
+
+.lobby-code {
+    font-size: 50px;
+    font-weight: 700;
+    margin-left: 2em;
+}
+
+.closed {
+    display: none;
+}
+
+.opened {
+    display: flex;
+    flex-wrap: wrap;
+}

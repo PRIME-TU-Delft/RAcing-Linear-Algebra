@@ -1,0 +1,516 @@
+[
+    {
+        "_id": {
+            "$oid": "64862d1210dc7e4f980baba0"
+        },
+        "score": 15,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648744da8dde5bfadd7bc55f"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64874816c3244a9580785cc5"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648748e596489a06fde373e4"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648749f58854690bd58d2778"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64874a818854690bd58d277d"
+        },
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "AE"
+    },
+    {
+        "_id": {
+            "$oid": "64874cc6afe686653ef7030c"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64874e619d86504755a3423b"
+        },
+        "score": 11,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "6487545f8e7ce33cbdb078ae"
+        },
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64875a8e5106d17c346947f4"
+        },
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64875ae45106d17c346947f9"
+        },
+        "score": 42,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64875db34d6740836356f2df"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64875e084d6740836356f2e5"
+        },
+        "score": 10,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64875e6c4d6740836356f2ea"
+        },
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648838ced4ef638424d6da8d"
+        },
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64883aefa6c2b528066cb67d"
+        },
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "6488541104b708d6ae8c480d"
+        },
+        "teamname": "New Team",
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648858547307b5669f7206d2"
+        },
+        "teamname": "",
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648887fd202cc067170c088f"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "6488888e881ba31e93e0be6b"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648889db9b52c83acb06113c"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "64888a4fcda34641aa4434ca"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "64888ab45660f6c22256cdde"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "64888b681679e5df7978b224"
+        },
+        "teamname": "",
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "6488ad131a3ac285c6d1663e"
+        },
+        "teamname": "",
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "64898af000e8d0eeb2bddef1"
+        },
+        "teamname": "",
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "64898bc200e8d0eeb2bddef7"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 25
+    },
+    {
+        "_id": {
+            "$oid": "64898c9000e8d0eeb2bddefd"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 25
+    },
+    {
+        "_id": {
+            "$oid": "64898d3383feb171137e521c"
+        },
+        "teamname": "",
+        "score": 16.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 50
+    },
+    {
+        "_id": {
+            "$oid": "64898ea24a7c25d64a87dda1"
+        },
+        "teamname": "",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 25
+    },
+    {
+        "_id": {
+            "$oid": "648990ca4a7c25d64a87dda7"
+        },
+        "teamname": "",
+        "score": 11.7,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 75
+    },
+    {
+        "_id": {
+            "$oid": "648998ea5f165cd41b3b4404"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 25
+    },
+    {
+        "_id": {
+            "$oid": "648a2c2fe79a8ee9d5cdc160"
+        },
+        "teamname": "New Team",
+        "score": 10.5,
+        "checkpoints": [],
+        "roundId": "6489d943031e185011a8431d",
+        "study": "CSE",
+        "accuracy": 40
+    },
+    {
+        "_id": {
+            "$oid": "648a2d9e2dd285aadc3a0a71"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "6489d943031e185011a8431d",
+        "study": "CSE",
+        "accuracy": 33
+    },
+    {
+        "_id": {
+            "$oid": "648a31466fafc487604bea56"
+        },
+        "teamname": "New Team",
+        "score": 20,
+        "checkpoints": [27],
+        "roundId": "6489d943031e185011a8431d",
+        "study": "AE",
+        "accuracy": 28
+    },
+    {
+        "_id": {
+            "$oid": "648ac266640bccfba2a357d3"
+        },
+        "teamname": "New Team",
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648ac32d640bccfba2a357d9"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648ac372640bccfba2a357df"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648ad1180a84ce2155ae05cf"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "AE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648ad5562094b16924a011aa"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "MCH",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648ad8c9b24e8086dc67eb5f"
+        },
+        "teamname": "New Team",
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "CSE"
+    },
+    {
+        "_id": {
+            "$oid": "648add54aeb94bee22df63f4"
+        },
+        "teamname": "New Team",
+        "score": 39.5,
+        "checkpoints": [18],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648b40393953657372aad2c1"
+        },
+        "teamname": "New Team",
+        "score": 12.5,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "MCH",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648b409b3953657372aad2c3"
+        },
+        "teamname": "New Team",
+        "score": 9,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "MCH",
+        "accuracy": 16
+    },
+    {
+        "_id": {
+            "$oid": "648b40ef3953657372aad2c5"
+        },
+        "teamname": "New Team",
+        "score": 5,
+        "checkpoints": [],
+        "roundId": "6489d943031e185011a8431d",
+        "study": "MCH",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "648b41fe3953657372aad2ce"
+        },
+        "teamname": "New Team",
+        "score": 51.5,
+        "checkpoints": [13, 28, 56],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "MCH",
+        "accuracy": 50
+    },
+    {
+        "_id": {
+            "$oid": "648b8eedb7bfa4f42cf471be"
+        },
+        "teamname": "asdzx",
+        "score": 110,
+        "checkpoints": [],
+        "roundId": "6489c0d4031e185011a8423e",
+        "study": "CSE",
+        "accuracy": 40
+    },
+    {
+        "_id": {
+            "$oid": "6495b1e85160d6ae60e73d52"
+        },
+        "teamname": "asd",
+        "score": 50,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 100
+    },
+    {
+        "_id": {
+            "$oid": "6495b4878a2004cbd7d470d9"
+        },
+        "teamname": "asd",
+        "score": 0,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "CSE",
+        "accuracy": 0
+    },
+    {
+        "_id": {
+            "$oid": "6495b51219a8f15b0b395690"
+        },
+        "teamname": "asd",
+        "score": 50,
+        "checkpoints": [],
+        "roundId": "64732537fe3321a40696f646",
+        "study": "MCH",
+        "accuracy": 50
+    }
+]

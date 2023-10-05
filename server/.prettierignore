@@ -1,0 +1,6 @@
+/build/
+/dist/
+/node_modules/
+/.gitlab-ci.yml
+/.gitignore
+/.eslintrc.js

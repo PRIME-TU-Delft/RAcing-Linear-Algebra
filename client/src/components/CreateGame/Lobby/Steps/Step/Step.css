@@ -1,0 +1,74 @@
+.step {
+    position: relative;
+    min-height: 1em;
+    color: gray;
+}
+
+.step:hover {
+    cursor: pointer;
+}
+
+.step-title {
+    line-height: 1.5em;
+    font-weight: bold;
+    width: fit-content;
+}
+
+.caption {
+    font-size: 0.8em;
+    width: fit-content;
+}
+
+.step + .step {
+    margin-top: 3em;
+}
+
+.step > div:first-child {
+    height: 0;
+}
+
+.step > div:not(:first-child) {
+    margin-left: 2.5em;
+    padding-left: 1em;
+}
+
+.circle {
+    background: gray;
+    position: relative;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    border-radius: 100%;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0 0 3px #fff;
+}
+
+.step:last-child .circle:after {
+    display: none;
+}
+
+.step.step-active {
+    color: #00a6d6;
+}
+
+.step.step-active .circle {
+    background-color: #00a6d6;
+}
+
+.step.step-completed {
+    color: #6cc24a;
+}
+
+.step.step-completed .circle {
+    background-color: #6cc24a;
+}
+
+.active {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.closed {
+    display: none;
+}

@@ -1,0 +1,208 @@
+# RAcing Linear Algebra - Backend
+
+This is the backend component of the Racing Linear Algebra game. It is built using Node.js and provides the server-side logic and API endpoints for the game.
+
+## Table of Contents
+
+-   [Features](#features)
+-   [Technologies Used](#technologies-used)
+-   [Getting Started](#getting-started)
+-   [API Endpoints](#api-endpoints)
+-   [Socket Endpoints](#socket-endpoints)
+
+## Features
+
+-   Handle game logic, player interactions, and database operations.
+-   Expose RESTful API endpoints for communication with the frontend.
+-   Utilize WebSocket for real-time communication between players.
+
+## Technologies Used
+
+-   Node.js: JavaScript runtime for server-side development.
+-   MongoDB: NoSQL database for storing game data.
+-   Mongoose: Object Data Modeling (ODM) library for MongoDB.
+-   Jest: Testing framework for unit and integration testing.
+-   Socket.io: Real-time communication library for WebSocket-based communication.
+-   Sinon: JavaScript testing framework for mocking and stubbing.
+
+## Getting Started
+
+To get started with the backend, follow these steps:
+
+### Prerequisites
+
+Before running the backend, make sure you have the following prerequisites installed:
+
+-   Node.js (version 12 or higher)
+-   NPM (Node Package Manager)
+-   MongoDB (database)
+
+You can check if you have Node.js and NPM installed by running the following commands in your terminal:
+
+node --version
+npm --version
+
+If the commands above return version numbers, you have the prerequisites installed. If not, please install Node.js and NPM by following the official documentation: Node.js.
+
+### Installation
+
+Follow the steps below to install the Racing Linear Algebra Backend:
+
+1. Clone the repository
+2. Navigate to the project directory: `cd server`
+3. Install the dependencies: `npm install`
+4. Setup the database - see [Database](#Database)
+
+### Usage
+
+There are 2 ways of starting the server:
+
+`npm run dev` - this will start the server directly on top of TypeScript and it will automatically detect and restart the server upon changes. Recommended for when developing and testing.
+
+`npm start` - this will start the server directly from the JavaScript. Thus, you will also need to run `tsc` before-hand to compile all TypeScript.
+
+By default this will open your server in port 5000 (can be changed in the .env file).
+
+### Tests
+
+To run the tests, run the following command: `npm run test`.\
+Press `a` to run all tests.
+
+To see test coverage, run the following command: `npm run test:ci`
+
+## API Endpoints
+
+-   `/api/lobby/create/:faculty`
+
+    -   Creates a new lobby for a specific faculty
+    -   Provide the faculty name instead of ":faculty"
+    -   Returns a list containing:
+        -   The lobby ID
+        -   A list of all available topics
+
+-   `/api/lobby/validate/:lobbyid`
+    -   Checks if a lobby ID corresponds to an existing lobby
+    -   Provide the lobby ID instead of ":lobbyid"
+    -   Returns true if a lobby with the given ID was found, otherwise false
+
+## Socket Endpoints
+
+This is the list of all socket endpoints in the app. To get more info checkout server/src/socketConnection.ts where each one of them is commented thoroughly.
+
+-   socket.on("createLobby", (lobbyId: number))
+
+-   socket.on("joinLobby", (lobbyId: number))
+
+-   socket.on("startGame", (lobbyId: number, topics: string[], study: string, teamName: string))
+
+-   socket.on("getNewQuestion", (difficulty?: string))
+
+-   socket.on("checkAnswer", (answer: string))
+
+-   socket.on("addCheckpoint", (seconds: number))
+
+-   socket.on("endRound")
+
+-   socket.on("getAllScores", (roundId: string))
+
+-   socket.on("getCheckpoints", (num: number))
+
+-   socket.on("getLecturerStatistics")
+
+-   socket.on("startNextRound")
+
+-   socket.on("getGhostTrains")
+
+-   socket.on("getResults")
+
+-   socket.on("themeSelected", (theme: string))
+
+-   socket.on("getMandatoryNum")
+
+-   socket.on("authenticate", (password: string))
+
+# Database
+
+## Database Installation
+
+1. Install [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/) and install either the GUI [Compass](https://www.mongodb.com/docs/compass/master/install/) or the mongo shell [mongosh](https://www.mongodb.com/docs/mongodb-shell/install/).
+2. Create a repository - the default name currently used is 'racingLA', however the mongo connection url can be found and changed in the `.env` file.
+3. Add all json files present in the json [folder](/server/json/) as different collections in the repository. The collections names should preferably remain the same.
+
+## Adding data
+
+The following section will indicate the expected strucutre of the objects that can be added into the database.
+
+### Questions
+
+The `questions.json` collection stores all questions present in the game. There are some nuances and requirements that need to be taken into account when adding new questions to the game. A question object has the following properties:
+
+-   id: Auto-generated by mongo
+
+-   question: The question text that will be displayed. There are 2 rules that apply when parsing the question:
+
+1. Everything that should be parsed as latex should be put between `$$...$$` symbols (note that since they are stored in json the latex notation will all need an extra \ symbol, e.g. \\\neq ). This allows for only the relevant math expressions to be formatted using Latex, while keeping the rest of the text intact. Additionally, for line breaks you can make use of the `<br>` html tags.
+2. Parameterized questions - these are questions with a set of parameters that can be changed to allow for multiple variants of the same question. This allows for functionality where 2 player might get the same question, but with slightly different numbers making the answer different as well. All the parameters are found between `[!...!]`. Additionally, this parameters should also be put between `$$...$$` since they often are latex expressions. All the variants stored between `[!...!]` should have a matching field in the variant object they reference (see [Variants](#variants)). E.g. if your question has [!a!] has a parameter the variant json object should have an `a` property `{a: 2, ...}`.
+   (Note that in the database there might be extra variant properties for a lot of the questions, these correspond to intermediary steps of the calculation. This server for possibly in the future showing the step-by-step calculation of the answer, but this is currently not implemented).
+
+Example:
+
+![Example](/server/images/question_example.png)
+
+Note that here the answer is parameterized as well.
+
+![Alt text](/server/images/variants.png)
+
+This is one of the variants for this question in specific
+
+-   subject: The topic that question pertains to, e.g. 'Determinants'. If you intended to add a new round, make sure to match this string with the one stored in the round object.
+
+-   type: Depending on the type of the question, the question object will require different fields to function correctly. There are four types supported:
+
+    `mc`- multiple choice questions that can have anything from 3-6 options to choose from, this type also requires the presence of an `options` field.
+
+    `true/false` - true or false questions
+
+    `open` - open questions where the user can input any latex expression.
+
+    `open-infinite` - special type of open questions that has an infinite amount of answers that are correct. Usually all multiples of the correct answer stored also count as correct.
+
+-   answer:
+
+    If the question's type is `true/false` this can only be either 'True' or 'False'.
+
+    If the question's type is `mc` the answer should be included in the `options` array, additionally the answer has to be <ins>exactly the same to how it is</ins> in the `options` array. This means that it should also keep the `$$...$$` latex indicators, in case it has them.
+
+    If the question's type is `open` the answer should be stored as latex without the `$$...$$` latex indicators.
+
+    If the question's type is `open-infinite` the answer corresponds to one possibly answer, and according to the `specialRules` field the server will compute the rules needed for all other answers to be accepted.
+
+-   options: Only necessary for `mc` questions. Array that contains all multiple choice options that will be displayed, including the correct one.
+
+-   difficulty: The difficulty of the question can be one of four values: 'mandatory', 'easy', 'medium' and 'hard'.
+
+-   variants: Array containing all possible versions of the question, see [Variants](#Variants) for more information.
+
+### Rounds
+
+The `rounds.json` collection stores all rounds that can possibly be played. A round should focus only one of specific topic from a math course. The round object has the following properties:
+
+-   subject: Topic of the rounds, should match exactly with the `subject` field present in the questions.
+
+-   study: Array of faculties that has this round/topic on their course. This is to account for the fact that different faculties, even within the same math course, might study different topics. The faculties are stored as its abbreviation, e.g. 'Aerospace Engineering' -> 'AE'.
+
+-   mandatory_questions: Array of questions containing all ids of the questions with the `mandatory` difficulty. These questions will always appear at the start of the round and the players need to get through them to get bonus questions. Reccommended number of mandatories is 2 to 3.
+
+-   bonus_questions: Array of questions containing all ids of questions with the `easy`,`medium` and `hard` difficulty.
+
+### Variants
+
+All variants used in the database were directly imported from Grasple. However it is also possibly to manually add variants to your questions. All variants are grouped by their subject, for example all possible variants for the questions of the 'Determinants' subject will be in their separate collection from the ones from the 'Diagonalization' subject.
+
+1. Name the collection according to the subject of the questions, e.g. if you are adding variants to the 'Diagonalization' questions name the collection 'Diagonalization'. Note that the names should be exactly the same.
+2. Match the variant identifiers to fields stored in the database. For example, if you intend your question to have 2 varying parameters and your question is:
+   `What is the result of [!a!] + [!b!]?`
+   Make sure to have the fields `a` and `b` in your variant object. Your json object could like: `{'a': 3, 'b': 2, 'answer': 5}`
+3. Add the id of the variant to the `variants` array field of its respective question.
+
+Note: on the `/server/json/scripts` folder there are 2 python scripts useful for automating the process of adding variants. In case you are using data exported from grasple one of the scripts cleans the data to the correct format. The other is useful in case you are adding a large number of variants, it gets all the ids of the variants for you so that you can link them to the correct question. Additional comments can be found on the respective files.

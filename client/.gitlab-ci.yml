@@ -1,0 +1,30 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+  - stylecheck
+
+build-client:
+  stage: build
+  script:
+    - cd client
+    - npm install
+    - npm run build
+
+test-client:
+  stage: test
+  script:
+    - cd client
+    - npm install
+    - npm install jest-junit
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+
+stylecheck-client:
+  stage: stylecheck
+  script:
+    - cd client
+    - npm install
+    - npm run lint
+    - npm run prettier

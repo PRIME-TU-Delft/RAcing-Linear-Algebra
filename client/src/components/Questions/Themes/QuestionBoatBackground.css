@@ -1,0 +1,30 @@
+#wave-mid {
+    animation: wave-background 8s infinite ease-in-out alternate;
+}
+
+#wave-bot {
+    animation-delay: 1s;
+    animation: wave-background 8s infinite ease-in-out alternate-reverse;
+}
+
+@keyframes wave-background {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-550px);
+    }
+}
+
+#question-boat-background {
+    position: fixed;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 300vw;
+    height: 100vh;
+    z-index: -1;
+}

@@ -1,0 +1,59 @@
+.join-game {
+    margin-top: 8em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.join-game-title {
+    margin-top: 2em;
+    color: #0c2340;
+    text-align: center;
+}
+
+.join-game-title > p {
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.join-game-input {
+    width: 15em;
+    font-size: 20px;
+    height: 3em;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin: auto;
+    color: #0c2340;
+    border: 1px solid #0c2340;
+}
+
+.join-game-btn {
+    width: 23em;
+    height: 5em;
+    margin-top: 2em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    border: 2px solid #00a6d6;
+    color: #00a6d6;
+    transition-duration: 0.2s;
+}
+
+.join-game-btn:hover {
+    background-color: #00a6d6;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.join-game-btn > p {
+    font-size: 20px;
+}
+.error {
+    font-size: 20px;
+    color: red;
+}

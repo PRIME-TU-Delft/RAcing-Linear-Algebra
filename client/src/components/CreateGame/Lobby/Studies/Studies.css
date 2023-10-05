@@ -1,0 +1,54 @@
+.studies-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.study-container {
+    display: inline-block;
+
+    height: 5em;
+    width: 13em;
+
+    margin-right: 1em;
+    margin-top: 1em;
+    position: relative;
+    border: 2px solid #0c2340;
+    transition-duration: 0.3s;
+}
+
+.study-title {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: #0c2340;
+    transition-duration: 0.3s;
+}
+
+.study-container:hover {
+    border: 2px solid #00b8c8;
+    transition-duration: 0.3s;
+}
+
+.study-selected {
+    border: 2px solid #00b8c8;
+}
+
+.checked {
+    display: none;
+}
+
+.study-selected > .checked {
+    display: block;
+    position: absolute;
+    z-index: 9999;
+    right: 0px;
+    top: 0px;
+}

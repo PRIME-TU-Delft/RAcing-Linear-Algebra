@@ -1,0 +1,2428 @@
+[
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9bd"
+        },
+        "question": "Is the vector $$v = [!v!]$$ an eigenvector of the matrix $$A = [!A!]$$? <br> If it is indeed an eigenvector, give the corresponding eigenvalue. Otherwise, answer $$No$$.<br><br> $$\\lambda=$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!]",
+        "type": "open",
+        "difficulty": "mandatory",
+        "variants": [
+            "6472288b9c86201eac737c90",
+            "6472288b9c86201eac737c91",
+            "6472288b9c86201eac737c92",
+            "6472288b9c86201eac737c93",
+            "6472288b9c86201eac737c94",
+            "6472288b9c86201eac737c95",
+            "6472288b9c86201eac737c96",
+            "6472288b9c86201eac737c97",
+            "6472288b9c86201eac737c98",
+            "6472288b9c86201eac737c99",
+            "6472288b9c86201eac737c9a",
+            "6472288b9c86201eac737c9b",
+            "6472288b9c86201eac737c9c",
+            "6472288b9c86201eac737c9d",
+            "6472288b9c86201eac737c9e",
+            "6472288b9c86201eac737c9f",
+            "6472288b9c86201eac737ca0",
+            "6472288b9c86201eac737ca1",
+            "6472288b9c86201eac737ca2",
+            "6472288b9c86201eac737ca3"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9be"
+        },
+        "question": "Is the vector $$v = [!w!]$$ an eigenvector of the matrix $$A = [!A!]$$? <br> If it is indeed an eigenvector, give the corresponding eigenvalue. Otherwise, answer $$No$$. <br><br> $$\\lambda=$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "No",
+        "type": "open",
+        "difficulty": "mandatory",
+        "variants": [
+            "64722ae09c86201eac737ca5",
+            "64722ae09c86201eac737ca6",
+            "64722ae09c86201eac737ca7",
+            "64722ae09c86201eac737ca8",
+            "64722ae09c86201eac737ca9",
+            "64722ae09c86201eac737caa",
+            "64722ae09c86201eac737cab",
+            "64722ae09c86201eac737cac",
+            "64722ae09c86201eac737cad",
+            "64722ae09c86201eac737cae",
+            "64722ae09c86201eac737caf",
+            "64722ae09c86201eac737cb0",
+            "64722ae09c86201eac737cb1",
+            "64722ae09c86201eac737cb2",
+            "64722ae09c86201eac737cb3",
+            "64722ae09c86201eac737cb4",
+            "64722ae09c86201eac737cb5",
+            "64722ae09c86201eac737cb6",
+            "64722ae09c86201eac737cb7",
+            "64722ae09c86201eac737cb8"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9bf"
+        },
+        "question": "Is the vector $$v = \\begin{pmatrix}0\\\\0\\end{pmatrix}$$ an eigenvector of the matrix $$A = [!A!]$$? <br> If it is indeed an eigenvector, give the corresponding eigenvalue. Otherwise, answer $$No$$.<br><br> $$\\lambda=$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "No",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64722c6c9c86201eac737cbc",
+            "64722c6c9c86201eac737cbd",
+            "64722c6c9c86201eac737cbe",
+            "64722c6c9c86201eac737cbf",
+            "64722c6c9c86201eac737cc0",
+            "64722c6c9c86201eac737cc1",
+            "64722c6c9c86201eac737cc2",
+            "64722c6c9c86201eac737cc3",
+            "64722c6c9c86201eac737cc4",
+            "64722c6c9c86201eac737cc5",
+            "64722c6c9c86201eac737cc6",
+            "64722c6c9c86201eac737cc7",
+            "64722c6c9c86201eac737cc8",
+            "64722c6c9c86201eac737cc9",
+            "64722c6c9c86201eac737cca",
+            "64722c6c9c86201eac737ccb",
+            "64722c6c9c86201eac737ccc",
+            "64722c6c9c86201eac737ccd",
+            "64722c6c9c86201eac737cce",
+            "64722c6c9c86201eac737ccf"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c0"
+        },
+        "question": "Is the vector $$v = [!v!]$$ an eigenvector of the matrix $$A = [!A!]$$? <br> If it is indeed an eigenvector, give the corresponding eigenvalue. Otherwise, answer $$No$$. <br> $$\\lambda=$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "0",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64722d1f9c86201eac737cd1",
+            "64722d1f9c86201eac737cd2",
+            "64722d1f9c86201eac737cd3",
+            "64722d1f9c86201eac737cd4",
+            "64722d1f9c86201eac737cd5",
+            "64722d1f9c86201eac737cd6",
+            "64722d1f9c86201eac737cd7",
+            "64722d1f9c86201eac737cd8",
+            "64722d1f9c86201eac737cd9",
+            "64722d1f9c86201eac737cda",
+            "64722d1f9c86201eac737cdb",
+            "64722d1f9c86201eac737cdc",
+            "64722d1f9c86201eac737cdd",
+            "64722d1f9c86201eac737cde",
+            "64722d1f9c86201eac737cdf",
+            "64722d1f9c86201eac737ce0",
+            "64722d1f9c86201eac737ce1",
+            "64722d1f9c86201eac737ce2",
+            "64722d1f9c86201eac737ce3",
+            "64722d1f9c86201eac737ce4"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c1"
+        },
+        "question": "Let $$A$$ be an $$n \\times n$$ matrix, $$v$$ a vector in $$\\mathbb{R}^n$$ and $$\\lambda$$ a scalar. <br> If $$Av = \\lambda v$$, what does this imply?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "The vector $$v$$ is an eigenvector of $$A$$ and $$\\lambda$$ is an eigenvalue of $$A$$, unless $$v = 0$$.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "The vector $$v$$ is an eigenvector of $$A$$ and $$\\lambda$$ is an eigenvalue of $$A$$",
+            "The vector $$v$$ is an eigenvector of $$A$$ and $$\\lambda$$ is an eigenvalue of $$A$$, unless $$\\lambda = 0$$.",
+            "The vector $$v$$ is an eigenvector of $$A$$ and $$\\lambda$$ is an eigenvalue of $$A$$, unless $$v = 0$$."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c2"
+        },
+        "question": "Give the eigenvalues of the matrix $$A= \\begin{pmatrix}a&0&0\\\\d&b&0\\\\e&f&c\\end{pmatrix}$$. Separate your eigenvalues by commas.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "a,b,c",
+        "type": "open",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c3"
+        },
+        "question": "The eigenvalues of a matrix $$A$$ are equal to the entries on the main diagonal of $$A$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c4"
+        },
+        "question": "Let $$v_1,..., v_r$$ be eigenvectors of an $$n \\times n$$ matrix $$A$$, corresponding to distinct eigenvalues $$\\lambda_1,...,\\lambda_r$$. <br> Which of the following statements is true?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "The set $$v_1,..., v_r$$ is linearly independent.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "The set $$v_1,..., v_r$$ is orthogonal.",
+            "The set $$v_1,..., v_r$$ is orthonormal.",
+            "The set $$v_1,..., v_r$$ is linearly independent.",
+            "The set $$v_1,..., v_r$$ contains the zero vector."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c5"
+        },
+        "question": "Let $$A$$ be an $$n \\times n$$ matrix $$A$$, and let $$\\lambda$$ be an eigenvalue of $$A$$. <br> Which of the following statements about the eigenspace $$E_\\lambda$$ is true?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "$$E_\\lambda = Nul(A - \\lambda I)$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$E_\\lambda = Nul(A + \\lambda I)$$",
+            "$$E_\\lambda = Nul(A - \\lambda I)$$",
+            "$$E_\\lambda = Col(A + \\lambda I)$$",
+            "$$E_\\lambda = Col(A - \\lambda I)$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c6"
+        },
+        "question": "Let $$A$$ be an $$n \\times n$$ matrix $$A$$ and let $$\\lambda$$ be an eigenvalue of $$A$$ with corresponding eigenspace $$E_\\lambda$$. Which of the following statements is true?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "The vector $$0$$ is not an eigenvector of A, but $$0$$ is an element of $$E_\\lambda$$.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "The vector $$0$$ is an eigenvector of A, and hence $$0$$ is an element of $$E_\\lambda$$.",
+            "The vector $$0$$ is not an eigenvector of A, and hence $$0$$ is not an element of $$E_\\lambda$$.",
+            "The vector $$0$$ is not an eigenvector of A, but $$0$$ is an element of $$E_\\lambda$$."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c7"
+        },
+        "question": "The characteristic equation of a matrix $$A$$ is given by:",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "$$det(A - \\lambda I) = 0$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det(A + \\lambda I) = 0$$",
+            "$$det(A - \\lambda I) = 0$$",
+            "$$det(A) = det(\\lambda I)$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c8"
+        },
+        "question": "Let $$A$$ be a matrix with characteristic polynomial $$p(\\lambda) = ([!a!] - \\lambda)^2 ([!b!] - \\lambda)$$.<br>How many elements does the eigenspace $$E_{[!a!]}$$ have?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "Infinitely many",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": ["0", "1", "2", "3", "Infinitely many"],
+        "variants": [
+            "64723c2d9c86201eac737ce6",
+            "64723c2d9c86201eac737ce7",
+            "64723c2d9c86201eac737ce8",
+            "64723c2d9c86201eac737ce9",
+            "64723c2d9c86201eac737cea",
+            "64723c2d9c86201eac737ceb",
+            "64723c2d9c86201eac737cec",
+            "64723c2d9c86201eac737ced",
+            "64723c2d9c86201eac737cee",
+            "64723c2d9c86201eac737cef",
+            "64723c2d9c86201eac737cf0",
+            "64723c2d9c86201eac737cf1",
+            "64723c2d9c86201eac737cf2",
+            "64723c2d9c86201eac737cf3",
+            "64723c2d9c86201eac737cf4",
+            "64723c2d9c86201eac737cf5",
+            "64723c2d9c86201eac737cf6",
+            "64723c2d9c86201eac737cf7",
+            "64723c2d9c86201eac737cf8",
+            "64723c2d9c86201eac737cf9"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9c9"
+        },
+        "question": "Let $$\\lambda_1$$ be an eigenvalue of a square matrix $$A$$. The geometric multiplicity of $$\\lambda$$ is equal to:",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "The dimension of the eigenspace $$E_{\\lambda_1}$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "The number of distinct eigenvalues of $$A$$ corresponding to the eigenvalue $$\\lambda_1$$.",
+            "$$det(A - \\lambda_1 I)$$",
+            "The dimension of the eigenspace $$E_{\\lambda_1}$$",
+            "The number of factors $$(\\lambda - \\lambda_1)$$ in the characteristic polynomial of A."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "647261e1fe72cfb99da4a9ca"
+        },
+        "question": "If the characteristic polynomial of the matrix $$A$$ is equal to $$p(y) = ([!a!] - \\lambda)^{[!k!]} ([!b!] - \\lambda)^{[!l!]}$$, what is the algebraic multiplicity of the eigenvalue $$[!a!]$$?",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!k!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64723e729c86201eac737cfb",
+            "64723e729c86201eac737cfc",
+            "64723e729c86201eac737cfd",
+            "64723e729c86201eac737cfe",
+            "64723e729c86201eac737cff",
+            "64723e729c86201eac737d00",
+            "64723e729c86201eac737d01",
+            "64723e729c86201eac737d02",
+            "64723e729c86201eac737d03",
+            "64723e729c86201eac737d04",
+            "64723e729c86201eac737d05",
+            "64723e729c86201eac737d06",
+            "64723e729c86201eac737d07",
+            "64723e729c86201eac737d08",
+            "64723e729c86201eac737d09",
+            "64723e729c86201eac737d0a",
+            "64723e729c86201eac737d0b",
+            "64723e729c86201eac737d0c",
+            "64723e729c86201eac737d0d",
+            "64723e729c86201eac737d0e"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f626"
+        },
+        "question": "Is the vector $$v = [!v!]$$ an eigenvector of the matrix $$A = [!A!]$$? <br> If it is indeed an eigenvector, give the corresponding eigenvalue. Otherwise, answer $$No$$.<br><br> $$\\lambda=$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64726475fe72cfb99da4a9d1",
+            "64726475fe72cfb99da4a9d2",
+            "64726475fe72cfb99da4a9d3",
+            "64726475fe72cfb99da4a9d4",
+            "64726475fe72cfb99da4a9d5",
+            "64726475fe72cfb99da4a9d6",
+            "64726475fe72cfb99da4a9d7",
+            "64726475fe72cfb99da4a9d8",
+            "64726475fe72cfb99da4a9d9",
+            "64726475fe72cfb99da4a9da",
+            "64726475fe72cfb99da4a9db",
+            "64726475fe72cfb99da4a9dc",
+            "64726475fe72cfb99da4a9dd",
+            "64726475fe72cfb99da4a9de",
+            "64726475fe72cfb99da4a9df",
+            "64726475fe72cfb99da4a9e0",
+            "64726475fe72cfb99da4a9e1",
+            "64726475fe72cfb99da4a9e2",
+            "64726475fe72cfb99da4a9e3",
+            "64726475fe72cfb99da4a9e4"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f627"
+        },
+        "question": "The matrix $$A = [!A!]$$ has eigenvalues $$\\lambda_1 = [!e1!]$$ and $$\\lambda_2 = [!e2!]$$. <br> Find an eigenvector $$v_1$$ corresponding to the eigenvalue $$\\lambda_1 = [!e1!]$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "\\begin{bmatrix}[!minddoorc!]\\\\1\\end{bmatrix}",
+        "type": "open-infinite",
+        "difficulty": "medium",
+        "variants": [
+            "64726d21fe72cfb99da4a9e8",
+            "64726d21fe72cfb99da4a9e9",
+            "64726d21fe72cfb99da4a9ea",
+            "64726d21fe72cfb99da4a9eb",
+            "64726d21fe72cfb99da4a9ec",
+            "64726d21fe72cfb99da4a9ed",
+            "64726d21fe72cfb99da4a9ee",
+            "64726d21fe72cfb99da4a9ef",
+            "64726d21fe72cfb99da4a9f0",
+            "64726d21fe72cfb99da4a9f1",
+            "64726d21fe72cfb99da4a9f2",
+            "64726d21fe72cfb99da4a9f3",
+            "64726d21fe72cfb99da4a9f4",
+            "64726d21fe72cfb99da4a9f5",
+            "64726d21fe72cfb99da4a9f6",
+            "64726d21fe72cfb99da4a9f7",
+            "64726d21fe72cfb99da4a9f8",
+            "64726d21fe72cfb99da4a9f9",
+            "64726d21fe72cfb99da4a9fa",
+            "64726d21fe72cfb99da4a9fb"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f628"
+        },
+        "question": "Consider the matrix $$A = [!A!]$$.<br>Is $$[!k!]$$ an eigenvalue of A?<br>If it is, give an eigenvector $$v$$ corresponding to eigenvalue $$\\lambda = [!k!]$$. If $$[!k!]$$ is not an eigenvalue of A, type $$No$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "No",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64726e38fe72cfb99da4a9fd",
+            "64726e38fe72cfb99da4a9fe",
+            "64726e38fe72cfb99da4a9ff",
+            "64726e38fe72cfb99da4aa00",
+            "64726e38fe72cfb99da4aa01",
+            "64726e38fe72cfb99da4aa02",
+            "64726e38fe72cfb99da4aa03",
+            "64726e38fe72cfb99da4aa04",
+            "64726e38fe72cfb99da4aa05",
+            "64726e38fe72cfb99da4aa06",
+            "64726e38fe72cfb99da4aa07",
+            "64726e38fe72cfb99da4aa08",
+            "64726e38fe72cfb99da4aa09",
+            "64726e38fe72cfb99da4aa0a",
+            "64726e38fe72cfb99da4aa0b",
+            "64726e38fe72cfb99da4aa0c",
+            "64726e38fe72cfb99da4aa0d",
+            "64726e38fe72cfb99da4aa0e",
+            "64726e38fe72cfb99da4aa0f",
+            "64726e38fe72cfb99da4aa10"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f62a"
+        },
+        "question": "Let $$A = [!A!]$$ and $$ v = [!v!]$$.<br>Find all values of $$k$$ for which $$v$$ is an eigenvector of $$A$$.<br>If you find multiple values, separate your answers by commas (for example, type '-3,6').",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!Antwoord!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64727ac2fe72cfb99da4aa27",
+            "64727ac2fe72cfb99da4aa28",
+            "64727ac2fe72cfb99da4aa29",
+            "64727ac2fe72cfb99da4aa2a",
+            "64727ac2fe72cfb99da4aa2b",
+            "64727ac2fe72cfb99da4aa2c",
+            "64727ac2fe72cfb99da4aa2d",
+            "64727ac2fe72cfb99da4aa2e",
+            "64727ac2fe72cfb99da4aa2f",
+            "64727ac2fe72cfb99da4aa30",
+            "64727ac2fe72cfb99da4aa31",
+            "64727ac2fe72cfb99da4aa32",
+            "64727ac2fe72cfb99da4aa33",
+            "64727ac2fe72cfb99da4aa34",
+            "64727ac2fe72cfb99da4aa35",
+            "64727ac2fe72cfb99da4aa36",
+            "64727ac2fe72cfb99da4aa37",
+            "64727ac2fe72cfb99da4aa38",
+            "64727ac2fe72cfb99da4aa39",
+            "64727ac2fe72cfb99da4aa3a"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f62c"
+        },
+        "question": "Consider the matrix $$A = [!A!]$$.<br> Find a basis for the eigenspace $$E_{[!k!]}$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "\\left\\{\\begin{pmatrix}1\\\\0\\\\0\\end{pmatrix},\\begin{pmatrix}0\\\\1\\\\0\\end{pmatrix},\\begin{pmatrix}0\\\\0\\\\1\\end{pmatrix}\\right\\}",
+        "type": "open-infinite",
+        "difficulty": "easy",
+        "variants": [
+            "64731054fe3321a40696f552",
+            "64731054fe3321a40696f553",
+            "64731054fe3321a40696f554",
+            "64731054fe3321a40696f555",
+            "64731054fe3321a40696f556",
+            "64731054fe3321a40696f557",
+            "64731054fe3321a40696f558",
+            "64731054fe3321a40696f559",
+            "64731054fe3321a40696f55a",
+            "64731054fe3321a40696f55b",
+            "64731054fe3321a40696f55c",
+            "64731054fe3321a40696f55d",
+            "64731054fe3321a40696f55e",
+            "64731054fe3321a40696f55f",
+            "64731054fe3321a40696f560",
+            "64731054fe3321a40696f561",
+            "64731054fe3321a40696f562",
+            "64731054fe3321a40696f563",
+            "64731054fe3321a40696f564",
+            "64731054fe3321a40696f565"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f630"
+        },
+        "question": "Consider the matrix $$A = [!A!]$$.<br> The value $$\\lambda = [!k!]$$ is and eigenvalue of $$A$$. Find a basis $$\\mathcal{B}$$ for the eigenspace $$E_{[!k!]}$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "\\left\\{\\begin{pmatrix}-[!RE12!]\\\\1\\\\0\\end{pmatrix},\\begin{pmatrix}-[!RE13!]\\\\1\\\\0\\end{pmatrix}\\right\\}",
+        "type": "open-infinite",
+        "difficulty": "hard",
+        "variants": [
+            "647315b4fe3321a40696f57c",
+            "647315b4fe3321a40696f57d",
+            "647315b4fe3321a40696f57e",
+            "647315b4fe3321a40696f57f",
+            "647315b4fe3321a40696f580",
+            "647315b4fe3321a40696f581",
+            "647315b4fe3321a40696f582",
+            "647315b4fe3321a40696f583",
+            "647315b4fe3321a40696f584",
+            "647315b4fe3321a40696f585",
+            "647315b4fe3321a40696f586",
+            "647315b4fe3321a40696f587",
+            "647315b4fe3321a40696f588",
+            "647315b4fe3321a40696f589",
+            "647315b4fe3321a40696f58a",
+            "647315b4fe3321a40696f58b",
+            "647315b4fe3321a40696f58c",
+            "647315b4fe3321a40696f58d",
+            "647315b4fe3321a40696f58e",
+            "647315b4fe3321a40696f58f"
+        ],
+        "specialRule": "multiples-allowed"
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f631"
+        },
+        "question": "Consider the matrix $$A = [!A!]$$.<br> The value $$\\lambda = [!k!]$$ is and eigenvalue of $$A$$. Find a basis $$\\mathcal{B}$$ for the eigenspace $$E_{[!k!]}$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "\\left\\{\\begin{pmatrix}-[!RE12!]\\\\1\\\\0\\end{pmatrix}\\right\\}",
+        "type": "open-infinite",
+        "difficulty": "medium",
+        "variants": [
+            "64731641fe3321a40696f591",
+            "64731641fe3321a40696f592",
+            "64731641fe3321a40696f593",
+            "64731641fe3321a40696f594",
+            "64731641fe3321a40696f595",
+            "64731641fe3321a40696f596",
+            "64731641fe3321a40696f597",
+            "64731641fe3321a40696f598",
+            "64731641fe3321a40696f599",
+            "64731641fe3321a40696f59a",
+            "64731641fe3321a40696f59b",
+            "64731641fe3321a40696f59c",
+            "64731641fe3321a40696f59d",
+            "64731641fe3321a40696f59e",
+            "64731641fe3321a40696f59f",
+            "64731641fe3321a40696f5a0",
+            "64731641fe3321a40696f5a1",
+            "64731641fe3321a40696f5a2",
+            "64731641fe3321a40696f5a3",
+            "64731641fe3321a40696f5a4"
+        ],
+        "specialRule": "multiples-allowed"
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f632"
+        },
+        "question": "Let $$A = [!A!]$$.<br> Find the characteristic polynomial of $$A$$.<br><br>$$p_A (\\lambda) = $$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "\\lambda^2-[!Atrace!]\\lambda+[!Adet!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64731a5cfe3321a40696f5a6",
+            "64731a5cfe3321a40696f5a7",
+            "64731a5cfe3321a40696f5a8",
+            "64731a5cfe3321a40696f5a9",
+            "64731a5cfe3321a40696f5aa",
+            "64731a5cfe3321a40696f5ab",
+            "64731a5cfe3321a40696f5ac",
+            "64731a5cfe3321a40696f5ad",
+            "64731a5cfe3321a40696f5ae",
+            "64731a5cfe3321a40696f5af",
+            "64731a5cfe3321a40696f5b0",
+            "64731a5cfe3321a40696f5b1",
+            "64731a5cfe3321a40696f5b2",
+            "64731a5cfe3321a40696f5b3",
+            "64731a5cfe3321a40696f5b4",
+            "64731a5cfe3321a40696f5b5",
+            "64731a5cfe3321a40696f5b6",
+            "64731a5cfe3321a40696f5b7",
+            "64731a5cfe3321a40696f5b8",
+            "64731a5cfe3321a40696f5b9"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f633"
+        },
+        "question": "Let $$A = [!A!]$$. Find the eigenvalues of $$A$$.<br><br>Repeat eigenvalues according to their algebraic multiplicities and separate your answers by commas.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!],[!e2!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64731a5cfe3321a40696f5a6",
+            "64731a5cfe3321a40696f5a7",
+            "64731a5cfe3321a40696f5a8",
+            "64731a5cfe3321a40696f5a9",
+            "64731a5cfe3321a40696f5aa",
+            "64731a5cfe3321a40696f5ab",
+            "64731a5cfe3321a40696f5ac",
+            "64731a5cfe3321a40696f5ad",
+            "64731a5cfe3321a40696f5ae",
+            "64731a5cfe3321a40696f5af",
+            "64731a5cfe3321a40696f5b0",
+            "64731a5cfe3321a40696f5b1",
+            "64731a5cfe3321a40696f5b2",
+            "64731a5cfe3321a40696f5b3",
+            "64731a5cfe3321a40696f5b4",
+            "64731a5cfe3321a40696f5b5",
+            "64731a5cfe3321a40696f5b6",
+            "64731a5cfe3321a40696f5b7",
+            "64731a5cfe3321a40696f5b8",
+            "64731a5cfe3321a40696f5b9"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f634"
+        },
+        "question": "Let $$A = [!A!]$$. Find the eigenvalues of $$A$$.<br><br>Repeat eigenvalues according to their algebraic multiplicities and separate your answers by commas.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!],[!e2!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64731b42fe3321a40696f5bb",
+            "64731b42fe3321a40696f5bc",
+            "64731b42fe3321a40696f5bd",
+            "64731b42fe3321a40696f5be",
+            "64731b42fe3321a40696f5bf",
+            "64731b42fe3321a40696f5c0",
+            "64731b42fe3321a40696f5c1",
+            "64731b42fe3321a40696f5c2",
+            "64731b42fe3321a40696f5c3",
+            "64731b42fe3321a40696f5c4",
+            "64731b42fe3321a40696f5c5",
+            "64731b42fe3321a40696f5c6",
+            "64731b42fe3321a40696f5c7",
+            "64731b42fe3321a40696f5c8",
+            "64731b42fe3321a40696f5c9",
+            "64731b42fe3321a40696f5ca",
+            "64731b42fe3321a40696f5cb",
+            "64731b42fe3321a40696f5cc",
+            "64731b42fe3321a40696f5cd",
+            "64731b42fe3321a40696f5ce"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f635"
+        },
+        "question": "Let $$A = [!C!]$$. Find the eigenvalues of $$A$$.<br><br>Repeat eigenvalues according to their algebraic multiplicities and separate your answers by commas (e.g. type '-3,6,6').",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e3!],[!e1!],[!e2!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64731bf8fe3321a40696f5d0",
+            "64731bf8fe3321a40696f5d1",
+            "64731bf8fe3321a40696f5d2",
+            "64731bf8fe3321a40696f5d3",
+            "64731bf8fe3321a40696f5d4",
+            "64731bf8fe3321a40696f5d5",
+            "64731bf8fe3321a40696f5d6",
+            "64731bf8fe3321a40696f5d7",
+            "64731bf8fe3321a40696f5d8",
+            "64731bf8fe3321a40696f5d9",
+            "64731bf8fe3321a40696f5da",
+            "64731bf8fe3321a40696f5db",
+            "64731bf8fe3321a40696f5dc",
+            "64731bf8fe3321a40696f5dd",
+            "64731bf8fe3321a40696f5de",
+            "64731bf8fe3321a40696f5df",
+            "64731bf8fe3321a40696f5e0",
+            "64731bf8fe3321a40696f5e1",
+            "64731bf8fe3321a40696f5e2",
+            "64731bf8fe3321a40696f5e3"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f636"
+        },
+        "question": "Let $$A = [!C!]$$. Find the eigenvalues of $$A$$.<br><br>Repeat eigenvalues according to their algebraic multiplicities and separate your answers by commas (e.g. type '-3,6,6').",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!],[!e2!],[!e3!],[!e4!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64731c85fe3321a40696f5e5",
+            "64731c85fe3321a40696f5e6",
+            "64731c85fe3321a40696f5e7",
+            "64731c85fe3321a40696f5e8",
+            "64731c85fe3321a40696f5e9",
+            "64731c85fe3321a40696f5ea",
+            "64731c85fe3321a40696f5eb",
+            "64731c85fe3321a40696f5ec",
+            "64731c85fe3321a40696f5ed",
+            "64731c85fe3321a40696f5ee",
+            "64731c85fe3321a40696f5ef",
+            "64731c85fe3321a40696f5f0",
+            "64731c85fe3321a40696f5f1",
+            "64731c85fe3321a40696f5f2",
+            "64731c85fe3321a40696f5f3",
+            "64731c85fe3321a40696f5f4",
+            "64731c85fe3321a40696f5f5",
+            "64731c85fe3321a40696f5f6",
+            "64731c85fe3321a40696f5f7",
+            "64731c85fe3321a40696f5f8"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f637"
+        },
+        "question": "Let $$A = [!A!]$$. Find the eigenvalues of $$A$$.<br><br>Repeat eigenvalues according to their algebraic multiplicities and separate your answers by commas.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "[!e1!],[!e2!],[!e3!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64731cf0fe3321a40696f5fa",
+            "64731cf0fe3321a40696f5fb",
+            "64731cf0fe3321a40696f5fc",
+            "64731cf0fe3321a40696f5fd",
+            "64731cf0fe3321a40696f5fe",
+            "64731cf0fe3321a40696f5ff",
+            "64731cf0fe3321a40696f600",
+            "64731cf0fe3321a40696f601",
+            "64731cf0fe3321a40696f602",
+            "64731cf0fe3321a40696f603",
+            "64731cf0fe3321a40696f604",
+            "64731cf0fe3321a40696f605",
+            "64731cf0fe3321a40696f606",
+            "64731cf0fe3321a40696f607",
+            "64731cf0fe3321a40696f608",
+            "64731cf0fe3321a40696f609",
+            "64731cf0fe3321a40696f60a",
+            "64731cf0fe3321a40696f60b",
+            "64731cf0fe3321a40696f60c",
+            "64731cf0fe3321a40696f60d"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f63e"
+        },
+        "question": "If $$\\lambda$$ is an eigenvalue of the matrix $$A$$, then $$2\\lambda$$ is an eigenvalue of the matrix $$2A$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f641"
+        },
+        "question": "A non-zero vector can be in the two eigenspaces corresponding to two distinct eigenvalues of a matrix $$A$$.",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "64732489fe3321a40696f643"
+        },
+        "question": "Let $$A = [!A!]$$. This matrix has eigenvalues $$[!k!]$$ and $$[!m!]$$.<br>For which value(s) of $$a$$ will the eigenvalue $$[!k!]$$ have geometric multiplicity of 2?<br>Write your answer in one of the following forms:<br>$$a=...$$ (or $$a=...$$, $$a=...$$ etc...)<br>$$a\\neq...$$ (or $$a\\neq...$$, $$a\\neq...$$ etc. Type \\neq for the $$\\neq$$ sign.)<br>$$all\\space a$$<br>$$no\\space a$$",
+        "subject": "Eigenvalues & Eigenvectors",
+        "answer": "a=[!Antwoord!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64730f2afe3321a40696f53d",
+            "64730f2afe3321a40696f53e",
+            "64730f2afe3321a40696f53f",
+            "64730f2afe3321a40696f540",
+            "64730f2afe3321a40696f541",
+            "64730f2afe3321a40696f542",
+            "64730f2afe3321a40696f543",
+            "64730f2afe3321a40696f544",
+            "64730f2afe3321a40696f545",
+            "64730f2afe3321a40696f546",
+            "64730f2afe3321a40696f547",
+            "64730f2afe3321a40696f548",
+            "64730f2afe3321a40696f549",
+            "64730f2afe3321a40696f54a",
+            "64730f2afe3321a40696f54b",
+            "64730f2afe3321a40696f54c",
+            "64730f2afe3321a40696f54d",
+            "64730f2afe3321a40696f54e",
+            "64730f2afe3321a40696f54f",
+            "64730f2afe3321a40696f550"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64899c6e031e185011a84210"
+        },
+        "question": "Find the area of the triangle whose vertices are $$(-1,-[!a!])$$, $$([!b!],2)$$ and $$([!c!],3)$$.",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "mandatory",
+        "variants": [
+            "647760f4c877c8a786c045d1",
+            "647760f4c877c8a786c045d2",
+            "647760f4c877c8a786c045d3",
+            "647760f4c877c8a786c045d4",
+            "647760f4c877c8a786c045d5",
+            "647760f4c877c8a786c045d6",
+            "647760f4c877c8a786c045d7",
+            "647760f4c877c8a786c045d8",
+            "647760f4c877c8a786c045d9",
+            "647760f4c877c8a786c045da",
+            "647760f4c877c8a786c045db",
+            "647760f4c877c8a786c045dc",
+            "647760f4c877c8a786c045dd",
+            "647760f4c877c8a786c045de",
+            "647760f4c877c8a786c045df",
+            "647760f4c877c8a786c045e0",
+            "647760f4c877c8a786c045e1",
+            "647760f4c877c8a786c045e2",
+            "647760f4c877c8a786c045e3",
+            "647760f4c877c8a786c045e4"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64899caa031e185011a84212"
+        },
+        "question": "Find the determinant of $$\\begin{pmatrix}[!a!]&[!b!]\\\\[!c!]&[!d!]\\end{pmatrix}$$.",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "mandatory",
+        "variants": [
+            "64764d4708bb15c60006093e",
+            "64764d4708bb15c60006093f",
+            "64764d4708bb15c600060940",
+            "64764d4708bb15c600060941",
+            "64764d4708bb15c600060942",
+            "64764d4708bb15c600060943",
+            "64764d4708bb15c600060944",
+            "64764d4708bb15c600060945",
+            "64764d4708bb15c600060946",
+            "64764d4708bb15c600060947",
+            "64764d4708bb15c600060948",
+            "64764d4708bb15c600060949",
+            "64764d4708bb15c60006094a",
+            "64764d4708bb15c60006094b",
+            "64764d4708bb15c60006094c",
+            "64764d4708bb15c60006094d",
+            "64764d4708bb15c60006094e",
+            "64764d4708bb15c60006094f",
+            "64764d4708bb15c600060950",
+            "64764d4708bb15c600060951"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "64899cd1031e185011a84213"
+        },
+        "question": "Consider matrix $$A$$ with $$det(A) = [!a!]$$.The matrix $$B$$ is constructed by multiplying the second row of $$A$$ by [!b!].<br>What is the determinant of $$B$$?",
+        "subject": "Determinants",
+        "answer": "[!ab!]",
+        "type": "open",
+        "difficulty": "mandatory",
+        "variants": [
+            "6476527408bb15c600060968",
+            "6476527408bb15c600060969",
+            "6476527408bb15c60006096a",
+            "6476527408bb15c60006096b",
+            "6476527408bb15c60006096c",
+            "6476527408bb15c60006096d",
+            "6476527408bb15c60006096e",
+            "6476527408bb15c60006096f",
+            "6476527408bb15c600060970",
+            "6476527408bb15c600060971",
+            "6476527408bb15c600060972",
+            "6476527408bb15c600060973",
+            "6476527408bb15c600060974",
+            "6476527408bb15c600060975",
+            "6476527408bb15c600060976",
+            "6476527408bb15c600060977",
+            "6476527408bb15c600060978",
+            "6476527408bb15c600060979",
+            "6476527408bb15c60006097a",
+            "6476527408bb15c60006097b"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84214"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$[!A!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64764e7308bb15c600060953",
+            "64764e7308bb15c600060954",
+            "64764e7308bb15c600060955",
+            "64764e7308bb15c600060956",
+            "64764e7308bb15c600060957",
+            "64764e7308bb15c600060958",
+            "64764e7308bb15c600060959",
+            "64764e7308bb15c60006095a",
+            "64764e7308bb15c60006095b",
+            "64764e7308bb15c60006095c",
+            "64764e7308bb15c60006095d",
+            "64764e7308bb15c60006095e",
+            "64764e7308bb15c60006095f",
+            "64764e7308bb15c600060960",
+            "64764e7308bb15c600060961",
+            "64764e7308bb15c600060962",
+            "64764e7308bb15c600060963",
+            "64764e7308bb15c600060964",
+            "64764e7308bb15c600060965",
+            "64764e7308bb15c600060966"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84215"
+        },
+        "question": "Consider matrix $$A=\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}$$, what is the determinant $$det(A)$$?",
+        "subject": "Determinants",
+        "answer": "ad-bc",
+        "type": "open",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84216"
+        },
+        "question": "The determinant of an $$n \\times n$$ matrix $$A$$ can be computed by a cofactor expansion. The cofactor expansion across row $$i$$ is given by:",
+        "subject": "Determinants",
+        "answer": "$$det(A) = a_{i1} C_{i1} + a_{i2} C_{i2} + ... + a_{in} C_{in}$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det(A) = a_{i1} C_{i1} + a_{i2} C_{i2} + ... + a_{in} C_{in}$$",
+            "$$det(A) = a_{1i} C_{1i} + a_{2i} C_{2i} + ... + a_{ni} C_{ni}$$",
+            "$$det(A) = a_{i1} C_{1i} + a_{i2} C_{2i} + ... + a_{in} C_{ni}$$",
+            "$$det(A) = a_{1i} C_{i1} + a_{2i} C_{i2} + ... + a_{ni} C_{in}$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84217"
+        },
+        "question": "Consider matrix $$A=\\begin{pmatrix}a&b&c\\\\0&e&f\\\\0&0&g\\end{pmatrix}$$, what is the determinant of $$A$$?",
+        "subject": "Determinants",
+        "answer": "aeg",
+        "type": "open",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84218"
+        },
+        "question": "Which statement about the relation between invertibility of a square matrix and its determinant is correct?",
+        "subject": "Determinants",
+        "answer": "If the matrix is invertible, then the determinant of that matrix is unequal to zero.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "If the determinant of matrix is a negative number, then the matrix is not invertible.",
+            "If the determinant of a matrix is equal to zero, then the matrix is invertible.",
+            "If the matrix is invertible, then the determinant of that matrix is unequal to zero.",
+            "If a matrix is not invertible, then its determinant is unequal to zero."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84219"
+        },
+        "question": "Find the determinant of $$A=\\begin{pmatrix}[!a!]&[!b!]&[!c!]\\\\[!d!]&[!e!]&[!f!]\\\\[!g!]&[!h!]&[!i!]\\end{pmatrix}$$.",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "648b6ebba0139214946e6e94",
+            "648b6ebba0139214946e6e95",
+            "648b6ebba0139214946e6e96",
+            "648b6ebba0139214946e6e97",
+            "648b6ebba0139214946e6e98",
+            "648b6ebba0139214946e6e99",
+            "648b6ebba0139214946e6e9a",
+            "648b6ebba0139214946e6e9b",
+            "648b6ebba0139214946e6e9c",
+            "648b6ebba0139214946e6e9d",
+            "648b6ebba0139214946e6e9e",
+            "648b6ebba0139214946e6e9f",
+            "648b6ebba0139214946e6ea0",
+            "648b6ebba0139214946e6ea1",
+            "648b6ebba0139214946e6ea2",
+            "648b6ebba0139214946e6ea3",
+            "648b6ebba0139214946e6ea4",
+            "648b6ebba0139214946e6ea5",
+            "648b6ebba0139214946e6ea6",
+            "648b6ebba0139214946e6ea7"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421a"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$[!A!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6476585808bb15c600060992",
+            "6476585808bb15c600060993",
+            "6476585808bb15c600060994",
+            "6476585808bb15c600060995",
+            "6476585808bb15c600060996",
+            "6476585808bb15c600060997",
+            "6476585808bb15c600060998",
+            "6476585808bb15c600060999",
+            "6476585808bb15c60006099a",
+            "6476585808bb15c60006099b",
+            "6476585808bb15c60006099c",
+            "6476585808bb15c60006099d",
+            "6476585808bb15c60006099e",
+            "6476585808bb15c60006099f",
+            "6476585808bb15c6000609a0",
+            "6476585808bb15c6000609a1",
+            "6476585808bb15c6000609a2",
+            "6476585808bb15c6000609a3",
+            "6476585808bb15c6000609a4",
+            "6476585808bb15c6000609a5"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421b"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$[!A!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "647658c508bb15c6000609a7",
+            "647658c508bb15c6000609a8",
+            "647658c508bb15c6000609a9",
+            "647658c508bb15c6000609aa",
+            "647658c508bb15c6000609ab",
+            "647658c508bb15c6000609ac",
+            "647658c508bb15c6000609ad",
+            "647658c508bb15c6000609ae",
+            "647658c508bb15c6000609af",
+            "647658c508bb15c6000609b0",
+            "647658c508bb15c6000609b1",
+            "647658c508bb15c6000609b2",
+            "647658c508bb15c6000609b3",
+            "647658c508bb15c6000609b4",
+            "647658c508bb15c6000609b5",
+            "647658c508bb15c6000609b6",
+            "647658c508bb15c6000609b7",
+            "647658c508bb15c6000609b8",
+            "647658c508bb15c6000609b9",
+            "647658c508bb15c6000609ba"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421c"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$A =[!A!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6476592708bb15c6000609bc",
+            "6476592708bb15c6000609bd",
+            "6476592708bb15c6000609be",
+            "6476592708bb15c6000609bf",
+            "6476592708bb15c6000609c0",
+            "6476592708bb15c6000609c1",
+            "6476592708bb15c6000609c2",
+            "6476592708bb15c6000609c3",
+            "6476592708bb15c6000609c4",
+            "6476592708bb15c6000609c5",
+            "6476592708bb15c6000609c6",
+            "6476592708bb15c6000609c7",
+            "6476592708bb15c6000609c8",
+            "6476592708bb15c6000609c9",
+            "6476592708bb15c6000609ca",
+            "6476592708bb15c6000609cb",
+            "6476592708bb15c6000609cc",
+            "6476592708bb15c6000609cd",
+            "6476592708bb15c6000609ce",
+            "6476592708bb15c6000609cf"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421d"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$[!Matrix!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64765a2f08bb15c6000609d1",
+            "64765a2f08bb15c6000609d2",
+            "64765a2f08bb15c6000609d3",
+            "64765a2f08bb15c6000609d4",
+            "64765a2f08bb15c6000609d5",
+            "64765a2f08bb15c6000609d6",
+            "64765a2f08bb15c6000609d7",
+            "64765a2f08bb15c6000609d8",
+            "64765a2f08bb15c6000609d9",
+            "64765a2f08bb15c6000609da",
+            "64765a2f08bb15c6000609db",
+            "64765a2f08bb15c6000609dc",
+            "64765a2f08bb15c6000609dd",
+            "64765a2f08bb15c6000609de",
+            "64765a2f08bb15c6000609df",
+            "64765a2f08bb15c6000609e0",
+            "64765a2f08bb15c6000609e1",
+            "64765a2f08bb15c6000609e2",
+            "64765a2f08bb15c6000609e3",
+            "64765a2f08bb15c6000609e4"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421e"
+        },
+        "question": "Use cofactor expansion to find the determinant of $$[!Matrix!]$$",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64765a6d08bb15c6000609e6",
+            "64765a6d08bb15c6000609e7",
+            "64765a6d08bb15c6000609e8",
+            "64765a6d08bb15c6000609e9",
+            "64765a6d08bb15c6000609ea",
+            "64765a6d08bb15c6000609eb",
+            "64765a6d08bb15c6000609ec",
+            "64765a6d08bb15c6000609ed",
+            "64765a6d08bb15c6000609ee",
+            "64765a6d08bb15c6000609ef",
+            "64765a6d08bb15c6000609f0",
+            "64765a6d08bb15c6000609f1",
+            "64765a6d08bb15c6000609f2",
+            "64765a6d08bb15c6000609f3",
+            "64765a6d08bb15c6000609f4",
+            "64765a6d08bb15c6000609f5",
+            "64765a6d08bb15c6000609f6",
+            "64765a6d08bb15c6000609f7",
+            "64765a6d08bb15c6000609f8",
+            "64765a6d08bb15c6000609f9"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8421f"
+        },
+        "question": "Let $$A =\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}$$ and $$B =\\begin{pmatrix}c&d\\\\a&b\\end{pmatrix}$$.<br>How are the determinants of $$A$$ and $$B$$ related?",
+        "subject": "Determinants",
+        "answer": "$$det\\space B = det\\space -A$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det\\space B = det\\space A$$",
+            "$$det\\space B = det\\space -A$$",
+            "$$det\\space B = (det\\space A)^2$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84220"
+        },
+        "question": "Let $$A =\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}$$ and $$B =\\begin{pmatrix}a+kc&b+kd\\\\c&d\\end{pmatrix}$$.<br>How are the determinants of $$A$$ and $$B$$ related?",
+        "subject": "Determinants",
+        "answer": "$$det\\space B = det\\space A$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det\\space B = det\\space A$$",
+            "$$det\\space B = det\\space -A$$",
+            "$$det\\space B = det\\space k\\cdot A$$",
+            "$$det\\space B = det\\space k^2\\cdot A$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84221"
+        },
+        "question": "Let $$A =\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}$$ and $$B =\\begin{pmatrix}a&b\\\\kc&kd\\end{pmatrix}$$.<br>How are the determinants of $$A$$ and $$B$$ related?",
+        "subject": "Determinants",
+        "answer": "$$det\\space B = det\\space k\\cdot A$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det\\space B = det\\space A$$",
+            "$$det\\space B = det\\space -A$$",
+            "$$det\\space B = det\\space k\\cdot A$$",
+            "$$det\\space B = det\\space k^2\\cdot A$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84222"
+        },
+        "question": "Let $$A$$ be a $$[!n!] \\times [!n!]$$ matrix.<br>Suppose that after the following row operations, the matrix $$A$$ has been converted into an identity matrix.<ul><li>two times the interchange of two rows;</li><li>replacement of row $$[!r!]$$ by row $$[!r!]$$ plus $$[!a!]$$ times row 1;</li><li>scaling of two rows by the scalars $$[!b!]$$ and $$[!c!]$$, respectively.</li></ul><br><br> What is the determinant of A?",
+        "subject": "Determinants",
+        "answer": "[!Antwoord!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "6476609008bb15c6000609fb",
+            "6476609008bb15c6000609fc",
+            "6476609008bb15c6000609fd",
+            "6476609008bb15c6000609fe",
+            "6476609008bb15c6000609ff",
+            "6476609008bb15c600060a00",
+            "6476609008bb15c600060a01",
+            "6476609008bb15c600060a02",
+            "6476609008bb15c600060a03",
+            "6476609008bb15c600060a04",
+            "6476609008bb15c600060a05",
+            "6476609008bb15c600060a06",
+            "6476609008bb15c600060a07",
+            "6476609008bb15c600060a08",
+            "6476609008bb15c600060a09",
+            "6476609008bb15c600060a0a",
+            "6476609008bb15c600060a0b",
+            "6476609008bb15c600060a0c",
+            "6476609008bb15c600060a0d",
+            "6476609008bb15c600060a0e"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84223"
+        },
+        "question": "Let $$A$$ be the matrix $$\\begin{pmatrix}a&b&c\\\\d&e&f\\\\g&h&i\\end{pmatrix}$$ and $$B$$ the matrix $$\\begin{pmatrix}a&b&c\\\\[!a!]g&[!a!]h&[!a!]i\\\\d&e&f\\end{pmatrix}$$.<br>What is the determinant of $$B$$, if the determinant of $$A$$ equals $$[!b!]$$?",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "6476619c08bb15c600060a10",
+            "6476619c08bb15c600060a11",
+            "6476619c08bb15c600060a12",
+            "6476619c08bb15c600060a13",
+            "6476619c08bb15c600060a14",
+            "6476619c08bb15c600060a15",
+            "6476619c08bb15c600060a16",
+            "6476619c08bb15c600060a17",
+            "6476619c08bb15c600060a18",
+            "6476619c08bb15c600060a19",
+            "6476619c08bb15c600060a1a",
+            "6476619c08bb15c600060a1b",
+            "6476619c08bb15c600060a1c",
+            "6476619c08bb15c600060a1d",
+            "6476619c08bb15c600060a1e",
+            "6476619c08bb15c600060a1f",
+            "6476619c08bb15c600060a20",
+            "6476619c08bb15c600060a21",
+            "6476619c08bb15c600060a22",
+            "6476619c08bb15c600060a23"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84224"
+        },
+        "question": "Let $$A$$ be the matrix $$\\begin{pmatrix}a&b&c\\\\d&e&f\\\\g&h&i\\end{pmatrix}$$ and $$B$$ the matrix $$\\begin{pmatrix}a&b&c\\\\d&e&f\\\\[!a!]a+[!b!]d+[!c!]g&[!a!]b+[!b!]e+[!c!]h&[!a!]c+[!b!]f+[!c!]i\\end{pmatrix}$$.<br>What is the determinant of $$B$$, if the determinant of $$A$$ equals $$[!d!]$$?",
+        "subject": "Determinants",
+        "answer": "[!c!]*[!d!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6476631308bb15c600060a25",
+            "6476631308bb15c600060a26",
+            "6476631308bb15c600060a27",
+            "6476631308bb15c600060a28",
+            "6476631308bb15c600060a29",
+            "6476631308bb15c600060a2a",
+            "6476631308bb15c600060a2b",
+            "6476631308bb15c600060a2c",
+            "6476631308bb15c600060a2d",
+            "6476631308bb15c600060a2e",
+            "6476631308bb15c600060a2f",
+            "6476631308bb15c600060a30",
+            "6476631308bb15c600060a31",
+            "6476631308bb15c600060a32",
+            "6476631308bb15c600060a33",
+            "6476631308bb15c600060a34",
+            "6476631308bb15c600060a35",
+            "6476631308bb15c600060a36",
+            "6476631308bb15c600060a37",
+            "6476631308bb15c600060a38"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84225"
+        },
+        "question": "Consider matrix $$A$$ with $$det(A) = [!a!]$$. The matrix $$B$$ is constructed from $$A$$ by the following operations:<br>1. First row 1 of matrix $$A$$ is added to row 2;<br>2. Then row 2 and row 3 are interchanged.<br><br> What is the determinant of matrix $$B$$?",
+        "subject": "Determinants",
+        "answer": "-[!a!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "6476640d08bb15c600060a3a",
+            "6476640d08bb15c600060a3b",
+            "6476640d08bb15c600060a3c",
+            "6476640d08bb15c600060a3d",
+            "6476640d08bb15c600060a3e",
+            "6476640d08bb15c600060a3f",
+            "6476640d08bb15c600060a40",
+            "6476640d08bb15c600060a41",
+            "6476640d08bb15c600060a42",
+            "6476640d08bb15c600060a43",
+            "6476640d08bb15c600060a44",
+            "6476640d08bb15c600060a45",
+            "6476640d08bb15c600060a46",
+            "6476640d08bb15c600060a47",
+            "6476640d08bb15c600060a48",
+            "6476640d08bb15c600060a49",
+            "6476640d08bb15c600060a4a",
+            "6476640d08bb15c600060a4b",
+            "6476640d08bb15c600060a4c",
+            "6476640d08bb15c600060a4d"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84226"
+        },
+        "question": "Let $$A = [!A!]$$.<br>Use row reduction to echelon form to compute the determinant of $$A$$.",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "648b6fc4a0139214946e6ea9",
+            "648b6fc4a0139214946e6eaa",
+            "648b6fc4a0139214946e6eab",
+            "648b6fc4a0139214946e6eac",
+            "648b6fc4a0139214946e6ead",
+            "648b6fc4a0139214946e6eae",
+            "648b6fc4a0139214946e6eaf",
+            "648b6fc4a0139214946e6eb0",
+            "648b6fc4a0139214946e6eb1",
+            "648b6fc4a0139214946e6eb2",
+            "648b6fc4a0139214946e6eb3",
+            "648b6fc4a0139214946e6eb4",
+            "648b6fc4a0139214946e6eb5",
+            "648b6fc4a0139214946e6eb6",
+            "648b6fc4a0139214946e6eb7",
+            "648b6fc4a0139214946e6eb8",
+            "648b6fc4a0139214946e6eb9",
+            "648b6fc4a0139214946e6eba",
+            "648b6fc4a0139214946e6ebb",
+            "648b6fc4a0139214946e6ebc"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84227"
+        },
+        "question": "Let $$A = [!A!]$$.<br>Combine the methods f row reduction and cofactor expansion to compute the determinant of $$A$$.",
+        "subject": "Determinants",
+        "answer": "[!det!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6476653d08bb15c600060a64",
+            "6476653d08bb15c600060a65",
+            "6476653d08bb15c600060a66",
+            "6476653d08bb15c600060a67",
+            "6476653d08bb15c600060a68",
+            "6476653d08bb15c600060a69",
+            "6476653d08bb15c600060a6a",
+            "6476653d08bb15c600060a6b",
+            "6476653d08bb15c600060a6c",
+            "6476653d08bb15c600060a6d",
+            "6476653d08bb15c600060a6e",
+            "6476653d08bb15c600060a6f",
+            "6476653d08bb15c600060a70",
+            "6476653d08bb15c600060a71",
+            "6476653d08bb15c600060a72",
+            "6476653d08bb15c600060a73",
+            "6476653d08bb15c600060a74",
+            "6476653d08bb15c600060a75",
+            "6476653d08bb15c600060a76",
+            "6476653d08bb15c600060a77"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84228"
+        },
+        "question": "Is the statement $$det(\\alpha A) = \\alpha det(A)$$ true for $$n \\times n$$ matrices $$A$$ and real numbers$$\\alpha$$?",
+        "subject": "Determinants",
+        "answer": "Not always",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": ["Yes", "Not always", "No"]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84229"
+        },
+        "question": "Let $$A=[!A!]$$.<br>Use determinants to figure out whether or not $$A$$ is invertible.",
+        "subject": "Determinants",
+        "answer": "$$A$$ is invertible since det A \\neq 0$$.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$A$$ is invertible since $$det A = 0$$.",
+            "$$A$$ is not invertible since $$det A = 0$$.",
+            "$$A$$ is invertible since $$det A \\neq 0$$.",
+            "$$A$$ is not invertible since $$det A \\neq 0$$."
+        ],
+        "variants": [
+            "647667da08bb15c600060a8e",
+            "647667da08bb15c600060a8f",
+            "647667da08bb15c600060a90",
+            "647667da08bb15c600060a91",
+            "647667da08bb15c600060a92",
+            "647667da08bb15c600060a93",
+            "647667da08bb15c600060a94",
+            "647667da08bb15c600060a95",
+            "647667da08bb15c600060a96",
+            "647667da08bb15c600060a97",
+            "647667da08bb15c600060a98",
+            "647667da08bb15c600060a99",
+            "647667da08bb15c600060a9a",
+            "647667da08bb15c600060a9b",
+            "647667da08bb15c600060a9c",
+            "647667da08bb15c600060a9d",
+            "647667da08bb15c600060a9e",
+            "647667da08bb15c600060a9f",
+            "647667da08bb15c600060aa0",
+            "647667da08bb15c600060aa1"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422a"
+        },
+        "question": "Let $$A=[!A!]$$.<br>Use determinants to find all values of $$h$$ for which $$A$$ is invertible.<br>Denote your answer in one of the following forms:<br>$$h = ...$$ (or $$h = ...$$, $$h = ...$$ etc)<br>$$h \\neq ...$$ (or $$h \\neq ...$$, $$h \\neq ...$$ etc)<br>$$all\\space h$$<br>$$no\\space h$$",
+        "subject": "Determinants",
+        "answer": "h\\neq [!NietAntwoord!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "647668f508bb15c600060aa3",
+            "647668f508bb15c600060aa4",
+            "647668f508bb15c600060aa5",
+            "647668f508bb15c600060aa6",
+            "647668f508bb15c600060aa7",
+            "647668f508bb15c600060aa8",
+            "647668f508bb15c600060aa9",
+            "647668f508bb15c600060aaa",
+            "647668f508bb15c600060aab",
+            "647668f508bb15c600060aac",
+            "647668f508bb15c600060aad",
+            "647668f508bb15c600060aae",
+            "647668f508bb15c600060aaf",
+            "647668f508bb15c600060ab0",
+            "647668f508bb15c600060ab1",
+            "647668f508bb15c600060ab2",
+            "647668f508bb15c600060ab3",
+            "647668f508bb15c600060ab4",
+            "647668f508bb15c600060ab5",
+            "647668f508bb15c600060ab6"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422b"
+        },
+        "question": "Let $$T: \\mathbb{R}^2 \\rightarrow \\mathbb{R}^2$$ be a linear map.<br> Let $$R$$ be the rectangle in $$\\mathbb{R}^2$$ with corners (-1,0), (0,0), (0,1) and (-1,1).<br><br>What can you say about the shape of $$T(R)$$?",
+        "subject": "Determinants",
+        "answer": "$$T(R)$$ is a parellelogram (which could be a square or a rectangle) or a collapsed parallelogram (a piece of line or a point).",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$T(R)$$ is a square.",
+            "$$T(R)$$ is is a rectangle (which could be a square).",
+            "$$T(R)$$ is a parallellogram (which could be a square or a rectangle).",
+            "$$T(R)$$ is a parellelogram (which could be a square or a rectangle) or a collapsed parallelogram (a piece of line or a point)."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422c"
+        },
+        "question": "Let $$T: \\mathbb{R}^2 \\rightarrow \\mathbb{R}^2$$ be a linear map.<br> Let $$R$$ be the rectangle in $$\\mathbb{R}^2$$ with corners (-1,0), (0,0), (0,1) and (-1,1).<br><brIf $$T$$ has standard matrix $$A = [!A!]$$, what is the area of $$T(R)$$?",
+        "subject": "Determinants",
+        "answer": "[!AbsDet!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64774c04c877c8a786c044fd",
+            "64774c04c877c8a786c044fe",
+            "64774c04c877c8a786c044ff",
+            "64774c04c877c8a786c04500",
+            "64774c04c877c8a786c04501",
+            "64774c04c877c8a786c04502",
+            "64774c04c877c8a786c04503",
+            "64774c04c877c8a786c04504",
+            "64774c04c877c8a786c04505",
+            "64774c04c877c8a786c04506",
+            "64774c04c877c8a786c04507",
+            "64774c04c877c8a786c04508",
+            "64774c04c877c8a786c04509",
+            "64774c04c877c8a786c0450a",
+            "64774c04c877c8a786c0450b",
+            "64774c04c877c8a786c0450c",
+            "64774c04c877c8a786c0450d",
+            "64774c04c877c8a786c0450e",
+            "64774c04c877c8a786c0450f",
+            "64774c04c877c8a786c04510"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422d"
+        },
+        "question": "Consider $$n \\times n$$ matrix $$A$$, which statement is true?",
+        "subject": "Determinants",
+        "answer": "$$det(A^T) = det(A)$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$det(A^T) = \\frac{1}{det(A)}$$",
+            "$$det(A^T) = 2\\space det(A)$$",
+            "$$det(A^T) = det(A)$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422e"
+        },
+        "question": "Which of the following statements is false?",
+        "subject": "Determinants",
+        "answer": "If $$A$$ is an $$n \\times n$$ matrix and k a fixed constant, then $$det(kA) = k\\space det(A)$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "If $$A$$ and $$B$$ are $$n \\times n$$ matrices, then $$det(AB) = det(A)det(B)$$",
+            "A square matrix $$A$$ is invertible if and only if $$det(A) \\neq 0$$",
+            "If $$A$$ is an $$n \\times n$$ matrix and k a fixed constant, then $$det(kA) = k\\space det(A)$$",
+            "If $$A$$ is an invertible matrix, then $$det(A^{-1}) = \\frac{1}{det(A)}$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8422f"
+        },
+        "question": "Let $$A$$, $$B$$ and $$C$$ be square matrices, of the same size, with determinants $$[!a!]$$, $$[!b!]$$ and $$[!c!]$$, respectively.<br> What is the determinant of $$A^{-1}B^{[!b!]}C^T$$?",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "647755dbc877c8a786c04512",
+            "647755dbc877c8a786c04513",
+            "647755dbc877c8a786c04514",
+            "647755dbc877c8a786c04515",
+            "647755dbc877c8a786c04516",
+            "647755dbc877c8a786c04517",
+            "647755dbc877c8a786c04518",
+            "647755dbc877c8a786c04519",
+            "647755dbc877c8a786c0451a",
+            "647755dbc877c8a786c0451b",
+            "647755dbc877c8a786c0451c",
+            "647755dbc877c8a786c0451d",
+            "647755dbc877c8a786c0451e",
+            "647755dbc877c8a786c0451f",
+            "647755dbc877c8a786c04520",
+            "647755dbc877c8a786c04521",
+            "647755dbc877c8a786c04522",
+            "647755dbc877c8a786c04523",
+            "647755dbc877c8a786c04524",
+            "647755dbc877c8a786c04525"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84230"
+        },
+        "question": "Let $$A$$, $$B$$ and $$C$$ be $$[!n!] \\times [!n!]$$ matrices, of the same size, with determinants $$[!a!]$$, $$[!b!]$$ and $$[!c!]$$, respectively.<br> What is the determinant of the matrix $$[!alpha!]A^{-1}B^{[!k!]}C^T$$?",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64775653c877c8a786c04527",
+            "64775653c877c8a786c04528",
+            "64775653c877c8a786c04529",
+            "64775653c877c8a786c0452a",
+            "64775653c877c8a786c0452b",
+            "64775653c877c8a786c0452c",
+            "64775653c877c8a786c0452d",
+            "64775653c877c8a786c0452e",
+            "64775653c877c8a786c0452f",
+            "64775653c877c8a786c04530",
+            "64775653c877c8a786c04531",
+            "64775653c877c8a786c04532",
+            "64775653c877c8a786c04533",
+            "64775653c877c8a786c04534",
+            "64775653c877c8a786c04535",
+            "64775653c877c8a786c04536",
+            "64775653c877c8a786c04537",
+            "64775653c877c8a786c04538",
+            "64775653c877c8a786c04539",
+            "64775653c877c8a786c0453a"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84231"
+        },
+        "question": "The $$[!n!] \\times [!n!]$$ matrix $$A$$ satisfies the matrix equation $$A^2 = [!k!]A$$.<br> Find all possible values for $$det(A)$$.<br>If you enter multiple values, separate your values by commas.",
+        "subject": "Determinants",
+        "answer": "0, [!antw2!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "647756e0c877c8a786c0453c",
+            "647756e0c877c8a786c0453d",
+            "647756e0c877c8a786c0453e",
+            "647756e0c877c8a786c0453f",
+            "647756e0c877c8a786c04540",
+            "647756e0c877c8a786c04541",
+            "647756e0c877c8a786c04542",
+            "647756e0c877c8a786c04543",
+            "647756e0c877c8a786c04544",
+            "647756e0c877c8a786c04545",
+            "647756e0c877c8a786c04546",
+            "647756e0c877c8a786c04547",
+            "647756e0c877c8a786c04548",
+            "647756e0c877c8a786c04549",
+            "647756e0c877c8a786c0454a",
+            "647756e0c877c8a786c0454b",
+            "647756e0c877c8a786c0454c",
+            "647756e0c877c8a786c0454d",
+            "647756e0c877c8a786c0454e",
+            "647756e0c877c8a786c0454f"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84232"
+        },
+        "question": "The $$[!n!] \\times [!n!]$$ matrix $$A$$ satisfies the matrix equation $$A^3 = [!k!]A^T$$.<br> Find all possible values for $$det(A)$$.<br>If you enter multiple values, separate your values by commas.",
+        "subject": "Determinants",
+        "answer": "0, [!pos!], [!neg!]",
+        "type": "open-infinite",
+        "difficulty": "medium",
+        "variants": [
+            "6477575fc877c8a786c04553",
+            "6477575fc877c8a786c04554",
+            "6477575fc877c8a786c04555",
+            "6477575fc877c8a786c04556",
+            "6477575fc877c8a786c04557",
+            "6477575fc877c8a786c04558",
+            "6477575fc877c8a786c04559",
+            "6477575fc877c8a786c0455a",
+            "6477575fc877c8a786c0455b",
+            "6477575fc877c8a786c0455c",
+            "6477575fc877c8a786c0455d",
+            "6477575fc877c8a786c0455e",
+            "6477575fc877c8a786c0455f",
+            "6477575fc877c8a786c04560",
+            "6477575fc877c8a786c04561",
+            "6477575fc877c8a786c04562",
+            "6477575fc877c8a786c04563",
+            "6477575fc877c8a786c04564",
+            "6477575fc877c8a786c04565",
+            "6477575fc877c8a786c04566"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84233"
+        },
+        "question": "Consider the matrix $$A = [!A!]$$<br><br>Compute $$det(A^{[!n!]})$$",
+        "subject": "Determinants",
+        "answer": "[!DetMacht!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "647758fcc877c8a786c04568",
+            "647758fcc877c8a786c04569",
+            "647758fcc877c8a786c0456a",
+            "647758fcc877c8a786c0456b",
+            "647758fcc877c8a786c0456c",
+            "647758fcc877c8a786c0456d",
+            "647758fcc877c8a786c0456e",
+            "647758fcc877c8a786c0456f",
+            "647758fcc877c8a786c04570",
+            "647758fcc877c8a786c04571",
+            "647758fcc877c8a786c04572",
+            "647758fcc877c8a786c04573",
+            "647758fcc877c8a786c04574",
+            "647758fcc877c8a786c04575",
+            "647758fcc877c8a786c04576",
+            "647758fcc877c8a786c04577",
+            "647758fcc877c8a786c04578",
+            "647758fcc877c8a786c04579",
+            "647758fcc877c8a786c0457a",
+            "647758fcc877c8a786c0457b"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84234"
+        },
+        "question": "Consider the matrices $$A = [!A!]$$ and $$B = [!B!]$$.<br><br>Compute $$det([!k!]A^{-1}B^T)$$",
+        "subject": "Determinants",
+        "answer": "[!Antwoord!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64775a01c877c8a786c04592",
+            "64775a01c877c8a786c04593",
+            "64775a01c877c8a786c04594",
+            "64775a01c877c8a786c04595",
+            "64775a01c877c8a786c04596",
+            "64775a01c877c8a786c04597",
+            "64775a01c877c8a786c04598",
+            "64775a01c877c8a786c04599",
+            "64775a01c877c8a786c0459a",
+            "64775a01c877c8a786c0459b",
+            "64775a01c877c8a786c0459c",
+            "64775a01c877c8a786c0459d",
+            "64775a01c877c8a786c0459e",
+            "64775a01c877c8a786c0459f",
+            "64775a01c877c8a786c045a0",
+            "64775a01c877c8a786c045a1",
+            "64775a01c877c8a786c045a2",
+            "64775a01c877c8a786c045a3",
+            "64775a01c877c8a786c045a4",
+            "64775a01c877c8a786c045a5"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84235"
+        },
+        "question": "Is $$det(A + B) = det(A) + det(B)$$ true for $$n \\times n$$ matrices $$A$$ and $$B$$?",
+        "subject": "Determinants",
+        "answer": "Not always",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": ["Yes", "Not always", "Never"]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84236"
+        },
+        "question": "What is the logical relation between the following two statements if $$A$$ is a square matrix?<br>1. $$det(A) = 0$$<br>2. There are two rows of $$A$$, one of which is a multiple of the other.",
+        "subject": "Determinants",
+        "answer": "2 implies 1, but not necessarily the other way around.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "1 implies 2, but not necessarily the other way around.",
+            "2 implies 1, but not necessarily the other way around.",
+            "1 is true if and only if 2 is true."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84237"
+        },
+        "question": "Find the area of the triangle whose vertices are $$(0,0)$$, $$(-1,3)$$ and $$([!c!],[!d!])$$.",
+        "subject": "Determinants",
+        "answer": "[!antw2!]",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64775e8fc877c8a786c045a7",
+            "64775e8fc877c8a786c045a8",
+            "64775e8fc877c8a786c045a9",
+            "64775e8fc877c8a786c045aa",
+            "64775e8fc877c8a786c045ab",
+            "64775e8fc877c8a786c045ac",
+            "64775e8fc877c8a786c045ad",
+            "64775e8fc877c8a786c045ae",
+            "64775e8fc877c8a786c045af",
+            "64775e8fc877c8a786c045b0",
+            "64775e8fc877c8a786c045b1",
+            "64775e8fc877c8a786c045b2",
+            "64775e8fc877c8a786c045b3",
+            "64775e8fc877c8a786c045b4",
+            "64775e8fc877c8a786c045b5",
+            "64775e8fc877c8a786c045b6",
+            "64775e8fc877c8a786c045b7",
+            "64775e8fc877c8a786c045b8",
+            "64775e8fc877c8a786c045b9",
+            "64775e8fc877c8a786c045ba"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84238"
+        },
+        "question": "Let $$S$$ be the parallelogram determined by the vectors $$\\mathbf{u}=\\begin{pmatrix}[!u1!]\\\\ [!u2!]\\end{pmatrix}$$ and $$\\mathbf{v}=\\begin{pmatrix}[!v1!]\\\\ [!v2!]\\end{pmatrix}$$.<br>Let $$T$$ be the linear transformation whose stnadard matrix is $$A=\\begin{pmatrix}1&[!a1!]\\\\ [!a2!]&-1\\end{pmatrix}$$.<br><br>Find the area of $$T(S)$$, the image of $$S$$ under transformation $$T$$.",
+        "subject": "Determinants",
+        "answer": "[!antw3!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "64775e8fc877c8a786c045a7",
+            "64775e8fc877c8a786c045a8",
+            "64775e8fc877c8a786c045a9",
+            "64775e8fc877c8a786c045aa",
+            "64775e8fc877c8a786c045ab",
+            "64775e8fc877c8a786c045ac",
+            "64775e8fc877c8a786c045ad",
+            "64775e8fc877c8a786c045ae",
+            "64775e8fc877c8a786c045af",
+            "64775e8fc877c8a786c045b0",
+            "64775e8fc877c8a786c045b1",
+            "64775e8fc877c8a786c045b2",
+            "64775e8fc877c8a786c045b3",
+            "64775e8fc877c8a786c045b4",
+            "64775e8fc877c8a786c045b5",
+            "64775e8fc877c8a786c045b6",
+            "64775e8fc877c8a786c045b7",
+            "64775e8fc877c8a786c045b8",
+            "64775e8fc877c8a786c045b9",
+            "64775e8fc877c8a786c045ba"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a84239"
+        },
+        "question": "Find the area of the triangle whose vertices are $$(-2,1)$$, $$(-3,4)$$ and $$([!e!],[!f!])$$.",
+        "subject": "Determinants",
+        "answer": "[!antw2!]",
+        "type": "open",
+        "difficulty": "easy",
+        "variants": [
+            "64776059c877c8a786c045bc",
+            "64776059c877c8a786c045bd",
+            "64776059c877c8a786c045be",
+            "64776059c877c8a786c045bf",
+            "64776059c877c8a786c045c0",
+            "64776059c877c8a786c045c1",
+            "64776059c877c8a786c045c2",
+            "64776059c877c8a786c045c3",
+            "64776059c877c8a786c045c4",
+            "64776059c877c8a786c045c5",
+            "64776059c877c8a786c045c6",
+            "64776059c877c8a786c045c7",
+            "64776059c877c8a786c045c8",
+            "64776059c877c8a786c045c9",
+            "64776059c877c8a786c045ca",
+            "64776059c877c8a786c045cb",
+            "64776059c877c8a786c045cc",
+            "64776059c877c8a786c045cd",
+            "64776059c877c8a786c045ce",
+            "64776059c877c8a786c045cf"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8423a"
+        },
+        "question": "Let $$S$$ be the parallelogram spanned by the vectors $$\\mathbf{b}_1=\\begin{pmatrix}4\\\\ [!a!]\\end{pmatrix}$$ and $$\\mathbf{b}_2=\\begin{pmatrix}0\\\\ [!b!]\\end{pmatrix}$$.<br>Let $$A=\\begin{pmatrix}5&2\\\\ [!c!]&[!d!]\\end{pmatrix}$$.<br><br>Compute the area of the image $$S$$ under the mapping $$T(x) = Ax$$.",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "647761a9c877c8a786c045e6",
+            "647761a9c877c8a786c045e7",
+            "647761a9c877c8a786c045e8",
+            "647761a9c877c8a786c045e9",
+            "647761a9c877c8a786c045ea",
+            "647761a9c877c8a786c045eb",
+            "647761a9c877c8a786c045ec",
+            "647761a9c877c8a786c045ed",
+            "647761a9c877c8a786c045ee",
+            "647761a9c877c8a786c045ef",
+            "647761a9c877c8a786c045f0",
+            "647761a9c877c8a786c045f1",
+            "647761a9c877c8a786c045f2",
+            "647761a9c877c8a786c045f3",
+            "647761a9c877c8a786c045f4",
+            "647761a9c877c8a786c045f5",
+            "647761a9c877c8a786c045f6",
+            "647761a9c877c8a786c045f7",
+            "647761a9c877c8a786c045f8",
+            "647761a9c877c8a786c045f9"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8423b"
+        },
+        "question": "Find the volume of the parallelepiped with one vertex at the origin and adjacent vertices at $$([!a!], 1, 0)$$, $$(2, [!b!], 0)$$ and $$([!c!], [!d!], [!e!])$$.",
+        "subject": "Determinants",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "64776225c877c8a786c045fb",
+            "64776225c877c8a786c045fc",
+            "64776225c877c8a786c045fd",
+            "64776225c877c8a786c045fe",
+            "64776225c877c8a786c045ff",
+            "64776225c877c8a786c04600",
+            "64776225c877c8a786c04601",
+            "64776225c877c8a786c04602",
+            "64776225c877c8a786c04603",
+            "64776225c877c8a786c04604",
+            "64776225c877c8a786c04605",
+            "64776225c877c8a786c04606",
+            "64776225c877c8a786c04607",
+            "64776225c877c8a786c04608",
+            "64776225c877c8a786c04609",
+            "64776225c877c8a786c0460a",
+            "64776225c877c8a786c0460b",
+            "64776225c877c8a786c0460c",
+            "64776225c877c8a786c0460d",
+            "64776225c877c8a786c0460e"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489c065031e185011a8423c"
+        },
+        "question": "Consider the parallelogram with vertices $$([!p1!], [!p2!])$$, $$([!q1!], [!q2!])$$, $$([!r1!], [!r2!])$$ and $$([!s1!], [!s2!])$$.<br>For which value(s) of $$k$$ will the area of this parallelogram be equal to [!m!]?<br><br>If you find multiple possible values, separate your answers by commas.",
+        "subject": "Determinants",
+        "answer": "[!k1!],[!k2!]",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "647762e2c877c8a786c04610",
+            "647762e2c877c8a786c04611",
+            "647762e2c877c8a786c04612",
+            "647762e2c877c8a786c04613",
+            "647762e2c877c8a786c04614",
+            "647762e2c877c8a786c04615",
+            "647762e2c877c8a786c04616",
+            "647762e2c877c8a786c04617",
+            "647762e2c877c8a786c04618",
+            "647762e2c877c8a786c04619",
+            "647762e2c877c8a786c0461a",
+            "647762e2c877c8a786c0461b",
+            "647762e2c877c8a786c0461c",
+            "647762e2c877c8a786c0461d",
+            "647762e2c877c8a786c0461e",
+            "647762e2c877c8a786c0461f",
+            "647762e2c877c8a786c04620",
+            "647762e2c877c8a786c04621",
+            "647762e2c877c8a786c04622",
+            "647762e2c877c8a786c04623"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84307"
+        },
+        "question": "If $$A$$ is a $$4 \\times 4$$ matrix with three distinct eigenvalues such that one of the eigenspaces has a basis that consists of two vectors, then $$A$$ is diagonalizable.",
+        "subject": "Diagonalization",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "mandatory"
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84308"
+        },
+        "question": "The following matrix is diagonalizable: $$\\begin{pmatrix}[!a!]&[!b!]\\\\[!b!]&[!a!]\\end{pmatrix}$$",
+        "subject": "Diagonalization",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "mandatory",
+        "variants": [
+            "6489c8aa031e185011a84249",
+            "6489c8aa031e185011a8424a",
+            "6489c8aa031e185011a8424b",
+            "6489c8aa031e185011a8424c",
+            "6489c8aa031e185011a8424d",
+            "6489c8aa031e185011a8424e",
+            "6489c8aa031e185011a8424f",
+            "6489c8aa031e185011a84250",
+            "6489c8aa031e185011a84251",
+            "6489c8aa031e185011a84252",
+            "6489c8aa031e185011a84253",
+            "6489c8aa031e185011a84254",
+            "6489c8aa031e185011a84255",
+            "6489c8aa031e185011a84256",
+            "6489c8aa031e185011a84257",
+            "6489c8aa031e185011a84258",
+            "6489c8aa031e185011a84259",
+            "6489c8aa031e185011a8425a",
+            "6489c8aa031e185011a8425b",
+            "6489c8aa031e185011a8425c"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84309"
+        },
+        "question": "Two $$n \\times n$$ matrices $$A$$ and $$B$$ are called similar if there is an invertible $$n \\times n$$ matrix $$P$$ such that $$A = PBP^{-1}$$.<br>Let $$A = [!A!]$$ and $$B = [!B!]$$. Is the matrix $$P = [!P!]$$ a similarity transformation between $$A$$ and $$B$$?",
+        "subject": "Diagonalization",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "medium",
+        "variants": [
+            "6489cad3031e185011a8425e",
+            "6489cad3031e185011a8425f",
+            "6489cad3031e185011a84260",
+            "6489cad3031e185011a84261",
+            "6489cad3031e185011a84262",
+            "6489cad3031e185011a84263",
+            "6489cad3031e185011a84264",
+            "6489cad3031e185011a84265",
+            "6489cad3031e185011a84266",
+            "6489cad3031e185011a84267",
+            "6489cad3031e185011a84268",
+            "6489cad3031e185011a84269",
+            "6489cad3031e185011a8426a",
+            "6489cad3031e185011a8426b",
+            "6489cad3031e185011a8426c",
+            "6489cad3031e185011a8426d",
+            "6489cad3031e185011a8426e",
+            "6489cad3031e185011a8426f",
+            "6489cad3031e185011a84270",
+            "6489cad3031e185011a84271"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430a"
+        },
+        "question": "Two $$n \\times n$$ matrices $$A$$ and $$B$$ are called similar if there is an invertible $$n \\times n$$ matrix $$P$$ such that $$A = PBP^{-1}$$.<br>Let $$A = [!A!]$$ and $$B = [!B!]$$. If the matrix $$P = [!P!]$$ is a similarity transformation between $$A$$ and $$B$$, what does this imply about $$A$$ and $$B$$?",
+        "subject": "Diagonalization",
+        "answer": "$$A$$ and $$B$$ are similar",
+        "type": "mc",
+        "difficulty": "medium",
+        "options": [
+            "$$A$$ and $$B$$ are similar",
+            "$$A$$ and $$B$$ are not similar",
+            "The result of the preceding exercise in insufficient to determine whether or not $$A$$ and $$B$$ are similar"
+        ],
+        "variants": [
+            "6489cad3031e185011a8425e",
+            "6489cad3031e185011a8425f",
+            "6489cad3031e185011a84260",
+            "6489cad3031e185011a84261",
+            "6489cad3031e185011a84262",
+            "6489cad3031e185011a84263",
+            "6489cad3031e185011a84264",
+            "6489cad3031e185011a84265",
+            "6489cad3031e185011a84266",
+            "6489cad3031e185011a84267",
+            "6489cad3031e185011a84268",
+            "6489cad3031e185011a84269",
+            "6489cad3031e185011a8426a",
+            "6489cad3031e185011a8426b",
+            "6489cad3031e185011a8426c",
+            "6489cad3031e185011a8426d",
+            "6489cad3031e185011a8426e",
+            "6489cad3031e185011a8426f",
+            "6489cad3031e185011a84270",
+            "6489cad3031e185011a84271"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430b"
+        },
+        "question": "Two $$n \\times n$$ matrices $$A$$ and $$B$$ are called similar if there is an invertible $$n \\times n$$ matrix $$P$$ such that $$A = PBP^{-1}$$.<br>Let $$A = [!A!]$$ and $$B = [!B!]$$. Is the matrix $$P = [!P!]$$ a similarity transformation between $$A$$ and $$B$$?",
+        "subject": "Diagonalization",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "medium",
+        "variants": [
+            "6489cc3a031e185011a84273",
+            "6489cc3a031e185011a84274",
+            "6489cc3a031e185011a84275",
+            "6489cc3a031e185011a84276",
+            "6489cc3a031e185011a84277",
+            "6489cc3a031e185011a84278",
+            "6489cc3a031e185011a84279",
+            "6489cc3a031e185011a8427a",
+            "6489cc3a031e185011a8427b",
+            "6489cc3a031e185011a8427c",
+            "6489cc3a031e185011a8427d",
+            "6489cc3a031e185011a8427e",
+            "6489cc3a031e185011a8427f",
+            "6489cc3a031e185011a84280",
+            "6489cc3a031e185011a84281",
+            "6489cc3a031e185011a84282",
+            "6489cc3a031e185011a84283",
+            "6489cc3a031e185011a84284",
+            "6489cc3a031e185011a84285",
+            "6489cc3a031e185011a84286"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430c"
+        },
+        "question": "Two $$n \\times n$$ matrices $$A$$ and $$B$$ are called similar if there is an invertible $$n \\times n$$ matrix $$P$$ such that $$A = PBP^{-1}$$.<br>Let $$A = [!A!]$$ and $$B = [!B!]$$. If the matrix $$P = [!P!]$$ is a similarity transformation between $$A$$ and $$B$$, what does this imply about $$A$$ and $$B$$?",
+        "subject": "Diagonalization",
+        "answer": "The result of the preceding exercise in insufficient to determine whether or not $$A$$ and $$B$$ are similar",
+        "type": "mc",
+        "difficulty": "medium",
+        "options": [
+            "$$A$$ and $$B$$ are similar",
+            "$$A$$ and $$B$$ are not similar",
+            "The result of the preceding exercise in insufficient to determine whether or not $$A$$ and $$B$$ are similar"
+        ],
+        "variants": [
+            "6489cc3a031e185011a84273",
+            "6489cc3a031e185011a84274",
+            "6489cc3a031e185011a84275",
+            "6489cc3a031e185011a84276",
+            "6489cc3a031e185011a84277",
+            "6489cc3a031e185011a84278",
+            "6489cc3a031e185011a84279",
+            "6489cc3a031e185011a8427a",
+            "6489cc3a031e185011a8427b",
+            "6489cc3a031e185011a8427c",
+            "6489cc3a031e185011a8427d",
+            "6489cc3a031e185011a8427e",
+            "6489cc3a031e185011a8427f",
+            "6489cc3a031e185011a84280",
+            "6489cc3a031e185011a84281",
+            "6489cc3a031e185011a84282",
+            "6489cc3a031e185011a84283",
+            "6489cc3a031e185011a84284",
+            "6489cc3a031e185011a84285",
+            "6489cc3a031e185011a84286"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430d"
+        },
+        "question": "Consider the matrix $$A = [!matrixA!]$$.<br>Find a diagonalization $$A = PDP^{-1}$$ of $$A$$, if it exists.<br> If $$A$$ is not diagonalizable, type $$ND$$.<br>If $$A$$ is diagonalizable, submit your matrices $$P$$ and $$D$$, separated by a comma.",
+        "subject": "Diagonalization",
+        "answer": "[!Pvoorbeeld!],\\begin{pmatrix}[!D1!]&0\\\\0&[!D2!]\\end{pmatrix}",
+        "type": "open-infinite",
+        "difficulty": "medium",
+        "variants": [
+            "6489cdf2031e185011a84289",
+            "6489cdf2031e185011a8428a",
+            "6489cdf2031e185011a8428b",
+            "6489cdf2031e185011a8428c",
+            "6489cdf2031e185011a8428d",
+            "6489cdf2031e185011a8428e",
+            "6489cdf2031e185011a8428f",
+            "6489cdf2031e185011a84290",
+            "6489cdf2031e185011a84291",
+            "6489cdf2031e185011a84292",
+            "6489cdf2031e185011a84293",
+            "6489cdf2031e185011a84294",
+            "6489cdf2031e185011a84295",
+            "6489cdf2031e185011a84296",
+            "6489cdf2031e185011a84297",
+            "6489cdf2031e185011a84298",
+            "6489cdf2031e185011a84299",
+            "6489cdf2031e185011a8429a",
+            "6489cdf2031e185011a8429b",
+            "6489cdf2031e185011a8429c"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430e"
+        },
+        "question": "Consider the matrix $$A = [!matrixA!]$$.<br>Find a diagonalization $$A = PDP^{-1}$$ of $$A$$, if it exists.<br> If $$A$$ is not diagonalizable, type $$ND$$.<br>If $$A$$ is diagonalizable, submit your matrices $$P$$ and $$D$$, separated by a comma.",
+        "subject": "Diagonalization",
+        "answer": "ND",
+        "type": "open",
+        "difficulty": "medium",
+        "variants": [
+            "6489ce64031e185011a8429e",
+            "6489ce64031e185011a8429f",
+            "6489ce64031e185011a842a0",
+            "6489ce64031e185011a842a1",
+            "6489ce64031e185011a842a2",
+            "6489ce64031e185011a842a3",
+            "6489ce64031e185011a842a4",
+            "6489ce64031e185011a842a5",
+            "6489ce64031e185011a842a6",
+            "6489ce64031e185011a842a7",
+            "6489ce64031e185011a842a8",
+            "6489ce64031e185011a842a9",
+            "6489ce64031e185011a842aa",
+            "6489ce64031e185011a842ab",
+            "6489ce64031e185011a842ac",
+            "6489ce64031e185011a842ad",
+            "6489ce64031e185011a842ae",
+            "6489ce64031e185011a842af",
+            "6489ce64031e185011a842b0",
+            "6489ce64031e185011a842b1"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8430f"
+        },
+        "question": "Consider the matrix $$A = [!matrixA!]$$.<br>If yes, please submit two matrices $$D$$ and $$P$$, separated by a comma, such that $$A = PDP^{-1}$$ is a diagonalization of $$A$$.<br>If no, please submit $$ND$$.<br>To limit the amount of calculations,you may use that the eigenvalues are $$[!D1!]$$,$$[!D2!]$$,$$[!D3!]$$.",
+        "subject": "Diagonalization",
+        "answer": "[!D!],[!P!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6489cfa4031e185011a842b3",
+            "6489cfa4031e185011a842b4",
+            "6489cfa4031e185011a842b5",
+            "6489cfa4031e185011a842b6",
+            "6489cfa4031e185011a842b7",
+            "6489cfa4031e185011a842b8",
+            "6489cfa4031e185011a842b9",
+            "6489cfa4031e185011a842ba",
+            "6489cfa4031e185011a842bb",
+            "6489cfa4031e185011a842bc",
+            "6489cfa4031e185011a842bd",
+            "6489cfa4031e185011a842be",
+            "6489cfa4031e185011a842bf",
+            "6489cfa4031e185011a842c0",
+            "6489cfa4031e185011a842c1",
+            "6489cfa4031e185011a842c2",
+            "6489cfa4031e185011a842c3",
+            "6489cfa4031e185011a842c4",
+            "6489cfa4031e185011a842c5",
+            "6489cfa4031e185011a842c6"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84310"
+        },
+        "question": "Find $$\\alpha$$ such that the following matrix is diagonalizable.<br>$$A = \\begin{pmatrix}5&4&[!a!]&-8\\\\0&1&3\\alpha &9\\\\0&0&5&4\\\\0&0&0&3\\end{pmatrix}$$<br>$$\\alpha = $$",
+        "subject": "Diagonalization",
+        "answer": "[!antw!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6489d25c031e185011a842c8",
+            "6489d25c031e185011a842c9",
+            "6489d25c031e185011a842ca",
+            "6489d25c031e185011a842cb",
+            "6489d25c031e185011a842cc",
+            "6489d25c031e185011a842cd",
+            "6489d25c031e185011a842ce",
+            "6489d25c031e185011a842cf",
+            "6489d25c031e185011a842d0",
+            "6489d25c031e185011a842d1",
+            "6489d25c031e185011a842d2",
+            "6489d25c031e185011a842d3",
+            "6489d25c031e185011a842d4",
+            "6489d25c031e185011a842d5",
+            "6489d25c031e185011a842d6",
+            "6489d25c031e185011a842d7",
+            "6489d25c031e185011a842d8",
+            "6489d25c031e185011a842d9",
+            "6489d25c031e185011a842da",
+            "6489d25c031e185011a842db"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84311"
+        },
+        "question": "The matrix $$A = [!matrixA!]$$ has eigenvalues $$[!D1!]$$ and $$[!D3!]$$.<br>Find a diagonalization $$A = PDP^{-1}$$ of $$A$$, if it exists.<br>If $$A$$ is not diagonalizable, type $$ND$$.<br>If $$A$$ is diagonalizable, submit your matrices $$P$$ and $$D$$, separated by a comma.",
+        "subject": "Diagonalization",
+        "answer": "[!Pvoorbeeld!],\\begin{pmatrix}[!D1!]&0&0\\\\0&[!D2!]&0\\\\0&0&[!D3!]\\end{pmatrix}",
+        "type": "open-infinite",
+        "difficulty": "hard",
+        "variants": [
+            "6489d3b2031e185011a842dd",
+            "6489d3b2031e185011a842de",
+            "6489d3b2031e185011a842df",
+            "6489d3b2031e185011a842e0",
+            "6489d3b2031e185011a842e1",
+            "6489d3b2031e185011a842e2",
+            "6489d3b2031e185011a842e3",
+            "6489d3b2031e185011a842e4",
+            "6489d3b2031e185011a842e5",
+            "6489d3b2031e185011a842e6",
+            "6489d3b2031e185011a842e7",
+            "6489d3b2031e185011a842e8",
+            "6489d3b2031e185011a842e9",
+            "6489d3b2031e185011a842ea",
+            "6489d3b2031e185011a842eb",
+            "6489d3b2031e185011a842ec",
+            "6489d3b2031e185011a842ed",
+            "6489d3b2031e185011a842ee",
+            "6489d3b2031e185011a842ef",
+            "6489d3b2031e185011a842f0"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84312"
+        },
+        "question": "Let $$A = [!A!]$$. This matrix has eigenvalues $$[!m!]$$,$$[!k!]$$ and $$a$$.<br>For which value(s) of $$a$$ will $$A$$ be diagonalizable?<br>Write your answer in one of the following forms:<br>$$a = ...$$ (or $$a = ...$$, $$a = ...$$, etc)<br>$$a \\neq ...$$ (or $$a \\neq ...$$, $$a \\neq ...$$, etc. Type \\neq for the $$\\neq$$ sign)<br>$$all \\space a$$<br>$$no \\space a$$",
+        "subject": "Diagonalization",
+        "answer": "a \\neq [!m!]",
+        "type": "open",
+        "difficulty": "hard",
+        "variants": [
+            "6489d510031e185011a842f2",
+            "6489d510031e185011a842f3",
+            "6489d510031e185011a842f4",
+            "6489d510031e185011a842f5",
+            "6489d510031e185011a842f6",
+            "6489d510031e185011a842f7",
+            "6489d510031e185011a842f8",
+            "6489d510031e185011a842f9",
+            "6489d510031e185011a842fa",
+            "6489d510031e185011a842fb",
+            "6489d510031e185011a842fc",
+            "6489d510031e185011a842fd",
+            "6489d510031e185011a842fe",
+            "6489d510031e185011a842ff",
+            "6489d510031e185011a84300",
+            "6489d510031e185011a84301",
+            "6489d510031e185011a84302",
+            "6489d510031e185011a84303",
+            "6489d510031e185011a84304",
+            "6489d510031e185011a84305"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84313"
+        },
+        "question": "A matrix $$A$$ is called similar to a matrix $$B$$ when...",
+        "subject": "Diagonalization",
+        "answer": "There is an invertible matrix $$P$$ such that $$A = PBP^{-1}$$",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$A$$ and $$B$$ have the same determinant",
+            "$$A$$ is row equivalent to $$B$$",
+            "$$A$$ and $$B$$ have the same set of eigenvalues",
+            "There is an invertible matrix $$P$$ such that $$A = PBP^{-1}$$",
+            "There is a positive integer $$n$$ such that $$A^n = B^n$$"
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84314"
+        },
+        "question": "Similar matrices have the same eigenvalues and the same eigenvectors.",
+        "subject": "Diagonalization",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84315"
+        },
+        "question": "Which of the following statements is correct?",
+        "subject": "Diagonalization",
+        "answer": "An $$n \\times n$$ matrix with $$n$$ distinct eigenvalues is diagonalizable.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "A diagonalizable $$n \\times n$$  matrix has $$n$$ distinct eigenvalues.",
+            "An $$n \\times n$$ matrix with $$n$$ distinct eigenvalues is diagonalizable.",
+            "Both of the statements are correct."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84316"
+        },
+        "question": "If $$A$$ is similar to $$B$$, then $$A^2$$ is similar to $$B^2$$.",
+        "subject": "Diagonalization",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84317"
+        },
+        "question": "An $$n \\times n$$ matrix $$A$$ is diagonalizable if and only if ",
+        "subject": "Diagonalization",
+        "answer": "$$A$$ has a linearly independent set of $$n$$ eigenvectors.",
+        "type": "mc",
+        "difficulty": "easy",
+        "options": [
+            "$$A$$ is a diagonal matrix.",
+            "$$A$$ has $$n$$ distinct eigenvalues.",
+            "$$A$$ has a linearly independent set of $$n$$ eigenvectors."
+        ]
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84318"
+        },
+        "question": "If $$A$$ and $$B$$ are similar, then $$detA = detB$$.",
+        "subject": "Diagonalization",
+        "answer": "True",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a84319"
+        },
+        "question": "A $$4 \\times 4$$ matrix with two distinct eigenvalues cannot be diagonalizable.",
+        "subject": "Diagonalization",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "easy"
+    },
+    {
+        "_id": {
+            "$oid": "6489d88e031e185011a8431a"
+        },
+        "question": "If a matrix is diagonalizable, it is also invertible",
+        "subject": "Diagonalization",
+        "answer": "False",
+        "type": "true/false",
+        "difficulty": "easy"
+    }
+]

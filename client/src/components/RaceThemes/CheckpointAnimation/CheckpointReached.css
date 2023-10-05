@@ -1,0 +1,56 @@
+.text {
+    width: 100%;
+}
+
+.content {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    position: absolute;
+    z-index: 9999;
+    padding-top: 2em;
+    padding-bottom: 4em;
+    margin-top: 5em;
+}
+
+.hide {
+    display: none;
+}
+
+.trailsText {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    line-height: 130px;
+    color: #0c2340;
+    font-size: 130px;
+    font-weight: 700;
+    overflow: hidden;
+}
+
+.trailsText > div {
+    padding-right: 0.05em;
+    overflow: hidden;
+}
+
+.tracks {
+    margin-top: 2em;
+    height: 150px;
+    width: 110%;
+    background-image: url("../../../img/track-horizontal.png");
+    background-size: auto 150px;
+    background-repeat: repeat-x;
+    background-position: 0 0;
+
+    animation: slide 7s linear infinite;
+    animation-timing-function: cubic-bezier(0, -0.01, 0, 0.88);
+}
+
+@keyframes slide {
+    from {
+        background-position: 0 0;
+    }
+    /*use negative width if you want it to flow right to left else and positive for left to right*/
+    to {
+        background-position: -2000px 0;
+    }
+}

@@ -1,0 +1,92 @@
+.race-map {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+.tree > img {
+    height: 80px;
+    width: auto;
+}
+
+.lake > img {
+    height: 100px;
+    width: auto;
+}
+
+.windmill > img {
+    height: 250px;
+    width: auto;
+}
+
+.lilypad > img {
+    height: 15px;
+    width: auto;
+}
+
+.swamp-tree > img {
+    height: 80px;
+    width: auto;
+}
+
+.swamp-plant > img {
+    height: 60px;
+    width: auto;
+}
+
+.swamp-lake > img {
+    height: 200px;
+    width: auto;
+}
+
+.crocodile > img {
+    height: 60px;
+    width: auto;
+}
+
+.swamp-rock > img {
+    height: 50px;
+    width: auto;
+}
+
+.tree,
+.lake,
+.windmill,
+.lilypad,
+.swamp-tree,
+.swamp-plant,
+.swamp-rock,
+.swamp-lake,
+.crocodile {
+    position: absolute;
+}
+
+.crocodile,
+.lilypad,
+.swamp-plant,
+.swamp-rock {
+    z-index: 1000;
+}
+
+@media screen and (max-width: 1250px) {
+    .tree > img {
+        height: 60px;
+        width: auto;
+    }
+
+    .lake > img {
+        height: 75px;
+        width: auto;
+    }
+
+    .windmill > img {
+        height: 188px;
+        width: auto;
+    }
+}
