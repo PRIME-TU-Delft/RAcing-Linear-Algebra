@@ -42,6 +42,21 @@ module.exports = {
             })
 
             /**
+             * Leave a lobby by lobbyId (e.g. quitting at waiting screen)
+             */
+            socket.on("leaveLobby", (lobbyId: number) => {
+                void socket.leave(`players${lobbyId}`)
+                try {
+                    const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
+                } catch (error) {
+                    // If an error is caught, it means there are no longer any players in the lobby, 
+                    // thus emit so to the lecturer 0
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", 0)
+                }
+            })
+
+            /**
              * After a socket disconnects, update the amount of players in the lobby/game
              * And also update the score if they were in a game
              */
