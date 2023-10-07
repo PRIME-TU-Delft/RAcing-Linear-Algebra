@@ -11,6 +11,7 @@ interface Props {
     selectedTheme: string // the theme that was selected
     selectedStudy: string // the study that was selected
     selectedRounds: string[] // the rounds that were selected
+    playerNumber: number // number of players in the lobby
     onStartGame: () => void // event to start the game
 }
 
@@ -32,6 +33,8 @@ function StartGame(props: Props) {
 
         return res
     }
+
+    const requiredPlayersNumber = 1  // minimum number of players required to start a game; currently 1
 
     // Determines class for the start game button, based on whether all necessary steps are completed
     const buttonClassHandler = () => {
@@ -100,6 +103,13 @@ function StartGame(props: Props) {
         </div>
     )
 
+    // Text to display if minimum number of players wasn't achieved
+    const notEnoughPlayersText = (
+        <div className="incomplete">
+            <FontAwesomeIcon icon={faExclamationTriangle} /> At least {requiredPlayersNumber} player required to start the game.
+        </div>
+    )
+
     return (
         <div className="start-game-container">
             <div className="messages">
@@ -113,6 +123,9 @@ function StartGame(props: Props) {
                 {props.completedSteps[3]
                     ? roundsCompleteText
                     : roundsIncompleteText}
+                {props.playerNumber < requiredPlayersNumber 
+                    ? notEnoughPlayersText
+                    : null}
             </div>
 
             <button
@@ -121,7 +134,8 @@ function StartGame(props: Props) {
                     !props.completedSteps[0] ||
                     !props.completedSteps[1] ||
                     !props.completedSteps[2] ||
-                    !props.completedSteps[3]
+                    !props.completedSteps[3] ||
+                    props.playerNumber < requiredPlayersNumber
                 }
                 onClick={props.onStartGame}
             >

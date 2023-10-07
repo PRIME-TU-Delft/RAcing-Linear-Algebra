@@ -12,6 +12,7 @@ import SelectName from "../SelectName/SelectName"
 
 interface Props {
     lobbyId: number // id of the lobby
+    playerNumber: number // number of players in the lobby
     onNameSelected: (name: string) => void // event called when a name is chosen
     startGameHandler: (
         selectedRounds: string[],
@@ -180,6 +181,7 @@ function Steps(props: Props) {
                         selectedTheme={selectedTheme}
                         selectedStudy={selectedStudy}
                         selectedRounds={selectedRounds}
+                        playerNumber={props.playerNumber}
                         onStartGame={() =>
                             props.startGameHandler(
                                 selectedRounds,
