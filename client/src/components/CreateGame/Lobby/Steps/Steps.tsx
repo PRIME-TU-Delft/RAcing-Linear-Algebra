@@ -42,8 +42,9 @@ function Steps(props: Props) {
      * @param stepNumber    // the number of the step that was selected
      */
     const stepSelectedHandler = (stepNumber: number) => {
-        if (stepNumber == 3 && !completedSteps[2]) {
-            setActiveStep(2)
+        console.log(stepNumber)
+        if (stepNumber == 4 && !completedSteps[2]) {
+            setActiveStep(3)
             toast.warn("You have to select a study before selecting rounds.", {
                 position: "top-right",
                 autoClose: 3000,
