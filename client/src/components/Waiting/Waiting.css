@@ -66,6 +66,16 @@
     justify-content: center;
 }
 
+.back-btn.train {
+    border-color: #784212;
+    background-color: #A25918;
+}
+
+.back-btn.train:hover {
+    border-color: #A25918;
+    background-color: #784212;
+}
+
 .back-arrow {
     display: inline;
     margin: 0;
@@ -73,6 +83,14 @@
     line-height: 1;
     margin-bottom: 6px;
     margin-left: 2px;
+}
+
+.back-arrow.train {
+    color: #4E2B0C;
+}
+
+.back-arrow.train:hover {
+    color: white;
 }
 
 .tooltip-container {

@@ -71,8 +71,8 @@ function Waiting(props: Props) {
                     Waiting for the lecturer to start
                 </div>
             </div>
-            <button className="back-btn" onClick={() => navigate("/")}>
-                <p className="back-arrow">{"\u2190"}</p>
+            <button className={"back-btn" + (props.theme == "Train" ? " train" : "")} onClick={() => navigate("/")}>
+                <p className={"back-arrow" + (props.theme == "Train" ? " train" : "")}>{"\u2190"}</p>
             </button>
             <div className={`popup ${showPopup ? "show" : ""} `}>
                 <div className="popup-content">
