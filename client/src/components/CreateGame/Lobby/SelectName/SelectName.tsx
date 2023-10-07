@@ -13,6 +13,11 @@ function SelectName(props: Props) {
         setName((curr) => newName)
     }
 
+    const completeStep = () => {
+        props.teamNameSelected(name)
+        props.onStepCompleted()
+    }
+
     return (
         <div>
             <input
@@ -20,14 +25,14 @@ function SelectName(props: Props) {
                 className="team-name-input"
                 placeholder="New Team"
                 onChange={(e) => nameChangeHandler(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key == "Enter") completeStep()
+                }}
             />
             <button
                 type="button"
                 className="team-name-btn"
-                onClick={() => {
-                    props.teamNameSelected(name)
-                    props.onStepCompleted()
-                }}
+                onClick={() => completeStep()}
             >
                 Select
             </button>
