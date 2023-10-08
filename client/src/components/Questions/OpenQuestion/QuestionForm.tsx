@@ -190,7 +190,7 @@ function QuestionForm(props: Props) {
                         : "boat-theme-form"
                 } `}
                 onKeyDown={(e) => {
-                    if (e.key == "Enter") checkAnswer()
+                    if (e.key == "Enter" && !props.disableButton) checkAnswer()
                 }}
             >
                 <div className="math-field-container">
