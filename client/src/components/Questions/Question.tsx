@@ -320,34 +320,38 @@ function Question(props: Props) {
                     setOpen={setShowDifficulty}
                     type={question.subject}
                 ></DifficultySelection>
-                {question !== null && (
-                    <>
-                        {question.type === "open" ||
-                        question.type === "open-infinite" ? (
-                            <OpenQuestion
-                                latex={question.question}
-                                questionNum={questionNum}
-                                disableButton={disableButton}
-                                theme={props.theme}
-                            />
-                        ) : question.type === "mc" ? (
-                            <MultipleChoice
-                                latex={question.question}
-                                answers={[...(question.options ?? [])]}
-                                questionNum={questionNum}
-                                disableButton={disableButton}
-                                theme={props.theme}
-                            />
-                        ) : question.type === "true/false" ? (
-                            <TrueFalseQuestion
-                                latex={question.question}
-                                questionNum={questionNum}
-                                disableButton={disableButton}
-                                theme={props.theme}
-                            />
-                        ) : null}
-                    </>
-                )}
+                {!showDifficulty && !disableButton ? 
+                    <div>
+                        {question !== null && (
+                            <>
+                                {question.type === "open" ||
+                                question.type === "open-infinite" ? (
+                                    <OpenQuestion
+                                        latex={question.question}
+                                        questionNum={questionNum}
+                                        disableButton={disableButton}
+                                        theme={props.theme}
+                                    />
+                                ) : question.type === "mc" ? (
+                                    <MultipleChoice
+                                        latex={question.question}
+                                        answers={[...(question.options ?? [])]}
+                                        questionNum={questionNum}
+                                        disableButton={disableButton}
+                                        theme={props.theme}
+                                    />
+                                ) : question.type === "true/false" ? (
+                                    <TrueFalseQuestion
+                                        latex={question.question}
+                                        questionNum={questionNum}
+                                        disableButton={disableButton}
+                                        theme={props.theme}
+                                    />
+                                ) : null}
+                            </>
+                        )}
+                    </div> 
+                : null}
             </animated.div>
             <InfoModal
                 showInfoModal={showInfoModal}

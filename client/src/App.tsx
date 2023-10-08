@@ -17,7 +17,7 @@ function App() {
     const [theme, setTheme] = useState("train")
 
     const lobbyIdHandler = (id: number) => {
-        setLobbyId(id)
+        setLobbyId(curr => id)
     }
     const teamNameHandler = (name: string) => {
         setTeamName(name)
@@ -41,7 +41,13 @@ function App() {
                         />
                     }
                 ></Route>
-                <Route path="/JoinGame" element={<JoinGame />}></Route>
+                <Route 
+                    path="/JoinGame" 
+                    element={<JoinGame
+                        onLobbyJoined={(id: number) =>
+                            lobbyIdHandler(id)
+                        } />}>
+                </Route>
                 <Route
                     path="/Lobby"
                     element={
@@ -58,7 +64,8 @@ function App() {
                 ></Route>
                 <Route
                     path="/Waiting"
-                    element={<Waiting theme={theme} setTheme={setTheme} />}
+                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId}
+                    />}
                 ></Route>
                 <Route
                     path="/Login"

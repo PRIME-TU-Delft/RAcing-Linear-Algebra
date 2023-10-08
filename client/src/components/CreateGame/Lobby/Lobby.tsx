@@ -98,6 +98,7 @@ function Lobby(props: Props) {
             {/* STEPS TO COMPLETE BEFORE STARTING A GAME */}
             <Steps
                 lobbyId={props.lobbyId}
+                playerNumber={playerNumber}
                 startGameHandler={startGameHandler}
                 onNameSelected={(name: string) => {
                     setTeamName((cur) => name)
