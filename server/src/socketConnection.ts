@@ -20,9 +20,31 @@ module.exports = {
             cors: {
                 origin: "*",
             },
+            connectionStateRecovery: {
+                // the backup duration of the sessions and the packets
+                maxDisconnectionDuration: 2 * 60 * 1000,
+                // whether to skip middlewares upon successful recovery
+                skipMiddlewares: true,
+              }
         })
 
         io.on("connection", (socket: Socket) => {
+            console.log("CONNECTED")
+            console.log(socket.id)
+            console.log(socket.rooms)
+
+            if (socket.recovered) {
+                console.log("RECOVERED SUCCESFULLY!")
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+                    const players: number = io.sockets.adapter.rooms.get(
+                        `players${lobbyId}`
+                    ).size
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
             /**
              * Create a lobby with the lobbyId
              */
@@ -61,6 +83,9 @@ module.exports = {
              * And also update the score if they were in a game
              */
             socket.on("disconnect", () => {
+                console.log("DISCONNECT:")
+                console.log(socket.id)
+                console.log(socket.rooms)
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
