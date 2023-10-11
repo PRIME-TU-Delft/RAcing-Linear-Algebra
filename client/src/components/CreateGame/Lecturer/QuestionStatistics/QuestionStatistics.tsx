@@ -56,13 +56,6 @@ function QuestionStatistics() {
                 )
                 .sort(
                     (first, second) =>
-                        first.correctlyAnswered +
-                        first.incorrectlyAnswered -
-                        (second.correctlyAnswered + second.incorrectlyAnswered)
-                )
-                .filter((stat, index) => index < 0.7 * parsedStatistics.length)
-                .sort(
-                    (first, second) =>
                         first.correctlyAnswered /
                             (first.correctlyAnswered +
                                 first.incorrectlyAnswered) -
