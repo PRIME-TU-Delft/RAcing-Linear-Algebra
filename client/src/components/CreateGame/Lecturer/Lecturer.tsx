@@ -8,6 +8,7 @@ import CheckPoint from "./LeaderBoard/CheckPoint"
 import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
 import RaceTheme from "../../RaceThemes/RaceTheme"
+import LecturerService from "./LecturerService"
 
 //score object received from backend
 export interface IScore {
@@ -51,7 +52,7 @@ function Lecturer(props: Props) {
     const { width, height } = useWindowDimensions()
 
     //total seconds of count down(10 minutes), added additional of 3 because of the 3s count down
-    const [seconds, setSeconds] = useState(603)
+    const [seconds, setSeconds] = useState(13)
 
     //score of the team
     const [score, setScore] = useState(0)
@@ -70,9 +71,6 @@ function Lecturer(props: Props) {
 
     //checkpoint
     const [location, setLocation] = useState("Home")
-
-    //check if 10 minutes if up
-    const [timeIsUp, setTimeUp] = useState(false)
 
     //shows the 3s pop up countdown
     const [showPopup, setShowPopup] = useState(true)
@@ -100,77 +98,10 @@ function Lecturer(props: Props) {
         }, 15000)
     }
 
-    //handle the checkpoint data received from server, store them into checkpoint teams
-    const transformCheckpointData = (
-        result: [string, number][]
-    ): checkpointTeams[] => {
-        return result.map(([teamName, seconds]) => {
-            const teamMinutes = Math.floor(Math.max(0, seconds / 60))
-            const teamSeconds = seconds % 60
-            return {
-                teamName,
-                teamMinutes,
-                teamSeconds,
-            }
-        })
-    }
-
-    //set checkpoint data with the data received from server
-    const handleGetCheckpoints = async () => {
-        const result: [string, number][] = await new Promise((resolve) => {
-            socket.on("get-checkpoints", (result) => {
-                resolve(result)
-            })
-        })
-        setCheckpointData(transformCheckpointData(result))
-    }
-
     //when 10minutes count down is up
-    const timeUp = async () => {
+    const timeUp = () => {
         //round ends
         socket.emit("endRound")
-
-        //receive data for all teams
-        const result: IScore[] = await new Promise((resolve) => {
-            socket.on("get-all-scores", (res: IScore[]) => {
-                resolve(res)
-            })
-        })
-
-        //sort the scores in descending order of score
-        result.sort((a, b) => b.score - a.score)
-
-        //handle the data received from server
-        const teamScores: Teams[] = result.map(
-            (item): Teams => ({
-                name: item.teamname,
-                score: item.score,
-                accuracy: item.accuracy,
-                checkpoint: findCheckPoint(item.checkpoints.length),
-            })
-        )
-
-        setTeamScores(teamScores)
-        //show final leaderboard
-        setShowLeaderBoard(true)
-    }
-
-    //find the name of a certain checkpoint
-    const findCheckPoint = (index: number) => {
-        if (index == 1) {
-            return stations[0].name
-        } else if (index == 2) {
-            return stations[1].name
-        } else if (index == 3) {
-            return stations[2].name
-        }
-        return "Home"
-    }
-
-    //shows an alert when try to reload or leave
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-        event.preventDefault()
-        event.returnValue = "Are you sure you want to leave this page?"
     }
 
     //show statistic screen
@@ -180,13 +111,27 @@ function Lecturer(props: Props) {
         socket.emit("getLecturerStatistics")
     }
 
+    // Give warning before refreshing page to prevent disconnecting
     useEffect(() => {
-        //timer
+        const unloadCallback = (event: BeforeUnloadEvent) => {
+          event.preventDefault();
+          event.returnValue = "";
+          return "";
+        };
+      
+        window.addEventListener("beforeunload", unloadCallback);
+        return () => window.removeEventListener("beforeunload", unloadCallback);
+      }, []);
+    
+
+    // Timer functionality
+    useEffect(() => {
         const interval = setInterval(() => {
             if (seconds > 0) {
                 setSeconds((seconds) => seconds - 1)
-            } else if (seconds == 0 && !timeIsUp) {
-                setTimeUp((cur) => true)
+            } else {
+                timeUp()
+                clearInterval(interval)
             }
             if (countdown > 1) {
                 setCountdown((countdown) => countdown - 1)
@@ -194,20 +139,14 @@ function Lecturer(props: Props) {
                 setShowPopup(false)
             }
         }, 1000)
-        if (timeIsUp && seconds == 0) timeUp()
-        //for alert when refresh/close
-        window.addEventListener("beforeunload", handleBeforeUnload)
+
         return () => {
             clearInterval(interval)
-            // so the alert only shows once
-
-            //window.removeEventListener("beforeunload", handleBeforeUnload)
         }
-    }, [seconds, timeIsUp])
+    }, [seconds])
 
-    //for sockets
+    // Socket changes
     useEffect(() => {
-        handleGetCheckpoints()
         socket.on("score", (stats: TeamStats) => {
             setScore((current) =>
                 current < stats.score ? stats.score : current
@@ -217,25 +156,18 @@ function Lecturer(props: Props) {
         socket.on("game-ended", () => {
             setGameEnds(true)
         })
+
+        socket.on("get-checkpoints", (result: [string, number][]) => {
+            const formattedCheckpointData = LecturerService.transformCheckpointData(result)
+            setCheckpointData(curr => [...formattedCheckpointData])
+        })
+
+        socket.on("get-all-scores", (allScores: IScore[]) => {
+            const formattedTeamScores = LecturerService.formatTeamScores(allScores, props.theme)
+            setTeamScores(curr => [...formattedTeamScores])
+            setShowLeaderBoard(curr => true)
+        })
     }, [socket])
-
-    //display time correctly
-    const showTime = () => {
-        const minute = Math.floor(seconds / 60)
-        let s = (seconds % 60).toString()
-        let m = minute.toString()
-        if (minute >= 10) {
-            s = "0"
-        }
-        if (s.length == 1) {
-            s = "0" + s
-        }
-        if (m.length == 1) {
-            m = "0" + m
-        }
-
-        return `${m}:${s}`
-    }
 
     //reset everything when new round start
     const startNewRound = () => {
@@ -252,48 +184,15 @@ function Lecturer(props: Props) {
             setRoundFinished((cur) => false)
             setShowPopup((cur) => true)
             setCountdown((cur) => 3)
-            setTimeUp((cur) => false)
         }
     }
-
-    //checkpoints for train
-    const stations = [
-        {
-            name: "Delft",
-            points: 150,
-        },
-        {
-            name: "Rotterdam Centraal",
-            points: 300,
-        },
-        {
-            name: "Eindhoven Centraal",
-            points: 450,
-        },
-    ]
-
-    //checkpoints for boat
-    const islands = [
-        {
-            name: "Solitude Island",
-            points: 150,
-        },
-        {
-            name: "Mystic Isle",
-            points: 300,
-        },
-        {
-            name: "Hidden Oasis",
-            points: 450,
-        },
-    ]
 
     return (
         <div>
             <div className="lecturer-header">
                 <div className="t-name">TeamName: {props.teamName}</div>
                 <div className="countdown">
-                    <div>Time: {showTime()}</div>
+                    <div>Time: {LecturerService.formatTime(seconds)}</div>
                 </div>
 
                 <div className="total-score">
@@ -312,11 +211,7 @@ function Lecturer(props: Props) {
                         averageGoalPoints={500}
                         currentPoints={score}
                         mapDimensions={{ width: width, height: height - 100 }}
-                        checkpoints={
-                            props.theme.toLocaleLowerCase() == "train"
-                                ? stations
-                                : islands
-                        }
+                        checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
                         usedTime={600 - seconds}
                         setCheckpoint={(data: string) =>
                             setLocation((current) => data)
@@ -325,11 +220,7 @@ function Lecturer(props: Props) {
                     ></RaceTheme>
                     <StationDisplay
                         points={score}
-                        stations={
-                            props.theme.toLocaleLowerCase() == "train"
-                                ? stations
-                                : islands
-                        }
+                        stations={LecturerService.getCheckpointsForTheme(props.theme)}
                     ></StationDisplay>
                 </div>
             ) : (
@@ -377,6 +268,7 @@ function Lecturer(props: Props) {
                         yourCheckPoint={location}
                         teams={teamScores}
                     ></LeaderBoard>
+                    <p>It is {showLeaderBoard ? "true" : "false"}</p>
                     <button
                         className="next-btn"
                         onClick={() => {

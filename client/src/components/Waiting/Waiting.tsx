@@ -28,12 +28,10 @@ function Waiting(props: Props) {
     const [currentLobbyId, setCurrentLobbyId] = useState(props.lobbyId)
 
     const backButtonHandler = () => {
-        console.log(warningModalIsOpen)
         setWarningModalIsOpen(curr => true)
     }
 
     const leaveGame = () => {
-        console.log(props.lobbyId)
         socket.emit("leaveLobby", props.lobbyId)
         navigate("/")
     }
@@ -46,11 +44,14 @@ function Waiting(props: Props) {
         // Safety check for if the page is reloaded
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault()
+            socket.disconnect().connect()
             event.returnValue = "Are you sure you want to leave this page?"
             //shows an alert when try to reload or leave
         }
 
         window.addEventListener("beforeunload", handleBeforeUnload)
+        window.addEventListener("unload", () => socket.disconnect())
+        window.addEventListener("load", () => navigate("/"))
 
         const countdownInterval = setInterval(() => {
             if (countdown > 1) {
