@@ -31,7 +31,9 @@ export interface IQuestion {
 }
 
 interface Props {
-    theme: string
+    theme: string,
+    getQuestionNumber: (questionNumber: number) => void,
+    getQuestionAnswer: (questionAnswer: string) => void,
 }
 
 interface Statistic {
@@ -51,7 +53,6 @@ function Question(props: Props) {
         type: "",
         options: [],
     })
-    const [mandatoryNum, setMandatoryNum] = useState(0)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -61,17 +62,6 @@ function Question(props: Props) {
 
     // All the socket events for the questions are handled here
     useEffect(() => {
-        // Safety check for if the page is reloaded
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            event.preventDefault()
-            socket.disconnect().connect()
-            event.returnValue = "Are you sure you want to leave this page?"
-            //shows an alert when try to reload or leave
-        }
-
-        window.addEventListener("beforeunload", handleBeforeUnload)
-        window.addEventListener("unload", () => socket.disconnect())
-        window.addEventListener("load", () => navigate("/"))
         
         socket.emit("getMandatoryNum")
         socket.emit("getNewQuestion") // Get the first question
@@ -88,93 +78,11 @@ function Question(props: Props) {
         socket
             .off("get-next-question")
             .on("get-next-question", (questionReceived: IQuestion) => {
+                console.log("next")
                 setQuestionNum((questionNum) => questionNum + 1)
                 setQuestion(questionReceived)
             })
-
-        socket.off("round-ended").on("round-ended", () => {
-            setShowDifficulty(false)
-            setShowInfoModal(false)
-            setShowRoundOverModal(true)
-            socket.emit("getResults")
-        })
-
-        socket.off("round-started").on("round-started", () => {
-            setShowDifficulty(false)
-            setShowInfoModal(false)
-            setScore(0)
-            setRightAnswers(0)
-            setWrongAnswers(0)
-            setStreak(0)
-            setQuestionNum(0)
-            setMaxStreak(0)
-            socket.emit("getNewQuestion")
-            socket.emit("getMandatoryNum")
-            setShowRoundOverModal(false)
-            setShowPopup(true)
-            setCountdown(3)
-        })
-
-        socket.off("result").on("result", (result: string) => {
-            calculateStats(JSON.parse(result))
-        })
-
-        socket.off("mandatoryNum").on("mandatoryNum", (num: number) => {
-            setMandatoryNum(num)
-        })
-
-        socket.off("end-game").on("end-game", () => {
-            navigate("/endGame")
-        })
     }, [])
-
-    useEffect(() => {
-        if (questionNum > 2) {
-            setScoreToAdd((cur) => 0)
-        }
-
-        socket.off("rightAnswer").on("rightAnswer", (score: number) => {
-            // What happens if the answer is correct
-            setModalText(["✔️ Your answer is correct!"])
-            setModalType("correctAnswer")
-            setScoreToAdd((cur) => score)
-            setRightAnswers((rightAnswers) => rightAnswers + 1)
-            setStreak((streak) => streak + 1)
-            setShowInfoModal(true)
-            if (questionNum < mandatoryNum) socket.emit("getNewQuestion")
-        })
-
-        socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
-            // What happens if the answer is incorrect and you have no tries left
-            setModalText([
-                "❌ Your answer is incorrect! The correct answer is:",
-            ])
-            if (triesLeft === 0) {
-                setModalType("incorrectAnswer")
-                setModalAnswer(question.answer)
-                setStreak(0)
-                setScoreToAdd(0)
-                setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
-                setShowInfoModal(true)
-                if (questionNum < mandatoryNum) socket.emit("getNewQuestion")
-            } else {
-                wrongAnswerToast(triesLeft)
-            }
-        })
-    }, [question])
-
-    useEffect(() => {
-        const countdownInterval = setInterval(() => {
-            if (countdown > 1) {
-                setCountdown((countdown) => countdown - 1)
-            } else if (countdown == 1 || countdown == 0) {
-                setShowPopup((cur) => false)
-            }
-        }, 1000)
-        return () => {
-            clearInterval(countdownInterval)
-        }
-    }, [countdown])
 
     // Variable to display the difficulty selection screen
     const [showDifficulty, setShowDifficulty] = useState<boolean>(false)
@@ -199,49 +107,13 @@ function Question(props: Props) {
     const [modalType, setModalType] = useState<string>("")
     const [modalAnswer, setModalAnswer] = useState<string>("")
 
-    // Update the score when the scoreToAdd variable changes
     useEffect(() => {
-        setScore((score) => score + scoreToAdd)
-    }, [scoreToAdd])
+        props.getQuestionNumber(questionNum)
+    }, [questionNum])
 
     useEffect(() => {
-        // if (streak === 0) setScoreToAdd(0)
-        // else setScoreToAdd(100 * (1 + (streak - 1) / 10))
-        if (streak > maxStreak) setMaxStreak(streak)
-    }, [streak])
-
-    function wrongAnswerToast(triesLeft: number) {
-        setDisableButton(true)
-        // Enable the button after 1 second
-        setTimeout(() => {
-            setDisableButton(false)
-        }, 2000)
-        toast(
-            `❌ Your answer is incorrect. You have ${triesLeft} attempts left`,
-            {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            }
-        )
-    }
-
-    function calculateStats(statistic: Statistic[]) {
-        let rightAnswers = 0
-        let wrongAnswers = 0
-        for (const stat of statistic) {
-            if (stat.correctlyAnswered === 1) rightAnswers++
-            else if (stat.incorrectlyAnswered !== 0) wrongAnswers++
-        }
-        setRightAnswers(rightAnswers)
-        setWrongAnswers(wrongAnswers)
-        setNumOfQuestions(rightAnswers + wrongAnswers)
-    }
+        props.getQuestionAnswer(question.answer)
+    }, [question])
 
     // Animations
     const bodyAnimationRef = useSpringRef()
@@ -313,16 +185,7 @@ function Question(props: Props) {
     )
 
     return (
-        <>
-            {props.theme === "Train" ? (
-                <QuestionTrainBackground />
-            ) : (
-                <QuestionBoatBackground />
-            )}
-            <div className="question-header">
-                <div className="score"> Score: {Math.floor(score)}</div>
-            </div>
-            <animated.div
+           <animated.div
                 className="question-container"
                 style={bodyAnimation}
                 data-testid="question-container"
@@ -365,34 +228,6 @@ function Question(props: Props) {
                     </div> 
                 : null}
             </animated.div>
-            <InfoModal
-                showInfoModal={showInfoModal}
-                setShowInfoModal={setShowInfoModal}
-                modalAnimation={modalAnimation}
-                modalText={modalText}
-                type={modalType}
-                correctAnswer={modalAnswer}
-                streak={streak}
-                scoreToAdd={scoreToAdd}
-                questionType={question?.type}
-            />
-            <RoundOverModal
-                showRoundOverModal={showRoundOverModal}
-                modalAnimation={modalAnimation2}
-                numOfRightAnswers={rightAnswers}
-                numOfWrongAnswers={wrongAnswers}
-                maxStreak={maxStreak}
-                questionNum={numOfQuestions}
-            />
-            <ToastContainer />
-            <div className={`popup ${showPopup ? "show" : ""}`}>
-                <div className="popup-content">
-                    <p>
-                        <span className="countdown-text">{countdown}</span>
-                    </p>
-                </div>
-            </div>
-        </>
     )
 }
 

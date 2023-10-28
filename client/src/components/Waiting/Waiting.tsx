@@ -44,7 +44,7 @@ function Waiting(props: Props) {
         // Safety check for if the page is reloaded
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault()
-            socket.disconnect().connect()
+            setTimeout(() => socket.disconnect().connect(), 500)
             event.returnValue = "Are you sure you want to leave this page?"
             //shows an alert when try to reload or leave
         }
@@ -131,4 +131,4 @@ function Waiting(props: Props) {
     )
 }
 
-export default Waiting
+export default Waiting      
