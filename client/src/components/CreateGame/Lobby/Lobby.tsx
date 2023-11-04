@@ -47,6 +47,7 @@ function Lobby(props: Props) {
             selectedStudy.toUpperCase(),
             teamName
         )
+        socket.emit("getGhostTrains")
     }
 
     // Converts the lobby id to string and padds it with 0s if necessary to obtain a 4 number code
