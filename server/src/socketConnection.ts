@@ -146,6 +146,20 @@ module.exports = {
                     } catch (error) {
                         console.error(error)
                     }
+
+                    try {
+                        const lobbyId = socketToLobbyId.get(socket.id)!
+    
+                        const game = getGame(lobbyId)
+                        const round = game.rounds[game.round]
+                        const roundId: number = round.id
+    
+                        const ghostTrainScores = await getGhostTrainScores(roundId)
+    
+                        socket.emit("ghost-trains", ghostTrainScores)
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }
             )
 

@@ -10,6 +10,7 @@ import Login from "./components/CreateGame/Login/Login"
 import Lobby from "./components/CreateGame/Lobby/Lobby"
 import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
+import Game from "./components/Game/Game"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -77,7 +78,7 @@ function App() {
                         />
                     }
                 ></Route>
-                <Route path="/game" element={<Question theme={theme} />} />
+                <Route path="/game" element={<Game theme={theme} />} />
                 <Route
                     path="/Lecturer"
                     element={
