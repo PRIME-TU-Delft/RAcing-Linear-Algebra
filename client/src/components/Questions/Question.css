@@ -4,7 +4,10 @@
 }
 
 .question-container {
-    overflow: hidden;
+    width: 50%;
+    margin-top: 8rem;
+    height: 60vh;
+    position: relative;
 }
 
 .question-header {

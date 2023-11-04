@@ -36,7 +36,7 @@ export default function QuestionTrainBackground() {
                     </mask>
                 </defs>
             </svg>
-            <div className="background-train-track"></div>
+            <div className="background-train-2"></div>
         </div>
     )
 }

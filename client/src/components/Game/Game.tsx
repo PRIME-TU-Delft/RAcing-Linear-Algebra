@@ -280,9 +280,6 @@ function Game(props: Props) {
             ) : (
                 <QuestionBoatBackground />
             )}
-            <div className="question-header">
-                <div className="score"> Score: {Math.floor(score)}</div>
-            </div>
             <Question 
                 hideQuestion={hideQuestion}
                 theme={props.theme}

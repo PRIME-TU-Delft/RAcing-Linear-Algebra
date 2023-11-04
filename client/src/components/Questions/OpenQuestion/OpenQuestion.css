@@ -4,25 +4,15 @@
 }
 
 .question-container-open {
-    margin-top: 13px;
-    padding-top: 8px;
-    padding-bottom: 40px;
-    margin-right: 70px;
-    margin-left: 115px;
-    height: max-content;
+    margin-left: 2rem;
 }
 
 .question-form {
     text-align: left;
     margin-top: 50px;
-
-    width: 60em;
-    backdrop-filter: blur(10px);
+    width: 100%;
+    margin: auto;
     padding: 30px;
-    border: 1px solid #717171;
-    border-radius: 10px;
-    min-width: 300px;
-    max-width: 8000px;
 }
 
 .question-num-open {
@@ -32,6 +22,7 @@
     margin-right: 30px;
     font-family: "Century Gothic", Arial, Helvetica, sans-serif;
     margin-top: 20px;
+    margin-left: 10px;
     opacity: 1;
     font-family: Maven, Century Gothic;
     border-radius: 20px;
@@ -49,24 +40,19 @@
 }
 
 .question-block-container-open {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: #c7c1c1;
     border-radius: 30px;
     margin: 0px;
-    padding: 30px;
+    position: relative;
     border: 1px solid #717171;
     backdrop-filter: blur(10px);
-    overflow: hidden;
 }
 
-.boat-theme-form,
 .boat-theme-container {
     background: linear-gradient(to left, #91c9fa, #ffffff94);
 }
 
-.train-theme-form,
+
 .train-theme-container {
     background: linear-gradient(to left, #e1ba90, #f09c53a3);
 }
@@ -94,7 +80,7 @@
 
 .answer-form {
     display: block;
-    width: 850px;
+    width: 30rem;
     height: inherit;
     min-height: 100px;
     background-color: #f2f2f2;
@@ -185,8 +171,8 @@
 
     margin-top: 5px;
     position: absolute;
+    z-index: 5000;
     left: 110%;
-    top: -15%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -198,6 +184,7 @@
 
 .matrix-container {
     position: relative;
+    overflow:visible;
     display: flex;
     justify-content: space-between;
 }
@@ -255,54 +242,43 @@
     margin-right: 5px;
 }
 
-@media screen and (max-width: 1370px) {
-    .answer-form {
-        width: 500px;
-    }
-    .question-form {
-        width: 600px;
-    }
-}
-
-@media screen and (max-width: 1000px) {
-    .answer-form {
-        width: 500px;
-    }
-    .question-form {
-        width: 450px;
-    }
-    .question-text-open,
-    .question-num-open {
+@media screen and (max-width: 1600px) {
+    .question-text-open {
         font-size: 20px;
     }
 
-    .screen-button {
-        height: 30px;
+    .answer-form {
+        width: 25rem;
+    }
+}
+
+
+@media screen and (max-width: 1370px) {
+    .question-text-open {
+        font-size: 20px;
+    }
+
+    .answer-form {
+        width: 25rem;
+    }
+
+    .submit {
+        width: 100px;
+    }
+
+    .buttons-flexbox > .mathquill-button {
         width: 30px;
+        height: 30px;
         font-size: 12px;
     }
+}
 
-    #matrix-button {
-        width: 70px;
-    }
-
-    .modal-input {
-        margin: 0;
-        width: 80%;
-        height: 80%;
+@media screen and (max-width: 1200px) {
+    .question-text-open {
+        font-size: 18px;
     }
 
-    .question-block-container-open {
-        overflow: visible;
-    }
-    .modal-form {
-        margin: 0;
-        width: 30px;
-        height: 30px;
-        margin-left: 3px;
-    }
-    .modal-X {
-        margin: 0;
-        margin-right: 2px;
+    .answer-form {
+        width: 20rem;
     }
 }

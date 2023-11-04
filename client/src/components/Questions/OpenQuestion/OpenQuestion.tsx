@@ -43,7 +43,7 @@ function OpenQuestion(props: Props) {
     }
 
     return (
-        <>
+        <>  
             <div className="question-container-open">
                 <div
                     className={`question-block-container-open ${
