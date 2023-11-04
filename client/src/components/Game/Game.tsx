@@ -45,20 +45,21 @@ function Game(props: Props) {
 
     const navigate = useNavigate()
 
+     // Safety check for if the page is reloaded
+     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        event.preventDefault()
+        setTimeout(() => socket.disconnect().connect(), 500)
+        event.returnValue = "Are you sure you want to leave this page?"
+        //shows an alert when try to reload or leave
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    window.addEventListener("unload", () => socket.disconnect())
+    window.addEventListener("load", () => navigate("/"))
+
+    socket.emit("getMandatoryNum")
+
     useEffect(() => {
-        // Safety check for if the page is reloaded
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            event.preventDefault()
-            setTimeout(() => socket.disconnect().connect(), 500)
-            event.returnValue = "Are you sure you want to leave this page?"
-            //shows an alert when try to reload or leave
-        }
-
-        window.addEventListener("beforeunload", handleBeforeUnload)
-        window.addEventListener("unload", () => socket.disconnect())
-        window.addEventListener("load", () => navigate("/"))
-
-        socket.emit("getMandatoryNum")
 
         socket.off("round-ended").on("round-ended", () => {
             setShowInfoModal(false)
@@ -103,8 +104,6 @@ function Game(props: Props) {
                 setScoreToAdd(0)
                 setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
                 setShowInfoModal(true)
-                console.log(`Current question number: ${currentQuestionNum}`)
-                console.log(`Mandatory: ${mandatoryNum}`)
                 if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
             } else {
                 wrongAnswerToast(triesLeft)
@@ -120,10 +119,9 @@ function Game(props: Props) {
         })
 
         socket.off("mandatoryNum").on("mandatoryNum", (num: number) => {
-            console.log("MANDATORY")
             setMandatoryNum(curr => num)
         })
-    }, [])
+    }, [socket, currentQuestionNum, mandatoryNum])
 
     useEffect(() => {
         const countdownInterval = setInterval(() => {
@@ -147,7 +145,7 @@ function Game(props: Props) {
     // Variable to display the info modal
     const [showInfoModal, setShowInfoModal] = useState<boolean>(false)
     // Variable to inform the question screen that difficulty selection should not appear
-    const [hideDifficulty, setHideDifficulty] = useState(false)
+    const [hideQuestion, setHideQuestion] = useState<boolean>(false)
     const [answeredQuestionType, setAnsweredQuestionType] = useState("mc")
     // Varaible to display the round over modal
     const [showRoundOverModal, setShowRoundOverModal] = useState<boolean>(false)
@@ -173,6 +171,10 @@ function Game(props: Props) {
     useEffect(() => {
         if (streak > maxStreak) setMaxStreak(streak)
     }, [streak])
+
+    useEffect(() => {
+        setHideQuestion(curr => showInfoModal)
+    }, [showInfoModal])
 
     function wrongAnswerToast(triesLeft: number) {
         toast(
@@ -282,12 +284,14 @@ function Game(props: Props) {
                 <div className="score"> Score: {Math.floor(score)}</div>
             </div>
             <Question 
+                hideQuestion={hideQuestion}
                 theme={props.theme}
                 getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
                 getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
 
-            />            
+            />          
             <InfoModal
+                endInfoModal={() => setShowInfoModal(false)}
                 showInfoModal={showInfoModal}
                 setShowInfoModal={setShowInfoModal}
                 modalAnimation={modalAnimation}

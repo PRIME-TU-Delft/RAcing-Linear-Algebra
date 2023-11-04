@@ -11,6 +11,7 @@ import { ProgressBar } from "react-bootstrap"
 import { renderLatex, useRenderLatex } from "./useRenderLatex"
 
 interface Props {
+    endInfoModal: () => void,
     setShowInfoModal: React.Dispatch<React.SetStateAction<boolean>>
     showInfoModal: boolean
     modalAnimation: any
@@ -56,6 +57,7 @@ export default function InfoModal(props: Props) {
             setProgress(0)
             setShowCorrectnessModal(false)
             setProgress(100)
+            props.endInfoModal()
         }, 3500)
 
         return () => {

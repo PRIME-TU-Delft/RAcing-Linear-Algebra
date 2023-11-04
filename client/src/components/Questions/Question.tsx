@@ -31,6 +31,7 @@ export interface IQuestion {
 }
 
 interface Props {
+    hideQuestion: boolean,
     theme: string,
     getQuestionNumber: (questionNumber: number) => void,
     getQuestionAnswer: (questionAnswer: string) => void,
@@ -63,7 +64,6 @@ function Question(props: Props) {
     // All the socket events for the questions are handled here
     useEffect(() => {
         
-        socket.emit("getMandatoryNum")
         socket.emit("getNewQuestion") // Get the first question
 
         socket.off("chooseDifficulty").on("chooseDifficulty", () => {
@@ -195,7 +195,7 @@ function Question(props: Props) {
                     setOpen={setShowDifficulty}
                     type={question.subject}
                 ></DifficultySelection>
-                {!showDifficulty && !disableButton ? 
+                {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div>
                         {question !== null && (
                             <>
