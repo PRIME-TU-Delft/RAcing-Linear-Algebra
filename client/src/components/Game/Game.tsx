@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
+import TimeBar from "./TimeBar/TimeBar";
 import QuestionTrainBackground from "../Questions/Themes/QuestionTrainBackground";
 import { animated, config, useChain, useSpring, useSpringRef } from "react-spring";
 import { useNavigate } from "react-router-dom";
@@ -280,6 +281,7 @@ function Game(props: Props) {
             ) : (
                 <QuestionBoatBackground />
             )}
+            <TimeBar></TimeBar>
             <Question 
                 hideQuestion={hideQuestion}
                 theme={props.theme}

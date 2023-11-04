@@ -1,0 +1,21 @@
+.time-container {
+    height: 10vh;
+    width: 50%;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+}
+
+.time-title {
+    width: 8%;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+}
+
+.time-bar {
+    width: 95%;
+    margin-top: 4px;
+}
