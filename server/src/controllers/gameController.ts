@@ -19,6 +19,7 @@ export const gameRouter = Router()
  */
 export function addGame(
     rounds: IRound[],
+    roundDurations: number[],
     teamName: string,
     socketIds: string[],
     lobbyId: number,
@@ -26,7 +27,7 @@ export function addGame(
 ) {
     const map: Map<string, User> = new Map()
     for (const socketId of socketIds) map.set(socketId, new User())
-    const game: Game = new Game(rounds, teamName, map, study)
+    const game: Game = new Game(rounds, roundDurations, teamName, map, study)
     games.set(`${lobbyId}`, game)
 }
 
@@ -69,6 +70,18 @@ export function endRound(lobbyId: number): boolean {
     game.correct = 0
     game.incorrect = 0
     return game.round < game.rounds.length
+}
+
+/**
+ * Gets the duration of the current round, as was set by the lecturer at the start
+ * @param lobbyId the id of the game
+ * @returns the duration of the round
+ */
+export function getRoundDuration(lobbyId: number): number {
+    const game = games.get(`${lobbyId}`)
+    if (game === undefined) throw Error("No such game")
+
+    return game.roundDurations[game.round]
 }
 
 export function clearGames(): void {
