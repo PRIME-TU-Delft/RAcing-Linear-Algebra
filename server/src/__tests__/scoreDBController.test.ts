@@ -18,10 +18,11 @@ describe("scoreDBController tests", () => {
         const score = 100
         const checkpoints = [1, 2, 3]
         const roundId = "round123"
+        const roundDuration = 600
         const study = "CSE"
         const accuracy = 0.8
 
-        await saveNewScore(teamname, score, checkpoints, roundId, study, accuracy)
+        await saveNewScore(teamname, score, checkpoints, roundId, roundDuration, study, accuracy)
 
         expect(Score.create).toHaveBeenCalledTimes(1)
     })
