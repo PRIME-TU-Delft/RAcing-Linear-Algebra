@@ -3,6 +3,10 @@
     src: url("../../../fonts/CenturyGothic.ttf");
 }
 
+.true-false-question {
+    margin-left: 4rem;
+}
+
 .flexbox-answers-mc {
     display: flex;
     flex-direction: column;
@@ -12,12 +16,10 @@
 }
 
 .answer-mc {
-    width: 30%;
+    width: 100%;
     margin: 10px;
     display: flex;
     align-items: center;
-    justify-content: center;
-
     font-size: 25px;
     font-family: "Century Gothic", sans-serif;
     cursor: pointer;

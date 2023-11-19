@@ -1,0 +1,91 @@
+.team-stats-container {
+    width: 50%;
+    padding-left: 5rem;
+}
+
+.team-stats-container > .scores-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 11rem;
+    margin-top: 1rem;
+}
+
+.scores-container > .scores-title-container {
+    text-align: left;
+    position: relative;
+}
+
+.scores-container > .scores-values-container {
+    text-align: left;
+    position: relative;
+    margin-left: 3rem;
+}
+
+.team-stats-score-text {
+    font-size: 40px;
+    font-weight: 900;
+    color: white;
+}
+
+.team-stats-score-value {
+    font-size: 40px;
+    font-weight: 900;
+    color: #0C2E4F;
+}
+
+.individual-score {
+    color: yellow;
+}
+
+.horizontal-division-bar {
+    width: 85%;
+    height: 0.5rem;
+    margin: auto;
+    margin-top: 2rem;
+    background-color: #0C2E4F;
+}
+
+.show-stats-btn {
+    width: 20rem;
+    height: 3.5rem;
+    line-height: 3.5rem;
+    background-color: #081D33;
+
+    font-size: 18px;
+    color: white;
+    margin: auto;
+    margin-top: 1rem;
+    transition-duration: 0.3s;
+}
+
+.show-stats-btn:hover {
+    width: 21rem;
+    height: 4rem;
+    line-height: 4rem;
+    background-color: #061526;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.hide-stats-btn {
+    width: 15rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    background-color: #081D33;
+
+    font-size: 16px;
+    color: white;
+    margin: auto;
+    margin-top: 1rem;
+    transition-duration: 0.3s;
+}
+
+.hide-stats-btn:hover {
+    width: 16rem;
+    height: 2.8rem;
+    line-height: 2.8rem;
+    background-color: #061526;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}

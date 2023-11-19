@@ -1,0 +1,87 @@
+.leaderboard-container {
+    margin-top: 2rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 29rem;
+}
+
+.rail-background {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.rail-background > div {
+    height: 100%;
+    width: 1rem;
+    background-color: silver;
+    box-shadow: inset 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
+    z-index: 0;
+}
+
+.rail-background > div:nth-child(2) {
+    margin-left: 25rem;
+}
+
+.leaderboard-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-items > .leaderboard-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 30rem;
+    height: 4rem;
+    margin-top: 1.5rem;
+    background-color: #CF711F;
+    box-shadow: inset 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+
+}
+
+.leaderboard-item > div {
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    height: 4rem;
+    line-height: 4rem;
+}
+
+.first-team-crown {
+    margin-bottom: 2px;
+}
+
+.leaderboard-item > .team-name {
+    margin-left: 2rem;
+}
+
+.leaderboard-item > .team-score {
+    margin-left: auto;
+    margin-right: 2rem;
+}
+
+.first-team-item > div:nth-child(1) {
+    margin-left: 0.5rem;
+    margin-bottom: 6px;
+}
+
+.first-team-item > .team-name {
+    margin-left: 0.2rem;
+}
+
+.first-team-item > .team-score {
+    margin-right: 2rem;
+}
+
+.your-team-item {
+    border: 3px solid #0C2E4F;
+}
+
+.your-team-item > div {
+    color: #0C2E4F;
+}
