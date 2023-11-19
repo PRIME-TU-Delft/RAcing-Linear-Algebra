@@ -21,19 +21,19 @@ describe("Game functionality testing", () => {
     })
 
     it("Add game", () => {
-        addGame(irounds, "team123", socketIds, 123, "CSE")
+        addGame(irounds, [], "team123", socketIds, 123, "CSE")
         expect(games.size).toBe(1)
     })
 
     it("Remove game", () => {
-        addGame(irounds, "team456", socketIds, 456, "CSE")
+        addGame(irounds, [],"team456", socketIds, 456, "CSE")
         expect(games.size).toBe(1)
         removeGame(456)
         expect(games.size).toBe(0)
     })
 
     it("Get game", () => {
-        addGame(irounds, "team789", socketIds, 789, "CSE")
+        addGame(irounds, [],"team789", socketIds, 789, "CSE")
         expect(games.size).toBe(1)
 
         const game = getGame(789)
@@ -41,7 +41,7 @@ describe("Game functionality testing", () => {
     })
 
     it("Get game game undefined", () => {
-        addGame(irounds, "team789", socketIds, 789, "CSE")
+        addGame(irounds, [],"team789", socketIds, 789, "CSE")
         expect(games.size).toBe(1)
 
         expect(() => {
@@ -50,7 +50,7 @@ describe("Game functionality testing", () => {
     })
 
     it("End round", () => {
-        addGame(irounds, "team234", socketIds, 234, "AE")
+        addGame(irounds, [],"team234", socketIds, 234, "AE")
         expect(games.size).toBe(1)
         const game = getGame(234)
         game.avgScore = 50
@@ -69,7 +69,7 @@ describe("Game functionality testing", () => {
     })
 
     it("End round game undefined", () => {
-        addGame(irounds, "team234", socketIds, 234, "AE")
+        addGame(irounds, [],"team234", socketIds, 234, "AE")
         expect(games.size).toBe(1)
         const game = getGame(234)
         game.avgScore = 50

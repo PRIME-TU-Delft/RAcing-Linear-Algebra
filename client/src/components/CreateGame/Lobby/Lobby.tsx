@@ -44,6 +44,7 @@ function Lobby(props: Props) {
             "startGame",
             props.lobbyId,
             selectedRounds,
+            selectedRounds.map(x => 600),
             selectedStudy.toUpperCase(),
             teamName
         )

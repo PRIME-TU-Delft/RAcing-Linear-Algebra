@@ -5,6 +5,7 @@ export interface IScore extends mongoose.Document {
     score: number
     checkpoints: number[]
     roundId: string
+    roundDuration: number
     study: string
     accuracy: number
 }
@@ -27,6 +28,10 @@ export const scoreSchema: mongoose.Schema = new mongoose.Schema({
     },
     roundId: {
         type: String,
+        required: true,
+    },
+    roundDuration: {
+        type: Number,
         required: true,
     },
     study: {

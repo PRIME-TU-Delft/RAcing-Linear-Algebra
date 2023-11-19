@@ -69,7 +69,7 @@ function Game(props: Props) {
             socket.emit("getResults")
         })
 
-        socket.off("round-started").on("round-started", () => {
+        socket.off("round-started").on("round-started", (roundDuration: number) => {
             setShowInfoModal(false)
             setScore(0)
             setRightAnswers(0)
