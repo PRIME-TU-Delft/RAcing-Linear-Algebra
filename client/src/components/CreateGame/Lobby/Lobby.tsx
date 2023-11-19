@@ -47,6 +47,7 @@ function Lobby(props: Props) {
             selectedStudy.toUpperCase(),
             teamName
         )
+        socket.emit("getGhostTrains")
     }
 
     // Converts the lobby id to string and padds it with 0s if necessary to obtain a 4 number code
@@ -98,6 +99,7 @@ function Lobby(props: Props) {
             {/* STEPS TO COMPLETE BEFORE STARTING A GAME */}
             <Steps
                 lobbyId={props.lobbyId}
+                playerNumber={playerNumber}
                 startGameHandler={startGameHandler}
                 onNameSelected={(name: string) => {
                     setTeamName((cur) => name)

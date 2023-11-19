@@ -5,7 +5,11 @@ import "./JoinGame.css"
 import { useForm } from "react-hook-form"
 import socket from "../../socket"
 
-function JoinGame() {
+interface Props {
+    onLobbyJoined: (lobbyId: number) => void
+}
+
+function JoinGame(props: Props) {
     const navigate = useNavigate()
     const methods = useForm()
     const [lobbyId, setLobbyId] = useState("")
@@ -42,6 +46,7 @@ function JoinGame() {
         }
 
         socket.emit("joinLobby", lobbyId)
+        props.onLobbyJoined(parseInt(lobbyId))
         //go to the waiting screen
         navigate("/Waiting")
     })

@@ -10,6 +10,7 @@ import Login from "./components/CreateGame/Login/Login"
 import Lobby from "./components/CreateGame/Lobby/Lobby"
 import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
+import Game from "./components/Game/Game"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -17,7 +18,7 @@ function App() {
     const [theme, setTheme] = useState("train")
 
     const lobbyIdHandler = (id: number) => {
-        setLobbyId(id)
+        setLobbyId(curr => id)
     }
     const teamNameHandler = (name: string) => {
         setTeamName(name)
@@ -41,7 +42,13 @@ function App() {
                         />
                     }
                 ></Route>
-                <Route path="/JoinGame" element={<JoinGame />}></Route>
+                <Route 
+                    path="/JoinGame" 
+                    element={<JoinGame
+                        onLobbyJoined={(id: number) =>
+                            lobbyIdHandler(id)
+                        } />}>
+                </Route>
                 <Route
                     path="/Lobby"
                     element={
@@ -58,7 +65,8 @@ function App() {
                 ></Route>
                 <Route
                     path="/Waiting"
-                    element={<Waiting theme={theme} setTheme={setTheme} />}
+                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId}
+                    />}
                 ></Route>
                 <Route
                     path="/Login"
@@ -70,7 +78,7 @@ function App() {
                         />
                     }
                 ></Route>
-                <Route path="/game" element={<Question theme={theme} />} />
+                <Route path="/game" element={<Game theme={theme} />} />
                 <Route
                     path="/Lecturer"
                     element={

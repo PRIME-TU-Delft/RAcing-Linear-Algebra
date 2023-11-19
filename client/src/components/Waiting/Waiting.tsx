@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react"
 import "./Waiting.css"
 import { useNavigate } from "react-router-dom"
+import Modal from 'react-modal';
 import Boat from "./Themes/Boat"
 import BoatBackground from "./Themes/BoatBackground"
 import socket from "../../socket"
 import Tooltip from "./Tooltip"
+import WarningModal from "../WarningModal/WarningModal"
 import TrainBackground from "./Themes/TrainBackground"
 import Train from "./Themes/Train"
 
 interface Props {
     theme: string
     setTheme: React.Dispatch<React.SetStateAction<string>>
+    lobbyId: number
 }
 
 function Waiting(props: Props) {
@@ -20,7 +23,36 @@ function Waiting(props: Props) {
 
     const [countdown, setCountdown] = useState(-1)
 
+    const [warningModalIsOpen, setWarningModalIsOpen] = useState(false)
+
+    const [currentLobbyId, setCurrentLobbyId] = useState(props.lobbyId)
+
+    const backButtonHandler = () => {
+        setWarningModalIsOpen(curr => true)
+    }
+
+    const leaveGame = () => {
+        socket.emit("leaveLobby", props.lobbyId)
+        navigate("/")
+    }
+
     useEffect(() => {
+        setCurrentLobbyId(curr => props.lobbyId)
+    }, [props.lobbyId])
+
+    useEffect(() => {
+        // Safety check for if the page is reloaded
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault()
+            setTimeout(() => socket.disconnect().connect(), 500)
+            event.returnValue = "Are you sure you want to leave this page?"
+            //shows an alert when try to reload or leave
+        }
+
+        window.addEventListener("beforeunload", handleBeforeUnload)
+        window.addEventListener("unload", () => socket.disconnect())
+        window.addEventListener("load", () => navigate("/"))
+
         const countdownInterval = setInterval(() => {
             if (countdown > 1) {
                 setCountdown((countdown) => countdown - 1)
@@ -45,6 +77,7 @@ function Waiting(props: Props) {
 
         return () => {
             clearInterval(countdownInterval)
+            window.removeEventListener("beforeunload", handleBeforeUnload)
         }
     }, [socket, countdown])
 
@@ -71,8 +104,8 @@ function Waiting(props: Props) {
                     Waiting for the lecturer to start
                 </div>
             </div>
-            <button className="back-btn" onClick={() => navigate("/")}>
-                <p className="back-arrow">{"\u2190"}</p>
+            <button className={"back-btn" + (props.theme == "Train" ? " train" : "")} onClick={() => backButtonHandler()}>
+                <p className={"back-arrow" + (props.theme == "Train" ? " train" : "")}>{"\u2190"}</p>
             </button>
             <div className={`popup ${showPopup ? "show" : ""} `}>
                 <div className="popup-content">
@@ -87,8 +120,15 @@ function Waiting(props: Props) {
                 </div>
             </div>
             <Tooltip />
+            {warningModalIsOpen ? (
+                <WarningModal
+                message="Are you sure you want to quit the game?"
+                title="Warning"
+                onCloseModal={() => setWarningModalIsOpen(curr => false)}
+                onLeaveGame={() => leaveGame()} />
+            ) : null}
         </div>
     )
 }
 
-export default Waiting
+export default Waiting      

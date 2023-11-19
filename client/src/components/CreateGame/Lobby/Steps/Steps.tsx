@@ -12,6 +12,7 @@ import SelectName from "../SelectName/SelectName"
 
 interface Props {
     lobbyId: number // id of the lobby
+    playerNumber: number // number of players in the lobby
     onNameSelected: (name: string) => void // event called when a name is chosen
     startGameHandler: (
         selectedRounds: string[],
@@ -41,8 +42,9 @@ function Steps(props: Props) {
      * @param stepNumber    // the number of the step that was selected
      */
     const stepSelectedHandler = (stepNumber: number) => {
-        if (stepNumber == 3 && !completedSteps[2]) {
-            setActiveStep(2)
+        console.log(stepNumber)
+        if (stepNumber == 4 && !completedSteps[2]) {
+            setActiveStep(3)
             toast.warn("You have to select a study before selecting rounds.", {
                 position: "top-right",
                 autoClose: 3000,
@@ -180,6 +182,7 @@ function Steps(props: Props) {
                         selectedTheme={selectedTheme}
                         selectedStudy={selectedStudy}
                         selectedRounds={selectedRounds}
+                        playerNumber={props.playerNumber}
                         onStartGame={() =>
                             props.startGameHandler(
                                 selectedRounds,

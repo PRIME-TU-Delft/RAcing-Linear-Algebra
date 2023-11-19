@@ -1,0 +1,325 @@
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import RoundOverModal from "../Questions/RoundOverModal";
+import InfoModal from "../Questions/InfoModal";
+import QuestionTrainBackground from "../Questions/Themes/QuestionTrainBackground";
+import { animated, config, useChain, useSpring, useSpringRef } from "react-spring";
+import { useNavigate } from "react-router-dom";
+import socket from "../../socket";
+import QuestionBoatBackground from "../Questions/Themes/QuestionBoatBackground";
+import "./Game.css"
+import Question from "../Questions/Question";
+
+export interface IQuestion {
+    question: string
+    answer: string
+    difficulty: string
+    subject: string
+    type: string
+    options?: string[]
+    variants?: any[]
+}
+
+interface Props {
+    theme: string
+}
+
+interface Statistic {
+    question: string
+    answer: string
+    difficulty: string
+    correctlyAnswered: number
+    incorrectlyAnswered: number
+}
+
+function Game(props: Props) {
+    const [mandatoryNum, setMandatoryNum] = useState(0)
+
+    const [showPopup, setShowPopup] = useState(false)
+
+    const [countdown, setCountdown] = useState(-1)
+
+    const [currentQuestionNum, setCurrentQuestionNum] = useState(0)
+
+    const [currentQuestionAnswer, setCurrentQuestionAnswer] = useState("")
+
+    const navigate = useNavigate()
+
+     // Safety check for if the page is reloaded
+     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        event.preventDefault()
+        setTimeout(() => socket.disconnect().connect(), 500)
+        event.returnValue = "Are you sure you want to leave this page?"
+        //shows an alert when try to reload or leave
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    window.addEventListener("unload", () => socket.disconnect())
+    window.addEventListener("load", () => navigate("/"))
+
+    socket.emit("getMandatoryNum")
+
+    useEffect(() => {
+
+        socket.off("round-ended").on("round-ended", () => {
+            setShowInfoModal(false)
+            setShowRoundOverModal(true)
+            socket.emit("getResults")
+        })
+
+        socket.off("round-started").on("round-started", () => {
+            setShowInfoModal(false)
+            setScore(0)
+            setRightAnswers(0)
+            setWrongAnswers(0)
+            setStreak(0)
+            setMaxStreak(0)
+            socket.emit("getNewQuestion")
+            socket.emit("getMandatoryNum")
+            setShowRoundOverModal(false)
+            setShowPopup(true)
+            setCountdown(3)
+        })
+
+        socket.off("rightAnswer").on("rightAnswer", (score: number) => {
+            // What happens if the answer is correct
+            setModalText(["✔️ Your answer is correct!"])
+            setModalType("correctAnswer")
+            setScoreToAdd((cur) => score)
+            setRightAnswers((rightAnswers) => rightAnswers + 1)
+            setStreak((streak) => streak + 1)
+            setShowInfoModal(true)
+            if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+        })
+
+        socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
+            // What happens if the answer is incorrect and you have no tries left
+            setModalText([
+                "❌ Your answer is incorrect! The correct answer is:",
+            ])
+            if (triesLeft === 0) {
+                setModalType("incorrectAnswer")
+                setModalAnswer(currentQuestionAnswer)
+                setStreak(0)
+                setScoreToAdd(0)
+                setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
+                setShowInfoModal(true)
+                if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+            } else {
+                wrongAnswerToast(triesLeft)
+            }
+        })
+
+        socket.off("result").on("result", (result: string) => {
+            calculateStats(JSON.parse(result))
+        })
+
+        socket.off("end-game").on("end-game", () => {
+            navigate("/endGame")
+        })
+
+        socket.off("mandatoryNum").on("mandatoryNum", (num: number) => {
+            setMandatoryNum(curr => num)
+        })
+    }, [socket, currentQuestionNum, mandatoryNum])
+
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            if (countdown > 1) {
+                setCountdown((countdown) => countdown - 1)
+            } else if (countdown == 1 || countdown == 0) {
+                setShowPopup((cur) => false)
+            }
+        }, 1000)
+        return () => {
+            clearInterval(countdownInterval)
+        }
+    }, [countdown])
+
+    useEffect(() => {
+        if (currentQuestionNum > 2) {
+            setScoreToAdd(curr => 0)
+        }
+    }, [currentQuestionNum])
+
+    // Variable to display the info modal
+    const [showInfoModal, setShowInfoModal] = useState<boolean>(false)
+    // Variable to inform the question screen that difficulty selection should not appear
+    const [hideQuestion, setHideQuestion] = useState<boolean>(false)
+    const [answeredQuestionType, setAnsweredQuestionType] = useState("mc")
+    // Varaible to display the round over modal
+    const [showRoundOverModal, setShowRoundOverModal] = useState<boolean>(false)
+    // Used to track when to not call get new question, because of the difficulty selection screen
+    const [rightAnswers, setRightAnswers] = useState<number>(0)
+    const [wrongAnswers, setWrongAnswers] = useState<number>(0)
+    const [streak, setStreak] = useState<number>(0) // Streak of the user
+    const [maxStreak, setMaxStreak] = useState<number>(0) // Max streak of the user
+    const [score, setScore] = useState<number>(0) // Total score of the user
+    const [scoreToAdd, setScoreToAdd] = useState<number>(0) // Score gained for the current question
+    const [numOfQuestions, setNumOfQuestions] = useState<number>(0) // Number of questions in the round
+
+    // Variables to dinamically decide what to display on info modal
+    const [modalText, setModalText] = useState<string[]>([])
+    const [modalType, setModalType] = useState<string>("")
+    const [modalAnswer, setModalAnswer] = useState<string>("")
+
+    // Update the score when the scoreToAdd variable changes
+    useEffect(() => {
+        setScore((score) => score + scoreToAdd)
+    }, [scoreToAdd])
+
+    useEffect(() => {
+        if (streak > maxStreak) setMaxStreak(streak)
+    }, [streak])
+
+    useEffect(() => {
+        setHideQuestion(curr => showInfoModal)
+    }, [showInfoModal])
+
+    function wrongAnswerToast(triesLeft: number) {
+        toast(
+            `❌ Your answer is incorrect. You have ${triesLeft} attempts left`,
+            {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            }
+        )
+    }
+
+    function calculateStats(statistic: Statistic[]) {
+        let rightAnswers = 0
+        let wrongAnswers = 0
+        for (const stat of statistic) {
+            if (stat.correctlyAnswered === 1) rightAnswers++
+            else if (stat.incorrectlyAnswered !== 0) wrongAnswers++
+        }
+        setRightAnswers(rightAnswers)
+        setWrongAnswers(wrongAnswers)
+        setNumOfQuestions(rightAnswers + wrongAnswers)
+    }
+
+    // Animations
+    const bodyAnimationRef = useSpringRef()
+    const bodyAnimation = useSpring({
+        ref: bodyAnimationRef,
+        config: config.stiff,
+        from: {
+            scale: showInfoModal || showRoundOverModal ? 1 : 2,
+            opacity: showInfoModal || showRoundOverModal ? 1 : 0,
+            pointerEvent: "all",
+            overflow: "hidden",
+        },
+        to: {
+            scale: showInfoModal || showRoundOverModal ? 0 : 1,
+            opacity: showInfoModal || showRoundOverModal ? 0 : 1,
+            pointerEvent: showInfoModal || showRoundOverModal ? "none" : "all",
+            overflow: "hidden",
+        },
+    })
+
+    const modalAnimationRef = useSpringRef()
+    const modalAnimation = useSpring({
+        ref: modalAnimationRef,
+        config: config.stiff,
+        from: {
+            scale: 0,
+            opacity: 0,
+            size: "0%",
+            pointerEvents: "none",
+        },
+        to: {
+            scale: showInfoModal ? 1 : 0,
+            opacity: showInfoModal ? 1 : 0,
+            size: showInfoModal ? 1 : "0%",
+            pointerEvents: showInfoModal ? "all" : "none",
+        },
+    })
+
+    useChain(
+        showInfoModal
+            ? [bodyAnimationRef, modalAnimationRef]
+            : [modalAnimationRef, bodyAnimationRef],
+        [0, showInfoModal ? 0.3 : 0.1]
+    )
+
+    const modalAnimationRef2 = useSpringRef()
+    const modalAnimation2 = useSpring({
+        ref: modalAnimationRef2,
+        config: config.stiff,
+        from: {
+            scale: 0,
+            opacity: 0,
+            size: "0%",
+            pointerEvents: "none",
+        },
+        to: {
+            scale: showRoundOverModal ? 1 : 0,
+            opacity: showRoundOverModal ? 1 : 0,
+            size: showRoundOverModal ? 1 : "0%",
+            pointerEvents: showRoundOverModal ? "all" : "none",
+        },
+    })
+
+    useChain(
+        showRoundOverModal
+            ? [bodyAnimationRef, modalAnimationRef2]
+            : [modalAnimationRef2, bodyAnimationRef],
+        [0, showRoundOverModal ? 0.3 : 0.1]
+    )
+
+    return (
+        <>
+             {props.theme === "Train" ? (
+                <QuestionTrainBackground />
+            ) : (
+                <QuestionBoatBackground />
+            )}
+            <div className="question-header">
+                <div className="score"> Score: {Math.floor(score)}</div>
+            </div>
+            <Question 
+                hideQuestion={hideQuestion}
+                theme={props.theme}
+                getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
+                getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
+
+            />          
+            <InfoModal
+                endInfoModal={() => setShowInfoModal(false)}
+                showInfoModal={showInfoModal}
+                setShowInfoModal={setShowInfoModal}
+                modalAnimation={modalAnimation}
+                modalText={modalText}
+                type={modalType}
+                correctAnswer={modalAnswer}
+                streak={streak}
+                scoreToAdd={scoreToAdd}
+                questionType={answeredQuestionType}
+            />
+            <RoundOverModal
+                showRoundOverModal={showRoundOverModal}
+                modalAnimation={modalAnimation2}
+                numOfRightAnswers={rightAnswers}
+                numOfWrongAnswers={wrongAnswers}
+                maxStreak={maxStreak}
+                questionNum={numOfQuestions}
+            />
+            <ToastContainer />
+            <div className={`popup ${showPopup ? "show" : ""}`}>
+                <div className="popup-content">
+                    <p>
+                        <span className="countdown-text">{countdown}</span>
+                    </p>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default Game

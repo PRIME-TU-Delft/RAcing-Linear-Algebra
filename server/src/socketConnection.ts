@@ -20,9 +20,43 @@ module.exports = {
             cors: {
                 origin: "*",
             },
+            connectionStateRecovery: {
+                // the backup duration of the sessions and the packets
+                maxDisconnectionDuration: 2 * 60 * 1000,
+                // whether to skip middlewares upon successful recovery
+                skipMiddlewares: true,
+              }
         })
 
         io.on("connection", (socket: Socket) => {
+            console.log("DATA")
+            console.log(socket.data)
+            console.log("CONNECTED")
+            console.log(socket.id)
+            console.log(socket.rooms)
+
+            if (socket.recovered) {
+                console.log("RECOVERED SUCCESFULLY!")
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                try {
+                    const game = getGame(lobbyId)
+                    game.users.set(socket.id, socket.data.lastRecordedUserData)
+
+                    game.totalScore += socket.data.lastRecordedUserData.score
+
+                    game.avgScore = game.totalScore / game.users.size
+
+                    io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
+
+                } catch (error) {
+                    //If an error is throw it means the game was not started yet
+                    //So we only have to send the updated amount of players in the lobby
+                    const players: number = io.sockets.adapter.rooms.get(
+                        `players${lobbyId}`
+                    ).size
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
+                }
+            }
             /**
              * Create a lobby with the lobbyId
              */
@@ -42,10 +76,28 @@ module.exports = {
             })
 
             /**
+             * Leave a lobby by lobbyId (e.g. quitting at waiting screen)
+             */
+            socket.on("leaveLobby", (lobbyId: number) => {
+                void socket.leave(`players${lobbyId}`)
+                try {
+                    const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
+                } catch (error) {
+                    // If an error is caught, it means there are no longer any players in the lobby, 
+                    // thus emit so to the lecturer 0
+                    io.to(`lecturer${lobbyId}`).emit("new-player-joined", 0)
+                }
+            })
+
+            /**
              * After a socket disconnects, update the amount of players in the lobby/game
              * And also update the score if they were in a game
              */
             socket.on("disconnect", () => {
+                console.log("DISCONNECT:")
+                console.log(socket.id)
+                console.log(socket.rooms)
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
@@ -53,12 +105,14 @@ module.exports = {
                     if (user === undefined) return
 
                     game.totalScore -= user.score
+                    socket.data.lastRecordedUserData = user
 
                     game.users.delete(socket.id)
                     game.avgScore = game.totalScore / game.users.size
 
                     io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
                 } catch (error) {
+                    console.log(error)
                     //If an error is throw it means the game was not started yet
                     //So we only have to send the updated amount of players in the lobby
                     if (io.sockets.adapter.rooms.get(`players${lobbyId}`) === undefined)
@@ -91,6 +145,20 @@ module.exports = {
                         io.to(`players${lobbyId}`).emit("round-started")
                     } catch (error) {
                         console.error(error)
+                    }
+
+                    try {
+                        const lobbyId = socketToLobbyId.get(socket.id)!
+    
+                        const game = getGame(lobbyId)
+                        const round = game.rounds[game.round]
+                        const roundId: number = round.id
+    
+                        const ghostTrainScores = await getGhostTrainScores(roundId)
+    
+                        socket.emit("ghost-trains", ghostTrainScores)
+                    } catch (error) {
+                        console.log(error)
                     }
                 }
             )
