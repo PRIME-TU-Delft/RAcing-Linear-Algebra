@@ -8,6 +8,7 @@ export async function saveNewScore(
     score: number,
     checkpoints: number[],
     roundId: string,
+    roundDuration: number,
     study: string,
     accuracy: number
 ) {
@@ -16,6 +17,7 @@ export async function saveNewScore(
         score,
         checkpoints,
         roundId,
+        roundDuration,
         study,
         accuracy,
     })

@@ -42,7 +42,7 @@ describe("Game", () => {
         roundStub.study = ["CSE"]
         roundStub.mandatory_questions = [mandatoryQuestion]
         roundStub.bonus_questions = [bonusQuestionEasy, bonusQuestionHard]
-        game = new Game([roundStub], "team1", map, "CSE")
+        game = new Game([roundStub], [],"team1", map, "CSE")
     })
     afterEach(() => {
         sinon.restore()

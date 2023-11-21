@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
+import TeamStats from "./TeamStats/TeamStats";
+import TimeBar from "./TimeBar/TimeBar";
 import QuestionTrainBackground from "../Questions/Themes/QuestionTrainBackground";
 import { animated, config, useChain, useSpring, useSpringRef } from "react-spring";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +69,7 @@ function Game(props: Props) {
             socket.emit("getResults")
         })
 
-        socket.off("round-started").on("round-started", () => {
+        socket.off("round-started").on("round-started", (roundDuration: number) => {
             setShowInfoModal(false)
             setScore(0)
             setRightAnswers(0)
@@ -280,16 +282,21 @@ function Game(props: Props) {
             ) : (
                 <QuestionBoatBackground />
             )}
-            <div className="question-header">
-                <div className="score"> Score: {Math.floor(score)}</div>
-            </div>
-            <Question 
-                hideQuestion={hideQuestion}
-                theme={props.theme}
-                getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
-                getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
+            <div className="game-container">
+                <div className="game-left-container">
+                    <TimeBar></TimeBar>
+                    <Question 
+                        hideQuestion={hideQuestion}
+                        theme={props.theme}
+                        getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
+                        getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
 
-            />          
+                    />  
+                </div>
+                 
+                <TeamStats></TeamStats>
+            </div>
+                   
             <InfoModal
                 endInfoModal={() => setShowInfoModal(false)}
                 showInfoModal={showInfoModal}

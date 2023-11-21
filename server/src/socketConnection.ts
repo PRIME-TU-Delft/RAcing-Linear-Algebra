@@ -1,5 +1,5 @@
 import type { Socket } from "socket.io"
-import { addGame, getGame, endRound } from "./controllers/gameController"
+import { addGame, getGame, endRound, getRoundDuration } from "./controllers/gameController"
 import { getIRounds } from "./controllers/roundDBController"
 import { startLobby } from "./controllers/lobbyController"
 import {
@@ -132,17 +132,19 @@ module.exports = {
              */
             socket.on(
                 "startGame",
-                async (lobbyId: number, topics: string[], study: string, teamName: string) => {
+                async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     startLobby(lobbyId)
                     try {
-                        console.log("started round")
+                        console.log(study)
                         const rounds = await getIRounds(study, topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
                         )
-                        addGame(rounds, teamName, socketIds, lobbyId, study)
-                        io.to(`players${lobbyId}`).emit("round-started")
+                        addGame(rounds, roundDurations, teamName, socketIds, lobbyId, study)
+                        const roundDuration = getRoundDuration(lobbyId)
+                        io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
+                        io.to(`players${lobbyId}`).emit("round-started", roundDuration)
                     } catch (error) {
                         console.error(error)
                     }
@@ -250,6 +252,7 @@ module.exports = {
                     game.avgScore,
                     game.checkpoints,
                     game.rounds[game.round]._id,
+                    game.roundDurations[game.round],
                     game.study,
                     accuracy
                 )
@@ -288,7 +291,11 @@ module.exports = {
                 const continueGame = endRound(lobbyId)
 
                 if (!continueGame) io.to(`players${lobbyId}`).emit("end-game")
-                else io.to(`players${lobbyId}`).emit("round-started")
+                else {
+                    const roundDuration = getRoundDuration(lobbyId)
+                    io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
+                    io.to(`players${lobbyId}`).emit("round-started", roundDuration)
+                }
             })
 
             //This is for getting all the questions a user has answered.
@@ -331,6 +338,7 @@ module.exports = {
                     const roundId: number = round.id
 
                     const ghostTrainScores = await getGhostTrainScores(roundId)
+                    console.log(ghostTrainScores)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {

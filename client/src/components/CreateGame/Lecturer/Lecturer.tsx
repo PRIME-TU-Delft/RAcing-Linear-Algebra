@@ -52,7 +52,7 @@ function Lecturer(props: Props) {
     const { width, height } = useWindowDimensions()
 
     //total seconds of count down(10 minutes), added additional of 3 because of the 3s count down
-    const [seconds, setSeconds] = useState(13)
+    const [seconds, setSeconds] = useState(613)
 
     //score of the team
     const [score, setScore] = useState(0)
@@ -153,6 +153,11 @@ function Lecturer(props: Props) {
             )
             setAccuracy((current) => stats.accuracy)
         })
+
+        socket.on("round-duration", (roundDuration: number) => {
+            setSeconds(curr => roundDuration)
+        })
+
         socket.on("game-ended", () => {
             setGameEnds(true)
         })
@@ -177,7 +182,6 @@ function Lecturer(props: Props) {
         if (gameEnds) {
             navigate("/endGame")
         } else {
-            setSeconds((cur) => 603)
             setScore(0)
             setLocation("Home")
             setAccuracy(100)

@@ -1,5 +1,11 @@
-.question-container {
-    overflow: hidden;
+.game-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.game-left-container {
+    display: flex;
+    flex-direction: column;
 }
 
 @font-face {

@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom"
 import socket from "../../../socket"
 import { a, useSpring } from "react-spring"
 
+interface SelectedRound {
+    topicName: string,
+    roundDuration: number
+}
+
 interface Props {
     lobbyId: number // lobby id to display
     onThemeSelected: (theme: string) => void // event called when a theme is selected
@@ -33,7 +38,7 @@ function Lobby(props: Props) {
      * @param selectedTheme     // theme selected by the lecturer
      */
     const startGameHandler = (
-        selectedRounds: string[],
+        selectedRounds: SelectedRound[],
         selectedStudy: string,
         selectedTheme: string
     ) => {
@@ -43,7 +48,8 @@ function Lobby(props: Props) {
         socket.emit(
             "startGame",
             props.lobbyId,
-            selectedRounds,
+            selectedRounds.map(x => x.topicName),
+            selectedRounds.map(x => x.roundDuration),
             selectedStudy.toUpperCase(),
             teamName
         )

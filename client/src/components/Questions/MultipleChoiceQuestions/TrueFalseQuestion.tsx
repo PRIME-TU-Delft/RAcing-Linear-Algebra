@@ -23,7 +23,7 @@ export default function TrueFalseQuestion(props: Props) {
 
     return (
         <>
-            <div className="question-container">
+            <div className="true-false-question">
                 <div
                     className={`question-text-container ${
                         props.theme === "Train"

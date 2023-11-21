@@ -11,6 +11,7 @@ export class Game {
     teamName: string //The name of the team
     round: number //Number of the current round that is being played
     rounds: IRound[] //The selected rounds
+    roundDurations: number[] // The durations of the rounds
     users: Map<string, User> //The map of users in the game
     checkpoints: number[] //The amount of seconds taken to reach each checkpoint
     study: string //The study of this game
@@ -24,9 +25,10 @@ export class Game {
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(rounds: IRound[], teamName: string, users: Map<string, User>, study: string) {
+    constructor(rounds: IRound[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
         this.round = 0
         this.rounds = rounds
+        this.roundDurations = roundDurations
         this.teamName = teamName
         this.avgScore = 0
         this.totalScore = 0
