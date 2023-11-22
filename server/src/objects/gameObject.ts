@@ -210,6 +210,17 @@ export class Game {
     }
 
     /**
+     * Calculates the value for the team score which is to be stored in the database
+     * @param teamScore sumed value of the team score
+     * @param numberOfPlayers total number of players in the game
+     * @param roundDuration the duration of the round being played
+     * @returns the score value to store in the database
+     */
+    calculateDatabaseScoreValue(teamScore: number, numberOfPlayers: number, roundDuration: number) {
+        return teamScore / (numberOfPlayers * roundDuration)
+    }
+
+    /**
      * Helper function to check if the mandatory questions are done for a user
      * @param socketId the player to check for
      * @returns if user has already asnwered x mandatory questions
