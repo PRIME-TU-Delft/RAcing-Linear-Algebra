@@ -46,7 +46,9 @@ module.exports = {
 
                     game.avgScore = game.totalScore / game.users.size
 
-                    io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
+                    io.to(`lecturer${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
 
                 } catch (error) {
                     //If an error is throw it means the game was not started yet
@@ -110,7 +112,9 @@ module.exports = {
                     game.users.delete(socket.id)
                     game.avgScore = game.totalScore / game.users.size
 
-                    io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
+                    io.to(`lecturer${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
                 } catch (error) {
                     console.log(error)
                     //If an error is throw it means the game was not started yet
@@ -136,7 +140,9 @@ module.exports = {
                     startLobby(lobbyId)
                     try {
                         console.log(study)
+                        console.log(topics)
                         const rounds = await getIRounds(study, topics)
+                        console.log(rounds)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
@@ -199,7 +205,7 @@ module.exports = {
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
                         io.to(`lecturer${lobbyId}`).emit("score", {
-                            score: Math.floor(game.avgScore),
+                            score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
                         })
                     } else if (attempts === 0) {
