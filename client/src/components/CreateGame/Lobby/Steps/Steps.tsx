@@ -10,12 +10,17 @@ import { ToastContainer, toast } from "react-toastify"
 import socket from "../../../../socket"
 import SelectName from "../SelectName/SelectName"
 
+interface SelectedRound {
+    topicName: string,
+    roundDuration: number
+}
+
 interface Props {
     lobbyId: number // id of the lobby
     playerNumber: number // number of players in the lobby
     onNameSelected: (name: string) => void // event called when a name is chosen
     startGameHandler: (
-        selectedRounds: string[],
+        selectedRounds: SelectedRound[],
         selectedStudy: string,
         selectedTheme: string
     ) => void // event called when start game button is clicked
@@ -33,9 +38,11 @@ function Steps(props: Props) {
 
     const [selectedTheme, setSelectedTheme] = useState("")
     const [selectedStudy, setSelectedStudy] = useState("")
-    const [selectedRounds, setSelectedRounds] = useState<string[]>([])
+    const [selectedRounds, setSelectedRounds] = useState<SelectedRound[]>([])
 
     const [availableRounds, setAvailableRounds] = useState<string[]>([])
+
+    const temporaryRounds = ["Eigen values", "Diagonalization", "Determinants", "Transformation", "Multiplication"]
 
     /**
      * Function called when a step has been selected on the lobby screen
@@ -157,8 +164,8 @@ function Steps(props: Props) {
                 stepCaption="Rounds determine the topics for your race."
                 stepContent={
                     <Rounds
-                        onRoundSelected={(rounds: string[]) => {
-                            setSelectedRounds(rounds)
+                        onRoundSelected={(rounds: SelectedRound[]) => {
+                            setSelectedRounds(curr => [...rounds])
                         }}
                         onStepCompleted={(completed: boolean) =>
                             stepCompletionHandler(4, completed)
@@ -181,7 +188,7 @@ function Steps(props: Props) {
                         completedSteps={completedSteps}
                         selectedTheme={selectedTheme}
                         selectedStudy={selectedStudy}
-                        selectedRounds={selectedRounds}
+                        selectedRounds={selectedRounds.map(x => x.topicName)}
                         playerNumber={props.playerNumber}
                         onStartGame={() =>
                             props.startGameHandler(
