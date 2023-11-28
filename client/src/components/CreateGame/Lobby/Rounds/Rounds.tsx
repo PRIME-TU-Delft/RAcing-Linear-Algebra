@@ -68,7 +68,7 @@ function Rounds(props: Props) {
         newAvailableRounds.splice(removeIndex, 1)
         setUnselectedRounds(curr => [...newAvailableRounds])
 
-        props.onRoundSelected(selectedRounds)
+        props.onRoundSelected(newSelectedRounds)
         props.onStepCompleted(true)
     }
 
@@ -81,7 +81,7 @@ function Rounds(props: Props) {
         newSelectedRounds.splice(removeIndex, 1)
         setSelectedRounds(curr => [...newSelectedRounds])
 
-        props.onRoundSelected(selectedRounds)
+        props.onRoundSelected(newSelectedRounds)
         if (selectedRounds.length == 0) props.onStepCompleted(false)  
     }
 
