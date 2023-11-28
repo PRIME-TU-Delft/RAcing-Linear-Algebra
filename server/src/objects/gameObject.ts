@@ -4,10 +4,12 @@ import type { IRound } from "../models/roundModel"
 import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../latexParser"
+import { CurveInterpolator } from 'curve-interpolator';
 
 export class Game {
     avgScore: number //The average score of the team's users
     totalScore: number //The total (sum) score of the team's users
+    timeScores: number[]
     teamName: string //The name of the team
     round: number //Number of the current round that is being played
     rounds: IRound[] //The selected rounds
@@ -32,6 +34,7 @@ export class Game {
         this.teamName = teamName
         this.avgScore = 0
         this.totalScore = 0
+        this.timeScores = [0]
         this.users = users
         this.checkpoints = []
         this.study = study
@@ -210,14 +213,39 @@ export class Game {
     }
 
     /**
-     * Calculates the value for the team score which is to be stored in the database
-     * @param teamScore sumed value of the team score
-     * @param numberOfPlayers total number of players in the game
-     * @param roundDuration the duration of the round being played
-     * @returns the score value to store in the database
+     * Calculates and stores the current score into the list of time scores
+     * The value is scaled down based on player number and round duration
      */
-    calculateDatabaseScoreValue(teamScore: number, numberOfPlayers: number, roundDuration: number) {
-        return teamScore / (numberOfPlayers * roundDuration)
+    addNewTimeScore() {
+        const currentTotalScore = this.totalScore
+        const numberOfPlayers = this.users.keys.length
+        const roundDuration = this.roundDurations[this.round]
+
+        const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
+        this.timeScores.push(newTimeScore)
+    }
+
+    /**
+     * Gets the interpolated score points for a given ghost team scores
+     * @param ghostTeamScores the time scores array of the ghost team
+     * @param deltaT the delta T being used
+     * @returns a list of interpolated points for the given round to be used for this ghost team
+     */
+    getInterpolateGhostTeamScoreForCurrentGame(ghostTeamScores: number[], deltaT: number) {
+        const points = ghostTeamScores.map((x, index) => [index * 30, x])
+        const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
+        const newPoints = interp.getPoints(this.roundDurations[this.round] / deltaT)
+        return this.transformGhostTeamScoresForCurrentRound(newPoints)
+    }
+
+    /**
+     * Transforms the normalized score values into the appropriate values for the current round
+     * @param ghostTeamScores the array of points given by the curve interpolation library
+     *  representing interpolated ghost team scores
+     * @returns the scaled up values for the scores based on current number of players and round duration
+     */
+    transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
+        return ghostTeamScores.map(x => x[1] * this.users.keys.length * this.roundDurations[this.round])
     }
 
     /**
