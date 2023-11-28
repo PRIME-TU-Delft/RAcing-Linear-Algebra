@@ -5,7 +5,7 @@ const { MongoClient } = require("mongodb")
 
 export async function saveNewScore(
     teamname: string,
-    score: number,
+    score: number[],
     checkpoints: number[],
     roundId: string,
     roundDuration: number,
@@ -83,7 +83,7 @@ export async function getGhostTrainScores(roundId: number) {
                 {
                     $group: {
                         _id: null,
-                        maxScore: { $max: "$score" },
+                        maxScore: { $max: { $last: "$score"} },
                         teamName: { $first: "$teamname" },
                     },
                 },
@@ -98,7 +98,7 @@ export async function getGhostTrainScores(roundId: number) {
                 {
                     $group: {
                         _id: null,
-                        averageScore: { $avg: "$score" },
+                        averageScore: { $avg: { $last: "$score"} },
                     },
                 },
             ])

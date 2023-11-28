@@ -15,7 +15,7 @@ describe("scoreDBController tests", () => {
         jest.spyOn(Score, "create").mockResolvedValueOnce(mockScore as any)
 
         const teamname = "Team A"
-        const score = 100
+        const score = [100]
         const checkpoints = [1, 2, 3]
         const roundId = "round123"
         const roundDuration = 600
