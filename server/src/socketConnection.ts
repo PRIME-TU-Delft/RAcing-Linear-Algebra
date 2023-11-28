@@ -255,7 +255,7 @@ module.exports = {
 
                 await saveNewScore(
                     game.teamName,
-                    game.avgScore,
+                    game.timeScores,
                     game.checkpoints,
                     game.rounds[game.round]._id,
                     game.roundDurations[game.round],
@@ -266,6 +266,16 @@ module.exports = {
 
                 const result = await getAllScores(currentRound.id)
                 socket.emit("get-all-scores", result)
+            })
+
+            /**
+             * This function saves a new time score when called by frontend
+             * The time score is taken from the current team score after applying normalization
+             */
+            socket.on("saveTimeScore", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                const game = getGame(lobbyId)
+                game.addNewTimeScore()
             })
 
             /**
