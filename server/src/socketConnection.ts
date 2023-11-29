@@ -7,6 +7,7 @@ import {
     getAllScores,
     getCheckpoints,
     getGhostTrainScores,
+    getGhostTeams,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -278,6 +279,29 @@ module.exports = {
                 game.addNewTimeScore()
             })
 
+            socket.on("getGhostTeams", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+
+                    const game = getGame(lobbyId)
+                    const round = game.rounds[game.round]
+                    const roundId: number = round.id
+
+                    const ghostTeams = await getGhostTeams(roundId)
+                    const interpolatedGhostTeams = ghostTeams.map(x => ({
+                        teamName: x.teamname,
+                        scores: game.getInterpolateGhostTeamScoreForCurrentGame(x.scores, 30),
+                        checkpoints: x.checkpoints,
+                        study: x.study,
+                        accuracy: x.accuracy
+                    }))
+                    console.log("SENDIng...")
+                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        
             /**
              * This function gets the statistics for the lecturer
              * This includes all the questions answered with the score, accuracy, difficuly and answer
@@ -354,7 +378,6 @@ module.exports = {
                     const roundId: number = round.id
 
                     const ghostTrainScores = await getGhostTrainScores(roundId)
-                    console.log(ghostTrainScores)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {
