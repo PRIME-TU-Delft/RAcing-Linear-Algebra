@@ -218,7 +218,7 @@ export class Game {
      */
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
-        const numberOfPlayers = this.users.keys.length
+        const numberOfPlayers = this.users.size
         const roundDuration = this.roundDurations[this.round]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
@@ -235,7 +235,9 @@ export class Game {
         const points = ghostTeamScores.map((x, index) => [index * 30, x])
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const newPoints = interp.getPoints(this.roundDurations[this.round] / deltaT)
-        return this.transformGhostTeamScoresForCurrentRound(newPoints)
+        const result = this.transformGhostTeamScoresForCurrentRound(newPoints)
+        
+        return result
     }
 
     /**
@@ -245,7 +247,7 @@ export class Game {
      * @returns the scaled up values for the scores based on current number of players and round duration
      */
     transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
-        return ghostTeamScores.map(x => x[1] * this.users.keys.length * this.roundDurations[this.round])
+        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.round])
     }
 
     /**
