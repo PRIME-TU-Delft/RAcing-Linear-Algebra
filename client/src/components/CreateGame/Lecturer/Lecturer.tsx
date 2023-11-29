@@ -172,11 +172,16 @@ function Lecturer(props: Props) {
             setTeamScores(curr => [...formattedTeamScores])
             setShowLeaderBoard(curr => true)
         })
+
+        socket.on("ghost-teams", (ghostTeams: JSON[]) => {
+            console.log(ghostTeams)
+        })
     }, [socket])
 
     //reset everything when new round start
     const startNewRound = () => {
         socket.emit("startNextRound")
+        socket.emit("getGhostTeams")
 
         //if no more rounds, end game
         if (gameEnds) {
