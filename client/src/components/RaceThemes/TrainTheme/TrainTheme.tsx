@@ -122,6 +122,7 @@ function TrainTheme(props: Props) {
                                       props.averageGoalPoints
                             }
                             ghostTrains={props.ghosts}
+                            usedTime={props.usedTime}
                             finalSection={currentMapSection == 1}
                             mapDimensions={props.mapDimensions}
                             trackPoints={section.tracks}

@@ -114,6 +114,7 @@ function BoatTheme(props: Props) {
                                       props.averageGoalPoints
                             }
                             ghostBoats={props.ghosts}
+                            usedTime={props.usedTime}
                             finalSection={currentMapSection == 1}
                             mapDimensions={props.mapDimensions}
                             trackPoints={section.path}

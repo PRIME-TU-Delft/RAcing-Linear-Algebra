@@ -16,9 +16,7 @@ function BestGhost(props: Props) {
             style={{
                 borderColor: "#FFD700",
                 offsetPath: `path("${props.path}")`,
-                offsetDistance: `${
-                    (props.bestGhost.score / props.totalPoints) * 100
-                }%`,
+                offsetDistance: "0%",
             }}
         >
             <div className="highest-score">HIGHEST SCORE</div>
