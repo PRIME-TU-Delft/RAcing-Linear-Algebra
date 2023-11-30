@@ -231,14 +231,40 @@ export class Game {
      * @param deltaT the delta T being used
      * @returns a list of interpolated points for the given round to be used for this ghost team
      */
-    getInterpolateGhostTeamScoreForCurrentGame(ghostTeamScores: number[], deltaT: number) {
+    getGhostTeamTimePointScores(ghostTeamScores: number[]) {
+        const numberOfTimePoints = Math.floor(this.roundDurations[this.round] / 20)
         const points = ghostTeamScores.map((x, index) => [index * 30, x])
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
-        const newPoints = interp.getPoints(this.roundDurations[this.round] / deltaT)
-        const result = this.transformGhostTeamScoresForCurrentRound(newPoints)
-        
+        const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
+
+        const result = timePoints.map(x => ({
+            timePoint: x,
+            score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
+        }))
         return result
     }
+
+    /**
+     * Gets a random distribution of time points across the round duration interval that are to be used for score updating
+     * @param numberOfTimePoints the number of time points to generate
+     * @returns an array of time points in seconds across the interval
+     */
+    getTimePointsForTeam(numberOfTimePoints: number) {
+        const timePoints: number[] = [];
+        const maxDuration = this.roundDurations[this.round] * 1000; // Convert duration to milliseconds
+        const minSpacing = maxDuration / numberOfTimePoints;
+      
+        let currentTime = 0;
+        for (let i = 0; i < numberOfTimePoints; i++) {
+          const randomOffset = Math.random() * minSpacing + minSpacing * 0.5; // Random offset within a range
+          currentTime += randomOffset;
+          if (currentTime < maxDuration) {
+            timePoints.push(currentTime);
+          }
+        }
+      
+        return timePoints.map((time) => Math.floor(time / 1000)); // Convert back to seconds
+      }
 
     /**
      * Transforms the normalized score values into the appropriate values for the current round

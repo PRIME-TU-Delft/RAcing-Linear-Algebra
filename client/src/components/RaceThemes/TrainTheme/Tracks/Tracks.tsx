@@ -21,6 +21,7 @@ interface Props {
     trackPoints: PercentCoordinate[] // list of path corner points
     totalPoints: number // number of points needed to complete the map section
     currentPoints: number // current points of the team
+    usedTime: number    // current round time
     checkpoints: Checkpoint[] // list of checkpoints
     ghostTrains: Ghost[] // list of ghost boats
     finalSection: boolean // boolean to indicate whether this is the final section of the map
@@ -135,10 +136,10 @@ function Tracks(props: Props) {
                 <Ghosts
                     data-testid={"ghosts"}
                     ghosts={props.ghostTrains}
-                    totalPoints={props.totalPoints}
-                    colors={ghostColors}
+                    time={props.usedTime}
                     path={svgPath}
                     sprite={Sprites.train}
+                    totalPoints={props.totalPoints}
                 />
             )}
         </div>

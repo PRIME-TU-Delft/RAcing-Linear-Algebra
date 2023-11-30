@@ -23,26 +23,19 @@ function RaceTheme(props: Props) {
     const [ghosts, setGhosts] = useState<Ghost[]>([])
 
     useEffect(() => {
-        socket.emit("getGhostTrains")
-    }, [])
+        socket.emit("getGhostTeams")
+    }, [props.averageGoalPoints])
 
     useEffect(() => {
-        socket.on("ghost-trains", (ghosts) => {
-            const averageGhost = ghosts["avgScore"][0]
-            const bestGhost = ghosts["bestScore"][0]
+        socket.on("ghost-teams", (ghosts) => {
+            const ghostsWithColor: Ghost[] = ghosts.map(
+                (x: { teamName: string; timeScores: { timePoint: number, score: number }; checkpoints: number[]; study: string; accuracy: number }) => ({
+                    ...x,
+                    color: "#" + Math.random().toString(16).substring(2, 8)
+                }))
 
-            const newGhosts = [
-                {
-                    score: averageGhost["averageScore"],
-                    teamName: "AverageJoes",
-                },
-                {
-                    score: bestGhost["maxScore"],
-                    teamName: bestGhost["teamName"],
-                },
-            ]
-
-            setGhosts((curr) => [...newGhosts])
+            setGhosts((curr) => [...ghostsWithColor])
+            console.log(ghosts)
         })
     }, [socket])
 

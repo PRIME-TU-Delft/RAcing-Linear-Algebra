@@ -14,8 +14,12 @@ class Point {
 }
 
 interface Ghost {
-    score: number
     teamName: string
+    color: string
+    timeScores: { timePoint: number, score: number }[]
+    checkpoints: number[]
+    study: string
+    accuracy: number
 }
 
 interface Checkpoint {

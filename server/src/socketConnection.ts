@@ -279,6 +279,9 @@ module.exports = {
                 game.addNewTimeScore()
             })
 
+            /**
+             * Gets randomly sampled ghost teams, applies interpolation and sends them to client
+             */
             socket.on("getGhostTeams", async () => {
                 try {
                     const lobbyId = socketToLobbyId.get(socket.id)!
@@ -290,12 +293,11 @@ module.exports = {
                     const ghostTeams = await getGhostTeams(roundId)
                     const interpolatedGhostTeams = ghostTeams.map(x => ({
                         teamName: x.teamname,
-                        scores: game.getInterpolateGhostTeamScoreForCurrentGame(x.scores, 30),
+                        timeScores: game.getGhostTeamTimePointScores(x.scores),
                         checkpoints: x.checkpoints,
                         study: x.study,
                         accuracy: x.accuracy
                     }))
-                    console.log("SENDIng...")
                     socket.emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
                     console.log(error)

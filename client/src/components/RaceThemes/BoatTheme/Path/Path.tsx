@@ -20,6 +20,7 @@ interface Props {
     totalPoints: number // number of points needed to complete the map section
     currentPoints: number // current points of the team
     checkpoints: Checkpoint[] // list of checkpoints
+    usedTime: number    // current round time
     ghostBoats: Ghost[] // list of ghost boats
     finalSection: boolean // boolean to indicate whether this is the final section of the map
     onSectionComplete: () => void // event called when the end of the map is reached
@@ -125,10 +126,10 @@ function Path(props: Props) {
                 <Ghosts
                     data-testid={"ghosts"}
                     ghosts={props.ghostBoats}
-                    totalPoints={props.totalPoints}
-                    colors={ghostColors}
+                    time={props.usedTime}
                     path={svgPath}
                     sprite={Sprites.boat}
+                    totalPoints={props.totalPoints}
                 />
             )}
         </div>
