@@ -9,8 +9,6 @@ interface Props {
         width: number // screen width of map section
         height: number // screen height of map section
     }
-    maxPoints: number
-    averageGoalPoints: number
     currentPoints: number
     checkpoints: Checkpoint[]
     usedTime: number
@@ -21,10 +19,12 @@ interface Props {
 
 function RaceTheme(props: Props) {
     const [ghosts, setGhosts] = useState<Ghost[]>([])
-
+    const [averageFinalTeamScore, setAverageFinalTeamScore] = useState<number>(0)
+    
     useEffect(() => {
+        if (averageFinalTeamScore == 0) socket.emit("getAverageFinalTeamScore")
         socket.emit("getGhostTeams")
-    }, [props.averageGoalPoints])
+    }, [averageFinalTeamScore])
 
     useEffect(() => {
         socket.on("ghost-teams", (ghosts) => {
@@ -37,6 +37,11 @@ function RaceTheme(props: Props) {
             setGhosts((curr) => [...ghostsWithColor])
             console.log(ghosts)
         })
+
+        socket.on("average-final-score", (score: number) => {
+            setAverageFinalTeamScore(curr => score)
+            console.log(score)
+        })
     }, [socket])
 
     return (
@@ -46,8 +51,7 @@ function RaceTheme(props: Props) {
                     data-testid={"train-theme"}
                     ghosts={ghosts}
                     mapDimensions={props.mapDimensions}
-                    maxPoints={props.maxPoints}
-                    averageGoalPoints={props.averageGoalPoints}
+                    maxPoints={averageFinalTeamScore}
                     currentPoints={props.currentPoints}
                     checkpoints={props.checkpoints}
                     usedTime={props.usedTime}
@@ -61,8 +65,7 @@ function RaceTheme(props: Props) {
                     ghosts={ghosts}
                     data-testid={"boat-theme"}
                     mapDimensions={props.mapDimensions}
-                    maxPoints={props.maxPoints}
-                    averageGoalPoints={props.averageGoalPoints}
+                    maxPoints={averageFinalTeamScore}
                     currentPoints={props.currentPoints}
                     checkpoints={props.checkpoints}
                     usedTime={props.usedTime}

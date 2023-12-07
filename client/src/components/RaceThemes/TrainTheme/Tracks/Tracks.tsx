@@ -67,6 +67,8 @@ function Tracks(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
+        console.log(props.currentPoints)
+        console.log(props.totalPoints)
         setProgressPercent((current) => props.currentPoints / props.totalPoints)
         if (props.currentPoints >= props.totalPoints) props.onSectionComplete()
     }, [props.currentPoints])

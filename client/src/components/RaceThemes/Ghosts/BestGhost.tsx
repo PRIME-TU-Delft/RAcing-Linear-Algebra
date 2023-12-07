@@ -11,26 +11,7 @@ interface Props {
 
 function BestGhost(props: Props) {
     return (
-        <div
-            className="progress-point rounded-circle best-ghost"
-            style={{
-                borderColor: "#FFD700",
-                offsetPath: `path("${props.path}")`,
-                offsetDistance: "0%",
-            }}
-        >
-            <div className="highest-score">HIGHEST SCORE</div>
-            <div
-                className="name"
-                style={{
-                    color: "#FFD700",
-                    borderBottomColor: "#FFD700",
-                }}
-            >
-                {props.bestGhost.teamName}
-            </div>
-            <img src={props.sprite} alt="ghost" className="rounded-circle" />
-        </div>
+        <div></div>
     )
 }
 

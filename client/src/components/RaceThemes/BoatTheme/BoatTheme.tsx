@@ -11,7 +11,6 @@ import { Checkpoint, Dimensions, Ghost } from "../SharedUtils"
 interface Props {
     mapDimensions: Dimensions // width and height of the map
     maxPoints: number // maximum points obtainable
-    averageGoalPoints: number // points required to finish the first section
     currentPoints: number // current points of the team
     checkpoints: Checkpoint[] // list of checkpoints
     ghosts: Ghost[] // list of ghosts to show previous team progress
@@ -35,7 +34,7 @@ function BoatTheme(props: Props) {
         from: {
             opacity:
                 currentMapSection == 0 &&
-                props.currentPoints >= props.averageGoalPoints &&
+                props.currentPoints >= props.maxPoints &&
                 !checkpointReached
                     ? 1
                     : 0.4,
@@ -43,7 +42,7 @@ function BoatTheme(props: Props) {
         to: {
             opacity:
                 currentMapSection == 0 &&
-                props.currentPoints >= props.averageGoalPoints &&
+                props.currentPoints >= props.maxPoints &&
                 !checkpointReached
                     ? 0.4
                     : 1,
@@ -106,12 +105,12 @@ function BoatTheme(props: Props) {
                         <Path
                             checkpoints={index == 0 ? props.checkpoints : []}
                             onSectionComplete={sectionCompleteHandler}
-                            totalPoints={props.averageGoalPoints}
+                            totalPoints={props.maxPoints}
                             currentPoints={
                                 index == 0
                                     ? props.currentPoints
                                     : props.currentPoints -
-                                      props.averageGoalPoints
+                                      props.maxPoints
                             }
                             ghostBoats={props.ghosts}
                             usedTime={props.usedTime}

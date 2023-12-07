@@ -54,6 +54,7 @@ function Lobby(props: Props) {
             teamName
         )
         socket.emit("getGhostTeams")
+        socket.emit("getAverageFinalScore")
     }
 
     // Converts the lobby id to string and padds it with 0s if necessary to obtain a 4 number code
