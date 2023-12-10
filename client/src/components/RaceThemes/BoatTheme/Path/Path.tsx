@@ -3,7 +3,6 @@ import Sprites from "../BoatThemeSprites"
 import "./Path.css"
 import Checkpoints from "../../Checkpoints/Checkpoints"
 import { motion } from "framer-motion"
-import BestGhost from "../../Ghosts/BestGhost"
 import Ghosts from "../../Ghosts/Ghosts"
 import {
     Checkpoint,
@@ -114,16 +113,7 @@ function Path(props: Props) {
                 <img src={Sprites.boat} alt="boat" className="rounded-circle" />
             </motion.div>
 
-            {props.finalSection ? (
-                <BestGhost
-                    data-testid={"best-ghost"}
-                    bestGhost={props.ghostBoats[1]}
-                    totalPoints={props.totalPoints}
-                    path={svgPath}
-                    sprite={Sprites.boat}
-                />
-            ) : (
-                <Ghosts
+            <Ghosts
                     data-testid={"ghosts"}
                     ghosts={props.ghostBoats}
                     time={props.usedTime}
@@ -131,7 +121,6 @@ function Path(props: Props) {
                     sprite={Sprites.boat}
                     totalPoints={props.totalPoints}
                 />
-            )}
         </div>
     )
 }
