@@ -13,6 +13,12 @@ class Point {
     }
 }
 
+interface AnimationStatus {
+    pathProgress: number,
+    transitionDuration: number, 
+    timeScoreIndex: number 
+}
+
 interface Ghost {
     teamName: string
     color: string
@@ -20,6 +26,7 @@ interface Ghost {
     checkpoints: number[]
     study: string
     accuracy: number
+    animationStatus: AnimationStatus
 }
 
 interface Checkpoint {
