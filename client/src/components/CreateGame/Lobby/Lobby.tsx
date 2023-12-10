@@ -53,7 +53,6 @@ function Lobby(props: Props) {
             selectedStudy.toUpperCase(),
             teamName
         )
-        socket.emit("getGhostTeams")
         socket.emit("getAverageFinalScore")
     }
 

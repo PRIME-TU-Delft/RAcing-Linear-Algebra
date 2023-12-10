@@ -155,6 +155,7 @@ function Lecturer(props: Props) {
         })
 
         socket.on("round-duration", (roundDuration: number) => {
+            socket.emit("getGhostTeams")
             setSeconds(curr => roundDuration)
         })
 
@@ -216,8 +217,6 @@ function Lecturer(props: Props) {
                 >
                     <RaceTheme
                         selectedTheme={props.theme}
-                        maxPoints={2000}
-                        averageGoalPoints={2000}
                         currentPoints={score}
                         mapDimensions={{ width: width, height: height - 100 }}
                         checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
