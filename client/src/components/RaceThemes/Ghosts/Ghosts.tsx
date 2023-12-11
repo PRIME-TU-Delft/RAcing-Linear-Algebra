@@ -17,33 +17,54 @@ interface Props {
 }
 
 function Ghosts(props: Props) {
-    const [animations, setAnimations] = useState<GhostAnimation[]>(
-        new Array(18).fill(0).map(x => (
-            {
-                pathProgress: 0,    // initialize all ghost to progress of 0%
-                transitionDuration: 1,  // transition duration initalized at 1, changes when updating
-                timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
-            })))
 
     useEffect(() => {
-        const newAnimations = animations
-        if (!props.ghosts || props.ghosts.length != animations.length) return
-        for (let i = 0; i < newAnimations.length; i++) {
+        if (!props.ghosts) return
+        for (let i = 0; i < props.ghosts.length; i++) {
             // Introduce constants to reduce code repetition
-            const currentTimeScoreIndex = animations[i].timeScoreIndex
+            console.log( "ASD")
+            const currentTimeScoreIndex = props.ghosts[i].animationStatus.timeScoreIndex
             const currentGhostTimePoint = props.ghosts[i].timeScores[currentTimeScoreIndex].timePoint
             const currentGhostNewScore = props.ghosts[i].timeScores[currentTimeScoreIndex].score
 
-            // If the time matches a ghost's time point, it is time to update its score (make it move) 
-            if (currentGhostTimePoint == props.time) {
-                newAnimations[i] = {
-                    pathProgress: Math.floor((currentGhostNewScore / props.totalPoints) * 100), // progress determined as the ratio of points and total points
-                    transitionDuration: Math.floor(Math.random() * 5) + 1,  // randomize duration of animation between 1 and 5 seconds, for more variation
-                    timeScoreIndex: currentTimeScoreIndex == props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1  // increase index unless last score reached
+            // If the time matches a ghost's time point, it is time to update its score (make it move)
+            if (currentGhostTimePoint == props.time) {    
+                const progress = Math.floor(((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100) // progress determined as the ratio of points and total points
+                const duration = Math.floor(Math.random() * 5) + 1  // randomize duration of animation between 1 and 5 seconds, for more variation
+                
+                // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
+                if (props.ghosts[i].animationStatus.pathProgress >= progress) {
+
+                    props.ghosts[i].animationStatus = {
+                        pathProgress: 100,
+                        transitionDuration: 1,
+                        timeScoreIndex: currentTimeScoreIndex
+                    }
+                    
+                    setTimeout(() => {
+                        props.ghosts[i].animationStatus = {
+                            pathProgress: 0,
+                            transitionDuration: 0,
+                            timeScoreIndex: currentTimeScoreIndex
+                        }
+
+                        setTimeout(() => {
+                            props.ghosts[i].animationStatus = {
+                                pathProgress: progress, 
+                                transitionDuration: duration, 
+                                timeScoreIndex: currentTimeScoreIndex < props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1  // increase index unless last score reached
+                            }
+                        }, 800)
+                    }, 1500)
+                } else {
+                    props.ghosts[i].animationStatus = {
+                        pathProgress: progress, 
+                        transitionDuration: duration,  // randomize duration of animation between 1 and 5 seconds, for more variation
+                        timeScoreIndex: currentTimeScoreIndex == props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1  // increase index unless last score reached
+                    }
                 }
             }
         }
-        setAnimations(curr => [...newAnimations])
     }, [props.time])
 
     return (
@@ -58,9 +79,10 @@ function Ghosts(props: Props) {
                         offsetPath: `path("${props.path}")`,
                     }}
                     initial={{ offsetDistance: "0%" }}
-                    animate={{ offsetDistance: animations[index].pathProgress.toString() + "%" }}
+                    animate={{ offsetDistance: ghost.animationStatus.pathProgress.toString() + "%" }}
                     transition={{
-                        duration: animations[index].transitionDuration,
+                        ease: "easeInOut",
+                        duration: ghost.animationStatus.transitionDuration,
                         stiffness: 100,
                     }}
                 >

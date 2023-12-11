@@ -14,7 +14,6 @@ import {
 } from "../../SharedUtils"
 import Checkpoints from "../../Checkpoints/Checkpoints"
 import Ghosts from "../../Ghosts/Ghosts"
-import BestGhost from "../../Ghosts/BestGhost"
 
 interface Props {
     mapDimensions: Dimensions // width and height of the map
@@ -24,8 +23,6 @@ interface Props {
     usedTime: number    // current round time
     checkpoints: Checkpoint[] // list of checkpoints
     ghostTrains: Ghost[] // list of ghost boats
-    finalSection: boolean // boolean to indicate whether this is the final section of the map
-    onSectionComplete: () => void // event called when the end of the map is reached
 }
 
 function Tracks(props: Props) {
@@ -67,8 +64,9 @@ function Tracks(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
-        setProgressPercent((current) => props.currentPoints / props.totalPoints)
-        if (props.currentPoints >= props.totalPoints) props.onSectionComplete()
+        console.log(props.currentPoints)
+        console.log(props.totalPoints)
+        setProgressPercent((current) => (props.currentPoints % props.totalPoints) / props.totalPoints)
     }, [props.currentPoints])
 
     // Generates ghost train colors on load
@@ -115,7 +113,7 @@ function Tracks(props: Props) {
                 style={{ offsetPath: `path("${svgPath}")` }}
                 initial={{ offsetDistance: "0%" }}
                 animate={{ offsetDistance: `${progressPercent * 100}%` }}
-                transition={{ duration: 10 }}
+                transition={{ duration: 5 }}
             >
                 <img
                     src={Sprites.train}
@@ -124,16 +122,7 @@ function Tracks(props: Props) {
                 />
             </motion.div>
 
-            {props.finalSection ? (
-                <BestGhost
-                    data-testid={"best-ghost"}
-                    bestGhost={props.ghostTrains[1]}
-                    totalPoints={props.totalPoints}
-                    path={svgPath}
-                    sprite={Sprites.train}
-                />
-            ) : (
-                <Ghosts
+            <Ghosts
                     data-testid={"ghosts"}
                     ghosts={props.ghostTrains}
                     time={props.usedTime}
@@ -141,7 +130,6 @@ function Tracks(props: Props) {
                     sprite={Sprites.train}
                     totalPoints={props.totalPoints}
                 />
-            )}
         </div>
     )
 }

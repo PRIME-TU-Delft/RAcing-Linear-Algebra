@@ -8,6 +8,7 @@ import {
     getCheckpoints,
     getGhostTrainScores,
     getGhostTeams,
+    getAverageFinalScore,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -299,6 +300,27 @@ module.exports = {
                         accuracy: x.accuracy
                     }))
                     socket.emit("ghost-teams", interpolatedGhostTeams)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+
+            /**
+             * Calculate the average final score for the current round, to be used as the end value of the race track
+             */
+            socket.on("getAverageFinalScore", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+                    const game = getGame(lobbyId)
+                    const round = game.rounds[game.round]
+                    const roundId: number = round.id
+
+                    const normalizedAverageFinalScore = await getAverageFinalScore(roundId)
+                    const averageFinalScore = Math.floor(
+                        normalizedAverageFinalScore 
+                        * game.roundDurations[game.round] 
+                        * game.users.size)
+                    socket.emit("average-final-score", averageFinalScore)
                 } catch (error) {
                     console.log(error)
                 }

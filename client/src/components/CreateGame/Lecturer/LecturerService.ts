@@ -31,15 +31,15 @@ const numberOfCheckpoints = 3
 const stations = [
     {
         name: "Delft",
-        points: 150,
+        points: 80,
     },
     {
         name: "Rotterdam Centraal",
-        points: 300,
+        points: 160,
     },
     {
         name: "Eindhoven Centraal",
-        points: 450,
+        points: 240,
     },
 ]
 

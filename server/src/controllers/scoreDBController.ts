@@ -174,6 +174,43 @@ export async function getGhostTeams(roundId: number) {
 }
 
 /**
+ * Calculates the average value of the final team score for the current round
+ * @param roundId id of the current round
+ * @returns the average final team score 
+ */
+export async function getAverageFinalScore(roundId: number) {
+    try {
+        const client = new MongoClient(process.env.MONGO_URL as string)
+        await client.connect()
+
+        const db = client.db()
+        const scores = db.collection("scores")
+        const roundIdStr: string = roundId.toString()
+        const res = await scores.aggregate([
+            {
+                $match: { roundId: roundIdStr },
+            },
+            {
+              $project: {
+                lastScore: { $arrayElemAt: ["$scores", -1] } // Extract the last element from the "scores" array
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                avgFinalScore: { $avg: "$lastScore" } // Calculate the average of the extracted last scores
+              }
+            }
+          ]).toArray()
+        return res[0].avgFinalScore
+
+    } catch(error) {
+        console.log(error)
+    }
+
+}
+
+/**
  * Gets the average score and best score for the chosen round
  * @param roundId the selected round
  * @returns the average score and best score

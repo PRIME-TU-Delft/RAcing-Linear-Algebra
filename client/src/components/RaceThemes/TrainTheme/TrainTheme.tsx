@@ -13,7 +13,6 @@ import { Checkpoint, Dimensions, Ghost } from "../SharedUtils"
 interface Props {
     mapDimensions: Dimensions // width and height of the map
     maxPoints: number // maximum points obtainable
-    averageGoalPoints: number // points required to finish the first section
     currentPoints: number // current points of the team
     checkpoints: Checkpoint[] // list of checkpoints
     ghosts: Ghost[] // list of ghosts to show previous team progress
@@ -27,30 +26,8 @@ function TrainTheme(props: Props) {
     const width = props.mapDimensions.width
 
     const [nextCheckpoint, setNextCheckpoint] = useState(props.checkpoints[0]) // next checkpoint to be reached
-    const [currentMapSection, setCurrentMapSection] = useState(0) // index of the current section of the map (can be 0 or 1)
     const [checkpointReached, setCheckpointReached] = useState(false) // boolean indicating whether a checkpoint has been reached
     const selectedMap = maps[0] // multiple maps may be used in the future, currently only one exists
-
-    // Fade animation for the map when a checkpoint is reached, created using react-spring
-    const fadeMap = useSpring({
-        config: { mass: 2, friction: 40, tension: 170 },
-        from: {
-            opacity:
-                currentMapSection == 0 &&
-                props.currentPoints >= props.averageGoalPoints &&
-                !checkpointReached
-                    ? 1
-                    : 0.4,
-        },
-        to: {
-            opacity:
-                currentMapSection == 0 &&
-                props.currentPoints >= props.averageGoalPoints &&
-                !checkpointReached
-                    ? 0.4
-                    : 1,
-        },
-    })
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({
@@ -59,15 +36,9 @@ function TrainTheme(props: Props) {
         to: { opacity: checkpointReached ? 0.4 : 1 },
     })
 
-    // Called when a section of the map is finished
-    const sectionCompleteHandler = () => {
-        setCurrentMapSection((curr) => 1)
-    }
-
     // When the team points are updated, checks whether a checkpoint is reached and records the team's time for reaching it
     useEffect(() => {
         if (
-            currentMapSection == 0 && // checkpoints exist only on the initial map section
             props.currentPoints >= nextCheckpoint.points
         ) {
             const nextCheckpointName = nextCheckpoint.name
@@ -94,47 +65,31 @@ function TrainTheme(props: Props) {
         <a.div
             className="race-map"
             style={{
-                ...fadeMap,
+                ...fadeSection,
                 backgroundColor:
-                    selectedMap.sections[currentMapSection].backgroundColor,
+                    selectedMap.backgroundColor,
             }}
         >
-            {/* Displays the current map section */}
-            {selectedMap.sections.map((section, index) =>
-                index == currentMapSection ? (
-                    <a.div
-                        data-testid={index}
-                        key={index}
-                        className="map-content"
-                        style={{ ...fadeSection }}
-                    >
-                        <Tracks
-                            onSectionComplete={sectionCompleteHandler}
-                            totalPoints={
-                                index == 0
-                                    ? props.averageGoalPoints
-                                    : props.maxPoints
-                            }
-                            currentPoints={
-                                index == 0
-                                    ? props.currentPoints
-                                    : props.currentPoints -
-                                      props.averageGoalPoints
-                            }
-                            ghostTrains={props.ghosts}
-                            usedTime={props.usedTime}
-                            finalSection={currentMapSection == 1}
-                            mapDimensions={props.mapDimensions}
-                            trackPoints={section.tracks}
-                            checkpoints={index == 0 ? props.checkpoints : []}
-                        ></Tracks>
-                        <Decorations
-                            mapDimensions={{ width: width, height: height }}
-                            decorationsList={section.decorations}
-                        ></Decorations>
-                    </a.div>
-                ) : null
-            )}
+
+            <a.div
+                data-testid={"map"}
+                className="map-content"
+                style={{ ...fadeSection }}
+            >
+                <Tracks
+                    totalPoints={props.maxPoints}
+                    currentPoints={props.currentPoints}
+                    ghostTrains={props.ghosts}
+                    usedTime={props.usedTime}
+                    mapDimensions={props.mapDimensions}
+                    trackPoints={selectedMap.tracks}
+                    checkpoints={props.checkpoints}
+                ></Tracks>
+                <Decorations
+                    mapDimensions={{ width: width, height: height }}
+                    decorationsList={selectedMap.decorations}
+                ></Decorations>
+            </a.div>
 
             {/* Animation for reaching a checkpoint, lasts 3 seconds */}
             <CheckpointReached
