@@ -1,5 +1,5 @@
-import TracksStyle from "../components/RaceThemes/TrainTheme/Tracks/TracksStyle"
-import Sprites from "../components/RaceThemes/TrainTheme/TrainThemeSprites"
+import TracksStyle from "../components/RaceThemes/Tracks/TracksStyle"
+import Sprites from "../components/RaceThemes/Sprites/TrainThemeSprites"
 import Position from "../components/RaceThemes/PathPosition"
 
 class Point {

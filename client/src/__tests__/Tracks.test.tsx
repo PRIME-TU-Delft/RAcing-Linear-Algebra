@@ -1,6 +1,6 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
-import Tracks from "../components/RaceThemes/TrainTheme/Tracks/Tracks"
+import Tracks from "../components/RaceThemes/Tracks/Tracks"
 
 describe("Tracks component tests", () => {
     const dimensions = { width: innerWidth, height: innerHeight }
