@@ -19,10 +19,9 @@ interface Props {
 function Ghosts(props: Props) {
 
     useEffect(() => {
-        if (!props.ghosts) return
+        if (!props.ghosts || props.ghosts[0].timeScores.length == 0) return
         for (let i = 0; i < props.ghosts.length; i++) {
             // Introduce constants to reduce code repetition
-            console.log( "ASD")
             const currentTimeScoreIndex = props.ghosts[i].animationStatus.timeScoreIndex
             const currentGhostTimePoint = props.ghosts[i].timeScores[currentTimeScoreIndex].timePoint
             const currentGhostNewScore = props.ghosts[i].timeScores[currentTimeScoreIndex].score
@@ -86,15 +85,7 @@ function Ghosts(props: Props) {
                         stiffness: 100,
                     }}
                 >
-                    <div
-                        className="name"
-                        style={{
-                            color: ghost.color,
-                            borderBottomColor: ghost.color,
-                        }}
-                    >
-                        {ghost.teamName}
-                    </div>
+                    
                     <img
                         src={props.sprite}
                         alt="ghost"

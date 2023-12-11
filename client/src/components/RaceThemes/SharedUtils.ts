@@ -58,6 +58,18 @@ class Component {
     }
 }
 
+interface DecorationElement {
+    points: PercentCoordinate[]
+    class: string
+    sprite: string
+}
+
+interface Map {
+    backgroundColor: string // the color of the background for the given theme
+    decorations: DecorationElement[] // list of decorations for the map
+    path: PercentCoordinate[] // list of corner points for the tracks of the train theme
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -65,4 +77,5 @@ export {
     Component,
     type Ghost,
     type Dimensions,
+    type Map
 }

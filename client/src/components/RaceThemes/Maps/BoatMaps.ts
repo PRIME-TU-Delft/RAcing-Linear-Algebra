@@ -1,17 +1,5 @@
-import Sprites from "../BoatTheme/BoatThemeSprites"
-import { PercentCoordinate } from "../SharedUtils"
-
-interface DecorationElement {
-    points: PercentCoordinate[]
-    class: string
-    sprite: string
-}
-
-interface Map {
-    backgroundColor: string
-    decorations: DecorationElement[]
-    path: PercentCoordinate[]
-}
+import Sprites from "../Sprites/BoatThemeSprites"
+import { PercentCoordinate, Map } from "../SharedUtils"
 
 const mapOne = {
             backgroundColor: "#19CDFF",
@@ -55,6 +43,6 @@ const mapOne = {
                 { xPercent: 1, yPercent: 0.75 },
             ],
 }
-const maps: Map[] = [mapOne]
+const boatMaps: Map[] = [mapOne]
 
-export { maps }
+export { boatMaps }
