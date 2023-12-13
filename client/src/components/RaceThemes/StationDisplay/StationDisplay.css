@@ -1,0 +1,59 @@
+.station-display {
+    z-index: 9999;
+    position: absolute;
+    width: 400px;
+    height: 240px;
+    background-color: #003082;
+    color: white;
+}
+
+.station-display > .header {
+    width: 100%;
+    height: 35px;
+    padding-top: 0.2em;
+    padding-left: 1em;
+    font-size: 18px;
+}
+
+.train-info {
+    text-align: left;
+}
+
+.current-points {
+    text-align: right;
+}
+
+.station {
+    text-align: left;
+}
+
+.active-station {
+    height: 80px;
+    text-align: left;
+    padding-left: 1em;
+    color: #003082;
+    background-color: white;
+}
+
+.station {
+    padding-left: 1em;
+    height: 30px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.next-text {
+    font-size: 18px;
+    padding-top: 0.3em;
+    padding-bottom: 0;
+}
+
+.active-station > .station-info {
+    padding-top: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.btn {
+    float: left;
+}

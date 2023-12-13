@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react"
-import Sprites from "../TrainThemeSprites"
+import TrainSprites from "../Sprites/TrainThemeSprites"
+import BoatSprites from "../Sprites/BoatThemeSprites"
+
 import Style from "./TracksStyle"
 import "./Tracks.css"
-import Position from "../../PathPosition"
 import { motion } from "framer-motion"
 import {
     PercentCoordinate,
@@ -11,28 +12,29 @@ import {
     Checkpoint,
     Component,
     Dimensions,
-} from "../../SharedUtils"
-import Checkpoints from "../../Checkpoints/Checkpoints"
-import Ghosts from "../../Ghosts/Ghosts"
+} from "../SharedUtils"
+import Checkpoints from "../Checkpoints/Checkpoints"
+import Ghosts from "../Ghosts/Ghosts"
+import RacePath from "./RacePath"
 
 interface Props {
+    theme: string   // theme for the race (e.g. train, boat...)
     mapDimensions: Dimensions // width and height of the map
     trackPoints: PercentCoordinate[] // list of path corner points
     totalPoints: number // number of points needed to complete the map section
     currentPoints: number // current points of the team
     usedTime: number    // current round time
     checkpoints: Checkpoint[] // list of checkpoints
-    ghostTrains: Ghost[] // list of ghost boats
+    ghosts: Ghost[] // list of ghost teams
 }
 
 function Tracks(props: Props) {
     const height = props.mapDimensions.height
     const width = props.mapDimensions.width
-    const [progressPercent, setProgressPercent] = useState(0) // percent of train progress, initialized at 0%
-    const [ghostColors, setGhostColors] = useState<string[]>([]) // randomized colors for the ghost trains
+    const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
 
     const points: Point[] = [] // list of points computed from track coordinates
-    let svgPath = "M" // svg path that the train takes
+    let svgPath = "M" // svg path that the team takes
 
     // Transform coordinates into points and generate the svg path from said points
     for (let i = 0; i < props.trackPoints.length; i++) {
@@ -69,65 +71,65 @@ function Tracks(props: Props) {
         setProgressPercent((current) => (props.currentPoints % props.totalPoints) / props.totalPoints)
     }, [props.currentPoints])
 
-    // Generates ghost train colors on load
-    useEffect(() => {
-        const newColors = props.ghostTrains.map(
-            (val) => "#" + Math.random().toString(16).substring(2, 8)
-        )
-        setGhostColors((curr) => newColors)
-    }, [props.ghostTrains])
+    const getCheckpointSprite = () => {
+        switch(props.theme) {
+            case "train":
+                return TrainSprites.trainStation
+            case "boat":
+                return BoatSprites.islandIcon
+            default:
+                return TrainSprites.trainStation
+        }
+    }
+
+    const getVehicleSprite = () => {
+        switch(props.theme) {
+            case "train":
+                return TrainSprites.train
+            case "boat":
+                return BoatSprites.boat
+            default:
+                return TrainSprites.train
+        }
+    }
 
     return (
         <div>
-            {/* Displays the train tracks from the list of components */}
-            {components.map((component) => (
-                <div key={components.indexOf(component)}>
-                    <div
-                        style={Style.createComponentStyle(
-                            component.start,
-                            component.end,
-                            components.indexOf(component) == 0
-                        )}
-                    ></div>
-                    <div
-                        style={Style.createRailTurnComponentStyle(
-                            components.indexOf(component),
-                            components
-                        )}
-                    ></div>
-                </div>
-            ))}
+            <RacePath
+                theme={props.theme}
+                components={components}
+                svgPath={svgPath}></RacePath>
 
             <Checkpoints
                 checkpoints={props.checkpoints}
-                sprite={Sprites.trainStation}
+                sprite={getCheckpointSprite()}
                 pathLength={tracksLength}
                 totalPoints={props.totalPoints}
                 components={components}
             ></Checkpoints>
 
-            {/* Displays the main train, representing the team currently playing */}
+            {/* Displays the main vehicle, representing the team currently playing */}
             <motion.div
-                data-testid={"main-train"}
-                className="progress-point rounded-circle main-train"
+                data-testid={"main-vehicle"}
+                className="progress-point rounded-circle main-vehicle"
                 style={{ offsetPath: `path("${svgPath}")` }}
                 initial={{ offsetDistance: "0%" }}
                 animate={{ offsetDistance: `${progressPercent * 100}%` }}
                 transition={{ duration: 5 }}
             >
                 <img
-                    src={Sprites.train}
-                    alt="train"
+                    src={getVehicleSprite()}
+                    alt="vehicle"
                     className="rounded-circle"
                 />
             </motion.div>
 
             <Ghosts
                     data-testid={"ghosts"}
-                    ghosts={props.ghostTrains}
+                    ghosts={props.ghosts}
                     time={props.usedTime}
                     path={svgPath}
-                    sprite={Sprites.train}
+                    sprite={getVehicleSprite()}
                     totalPoints={props.totalPoints}
                 />
         </div>

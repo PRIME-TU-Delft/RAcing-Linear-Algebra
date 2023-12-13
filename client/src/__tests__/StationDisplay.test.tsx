@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import React from "react"
-import StationDisplay from "../components/RaceThemes/TrainTheme/StationDisplay/StationDisplay"
+import StationDisplay from "../components/RaceThemes/StationDisplay/StationDisplay"
 
 describe("Station display component tests", () => {
     const stations = [

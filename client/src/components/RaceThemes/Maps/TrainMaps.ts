@@ -1,17 +1,5 @@
-import Sprites from "../TrainTheme/TrainThemeSprites"
-import { PercentCoordinate } from "../SharedUtils"
-
-interface DecorationElement {
-    points: PercentCoordinate[]
-    class: string
-    sprite: string
-}
-
-interface Map {
-    backgroundColor: string // the color of the background for the given theme
-    decorations: DecorationElement[] // list of decorations for the map
-    tracks: PercentCoordinate[] // list of corner points for the tracks of the train theme
-}
+import Sprites from "../Sprites/TrainThemeSprites"
+import { PercentCoordinate, Map } from "../SharedUtils"
 
 const mapOne: Map = {
             backgroundColor: "#fff6e4",
@@ -110,7 +98,7 @@ const mapOne: Map = {
                     sprite: Sprites.windmill,
                 },
             ],
-            tracks: [
+            path: [
                 { xPercent: 0.1, yPercent: 0 }, // |^
                 { xPercent: 0.1, yPercent: 0.2 }, // ------>
                 { xPercent: 0.4, yPercent: 0.2 }, // _|^
@@ -128,7 +116,7 @@ const templateLoopMap = {
     backgroundColor: "#fff6e4",
     decorations: [
     ],
-    tracks: [
+    path: [
         { xPercent: 0.5, yPercent: 0.1 },
         { xPercent: 0.9, yPercent: 0.1 },
         { xPercent: 0.9, yPercent: 0.9 },
@@ -138,6 +126,6 @@ const templateLoopMap = {
     ],
 }
     
-const maps: Map[] = [templateLoopMap]
+const trainMaps: Map[] = [templateLoopMap]
 
-export { maps }
+export { trainMaps }
