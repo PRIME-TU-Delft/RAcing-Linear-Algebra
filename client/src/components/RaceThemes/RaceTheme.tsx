@@ -41,8 +41,8 @@ function RaceTheme(props: Props) {
         accuracy: 100,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%
-                        transitionDuration: 1,  // transition duration initalized at 1, changes when updating
-                        timeScoreIndex: 0  
+            transitionDuration: 1,  // transition duration initalized at 1, changes when updating
+            timeScoreIndex: 0  
         }
     }]
 
@@ -90,7 +90,7 @@ function RaceTheme(props: Props) {
     }, [props.currentPoints])
     
     useEffect(() => {
-        if (averageFinalTeamScore == 0) socket.emit("getAverageFinalTeamScore")
+        if (averageFinalTeamScore == 0) socket.emit("getRaceTrackEndScore")
         socket.emit("getGhostTeams")
     }, [averageFinalTeamScore])
 
@@ -111,7 +111,7 @@ function RaceTheme(props: Props) {
             console.log(ghosts)
         })
 
-        socket.on("average-final-score", (score: number) => {
+        socket.on("race-track-end-score", (score: number) => {
             setAverageFinalTeamScore(curr => score)
             console.log(score)
         })

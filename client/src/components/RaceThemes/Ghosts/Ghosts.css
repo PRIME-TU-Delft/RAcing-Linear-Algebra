@@ -1,5 +1,28 @@
 .ghost {
-    opacity: 0.7;
+    offset-rotate: 0deg;
+    position: absolute;
+    height: 110px;
+    display: flex;
+    align-items: center;
 }
 
+.ghost-vehicle {
+    position: relative;
+    offset-rotate: 0deg;
+    border-style: solid;
+    border-width: 3px;
+}
 
+.position-number {
+    font-size: 24px;
+    font-weight: 600;
+    position: absolute;
+    top: 0;
+}
+
+.closed-ghost {
+    position: relative;
+    offset-rotate: 0deg;
+    height: 30px;
+    width: 30px;
+}

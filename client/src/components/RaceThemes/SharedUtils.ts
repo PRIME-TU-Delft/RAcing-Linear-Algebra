@@ -19,6 +19,12 @@ interface AnimationStatus {
     timeScoreIndex: number 
 }
 
+interface RaceObject {
+    isGhost: boolean,
+    ghostIndex?: number,
+    score: number
+}
+
 interface Ghost {
     teamName: string
     color: string
@@ -75,6 +81,7 @@ export {
     Point,
     type Checkpoint,
     Component,
+    type RaceObject,
     type Ghost,
     type Dimensions,
     type Map

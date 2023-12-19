@@ -8,7 +8,7 @@ import {
     getCheckpoints,
     getGhostTrainScores,
     getGhostTeams,
-    getAverageFinalScore,
+    getBestTeamFinalScore,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -306,21 +306,23 @@ module.exports = {
             })
 
             /**
-             * Calculate the average final score for the current round, to be used as the end value of the race track
+             * Calculate the end point of one race lap for the current round
+             * Currently set to half of the best team's final score
              */
-            socket.on("getAverageFinalScore", async () => {
+            socket.on("getRaceTrackEndScore", async () => {
                 try {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
                     const round = game.rounds[game.round]
                     const roundId: number = round.id
 
-                    const normalizedAverageFinalScore = await getAverageFinalScore(roundId)
-                    const averageFinalScore = Math.floor(
-                        normalizedAverageFinalScore 
+                    const normalizedHighestFinalScore = await getBestTeamFinalScore(roundId)
+                    const halvedHighestFinalScore = Math.floor(
+                        normalizedHighestFinalScore 
                         * game.roundDurations[game.round] 
-                        * game.users.size)
-                    socket.emit("average-final-score", averageFinalScore)
+                        * game.users.size 
+                        / 2)
+                    socket.emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
                     console.log(error)
                 }
