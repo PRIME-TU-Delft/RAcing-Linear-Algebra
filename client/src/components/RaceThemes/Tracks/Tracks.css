@@ -5,11 +5,16 @@
 }
 
 .main-vehicle {
+    position: absolute;
+    offset-rotate: 0deg;
+    height: 110px;
+    display: flex;
+    align-items: center;
     z-index: 5000;
 }
 
 .progress-point {
-    position: absolute;
+    position: relative;
     offset-rotate: 0deg;
     height: 60px;
     width: 60px;
@@ -17,11 +22,8 @@
     border: 3px solid #011fa7;
 }
 
-.progress-point > img {
-    position: relative;
-    height: 50px;
-    width: auto;
-    margin: auto;
+.main-color {
+    color: #011fa7;
 }
 
 .svg-path {
@@ -31,4 +33,13 @@
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+
+.position-number {
+    font-size: 24px;
+    font-weight: 600;
+    position: absolute;
+    margin-left: 50px;
+    top: 0;
 }

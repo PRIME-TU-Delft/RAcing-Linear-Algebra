@@ -1,7 +1,7 @@
 import React from "react";
-import { Component } from "../SharedUtils";
-import TracksStyle from "./TracksStyle";
-import "./Tracks.css"
+import { Component } from "../../SharedUtils";
+import TracksStyle from "../TracksStyle";
+import "../Tracks.css"
 
 interface Props {
     theme: string,
@@ -12,7 +12,6 @@ interface Props {
 function RacePath(props: Props) {
     
     const getRacePath = () => {
-        console.log(props.svgPath)
         switch(props.theme.toLowerCase()) {
             case "train":
                 return props.components.map((component, index) => (
