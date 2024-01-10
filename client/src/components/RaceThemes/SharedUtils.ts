@@ -37,7 +37,8 @@ interface Ghost {
 
 interface Checkpoint {
     name: string
-    points: number
+    percentage: number
+    insideTracks: boolean
 }
 
 interface Dimensions {

@@ -1,3 +1,5 @@
+import { Checkpoint } from "./SharedUtils"
+
 class Point {
     x: number
     y: number
@@ -103,12 +105,12 @@ function getCurrentComponentIndexAndPercent(
  * @returns     	        the position styling (left and bottom properties) for the checkpoint
  */
 function getCheckpointPosition(
-    progressPercent: number,
+    checkpoint: Checkpoint,
     pathLength: number,
     components: Component[]
 ) {
     const currentComponent = getCurrentComponentIndexAndPercent(
-        progressPercent,
+        checkpoint.percentage,
         pathLength,
         components
     )
@@ -119,13 +121,13 @@ function getCheckpointPosition(
 
     if (components[currentComponent.index].direction == "vertical")
         return {
-            left: `${point.x + 50}px`,
+            left: `${point.x + (checkpoint.insideTracks ? 55 : -55)}px`,
             bottom: `${point.y}px`,
         }
     else
         return {
             left: `${point.x}px`,
-            bottom: `${point.y - 50}px`,
+            bottom: `${point.y + (checkpoint.insideTracks ? 55 : -55)}px`,
         }
 }
 

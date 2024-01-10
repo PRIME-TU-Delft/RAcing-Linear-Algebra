@@ -321,7 +321,7 @@ module.exports = {
                         normalizedHighestFinalScore 
                         * game.roundDurations[game.round] 
                         * game.users.size 
-                        / 2)
+                        / 3)
                     socket.emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
                     console.log(error)

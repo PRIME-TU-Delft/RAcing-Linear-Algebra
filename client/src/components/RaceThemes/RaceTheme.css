@@ -11,56 +11,18 @@
     height: 100%;
 }
 
-.shark,
-.sun,
-.lighthouse,
-.iceberg-one,
-.iceberg-two,
-.iceberg-three {
+.tree,
+.lake,
+.lake-one,
+.lake-two,
+.windmill,
+.lilypad,
+.swamp-tree,
+.swamp-plant,
+.swamp-rock,
+.swamp-lake,
+.crocodile {
     position: absolute;
-    z-index: 200;
-}
-
-.shark > img {
-    height: 150px;
-    width: auto;
-}
-
-.sun > img {
-    height: 300px;
-    width: auto;
-}
-
-.lighthouse > img {
-    height: 150px;
-    width: auto;
-}
-
-.iceberg-one > img {
-    width: 200px;
-    height: auto;
-}
-
-.iceberg-two > img {
-    width: 100px;
-    height: auto;
-}
-
-.iceberg-three > img {
-    width: 100px;
-    height: auto;
-}
-
-.iceberg-one {
-    animation: iceberg1 3s ease infinite;
-}
-
-.iceberg-two {
-    animation: iceberg2 2s ease infinite;
-}
-
-.iceberg-three {
-    animation: iceberg2 4s ease infinite;
 }
 
 @keyframes swell {
