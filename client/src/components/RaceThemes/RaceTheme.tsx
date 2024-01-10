@@ -10,6 +10,9 @@ import Decorations from "./Decorations/Decorations"
 import CheckpointReached from "./CheckpointAnimation/CheckpointReached"
 import ThemeBackground from "./ThemeBackground/ThemeBackground"
 import "./RaceTheme.css"
+import DecorationsEditor from "./DecorationsEditor/DecorationsEditor"
+import TrainThemeSprites from "./Sprites/TrainThemeSprites"
+import StationDisplay from "./StationDisplay/StationDisplay"
 interface Props {
     mapDimensions: {
         width: number // screen width of map section
@@ -67,7 +70,7 @@ function RaceTheme(props: Props) {
     // When the team points are updated, checks whether a checkpoint is reached and records the team's time for reaching it
     useEffect(() => {
         if (
-            props.currentPoints >= nextCheckpoint.points
+            props.currentPoints % averageFinalTeamScore >= nextCheckpoint.percentage * averageFinalTeamScore
         ) {
             const nextCheckpointName = nextCheckpoint.name
             props.setCheckpoint(nextCheckpointName)
@@ -78,7 +81,7 @@ function RaceTheme(props: Props) {
 
             setTimeout(() => {
                 const filteredCheckpoints = props.checkpoints.filter(
-                    (checkpoint) => checkpoint.points > props.currentPoints
+                    (checkpoint) => checkpoint.percentage * averageFinalTeamScore > props.currentPoints % averageFinalTeamScore
                 )
                 if (filteredCheckpoints.length > 0)
                     setNextCheckpoint((val) => filteredCheckpoints[0])
@@ -148,6 +151,13 @@ function RaceTheme(props: Props) {
                 ></Decorations>
             </a.div>
 
+{/*             
+            <StationDisplay
+                        fullRacePoints={averageFinalTeamScore}
+                        points={props.currentPoints}
+                        stations={props.checkpoints}
+            ></StationDisplay> */}
+
             {/* Animation for reaching a checkpoint, lasts 3 seconds */}
             <CheckpointReached
                 open={checkpointReached}
@@ -160,12 +170,12 @@ function RaceTheme(props: Props) {
             {/* <DecorationsEditor 
             mapDimensions={props.mapDimensions}
             decorationsList={[
-                {class: "tree", sprite: Sprites.treeOne, dimensions: {height: 80, width: 100}},
-                {class: "tree", sprite: Sprites.treeTwo, dimensions: {height: 80, width: 100}},
-                {class: "tree", sprite: Sprites.treeThree, dimensions: {height: 80, width: 100}}, 
-                {class: "lake", sprite: Sprites.lakeOne, dimensions: {height: 100, width: 100}},
-                {class: "lake", sprite: Sprites.lakeTwo, dimensions: {height: 100, width: 71} },
-                {class: "windmill", sprite: Sprites.windmill, dimensions: {height: 250, width: 250}}
+                {class: "tree", sprite: TrainThemeSprites.treeOne, dimensions: {height: 80, width: 100}},
+                {class: "tree", sprite: TrainThemeSprites.treeTwo, dimensions: {height: 80, width: 100}},
+                {class: "tree", sprite: TrainThemeSprites.treeThree, dimensions: {height: 80, width: 100}}, 
+                {class: "lake", sprite: TrainThemeSprites.lakeOne, dimensions: {height: 100, width: 100}},
+                {class: "lake", sprite: TrainThemeSprites.lakeTwo, dimensions: {height: 100, width: 71} },
+                {class: "windmill", sprite: TrainThemeSprites.windmill, dimensions: {height: 250, width: 250}}
             ]}></DecorationsEditor> */}
         </a.div>
     )

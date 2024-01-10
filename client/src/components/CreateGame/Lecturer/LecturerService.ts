@@ -1,5 +1,5 @@
 import socket from "../../../socket"
-
+import { Checkpoint } from "../../RaceThemes/SharedUtils"
 //score object received from backend
 export interface IScore {
     teamname: string
@@ -30,16 +30,19 @@ const numberOfCheckpoints = 3
 //checkpoints for train
 const stations = [
     {
+        name: "Roterdam Centraal",
+        percentage: 0.17,
+        insideTracks: false
+    },
+    {
+        name: "Leiden Centraal",
+        percentage: 0.55,
+        insideTracks: false
+    },
+    {
         name: "Delft",
-        points: 80,
-    },
-    {
-        name: "Rotterdam Centraal",
-        points: 160,
-    },
-    {
-        name: "Eindhoven Centraal",
-        points: 240,
+        percentage: 0.82,
+        insideTracks: true
     },
 ]
 
@@ -47,15 +50,21 @@ const stations = [
 const islands = [
     {
         name: "Solitude Island",
-        points: 150,
+        percentage: 150,
+        insideTracks: false
+
     },
     {
         name: "Mystic Isle",
-        points: 300,
+        percentage: 300,
+        insideTracks: false
+
     },
     {
         name: "Hidden Oasis",
-        points: 450,
+        percentage: 450,
+        insideTracks: false
+
     },
 ]
 
@@ -77,7 +86,7 @@ const transformCheckpointData = (
 // Formats the data received from the server into a list of team data (including scores)
     const formatTeamScores = (allScores: IScore[], gameTheme: string) => {
 
-        const themeCheckpoints: {name: string, points: number}[] = getCheckpointsForTheme(gameTheme)
+        const themeCheckpoints: Checkpoint[] = getCheckpointsForTheme(gameTheme)
 
         //sort the scores in descending order of score
         allScores.sort((a, b) => b.score - a.score)
@@ -112,7 +121,7 @@ const formatTime = (seconds: number) => {
 }
 
 const getCheckpointsForTheme = (gameTheme: string) => {
-    let checkpoints: {name: string, points: number}[] = []
+    let checkpoints: Checkpoint[] = []
     // Sets the appropriate list of checkpoints to be used, based on the game theme (Boat, Train...)
     switch (gameTheme.toLowerCase()) {
         case "boat":

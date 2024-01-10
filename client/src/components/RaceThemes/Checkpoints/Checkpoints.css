@@ -2,6 +2,9 @@
     position: absolute;
     z-index: 9999;
     offset-rotate: 0deg;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .checkpoint-element > div {
@@ -17,6 +20,7 @@
     font-size: 16px;
     font-weight: 500;
     padding-left: 10px;
+    width: 7rem;
 }
 
 .checkpoint-element > .img-container {

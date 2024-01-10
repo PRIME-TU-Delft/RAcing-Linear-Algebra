@@ -4,13 +4,14 @@ import { a, useSpring } from "react-spring"
 import { Checkpoint } from "../SharedUtils"
 
 interface Props {
+    fullRacePoints: number,
     stations: Checkpoint[] // list of stations (checkpoints) available for the map
     points: number // current number of points
 }
 
 function StationDisplay(props: Props) {
     const filteredStations = props.stations.filter(
-        (station, index) => station.points > props.points
+        (station, index) => station.percentage * props.fullRacePoints > props.points % props.fullRacePoints
     ) // list of stations that haven't been reached yet by the team
 
     const nextStationIndex =
@@ -27,7 +28,7 @@ function StationDisplay(props: Props) {
     // When number of points changes, check whether to display the station schedule
     useEffect(() => {
         if (
-            props.points >= props.stations[nextStationIndex].points - 100 &&
+            props.points % props.fullRacePoints >= props.stations[nextStationIndex].percentage * props.fullRacePoints - 0.1 * props.fullRacePoints &&
             !stationDisplayShown[nextStationIndex] // approaching the next station and schedule hasn't been shown yet
         ) {
             setShow((val) => true) // show station schedule
@@ -71,7 +72,7 @@ function StationDisplay(props: Props) {
                             ) : null}
                             <div className="station-info row">
                                 <div className="col-2 station-points text-center">
-                                    {station.points}
+                                    {Math.floor(station.percentage * props.fullRacePoints)}
                                 </div>
                                 <div className="col station-name">
                                     {station.name}

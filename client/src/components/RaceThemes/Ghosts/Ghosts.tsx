@@ -27,7 +27,8 @@ function Ghosts(props: Props) {
             const currentGhostNewScore = props.ghosts[i].timeScores[currentTimeScoreIndex].score
 
             // If the time matches a ghost's time point, it is time to update its score (make it move)
-            if (currentGhostTimePoint == props.time) {    
+            if (currentGhostTimePoint == props.time) {  
+                console.log(props.ghosts[i].animationStatus.pathProgress)  
                 const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
                 const newTimeScoreIndex = currentTimeScoreIndex == props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1
                 // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
@@ -97,6 +98,8 @@ function Ghosts(props: Props) {
         const score = ghost.timeScores[Math.max(timeScoreIndex - 1, 0)].score
         return Math.floor(score / props.totalPoints)
     }
+
+    console.log(props.ghosts)
 
     const getGhostStyle = (ghostIndex: number) => {
         const isOpen = currentGhostIsOpen(ghostIndex)

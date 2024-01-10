@@ -226,10 +226,6 @@ function Lecturer(props: Props) {
                         }
                         showCheckPoint={() => showCheckPoint()}
                     ></RaceTheme>
-                    <StationDisplay
-                        points={score}
-                        stations={LecturerService.getCheckpointsForTheme(props.theme)}
-                    ></StationDisplay>
                 </div>
             ) : (
                 <div className="statistics-wrapper">

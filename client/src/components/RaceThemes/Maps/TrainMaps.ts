@@ -125,7 +125,133 @@ const templateLoopMap = {
         { xPercent: 0.5, yPercent: 0.1 },
     ],
 }
+
+const netherlandsMap1 = {
+    backgroundColor: "#fff6e4",
+    decorations: [
+        {
+            points: [
+                {xPercent: 0.285, yPercent: 0.19},
+                {xPercent: 0.325, yPercent: 0.19},
+                {xPercent: 0.365, yPercent: 0.19},
+                {xPercent: 0.405, yPercent: 0.19},
+                {xPercent: 0.445, yPercent: 0.19},
+                {xPercent: 0.485, yPercent: 0.19},
+                {xPercent: 0.525, yPercent: 0.19},
+                {xPercent: 0.565, yPercent: 0.19},
+                {xPercent: 0.605, yPercent: 0.19},
+                {xPercent: 0.645, yPercent: 0.19},
+                {xPercent: 0.285, yPercent: 0.255},
+                {xPercent: 0.325, yPercent: 0.255},
+                {xPercent: 0.365, yPercent: 0.255},
+                {xPercent: 0.405, yPercent: 0.255},
+                {xPercent: 0.445, yPercent: 0.255},
+                {xPercent: 0.485, yPercent: 0.255},
+                {xPercent: 0.525, yPercent: 0.255},
+                {xPercent: 0.565, yPercent: 0.255},
+                {xPercent: 0.605, yPercent: 0.255},
+                {xPercent: 0.645, yPercent: 0.255},
+                {xPercent: 0.285, yPercent: 0.32},
+                {xPercent: 0.325, yPercent: 0.32},
+                {xPercent: 0.365, yPercent: 0.32},
+                {xPercent: 0.405, yPercent: 0.32},
+                {xPercent: 0.445, yPercent: 0.32},
+                {xPercent: 0.485, yPercent: 0.32},
+                {xPercent: 0.525, yPercent: 0.32},
+                {xPercent: 0.565, yPercent: 0.32},
+                {xPercent: 0.605, yPercent: 0.32},
+                {xPercent: 0.645, yPercent: 0.32},
+
+            ],
+            class: "tree",
+            sprite: Sprites.treeOne,
+        },
+        {
+            points: [
+                {xPercent: 0.72, yPercent: 0.44},
+                {xPercent: 0.72, yPercent: 0.61}
+            ],
+            class: "windmill",
+            sprite: Sprites.windmill
+        },
+        {
+            points: [
+                {xPercent: 0.11, yPercent: 0.68},
+            
+            ],
+            class: "lake-one",
+            sprite: Sprites.lakeOne
+        },
+        {
+            points: [
+                {xPercent: 0.20, yPercent: 0.74},
+            
+            ],
+            class: "lake-two",
+            sprite: Sprites.lakeTwo
+        },
+        {
+            points: [
+                { xPercent: 0.72, yPercent: 0.8 },
+                { xPercent: 0.69, yPercent: 0.75 },
+                { xPercent: 0.66, yPercent: 0.8 },
+                { xPercent: 0.63, yPercent: 0.75 },
+                { xPercent: 0.6, yPercent: 0.8 },
+                { xPercent: 0.57, yPercent: 0.75 },
+                { xPercent: 0.54, yPercent: 0.8 },
+                { xPercent: 0.51, yPercent: 0.75 },
+                { xPercent: 0.48, yPercent: 0.8 },
+                { xPercent: 0.45, yPercent: 0.75 },
+                { xPercent: 0.42, yPercent: 0.8 },
+                { xPercent: 0.39, yPercent: 0.75 }
+            
+            ],
+            class: "tree",
+            sprite: Sprites.treeThree
+        },
+        {
+            points: [
+                { xPercent: 0.06, yPercent: 0.40 },
+                { xPercent: 0.18, yPercent: 0.46 },
+                { xPercent: 0.1, yPercent: 0.2 },
+                { xPercent: 0.17, yPercent: 0.08 },
+            ],
+            class: "tree",
+            sprite: Sprites.treeTwo
+        },
+        {
+            points: [
+                { xPercent: 0.15, yPercent: 0.35 },
+            
+            ],
+            class: "swamp-rock",
+            sprite: Sprites.swampRock
+        },
+        {
+            points: [
+                { xPercent: 0.2, yPercent: 0.35 },
+                { xPercent: 0.15, yPercent: 0.31 },
+                { xPercent: 0.12, yPercent: 0.38 },
+                { xPercent: 0.07, yPercent: 0.19 },
+                { xPercent: 0.15, yPercent: 0.15 },
+            ],
+            class: "swamp-plant",
+            sprite: Sprites.swampPlant
+        },
+    ],    path: [
+        {xPercent: 0.5, yPercent: 0.1},
+        {xPercent: 0.7, yPercent: 0.1},
+        {xPercent: 0.7, yPercent: 0.4},
+        {xPercent: 0.9, yPercent: 0.4},
+        {xPercent: 0.9, yPercent: 0.9},
+        {xPercent: 0.05, yPercent: 0.9},
+        {xPercent: 0.05, yPercent: 0.6},
+        {xPercent: 0.25, yPercent: 0.6},
+        {xPercent: 0.25, yPercent: 0.1},
+        {xPercent: 0.5, yPercent: 0.1},
+    ]
+}
     
-const trainMaps: Map[] = [templateLoopMap]
+const trainMaps: Map[] = [netherlandsMap1]
 
 export { trainMaps }
