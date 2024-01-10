@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react"
 import "./Lecturer.css"
 import { useNavigate } from "react-router-dom"
 import socket from "../../../socket"
-import useWindowDimensions from "../../RaceThemes/TrainTheme/Tracks/WindowDimensions"
-import StationDisplay from "../../RaceThemes/TrainTheme/StationDisplay/StationDisplay"
+import useWindowDimensions from "../../RaceThemes/Tracks/WindowDimensions"
+import StationDisplay from "../../RaceThemes/StationDisplay/StationDisplay"
 import CheckPoint from "./LeaderBoard/CheckPoint"
 import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
@@ -155,6 +155,7 @@ function Lecturer(props: Props) {
         })
 
         socket.on("round-duration", (roundDuration: number) => {
+            socket.emit("getGhostTeams")
             setSeconds(curr => roundDuration)
         })
 
@@ -172,11 +173,16 @@ function Lecturer(props: Props) {
             setTeamScores(curr => [...formattedTeamScores])
             setShowLeaderBoard(curr => true)
         })
+
+        socket.on("ghost-teams", (ghostTeams: JSON[]) => {
+            console.log(ghostTeams)
+        })
     }, [socket])
 
     //reset everything when new round start
     const startNewRound = () => {
         socket.emit("startNextRound")
+        socket.emit("getGhostTeams")
 
         //if no more rounds, end game
         if (gameEnds) {
@@ -211,8 +217,6 @@ function Lecturer(props: Props) {
                 >
                     <RaceTheme
                         selectedTheme={props.theme}
-                        maxPoints={1000}
-                        averageGoalPoints={500}
                         currentPoints={score}
                         mapDimensions={{ width: width, height: height - 100 }}
                         checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
@@ -222,10 +226,6 @@ function Lecturer(props: Props) {
                         }
                         showCheckPoint={() => showCheckPoint()}
                     ></RaceTheme>
-                    <StationDisplay
-                        points={score}
-                        stations={LecturerService.getCheckpointsForTheme(props.theme)}
-                    ></StationDisplay>
                 </div>
             ) : (
                 <div className="statistics-wrapper">

@@ -7,6 +7,8 @@ import {
     getAllScores,
     getCheckpoints,
     getGhostTrainScores,
+    getGhostTeams,
+    getBestTeamFinalScore,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -46,7 +48,9 @@ module.exports = {
 
                     game.avgScore = game.totalScore / game.users.size
 
-                    io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
+                    io.to(`lecturer${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
 
                 } catch (error) {
                     //If an error is throw it means the game was not started yet
@@ -110,7 +114,9 @@ module.exports = {
                     game.users.delete(socket.id)
                     game.avgScore = game.totalScore / game.users.size
 
-                    io.to(`lecturer${lobbyId}`).emit("score", game.avgScore)
+                    io.to(`lecturer${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
                 } catch (error) {
                     console.log(error)
                     //If an error is throw it means the game was not started yet
@@ -136,7 +142,9 @@ module.exports = {
                     startLobby(lobbyId)
                     try {
                         console.log(study)
+                        console.log(topics)
                         const rounds = await getIRounds(study, topics)
+                        console.log(rounds)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
@@ -199,7 +207,7 @@ module.exports = {
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
                         io.to(`lecturer${lobbyId}`).emit("score", {
-                            score: Math.floor(game.avgScore),
+                            score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
                         })
                     } else if (attempts === 0) {
@@ -249,7 +257,7 @@ module.exports = {
 
                 await saveNewScore(
                     game.teamName,
-                    game.avgScore,
+                    game.timeScores,
                     game.checkpoints,
                     game.rounds[game.round]._id,
                     game.roundDurations[game.round],
@@ -262,6 +270,64 @@ module.exports = {
                 socket.emit("get-all-scores", result)
             })
 
+            /**
+             * This function saves a new time score when called by frontend
+             * The time score is taken from the current team score after applying normalization
+             */
+            socket.on("saveTimeScore", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                const game = getGame(lobbyId)
+                game.addNewTimeScore()
+            })
+
+            /**
+             * Gets randomly sampled ghost teams, applies interpolation and sends them to client
+             */
+            socket.on("getGhostTeams", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+
+                    const game = getGame(lobbyId)
+                    const round = game.rounds[game.round]
+                    const roundId: number = round.id
+
+                    const ghostTeams = await getGhostTeams(roundId)
+                    const interpolatedGhostTeams = ghostTeams.map(x => ({
+                        teamName: x.teamname,
+                        timeScores: game.getGhostTeamTimePointScores(x.scores),
+                        checkpoints: x.checkpoints,
+                        study: x.study,
+                        accuracy: x.accuracy
+                    }))
+                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+
+            /**
+             * Calculate the end point of one race lap for the current round
+             * Currently set to half of the best team's final score
+             */
+            socket.on("getRaceTrackEndScore", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+                    const game = getGame(lobbyId)
+                    const round = game.rounds[game.round]
+                    const roundId: number = round.id
+
+                    const normalizedHighestFinalScore = await getBestTeamFinalScore(roundId)
+                    const halvedHighestFinalScore = Math.floor(
+                        normalizedHighestFinalScore 
+                        * game.roundDurations[game.round] 
+                        * game.users.size 
+                        / 3)
+                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        
             /**
              * This function gets the statistics for the lecturer
              * This includes all the questions answered with the score, accuracy, difficuly and answer
@@ -338,7 +404,6 @@ module.exports = {
                     const roundId: number = round.id
 
                     const ghostTrainScores = await getGhostTrainScores(roundId)
-                    console.log(ghostTrainScores)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {

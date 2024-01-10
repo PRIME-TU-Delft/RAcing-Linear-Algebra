@@ -13,14 +13,32 @@ class Point {
     }
 }
 
-interface Ghost {
+interface AnimationStatus {
+    pathProgress: number,
+    transitionDuration: number, 
+    timeScoreIndex: number 
+}
+
+interface RaceObject {
+    isGhost: boolean,
+    ghostIndex?: number,
     score: number
+}
+
+interface Ghost {
     teamName: string
+    color: string
+    timeScores: { timePoint: number, score: number }[]
+    checkpoints: number[]
+    study: string
+    accuracy: number
+    animationStatus: AnimationStatus
 }
 
 interface Checkpoint {
     name: string
-    points: number
+    percentage: number
+    insideTracks: boolean
 }
 
 interface Dimensions {
@@ -47,11 +65,25 @@ class Component {
     }
 }
 
+interface DecorationElement {
+    points: PercentCoordinate[]
+    class: string
+    sprite: string
+}
+
+interface Map {
+    backgroundColor: string // the color of the background for the given theme
+    decorations: DecorationElement[] // list of decorations for the map
+    path: PercentCoordinate[] // list of corner points for the tracks of the train theme
+}
+
 export {
     type PercentCoordinate,
     Point,
     type Checkpoint,
     Component,
+    type RaceObject,
     type Ghost,
     type Dimensions,
+    type Map
 }

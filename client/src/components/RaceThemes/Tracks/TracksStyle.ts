@@ -1,5 +1,5 @@
-import Sprites from "../TrainThemeSprites"
-import Position from "../../PathPosition"
+import Sprites from "../Sprites/TrainThemeSprites"
+import Position from "../PathPosition"
 
 interface Point {
     x: number

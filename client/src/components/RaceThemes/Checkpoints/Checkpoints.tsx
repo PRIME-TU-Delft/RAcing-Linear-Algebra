@@ -12,6 +12,14 @@ interface Props {
 }
 
 function Checkpoints(props: Props) {
+
+    const getCheckpointStyle = (checkpoint: Checkpoint) => {
+        return Position.getCheckpointPosition(
+            checkpoint,
+            props.pathLength,
+            props.components
+        )
+    }
     return (
         <div>
             {props.checkpoints.map((checkpoint, index) => (
@@ -19,11 +27,7 @@ function Checkpoints(props: Props) {
                     data-testid={`checkpoint${index}`}
                     key={index}
                     className="checkpoint-element"
-                    style={Position.getCheckpointPosition(
-                        checkpoint.points / props.totalPoints,
-                        props.pathLength,
-                        props.components
-                    )}
+                    style={getCheckpointStyle(checkpoint )}
                 >
                     <div className="img-container">
                         <img src={props.sprite} />

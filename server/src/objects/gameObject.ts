@@ -4,10 +4,12 @@ import type { IRound } from "../models/roundModel"
 import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../latexParser"
+import { CurveInterpolator } from 'curve-interpolator';
 
 export class Game {
     avgScore: number //The average score of the team's users
     totalScore: number //The total (sum) score of the team's users
+    timeScores: number[]
     teamName: string //The name of the team
     round: number //Number of the current round that is being played
     rounds: IRound[] //The selected rounds
@@ -32,6 +34,7 @@ export class Game {
         this.teamName = teamName
         this.avgScore = 0
         this.totalScore = 0
+        this.timeScores = [0]
         this.users = users
         this.checkpoints = []
         this.study = study
@@ -207,6 +210,70 @@ export class Game {
         }
 
         return score
+    }
+
+    /**
+     * Calculates and stores the current score into the list of time scores
+     * The value is scaled down based on player number and round duration
+     */
+    addNewTimeScore() {
+        const currentTotalScore = this.totalScore
+        const numberOfPlayers = this.users.size
+        const roundDuration = this.roundDurations[this.round]
+
+        const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
+        this.timeScores.push(newTimeScore)
+    }
+
+    /**
+     * Gets the interpolated score points for a given ghost team scores
+     * @param ghostTeamScores the time scores array of the ghost team
+     * @param deltaT the delta T being used
+     * @returns a list of interpolated points for the given round to be used for this ghost team
+     */
+    getGhostTeamTimePointScores(ghostTeamScores: number[]) {
+        const numberOfTimePoints = Math.floor(this.roundDurations[this.round] / 20)
+        const points = ghostTeamScores.map((x, index) => [index * 30, x])
+        const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
+        const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
+
+        const result = timePoints.map(x => ({
+            timePoint: x,
+            score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
+        }))
+        return result
+    }
+
+    /**
+     * Gets a random distribution of time points across the round duration interval that are to be used for score updating
+     * @param numberOfTimePoints the number of time points to generate
+     * @returns an array of time points in seconds across the interval
+     */
+    getTimePointsForTeam(numberOfTimePoints: number) {
+        const timePoints: number[] = [];
+        const maxDuration = this.roundDurations[this.round] * 1000; // Convert duration to milliseconds
+        const minSpacing = maxDuration / numberOfTimePoints;
+      
+        let currentTime = 0;
+        for (let i = 0; i < numberOfTimePoints; i++) {
+          const randomOffset = Math.random() * minSpacing + minSpacing * 0.5; // Random offset within a range
+          currentTime += randomOffset;
+          if (currentTime < maxDuration) {
+            timePoints.push(currentTime);
+          }
+        }
+      
+        return timePoints.map((time) => Math.floor(time / 1000)); // Convert back to seconds
+      }
+
+    /**
+     * Transforms the normalized score values into the appropriate values for the current round
+     * @param ghostTeamScores the array of points given by the curve interpolation library
+     *  representing interpolated ghost team scores
+     * @returns the scaled up values for the scores based on current number of players and round duration
+     */
+    transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
+        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.round])
     }
 
     /**
