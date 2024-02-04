@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Checkpoint, Ghost, Map } from "./SharedUtils"
+import { Checkpoint, Ghost, Map, ServerGhost } from "./SharedUtils"
 import socket from "../../socket"
 import { trainMaps } from "./Maps/TrainMaps"
 import { boatMaps } from "./Maps/BoatMaps"
@@ -9,10 +9,9 @@ import Tracks from "./Tracks/Tracks"
 import Decorations from "./Decorations/Decorations"
 import CheckpointReached from "./CheckpointAnimation/CheckpointReached"
 import ThemeBackground from "./ThemeBackground/ThemeBackground"
+import {initializeFrontendGhostObjects} from "./Ghosts/GhostService"
 import "./RaceTheme.css"
-import DecorationsEditor from "./DecorationsEditor/DecorationsEditor"
-import TrainThemeSprites from "./Sprites/TrainThemeSprites"
-import StationDisplay from "./StationDisplay/StationDisplay"
+
 interface Props {
     mapDimensions: {
         width: number // screen width of map section
@@ -37,11 +36,13 @@ function RaceTheme(props: Props) {
     
     const testGhosts: Ghost[] = [{
         teamName: "Test",
-        color: "#" + Math.random().toString(16).substring(2, 8),
+        key: 1,
+        colors: { mainColor: "#" + Math.random().toString(16).substring(2, 8), highlightColor: ""},
         timeScores: [],
         checkpoints: [],
         study: "CSE",
         accuracy: 100,
+        lapsCompleted: 0,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%
             transitionDuration: 1,  // transition duration initalized at 1, changes when updating
@@ -98,19 +99,10 @@ function RaceTheme(props: Props) {
     }, [averageFinalTeamScore])
 
     useEffect(() => {
-        socket.on("ghost-teams", (ghosts) => {
-            const ghostsWithColor: Ghost[] = ghosts.map(
-                (x: { teamName: string; timeScores: { timePoint: number, score: number }; checkpoints: number[]; study: string; accuracy: number }) => ({
-                    ...x,
-                    color: "#" + Math.random().toString(16).substring(2, 8),
-                    animationStatus: {
-                        pathProgress: 0,    // initialize all ghost to progress of 0%
-                        transitionDuration: 1,  // transition duration initalized at 1, changes when updating
-                        timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
-                    }
-                }))
+        socket.on("ghost-teams", (ghosts: ServerGhost[]) => {
+            const intializedGhosts: Ghost[] = initializeFrontendGhostObjects(ghosts)
 
-            setGhosts((curr) => [...ghostsWithColor])
+            setGhosts((curr) => [...intializedGhosts])
             console.log(ghosts)
         })
 
