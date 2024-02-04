@@ -13,10 +13,11 @@ import {
     Component,
     Dimensions,
 } from "../SharedUtils"
-import {formatRacePositionText} from "../RaceService"
+import {formatRacePositionText, getRaceVehicleSprite} from "../RaceService"
 import Checkpoints from "../Checkpoints/Checkpoints"
 import Ghosts from "../Ghosts/Ghosts"
 import RacePath from "./RacePath/RacePath"
+import VehicleImage from "../VehicleImage/VehicleImage"
 
 interface Props {
     theme: string   // theme for the race (e.g. train, boat...)
@@ -38,13 +39,14 @@ function Tracks(props: Props) {
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
-        for (let i = 0; i < props.ghosts.length; i++) {
+        for (const ghost of props.ghosts) {
             newRacingTeams.push({
                 isGhost: true,
-                ghostIndex: i,
+                ghostKey: ghost.key,
                 score: 0
             })
         }
+    
         newRacingTeams.push({
             isGhost: false,
             score: 0
@@ -59,14 +61,14 @@ function Tracks(props: Props) {
         setSortedRacingTeamStats(curr => [...newOrderOfTeams])
     }, [racingTeamsStats])
 
-    const updateRacingStats = (newScore: number, ghostIndex?: number) => {
+    const updateRacingStats = (newScore: number, ghostKey?: number) => {
         const newStats = [...racingTeamsStats]
 
         let indexToUpdate = -1
 
         // Only ghost teams have a ghost index
-        if (ghostIndex != undefined) {
-            indexToUpdate = newStats.findIndex(x => x.ghostIndex == ghostIndex)   // find element representing ghost which had a change in score
+        if (ghostKey != undefined) {
+            indexToUpdate = newStats.findIndex(x => x.ghostKey == ghostKey)   // find element representing ghost which had a change in score
         }
         else {
             indexToUpdate = newStats.findIndex(x => !x.isGhost)   // only one team is not a ghost (playing team)
@@ -128,22 +130,11 @@ function Tracks(props: Props) {
         }
     }
 
-    const getVehicleSprite = () => {
-        switch(props.theme) {
-            case "train":
-                return TrainSprites.train
-            case "boat":
-                return BoatSprites.boat
-            default:
-                return TrainSprites.train
-        }
-    }
-
-    const getRacePosition = (ghostIndex?: number) => {
+    const getRacePosition = (ghostKey?: number) => {
         let positionIndex = -1
 
-        if (ghostIndex != undefined) {
-            positionIndex = sortedRacingTeamStats.findIndex(x => x.ghostIndex == ghostIndex)   // using the ghost's index to find position in the race
+        if (ghostKey != undefined) {
+            positionIndex = sortedRacingTeamStats.findIndex(x => x.ghostKey == ghostKey)   // using the ghost's index to find position in the race
         }
         else {
             positionIndex = sortedRacingTeamStats.findIndex(x => !x.isGhost)   // playing team is the only non-ghost in the array
@@ -152,8 +143,8 @@ function Tracks(props: Props) {
         return positionIndex
     }
 
-    const getRacePositionText = (ghostIndex?: number) => {
-        const positionIndex = getRacePosition(ghostIndex)
+    const getRacePositionText = (ghostKey?: number) => {
+        const positionIndex = getRacePosition(ghostKey)
         if (positionIndex != -1) return formatRacePositionText(positionIndex + 1)
         else return ""
     }
@@ -178,19 +169,21 @@ function Tracks(props: Props) {
                 data-testid={"main-vehicle"}
                 className="main-vehicle"
                 style={{ offsetPath: `path("${svgPath}")` }}
-                initial={{ offsetDistance: "0%", filter: "saturate(0.3)" }}
+                initial={{ offsetDistance: "0%"}}
                 animate={{ 
-                    offsetDistance: `${progressPercent * 100}%`,
-                    filter: `saturate(${0.3 + Math.floor(props.currentPoints / props.totalPoints) * 0.6})`
+                    offsetDistance: `${progressPercent * 100}%`
                  }}
                 transition={{ duration: 1 }}
             >
-                <div className="position-number main-color">{getRacePositionText()}</div>
-                <img
-                    src={getVehicleSprite()}
-                    alt="vehicle"
-                    className="rounded-circle progress-point"
-                />
+                <div className="position-number main-vehicle-text">{getRacePositionText()}</div>
+                <div className="vehicle-image-container rounded-circle">
+                    <VehicleImage 
+                        theme={props.theme} 
+                        colors={{
+                            mainColor: "#0021A7",
+                            highlightColor: "#F8B700"
+                        }} />
+                </div>
             </motion.div>
 
             <Ghosts
@@ -198,11 +191,11 @@ function Tracks(props: Props) {
                     ghosts={props.ghosts}
                     time={props.usedTime}
                     path={svgPath}
-                    sprite={getVehicleSprite()}
+                    theme={props.theme}
                     totalPoints={props.totalPoints}
                     mainVehiclePosition={getRacePosition()}
-                    onGhostScoreUpdate={(newScore, ghostIndex) => updateRacingStats(newScore, ghostIndex)}
-                    getRacePosition={(ghostIndex: number) => getRacePosition(ghostIndex)}
+                    onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
+                    getRacePosition={(ghostKey: number) => getRacePosition(ghostKey)}
                 />
         </div>
     )

@@ -1,0 +1,11 @@
+.position-text {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.team-name-text{
+    font-size: 18px;
+    text-align: left;
+    margin-left: 10px;
+    font-weight: 500;
+}

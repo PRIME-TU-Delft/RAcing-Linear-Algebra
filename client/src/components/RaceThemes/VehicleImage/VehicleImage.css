@@ -1,0 +1,22 @@
+.vehicle-main-svg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.vehicle-highlight-svg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.background-vehicle-image {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
