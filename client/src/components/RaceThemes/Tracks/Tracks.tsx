@@ -34,11 +34,20 @@ function Tracks(props: Props) {
     const height = props.mapDimensions.height
     const width = props.mapDimensions.width
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
-    const [racingTeamsStats, setRacingTeamsStats] = useState<RaceObject[]>([])
+    const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
+
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
+
+        // Adding the main train
+        newRacingTeams.push({
+            isGhost: false,
+            score: 0
+        })
+
+        // Adding the ghost teams
         for (const ghost of props.ghosts) {
             newRacingTeams.push({
                 isGhost: true,
@@ -46,23 +55,21 @@ function Tracks(props: Props) {
                 score: 0
             })
         }
-    
-        newRacingTeams.push({
-            isGhost: false,
-            score: 0
-        })
-        setRacingTeamsStats(curr => [...newRacingTeams])
+
+        setRacingTeamStats(curr => [...newRacingTeams])
         setSortedRacingTeamStats(curr => [...newRacingTeams])
     }, [props.ghosts])
 
     useEffect(() => {
-        const newOrderOfTeams = [...racingTeamsStats]
+        const newOrderOfTeams = [...racingTeamStats]
         newOrderOfTeams.sort((x, y) => x.score > y.score ? -1 : x.score < y.score ? 1 : 0)
         setSortedRacingTeamStats(curr => [...newOrderOfTeams])
-    }, [racingTeamsStats])
+    }, [racingTeamStats])
 
     const updateRacingStats = (newScore: number, ghostKey?: number) => {
-        const newStats = [...racingTeamsStats]
+        if (racingTeamStats.length == 0) return
+        
+        const newStats = [...racingTeamStats]
 
         let indexToUpdate = -1
 
@@ -77,8 +84,7 @@ function Tracks(props: Props) {
         if (indexToUpdate != -1) {
             newStats[indexToUpdate].score = newScore
         }
-        console.log(newStats)
-        setRacingTeamsStats(curr => [...newStats])
+        setRacingTeamStats(curr => [...newStats])
     }
 
     const points: Point[] = [] // list of points computed from track coordinates
@@ -114,7 +120,6 @@ function Tracks(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
-        console.log(props.currentPoints)
         setProgressPercent((current) => (props.currentPoints % props.totalPoints) / props.totalPoints)
         updateRacingStats(props.currentPoints)
     }, [props.currentPoints])
