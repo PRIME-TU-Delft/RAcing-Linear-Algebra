@@ -55,7 +55,7 @@ function Decoration(props: Props) {
         const style = {
             left: `${x}px`,
             bottom: `${y}px`,
-            zIndex: `${Math.floor((1 - coordinates.yPercent) * 10000)}`
+            zIndex: `${Math.floor((1 - coordinates.yPercent) * 1000)}`
         }
 
         return style

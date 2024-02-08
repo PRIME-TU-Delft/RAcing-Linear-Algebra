@@ -85,7 +85,7 @@ function Waiting(props: Props) {
         <div className="waiting">
             {props.theme === "Train" ? (
                 <>
-                    <TrainBackground />
+                    <TrainBackground includeRail={true}/>
                     <div className="train-container">
                         <Train />
                     </div>
