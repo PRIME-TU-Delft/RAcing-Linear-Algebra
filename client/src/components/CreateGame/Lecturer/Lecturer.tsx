@@ -9,6 +9,7 @@ import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
 import RaceTheme from "../../RaceThemes/RaceTheme"
 import LecturerService from "./LecturerService"
+import { Ghost } from "../../RaceThemes/SharedUtils"
 
 //score object received from backend
 export interface IScore {
@@ -24,6 +25,7 @@ interface Props {
     lobbyId: number
     teamName: string
     theme: string
+    ghostTeams: Ghost[]
 }
 
 //data to be displayed
@@ -52,7 +54,7 @@ function Lecturer(props: Props) {
     const { width, height } = useWindowDimensions()
 
     //total seconds of count down(10 minutes), added additional of 3 because of the 3s count down
-    const [seconds, setSeconds] = useState(613)
+    const [seconds, setSeconds] = useState(600)
 
     //score of the team
     const [score, setScore] = useState(0)
@@ -72,12 +74,6 @@ function Lecturer(props: Props) {
     //checkpoint
     const [location, setLocation] = useState("Home")
 
-    //shows the 3s pop up countdown
-    const [showPopup, setShowPopup] = useState(true)
-
-    //how many seconds of count down when the screen starts
-    const [countdown, setCountdown] = useState(3)
-
     //score data for all teams for the final leaderboard
     const [teamScores, setTeamScores] = useState<Teams[]>([])
 
@@ -92,10 +88,10 @@ function Lecturer(props: Props) {
 
     //show checkpoint leaderboard for 15s
     const showCheckPoint = () => {
-        setShowCP(true)
-        setTimeout(() => {
-            setShowCP(false)
-        }, 15000)
+        // setShowCP(true)
+        // setTimeout(() => {
+        //     setShowCP(false)
+        // }, 15000)
     }
 
     //when 10minutes count down is up
@@ -121,8 +117,7 @@ function Lecturer(props: Props) {
       
         window.addEventListener("beforeunload", unloadCallback);
         return () => window.removeEventListener("beforeunload", unloadCallback);
-      }, []);
-    
+      }, []);    
 
     // Timer functionality
     useEffect(() => {
@@ -132,11 +127,6 @@ function Lecturer(props: Props) {
             } else {
                 timeUp()
                 clearInterval(interval)
-            }
-            if (countdown > 1) {
-                setCountdown((countdown) => countdown - 1)
-            } else {
-                setShowPopup(false)
             }
         }, 1000)
 
@@ -174,9 +164,6 @@ function Lecturer(props: Props) {
             setShowLeaderBoard(curr => true)
         })
 
-        socket.on("ghost-teams", (ghostTeams: JSON[]) => {
-            console.log(ghostTeams)
-        })
     }, [socket])
 
     //reset everything when new round start
@@ -192,8 +179,6 @@ function Lecturer(props: Props) {
             setLocation("Home")
             setAccuracy(100)
             setRoundFinished((cur) => false)
-            setShowPopup((cur) => true)
-            setCountdown((cur) => 3)
         }
     }
 
@@ -221,6 +206,7 @@ function Lecturer(props: Props) {
                         mapDimensions={{ width: width, height: height - 100 }}
                         checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
                         usedTime={600 - seconds}
+                        ghostTeams={props.ghostTeams}
                         setCheckpoint={(data: string) =>
                             setLocation((current) => data)
                         }
@@ -283,18 +269,6 @@ function Lecturer(props: Props) {
                     </button>
                 </div>
             )}
-            <div className={`popup ${showPopup ? "show" : ""}`}>
-                <div className="popup-content">
-                    <p>
-                        <span
-                            className="countdown-text"
-                            data-testid="count-down"
-                        >
-                            {countdown}
-                        </span>
-                    </p>
-                </div>
-            </div>
         </div>
     )
 }
