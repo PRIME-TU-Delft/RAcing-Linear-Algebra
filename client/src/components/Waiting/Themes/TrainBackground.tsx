@@ -1,7 +1,11 @@
 import React from "react"
 import "./TrainBackground.css"
 
-export default function TrainBackground() {
+interface Props {
+    includeRail: boolean
+}
+
+export default function TrainBackground(props: Props) {
     return (
         <div className="background-train">
             <svg
@@ -36,7 +40,7 @@ export default function TrainBackground() {
                     </mask>
                 </defs>
             </svg>
-            <div className="background-train-track"></div>
+            {props.includeRail ? <div className="background-train-track"></div> : null}
         </div>
     )
 }
