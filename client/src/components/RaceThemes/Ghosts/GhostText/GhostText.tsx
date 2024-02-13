@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { animated, useSpringRef, useTransition } from "react-spring"
 import "./GhostText.css"
+import { getColorForStudy } from "../GhostService"
 
 interface Props {
     ghostTeamName: string,
+    ghostStudy: string,
     ghostRacePosition: string,
     showTeamName: boolean
 }
@@ -33,7 +35,11 @@ function GhostText(props: Props) {
         <div>
             {transitions((style, i) => (
                 <animated.div style={style} className={(i == 0 ? "position-text" : "team-name-text")}>
-                    { i == 0 ? props.ghostRacePosition : props.ghostTeamName }
+                    { i == 0 ? props.ghostRacePosition : (
+                        <div>
+                            <span style={{ color: getColorForStudy(props.ghostStudy), fontWeight: 700 }}>{props.ghostStudy + ":"}</span> {props.ghostTeamName}
+                        </div>
+                    )}
                 </animated.div>
             ))}
         </div>

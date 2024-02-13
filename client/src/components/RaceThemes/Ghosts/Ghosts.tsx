@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Ghost } from "../SharedUtils"
 import { motion } from "framer-motion"
 import { useSpring, animated, a, useTransition, useSpringRef } from '@react-spring/web'
-import {currentGhostIsOpen, getGhostStyle, getRacePositionText} from "./GhostService"
+import {currentGhostIsOpen, getColorForStudy, getGhostStyle, getRacePositionText} from "./GhostService"
 import { getColorForRaceLap } from "../RaceService"
 import "./Ghosts.css"
 import GhostText from "./GhostText/GhostText"
@@ -112,9 +112,10 @@ function Ghosts(props: Props) {
                     {currentGhostIsOpen(props.getRacePosition(ghost.key), props.mainVehiclePosition) && startShowingPosition ? 
                     (<motion.div 
                         className="position-number"
-                        style={{borderColor: ghost.colors.mainColor}}>
+                        style={{borderColor: ghost.colors.highlightColor}}>
                             <GhostText 
                                 ghostTeamName={ghost.teamName} 
+                                ghostStudy={ghost.study}
                                 ghostRacePosition={getRacePositionText(props.getRacePosition(ghost.key))}
                                 showTeamName={showTeamNames}
                             />
@@ -128,7 +129,8 @@ function Ghosts(props: Props) {
                         animate={
                             getGhostStyle(
                                 currentGhostIsOpen(props.getRacePosition(ghost.key), props.mainVehiclePosition), 
-                                getColorForRaceLap(ghost.lapsCompleted)
+                                getColorForRaceLap(ghost.lapsCompleted),
+                                getColorForStudy(ghost.study)
                             )
                         }
                         transition={{

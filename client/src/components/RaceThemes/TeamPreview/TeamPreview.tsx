@@ -8,6 +8,7 @@ import socket from "../../../socket";
 import { useNavigate } from "react-router-dom";
 import TrainBackground from "../../Waiting/Themes/TrainBackground";
 import PregameCountdown from "./PregameCountdown/PregameCountdown";
+import { getColorForStudy } from "../Ghosts/GhostService";
 
 interface Props {
     topic: string,
@@ -67,8 +68,8 @@ function TeamPreview(props: Props) {
                                         />
                                 </div>
                                 <div className="team-preview-name-container">
-                                    <div style={{textDecorationLine: "underline", textDecorationColor: ghost.colors.mainColor}}>
-                                        {ghost.teamName}
+                                    <div style={{textDecorationLine: "underline", textDecorationColor: ghost.colors.highlightColor}}>
+                                        <span style={{ color: getColorForStudy(ghost.study), fontWeight: 700 }}>{ghost.study + ":"}</span>{ghost.teamName}
                                     </div>
                                 </div>
                             </div>

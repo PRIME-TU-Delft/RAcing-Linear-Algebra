@@ -38,7 +38,7 @@ export function getRacePositionText(positionIndex: number) {
  * @param raceLapColor color used for the race lap the ghost team is currently in
  * @returns the css styling to use for the ghost team
  */
-export function getGhostStyle(isOpen: boolean, raceLapColor: string) {
+export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor: string) {
     if (isOpen) {
         return {
             height: "55px",
@@ -51,93 +51,40 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string) {
         return {
             height: "30px",
             width: "30px",
-            borderColor: "black",
-            borderWidth: "1px",
-            backgroundColor: raceLapColor
+            borderColor: raceLapColor,
+            borderWidth: "3px",
+            backgroundColor: ghostColor
         }
     }
 }
 
 function getGhostTeamColors() {
-    const colors: GhostColor[] = [
-        {
-            mainColor: "#ca2128",
-            highlightColor: "#e2d820"
-        },
-        {
-            mainColor: "#f186b6",
-            highlightColor: "#efe484"
-        },
-        {
-            mainColor: "#d34797",
-            highlightColor: "#a8a8a8"
-        },
-        {
-            mainColor: "#803292",
-            highlightColor: "#ffcd4a"
-        },
-        {
-            mainColor: "#7683ff",
-            highlightColor: "#ff9d75"
-        },
-        {
-            mainColor: "#64c4c0",
-            highlightColor: "#c166a6"
-        },
-        {
-            mainColor: "#87ce59",
-            highlightColor: "#5968cf"
-        },
-        {
-            mainColor: "#3eb55f",
-            highlightColor: "#ff7357"
-        },
-        {
-            mainColor: "#8b4513",
-            highlightColor: "#c98bcc"
-        },
-        {
-            mainColor: "#8b0000",
-            highlightColor: "#80ceff"
-        },
-        {
-            mainColor: "#e0db2b",
-            highlightColor: "#2ba4e0"
-        },
-        {
-            mainColor: "#ff8389",
-            highlightColor: "#ffe382"
-        },
-        {
-            mainColor: "#4a504e",
-            highlightColor: "#00a8bb"
-        },
-        {
-            mainColor: "#008080",
-            highlightColor: "#a973ff"
-        },
-        {
-            mainColor: "#0bb4ff",
-            highlightColor: "#ff4a4a"
-        },
-        {
-            mainColor: "#c6aef4",
-            highlightColor: "#f5d3ae"
-        },
-        {
-            mainColor: "#39ffd9",
-            highlightColor: "#ff9a36"
-        },
-        {
-            mainColor: "#ff7300",
-            highlightColor: "#4d4080"
-        },
+    const colors: string[] = [
+        "#ca2128",
+        "#f186b6",
+        "#d34797",
+        "#803292",
+        "#7683ff",
+        "#64c4c0",
+        "#87ce59",
+        "#3eb55f",
+        "#8b4513",
+        "#8b0000",
+        "#e0db2b",
+        "#c9959a",
+        "#898989",
+        "#2c2c99",
+        "#0084b2",
+        "#c6aef4",
+        "#39ffd9",
+        "#ff7300"
     ]
+    
     return colors
 }
 
 function getShuffledGhotsColors() {
-    const colors: GhostColor[] = getGhostTeamColors()
+    const colors: string[] = getGhostTeamColors()
 
     // Using the standard implementation of the Fisher-Yates (aka Knuth) Shuffle algorithm
     let currentIndex = colors.length,  randomIndex;
@@ -156,24 +103,36 @@ function getShuffledGhotsColors() {
     return colors
 }
 
+export function getColorForStudy(study: string) {
+    switch(study.toLowerCase()) {
+        case "cse":
+            return "#9865fc"
+        case "ae":
+            return "#cccccc"
+        case "mch":
+            return "#3a3a3a"
+        case "ae":
+            return "#3dcdf9"
+        default:
+            return "#143862"
+    }
+}
+
 export function initializeFrontendGhostObjects(ghosts: ServerGhost[]) {
-    const colors: GhostColor[] = getShuffledGhotsColors()
+    const highlightColors: string[] = getShuffledGhotsColors()
 
     // Safety check to make sure number of ghosts matches the preset number of colors (18)
-    if (colors.length < ghosts.length) {
-        const numOfMissingColors = ghosts.length - colors.length
+    if (highlightColors.length < ghosts.length) {
+        const numOfMissingColors = ghosts.length - highlightColors.length
         for (let i = 0; i < numOfMissingColors; i++) {
-            colors.push({
-                mainColor: "#" + Math.random().toString(16).substring(2, 8),
-                highlightColor: "#" + Math.random().toString(16).substring(2, 8)
-            })
+            highlightColors.push("#" + Math.random().toString(16).substring(2, 8))
         }
     }
 
     const initializedGhosts: Ghost[] = ghosts.map((x, i) => ({
         ...x,
         key: i,
-        colors: { mainColor: colors[i].mainColor, highlightColor: colors[i].highlightColor},
+        colors: { mainColor: getColorForStudy(x.study), highlightColor: highlightColors[i]},
         lapsCompleted: 0,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%
