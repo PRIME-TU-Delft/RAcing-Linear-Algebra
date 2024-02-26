@@ -252,19 +252,22 @@ export class Game {
     getTimePointsForTeam(numberOfTimePoints: number) {
         const timePoints: number[] = [];
         const maxDuration = this.roundDurations[this.round] * 1000; // Convert duration to milliseconds
-        const minSpacing = maxDuration / numberOfTimePoints;
-      
         let currentTime = 0;
-        for (let i = 0; i < numberOfTimePoints; i++) {
-          const randomOffset = Math.random() * minSpacing + minSpacing * 0.5; // Random offset within a range
-          currentTime += randomOffset;
-          if (currentTime < maxDuration) {
-            timePoints.push(currentTime);
-          }
+      
+        for (let i = numberOfTimePoints + 1; i > 1; i--) {
+            // Generate a random number between 0.5 and 2
+            const factor = Math.random() * 1.5 + 0.5;
+            const averageInterval = (maxDuration - currentTime) / i;
+            // Calculate the interval based on the factor
+            const intervalTime = averageInterval * factor;
+            currentTime += intervalTime;
+            if (currentTime < maxDuration) {
+                timePoints.push(currentTime);
+            }
         }
       
         return timePoints.map((time) => Math.floor(time / 1000)); // Convert back to seconds
-      }
+    }
 
     /**
      * Transforms the normalized score values into the appropriate values for the current round

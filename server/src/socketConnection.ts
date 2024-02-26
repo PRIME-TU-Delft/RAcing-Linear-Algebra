@@ -255,19 +255,21 @@ module.exports = {
                     (game.correct / (game.incorrect + game.correct)) * 100
                 )
 
-                await saveNewScore(
-                    game.teamName,
-                    game.timeScores,
-                    game.checkpoints,
-                    game.rounds[game.round]._id,
-                    game.roundDurations[game.round],
-                    game.study,
-                    accuracy
-                )
-                const currentRound = game.rounds[game.round]
-
-                const result = await getAllScores(currentRound.id)
-                socket.emit("get-all-scores", result)
+                if (game.totalScore !== 0) {
+                    await saveNewScore(
+                        game.teamName,
+                        game.timeScores,
+                        game.checkpoints,
+                        game.rounds[game.round]._id,
+                        game.roundDurations[game.round],
+                        game.study,
+                        accuracy
+                    )
+                    const currentRound = game.rounds[game.round]
+    
+                    const result = await getAllScores(currentRound.id)
+                    socket.emit("get-all-scores", result)
+                }
             })
 
             /**
