@@ -3,7 +3,7 @@ import TrainSprites from "../Sprites/TrainThemeSprites"
 import BoatSprites from "../Sprites/BoatThemeSprites"
 
 import "./Tracks.css"
-import { motion } from "framer-motion"
+import { color, motion } from "framer-motion"
 import {
     PercentCoordinate,
     Ghost,
@@ -13,11 +13,13 @@ import {
     Component,
     Dimensions,
 } from "../SharedUtils"
-import {formatRacePositionText, getRaceVehicleSprite} from "../RaceService"
+import {formatRacePositionText, getColorForRaceLap, getRaceVehicleSprite} from "../RaceService"
 import Checkpoints from "../Checkpoints/Checkpoints"
 import Ghosts from "../Ghosts/Ghosts"
 import RacePath from "./RacePath/RacePath"
 import VehicleImage from "../VehicleImage/VehicleImage"
+import TracksStyle from "./TracksStyle"
+import { a, useSpring, useTransition } from "react-spring"
 
 interface Props {
     theme: string   // theme for the race (e.g. train, boat...)
@@ -36,7 +38,7 @@ function Tracks(props: Props) {
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
     const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
-
+    const [lapCompletedNotifications, setLapCompleted] = useState<boolean>(false)
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
@@ -154,8 +156,25 @@ function Tracks(props: Props) {
         else return ""
     }
 
+    const getNumberOfRaceLapsCompleted = (totalPoints: number, currentPoints: number) => {
+        return Math.floor(currentPoints / totalPoints)
+    }
+
+    const lapCompletedTextAnimation = useSpring({
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+        exitBeforeEnter: true,
+    })
+
     return (
         <div>
+            {/* <div className="btn btn-primary" onClick={() => {
+                setShowLapCompletedNotification(curr => true)
+                setTimeout(() => {
+                    setShowLapCompletedNotification(curr => false)
+                }, 1000);
+            }}>CLICK</div> */}
             <RacePath
                 theme={props.theme}
                 components={components}
@@ -169,6 +188,10 @@ function Tracks(props: Props) {
                 components={components}
             ></Checkpoints>
 
+            {/* { showLapCompletedNotification ? (
+                <a.div style={lapCompletedTextAnimation}>Completed!</a.div>
+            ) : null } */}
+
             {/* Displays the main vehicle, representing the team currently playing */}
             <motion.div
                 data-testid={"main-vehicle"}
@@ -181,7 +204,7 @@ function Tracks(props: Props) {
                 transition={{ duration: 1 }}
             >
                 <div className="position-number main-vehicle-text">{getRacePositionText()}</div>
-                <div className="vehicle-image-container rounded-circle">
+                <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
                     <VehicleImage 
                         theme={props.theme} 
                         colors={{

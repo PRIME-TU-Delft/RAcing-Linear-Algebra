@@ -58,7 +58,12 @@
 
 .main-vehicle > .vehicle-image-container {
     animation: pulse 2s infinite;
-    border: 3px solid #FFB81C;
+    border: 3px solid;
+}
+
+.lap-completed-text {
+    font-size: 12px;
+    font-weight: 800;
 }
 
 @keyframes pulse {

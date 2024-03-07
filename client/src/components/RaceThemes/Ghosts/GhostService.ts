@@ -45,6 +45,7 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor:
             width: "55px",
             borderColor: raceLapColor,
             borderWidth: "3px",
+            boxShadow: "0px 0px 5px #000000",
             backgroundColor: "white"
         }
     } else {
@@ -52,9 +53,103 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor:
             height: "30px",
             width: "30px",
             borderColor: raceLapColor,
-            borderWidth: "3px",
+            borderWidth: "4px",
+            boxShadow: "0px 0px 5px #000000",
             backgroundColor: ghostColor
         }
+    }
+}
+
+function getGhostTeamFacultyColors() {
+    const colorsMAR: string[] = [
+        "#ca2128",
+        "#f186b6",
+        "#d34797",
+        "#803292",
+        "#a6b3ff",
+        "#64c4c0",
+        "#87ce59",
+        "#3eb55f",
+        "#8b4513",
+        "#8b0000",
+        "#e0db2b",
+        "#d39700",
+        "#898989",
+        "#2c2c99",
+        "#004c60",
+        "#c6aef4",
+        "#39ffd9",
+        "#ff7300"
+    ]
+
+    const colorsCSE: string[] = [
+        "#3ebfff",
+        "#f186b6",
+        "#7c00ff",
+        "#803292",
+        "#7683ff",
+        "#64c4c0",
+        "#87ce59",
+        "#3eb55f",
+        "#015623",
+        "#8b0000",
+        "#e0db2b",
+        "#00f3ff",
+        "#898989",
+        "#2c2c99",
+        "#0084b2",
+        "#c6aef4",
+        "#39ffd9",
+        "#ff7300"
+    ]
+
+    const colorsAE: string[] = [
+        "#ca2128",
+        "#f186b6",
+        "#d34797",
+        "#803292",
+        "#7683ff",
+        "#039fff",
+        "#87ce59",
+        "#43e86a",
+        "#8b4513",
+        "#8b0000",
+        "#e0db2b",
+        "#e09824",
+        "#898989",
+        "#2c2c99",
+        "#80d5ff",
+        "#c6aef4",
+        "#39ffd9",
+        "#0623F9"
+    ]
+
+    const colorsMCH: string[] = [
+        "#ca2128",
+        "#ff00e1",
+        "#d34797",
+        "#803292",
+        "#7683ff",
+        "#64c4c0",
+        "#87ce59",
+        "#3eb55f",
+        "#39bdff",
+        "#8b0000",
+        "#e0db2b",
+        "#0c6852",
+        "#898989",
+        "#2c2c99",
+        "#0084b2",
+        "#c6aef4",
+        "#39ffd9",
+        "#0623f9"
+    ]
+
+    return {
+        mch: colorsMCH,
+        ae: colorsAE,
+        mar: colorsMAR,
+        cse: colorsCSE
     }
 }
 
@@ -103,36 +198,90 @@ function getShuffledGhotsColors() {
     return colors
 }
 
+function getShuffledIndexArray(length: number) {
+    const resultArray: number[] = [];
+
+    for (let i = 0; i < length; i++) {
+        resultArray.push(i);
+    }
+
+    // Using the standard implementation of the Fisher-Yates (aka Knuth) Shuffle algorithm
+    let currentIndex = resultArray.length,  randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [resultArray[currentIndex], resultArray[randomIndex]] = [resultArray[randomIndex], resultArray[currentIndex]];
+    }
+
+    return resultArray
+}
+
 export function getColorForStudy(study: string) {
     switch(study.toLowerCase()) {
         case "cse":
-            return "#9865fc"
+            return { mainColor: "#003B91", highlightColor: "#EC40FF" }
         case "ae":
-            return "#cccccc"
+            return { mainColor: "#2BB7E2", highlightColor: "#DB274B" }
         case "mch":
-            return "#3a3a3a"
-        case "ae":
-            return "#3dcdf9"
+            return { mainColor: "#F98F46", highlightColor: "#274BFF" }
+        case "mar":
+            return { mainColor: "#003B91", highlightColor: "#D585FF" }
         default:
-            return "#143862"
+            return { mainColor: "#003B91", highlightColor: "#D585FF" }
+    }
+}
+
+function getHiglightColor(study: string, index: number) {
+    const colors = getGhostTeamFacultyColors()
+
+    switch(study) {
+        case "cse":
+            return colors.cse[index]
+        case "ae":
+            return colors.ae[index]
+        case "mch":
+            return colors.mch[index]
+        case "mar":
+            return colors.mar[index]
+        default:
+            return colors.cse[index]
     }
 }
 
 export function initializeFrontendGhostObjects(ghosts: ServerGhost[]) {
-    const highlightColors: string[] = getShuffledGhotsColors()
+    // const highlightColors: string[] = getShuffledGhotsColors()
 
-    // Safety check to make sure number of ghosts matches the preset number of colors (18)
-    if (highlightColors.length < ghosts.length) {
-        const numOfMissingColors = ghosts.length - highlightColors.length
-        for (let i = 0; i < numOfMissingColors; i++) {
-            highlightColors.push("#" + Math.random().toString(16).substring(2, 8))
-        }
-    }
+    const higlightColorsIndexArray: number[] = getShuffledIndexArray(18)
+
+    // // Safety check to make sure number of ghosts matches the preset number of colors (18)
+    // if (highlightColors.length < ghosts.length) {
+    //     const numOfMissingColors = ghosts.length - highlightColors.length
+    //     for (let i = 0; i < numOfMissingColors; i++) {
+    //         highlightColors.push("#" + Math.random().toString(16).substring(2, 8))
+    //     }
+    // }
+
+    // const initializedGhosts: Ghost[] = ghosts.map((x, i) => ({
+    //     ...x,
+    //     key: i,
+    //     colors: { mainColor: getColorForStudy(x.study), highlightColor: highlightColors[i]},
+    //     lapsCompleted: 0,
+    //     animationStatus: {
+    //         pathProgress: 0,    // initialize all ghost to progress of 0%
+    //         transitionDuration: 1,  // transition duration initalized at 1, changes when updating
+    //         timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
+    //     }
+    // }))
 
     const initializedGhosts: Ghost[] = ghosts.map((x, i) => ({
         ...x,
         key: i,
-        colors: { mainColor: getColorForStudy(x.study), highlightColor: highlightColors[i]},
+        colors: { mainColor: getColorForStudy(x.study).mainColor, highlightColor: getColorForStudy(x.study).highlightColor },
         lapsCompleted: 0,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%

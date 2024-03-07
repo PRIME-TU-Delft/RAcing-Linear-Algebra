@@ -36,6 +36,6 @@ export function getRaceVehicleSprite(theme: string) {
  * @returns color for the race lap the ghost team is in
  */
 export function getColorForRaceLap(lapsCompleted: number) {
-    const raceLapColors = ["#FFB81C", "#EC6842", "#A50034", "#EF60A3", "#6F1D77"]    // colors used to distinguish between the different race laps
+    const raceLapColors = ["#23D851", "#E8E807", "#D81212", "#FF15E9", "#A129FF"]    // colors used to distinguish between the different race laps
     return raceLapColors[lapsCompleted]
 }

@@ -37,7 +37,7 @@ function GhostText(props: Props) {
                 <animated.div style={style} className={(i == 0 ? "position-text" : "team-name-text")}>
                     { i == 0 ? props.ghostRacePosition : (
                         <div>
-                            <span style={{ color: getColorForStudy(props.ghostStudy), fontWeight: 700 }}>{props.ghostStudy + ":"}</span> {props.ghostTeamName}
+                            <span>{props.ghostStudy + ":"}</span>{props.ghostTeamName}
                         </div>
                     )}
                 </animated.div>

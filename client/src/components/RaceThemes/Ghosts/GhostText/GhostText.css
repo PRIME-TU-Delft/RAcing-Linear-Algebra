@@ -1,11 +1,14 @@
 .position-text {
     font-size: 24px;
     font-weight: 600;
+    z-index: 7000;
 }
 
 .team-name-text{
-    font-size: 16px;
+    z-index: 7000;
+    font-size: 14px;
     text-align: left;
     margin-left: 10px;
     font-weight: 500;
+    word-wrap: break-word;
 }

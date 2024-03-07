@@ -20,7 +20,7 @@ interface Props {
 }
 
 function Ghosts(props: Props) {
-    const raceLapColors = ["#FFB81C", "#EC6842", "#A50034", "#EF60A3", "#6F1D77"]    // colors used to distinguish between the different race laps
+    const raceLapColors = ["#23D851", "#E8E807", "#D81212", "#FF15E9", "#A129FF"]    // colors used to distinguish between the different race laps
     const [showTeamNames, setShowTeamNames] = useState<boolean>(false)  // boolean to indicate whether the ghost team names should be shown in favor of the position for a brief period of time
     const [startShowingPosition, setStartShowingPosition] = useState<boolean>(false) // boolean to indicate that the first ghost train has moved, so it is time to show the positions
     
@@ -112,7 +112,7 @@ function Ghosts(props: Props) {
                     {currentGhostIsOpen(props.getRacePosition(ghost.key), props.mainVehiclePosition) && startShowingPosition ? 
                     (<motion.div 
                         className="position-number"
-                        style={{borderColor: ghost.colors.highlightColor}}>
+                        style={{borderColor: getColorForRaceLap(ghost.lapsCompleted) }}>
                             <GhostText 
                                 ghostTeamName={ghost.teamName} 
                                 ghostStudy={ghost.study}
@@ -130,7 +130,7 @@ function Ghosts(props: Props) {
                             getGhostStyle(
                                 currentGhostIsOpen(props.getRacePosition(ghost.key), props.mainVehiclePosition), 
                                 getColorForRaceLap(ghost.lapsCompleted),
-                                getColorForStudy(ghost.study)
+                                getColorForStudy(ghost.study).mainColor
                             )
                         }
                         transition={{
