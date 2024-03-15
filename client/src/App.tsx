@@ -4,7 +4,7 @@ import Home from "./components/Home/Home"
 import CreateGame from "./components/CreateGame/CreateGame"
 import JoinGame from "./components/JoinGame/JoinGame"
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
-import Question from "./components/Questions/Question"
+import TestValues from "./utils/testValues"
 import Waiting from "./components/Waiting/Waiting"
 import Login from "./components/CreateGame/Login/Login"
 import Lobby from "./components/CreateGame/Lobby/Lobby"
@@ -15,6 +15,7 @@ import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
 import { Ghost, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
+import testValues from "./utils/testValues"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -101,7 +102,12 @@ function App() {
                 ></Route>
                 <Route 
                     path="/TeamPreview" 
-                    element={<TeamPreview theme={theme} topic={topic} ghostTeams={ghostTeams} onStartGame={() => navigate("/Lecturer")}></TeamPreview>
+                    element={<TeamPreview 
+                            	theme={theme} 
+                                topic={topic} 
+                                ghostTeams={ghostTeams}
+                                mainTeamName={teamName}
+                                onStartGame={() => navigate("/Lecturer")}></TeamPreview>
                         }>
                 </Route>
                 <Route

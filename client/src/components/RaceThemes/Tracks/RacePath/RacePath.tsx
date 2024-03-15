@@ -9,8 +9,7 @@ interface Props {
     svgPath: string
 }
 
-function RacePath(props: Props) {
-    
+function RacePath(props: Props) {    
     const getRacePath = () => {
         switch(props.theme.toLowerCase()) {
             case "train":
@@ -20,7 +19,7 @@ function RacePath(props: Props) {
                             style={TracksStyle.createComponentStyle(
                                 component.start,
                                 component.end,
-                                index == 0
+                                index == 0,
                             )}
                         ></div>
                         <div
@@ -29,6 +28,14 @@ function RacePath(props: Props) {
                                 props.components
                             )}
                         ></div>
+                        {index == props.components.length - 1 ? (
+                            <div 
+                                style={TracksStyle.createFinishLineStyle(
+                                    {x: component.end.x, y: component.end.y},
+                                    TracksStyle.getComponentDirection(component.start, component.end),
+                                )}
+                            ></div>
+                        ) : null}
                     </div>
                 ))
             

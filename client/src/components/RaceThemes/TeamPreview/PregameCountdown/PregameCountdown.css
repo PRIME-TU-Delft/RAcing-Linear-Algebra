@@ -4,9 +4,10 @@
     height: 15em;
     line-height: 15em;
     color: black;
-    -webkit-text-stroke: 2px black;
-    border: 5px solid;
-    outline: 3px solid black;
+    -webkit-text-stroke: 2px white;
+    border: 3px solid black;
+    background-color: #00A6D6;
+
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -15,22 +16,4 @@
 .team-preview-countdown-text > div {
     font-size: 90px;
     font-weight: 800;
-}
-
-.countdown-text-0 {
-    border-color: red;
-    background-color: red;
-    color: white;
-}
-
-.countdown-text-1 {
-    border-color: yellow;
-    background-color: yellow;
-    color: white;
-}
-
-.countdown-text-2 {
-    border-color: green;
-    background-color: green;
-    color: white;
 }

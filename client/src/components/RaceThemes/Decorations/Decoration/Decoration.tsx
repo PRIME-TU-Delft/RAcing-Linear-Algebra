@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import  { getZIndexValues } from "../../RaceService"
 import { Dimensions, PercentCoordinate } from "../../SharedUtils"
 
 interface Props {
@@ -55,7 +56,10 @@ function Decoration(props: Props) {
         const style = {
             left: `${x}px`,
             bottom: `${y}px`,
-            zIndex: `${Math.floor((1 - coordinates.yPercent) * 1000)}`
+            zIndex: `${Math.floor(
+                    	(1 - coordinates.yPercent) * (getZIndexValues().decoration / 2)     
+                        + (getZIndexValues().decoration / 2))   // assigning values between x/2 and x for layering purposes
+                    }`
         }
 
         return style

@@ -20,6 +20,8 @@ import SwampLake from "../../../img/swamp-lake.png"
 import Crocodile from "../../../img/crocodile.gif"
 import SwampRock from "../../../img/swamp-rock.png"
 import TrainStation from "../../../img/train_station_icon_180119.png"
+import FinishLineHorizontal from "../../../img/finish-line-horizontal.png"
+import FinishLineVertical from "../../../img/finish-line-vertical.png"
 
 export default {
     train: Train,
@@ -44,4 +46,6 @@ export default {
     crocodile: Crocodile,
     swampRock: SwampRock,
     trainStation: TrainStation,
+    finishLineHorizontal: FinishLineHorizontal,
+    finishLineVertical: FinishLineVertical
 }

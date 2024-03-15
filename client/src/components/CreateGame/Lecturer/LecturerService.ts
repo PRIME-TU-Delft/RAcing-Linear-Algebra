@@ -28,22 +28,22 @@ interface Teams {
 const numberOfCheckpoints = 3
 
 //checkpoints for train
-const stations = [
-    {
-        name: "Roterdam Centraal",
-        percentage: 0.17,
-        insideTracks: false
-    },
-    {
-        name: "Leiden Centraal",
-        percentage: 0.55,
-        insideTracks: false
-    },
-    {
-        name: "Delft",
-        percentage: 0.82,
-        insideTracks: true
-    },
+const stations: Checkpoint[] = [
+    // {
+    //     name: "Roterdam Centraal",
+    //     percentage: 0.17,
+    //     insideTracks: false
+    // },
+    // {
+    //     name: "Leiden Centraal",
+    //     percentage: 0.55,
+    //     insideTracks: false
+    // },
+    // {
+    //     name: "Delft",
+    //     percentage: 0.82,
+    //     insideTracks: true
+    // },
 ]
 
 //checkpoints for boat
