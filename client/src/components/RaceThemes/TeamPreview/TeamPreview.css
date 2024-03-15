@@ -1,0 +1,211 @@
+.team-preview-title {
+    width: 100%;
+    font-size: 55px;
+    font-weight: 600;
+    padding: 0.7rem 0rem;
+    border-bottom: 5px solid #00A6D6;
+
+}
+
+.team-preview-subtitle {
+    width: 100%;
+    font-size: 30px;
+    padding: 0.3rem 0rem;
+    font-weight: 500;
+}
+
+.team-preview-grid {
+    width: 80%;
+    margin: auto;
+    margin-top: 3em;
+    padding-bottom: 20px;
+    text-align: left;
+    border-radius: 20px;
+}
+
+.team-preview-grid > div {
+    display: inline-block;
+}
+
+.team-container {
+    margin-top: 2em;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.team-preview-name-container {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 10em;
+    margin-left: 5px;
+}
+
+.team-preview-name-container > div {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+.team-image-container {
+    box-shadow: 0px 0px 5px #000000;
+    position: relative;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    height: 80px;
+    width: 80px;
+}
+
+.vehicle-main-svg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.vehicle-highlight-svg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+    z-index: 3  ;
+}
+
+.background-vehicle-image {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
+
+.main-team-preview {
+    width: 90%;
+    margin: auto;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 5px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.main-team-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+}
+
+.main-team-name-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+@media only screen and (min-width: 768px) {
+    .team-preview-grid {
+        width: 90%;
+    }
+
+    .team-container {
+        margin-top: 1.5em;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .team-image-container {
+        width: 50px;
+        height: 50px;
+    }
+
+    .team-preview-name-container {
+        width: 5em;
+    }
+
+    .team-preview-name-container > div {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .team-preview-grid {
+        width: 95%;
+    }
+
+    .team-container {
+        margin-top: 1.5em;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .team-image-container {
+        width: 60px;
+        height: 60px;
+    }
+
+    .team-preview-name-container {
+        width: 6em;
+    }
+
+    .team-preview-name-container > div {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    .team-preview-grid {
+        width: 85%;
+    }
+
+    .team-container {
+        margin-top: 1.5em;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .team-image-container {
+        width: 75px;
+        height: 75px;
+    }
+
+    .team-preview-name-container {
+        width: 8em;
+    }
+
+    .team-preview-name-container > div {
+        font-size: 17px;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .team-preview-grid {
+        width: 80%;
+    }
+
+    .team-container {
+        margin-top: 2em;
+        margin-left: 1.5em;
+        margin-right: 1.5em;
+    }
+
+    .team-image-container {
+        width: 85px;
+        height: 85px;
+    }
+
+    .team-preview-name-container {
+        width: 10em;
+    }
+
+    .team-preview-name-container > div {
+        font-size: 20px;
+    }
+}

@@ -3,7 +3,7 @@ import TrainSprites from "../Sprites/TrainThemeSprites"
 import BoatSprites from "../Sprites/BoatThemeSprites"
 
 import "./Tracks.css"
-import { motion } from "framer-motion"
+import { color, motion } from "framer-motion"
 import {
     PercentCoordinate,
     Ghost,
@@ -13,10 +13,13 @@ import {
     Component,
     Dimensions,
 } from "../SharedUtils"
-import {formatRacePositionText} from "../RaceService"
+import {formatRacePositionText, getColorForRaceLap, getRaceVehicleSprite, getZIndexValues} from "../RaceService"
 import Checkpoints from "../Checkpoints/Checkpoints"
 import Ghosts from "../Ghosts/Ghosts"
 import RacePath from "./RacePath/RacePath"
+import VehicleImage from "../VehicleImage/VehicleImage"
+import TracksStyle from "./TracksStyle"
+import { a, useSpring, useTransition } from "react-spring"
 
 interface Props {
     theme: string   // theme for the race (e.g. train, boat...)
@@ -33,40 +36,55 @@ function Tracks(props: Props) {
     const height = props.mapDimensions.height
     const width = props.mapDimensions.width
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
-    const [racingTeamsStats, setRacingTeamsStats] = useState<RaceObject[]>([])
+    const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
+    const [lapCompletedNotifications, setLapCompletedNotifications] = useState<Ghost[]>([])
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
-        for (let i = 0; i < props.ghosts.length; i++) {
-            newRacingTeams.push({
-                isGhost: true,
-                ghostIndex: i,
-                score: 0
-            })
-        }
+
+        // Adding the main train
         newRacingTeams.push({
             isGhost: false,
             score: 0
         })
-        setRacingTeamsStats(curr => [...newRacingTeams])
+
+        // Adding the ghost teams
+        for (const ghost of props.ghosts) {
+            newRacingTeams.push({
+                isGhost: true,
+                ghostKey: ghost.key,
+                score: 0
+            })
+        }
+
+
+        setRacingTeamStats(curr => [...newRacingTeams])
         setSortedRacingTeamStats(curr => [...newRacingTeams])
     }, [props.ghosts])
 
     useEffect(() => {
-        const newOrderOfTeams = [...racingTeamsStats]
+        const newOrderOfTeams = [...racingTeamStats]
         newOrderOfTeams.sort((x, y) => x.score > y.score ? -1 : x.score < y.score ? 1 : 0)
         setSortedRacingTeamStats(curr => [...newOrderOfTeams])
-    }, [racingTeamsStats])
 
-    const updateRacingStats = (newScore: number, ghostIndex?: number) => {
-        const newStats = [...racingTeamsStats]
+        props.ghosts.forEach(ghost => {
+            const position = newOrderOfTeams.findIndex(x => x.ghostKey == ghost.key)
+            ghost.racePosition = position
+        })
+
+    }, [racingTeamStats])
+
+    const updateRacingStats = (newScore: number, ghostKey?: number) => {
+        if (racingTeamStats.length == 0) return
+        
+        const newStats = [...racingTeamStats]
 
         let indexToUpdate = -1
 
         // Only ghost teams have a ghost index
-        if (ghostIndex != undefined) {
-            indexToUpdate = newStats.findIndex(x => x.ghostIndex == ghostIndex)   // find element representing ghost which had a change in score
+        if (ghostKey != undefined) {
+            indexToUpdate = newStats.findIndex(x => x.ghostKey == ghostKey)   // find element representing ghost which had a change in score
         }
         else {
             indexToUpdate = newStats.findIndex(x => !x.isGhost)   // only one team is not a ghost (playing team)
@@ -75,8 +93,7 @@ function Tracks(props: Props) {
         if (indexToUpdate != -1) {
             newStats[indexToUpdate].score = newScore
         }
-        console.log(newStats)
-        setRacingTeamsStats(curr => [...newStats])
+        setRacingTeamStats(curr => [...newStats])
     }
 
     const points: Point[] = [] // list of points computed from track coordinates
@@ -112,7 +129,6 @@ function Tracks(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
-        console.log(props.currentPoints)
         setProgressPercent((current) => (props.currentPoints % props.totalPoints) / props.totalPoints)
         updateRacingStats(props.currentPoints)
     }, [props.currentPoints])
@@ -128,22 +144,11 @@ function Tracks(props: Props) {
         }
     }
 
-    const getVehicleSprite = () => {
-        switch(props.theme) {
-            case "train":
-                return TrainSprites.train
-            case "boat":
-                return BoatSprites.boat
-            default:
-                return TrainSprites.train
-        }
-    }
-
-    const getRacePosition = (ghostIndex?: number) => {
+    const getRacePosition = (ghostKey?: number) => {
         let positionIndex = -1
 
-        if (ghostIndex != undefined) {
-            positionIndex = sortedRacingTeamStats.findIndex(x => x.ghostIndex == ghostIndex)   // using the ghost's index to find position in the race
+        if (ghostKey != undefined) {
+            positionIndex = sortedRacingTeamStats.findIndex(x => x.ghostKey == ghostKey)   // using the ghost's index to find position in the race
         }
         else {
             positionIndex = sortedRacingTeamStats.findIndex(x => !x.isGhost)   // playing team is the only non-ghost in the array
@@ -152,11 +157,29 @@ function Tracks(props: Props) {
         return positionIndex
     }
 
-    const getRacePositionText = (ghostIndex?: number) => {
-        const positionIndex = getRacePosition(ghostIndex)
+    const getRacePositionText = (ghostKey?: number) => {
+        const positionIndex = getRacePosition(ghostKey)
         if (positionIndex != -1) return formatRacePositionText(positionIndex + 1)
         else return ""
     }
+
+    const getNumberOfRaceLapsCompleted = (totalPoints: number, currentPoints: number) => {
+        return Math.floor(currentPoints / totalPoints)
+    }
+
+    const lapCompletedTextAnimation = useTransition(lapCompletedNotifications, {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+        exitBeforeEnter: true,
+        onRest: (_springs, _ctrl, item) => {
+            setLapCompletedNotifications(state =>
+                state.filter(i => {
+                  return i.key !== item.key
+                })
+              )
+        },
+    })
 
     return (
         <div>
@@ -173,24 +196,39 @@ function Tracks(props: Props) {
                 components={components}
             ></Checkpoints>
 
+            {/* {lapCompletedTextAnimation((style, item) => (
+                <div style={TracksStyle.getLapCompletedTextPosition(components[components.length - 1])}>
+                    <a.div style={style} className="lap-completed-text">Completed!</a.div>
+                </div>
+            ))} */}
+
             {/* Displays the main vehicle, representing the team currently playing */}
             <motion.div
                 data-testid={"main-vehicle"}
                 className="main-vehicle"
-                style={{ offsetPath: `path("${svgPath}")` }}
-                initial={{ offsetDistance: "0%", filter: "saturate(0.3)" }}
+                style={{ 
+                    offsetPath: `path("${svgPath}")`,
+                    zIndex: getZIndexValues().mainVehicle
+                }}
+                initial={{ offsetDistance: "0%"}}
                 animate={{ 
-                    offsetDistance: `${progressPercent * 100}%`,
-                    filter: `saturate(${0.3 + Math.floor(props.currentPoints / props.totalPoints) * 0.6})`
-                 }}
-                transition={{ duration: 1 }}
+                    offsetDistance: `${progressPercent * 100}%`
+                }}
+                transition={{
+                    ease: "easeInOut",
+                    duration: 2,
+                    stiffness: 100,
+                }}
             >
-                <div className="position-number main-color">{getRacePositionText()}</div>
-                <img
-                    src={getVehicleSprite()}
-                    alt="vehicle"
-                    className="rounded-circle progress-point"
-                />
+                <div className="position-number main-vehicle-text">{getRacePositionText()}</div>
+                <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
+                    <VehicleImage 
+                        theme={props.theme} 
+                        colors={{
+                            mainColor: "#0021A7",
+                            highlightColor: "#F8B700"
+                        }} />
+                </div>
             </motion.div>
 
             <Ghosts
@@ -198,11 +236,11 @@ function Tracks(props: Props) {
                     ghosts={props.ghosts}
                     time={props.usedTime}
                     path={svgPath}
-                    sprite={getVehicleSprite()}
+                    theme={props.theme}
                     totalPoints={props.totalPoints}
                     mainVehiclePosition={getRacePosition()}
-                    onGhostScoreUpdate={(newScore, ghostIndex) => updateRacingStats(newScore, ghostIndex)}
-                    getRacePosition={(ghostIndex: number) => getRacePosition(ghostIndex)}
+                    onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
+                    onGhostCompletedLap = {(ghost: Ghost) => setLapCompletedNotifications(state => [...state, ghost])}
                 />
         </div>
     )

@@ -21,17 +21,20 @@ interface AnimationStatus {
 
 interface RaceObject {
     isGhost: boolean,
-    ghostIndex?: number,
+    ghostKey?: number,
     score: number
 }
 
 interface Ghost {
     teamName: string
-    color: string
+    key: number
+    colors: { mainColor: string, highlightColor: string}
     timeScores: { timePoint: number, score: number }[]
     checkpoints: number[]
     study: string
     accuracy: number
+    lapsCompleted: number,
+    racePosition: number,
     animationStatus: AnimationStatus
 }
 
@@ -77,6 +80,17 @@ interface Map {
     path: PercentCoordinate[] // list of corner points for the tracks of the train theme
 }
 
+interface ServerGhost { 
+    teamName: string; 
+    timeScores: { 
+        timePoint: number, 
+        score: number 
+    }[]; 
+    checkpoints: number[]; 
+    study: string; 
+    accuracy: number 
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -85,5 +99,6 @@ export {
     type RaceObject,
     type Ghost,
     type Dimensions,
-    type Map
+    type Map,
+    type ServerGhost
 }

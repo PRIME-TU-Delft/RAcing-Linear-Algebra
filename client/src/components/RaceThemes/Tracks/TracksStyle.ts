@@ -1,5 +1,6 @@
 import Sprites from "../Sprites/TrainThemeSprites"
 import Position from "../PathPosition"
+import React from "react"
 
 interface Point {
     x: number
@@ -84,13 +85,13 @@ function createRailTurnComponentStyle(index: number, components: Component[]) {
 function createComponentStyle(
     startPoint: Point,
     endPoint: Point,
-    isStartingComponent: boolean
+    isStartingComponent: boolean,
 ) {
-    const position = Position.getPosition(startPoint, endPoint)
+    const direction = getComponentDirection(startPoint, endPoint)
 
-    // Vertical
-    if (startPoint.x == endPoint.x) {
+    if (direction == "vertical") {
         const componentHeight = Math.abs(startPoint.y - endPoint.y)
+        // Assume upwards
         const style = {
             position: "absolute",
             left: `${startPoint.x}px`,
@@ -102,21 +103,25 @@ function createComponentStyle(
             backgroundRepeat: "repeat-y",
         }
 
+        // Check if downwards
         if (startPoint.y > endPoint.y) {
             style.height = `${componentHeight - 40}px`
             style.bottom = `${endPoint.y + 40}px`
-        } else if (!isStartingComponent) {
+        } 
+        
+        else if (!isStartingComponent) {
             style.height = `${componentHeight - 40}px`
             style.bottom = `${startPoint.y + 40}px`
         }
 
+
         return style
     }
 
-    // Horizontal
-    else if (startPoint.y == endPoint.y) {
+    else if (direction == "horizontal") {
         const componentWidth = Math.abs(startPoint.x - endPoint.x)
 
+        // Assume leftwards
         const style = {
             position: "absolute",
             left: `${startPoint.x}px`,
@@ -128,10 +133,13 @@ function createComponentStyle(
             backgroundRepeat: "repeat-x",
         }
 
+        // Check if rightwards
         if (startPoint.x > endPoint.x) {
             style.width = `${componentWidth - 40}px`
             style.left = `${endPoint.x + 40}px`
-        } else if (!isStartingComponent) {
+        } 
+        
+        else if (!isStartingComponent) {
             style.width = `${componentWidth - 40}px`
             style.left = `${startPoint.x + 40}px`
         }
@@ -140,4 +148,37 @@ function createComponentStyle(
     } else return {}
 }
 
-export default { createComponentStyle, createRailTurnComponentStyle }
+function createFinishLineStyle(startPoint: Point, direction: string) {
+    const style = {
+        position: "absolute",
+        left: `${startPoint.x}px`,
+        bottom: `${startPoint.y}px`,
+        width: "22px",
+        height: "40px",
+        backgroundImage: `url(${direction == "vertical" ? Sprites.finishLineVertical : Sprites.finishLineHorizontal})`,
+        backgroundSize: "auto 40px",
+        backgroundRepeat: "repeat-x",
+    } as React.CSSProperties
+
+    return style
+}
+
+function getComponentDirection(startPoint: Point, endPoint: Point) {
+    if (startPoint.x == endPoint.x) return "vertical"
+    else if (startPoint.y == endPoint.y) return "horizontal"
+    else return ""
+}
+
+function getLapCompletedTextPosition(endComponent: Component) {
+    const direction = getComponentDirection(endComponent.start, endComponent.end)
+    const style = {
+        position: "absolute",
+        left: `${direction == "horizontal" ? endComponent.end.x + 10 :  endComponent.end.x + 50}px`,
+        bottom: `${ direction == "horizontal" ? endComponent.end.y + 50 :  endComponent.end.y + 10}px`,
+        transform: "translate(-50%, 0)"
+    } as React.CSSProperties
+
+    return style
+}
+
+export default { createComponentStyle, createRailTurnComponentStyle, createFinishLineStyle, getComponentDirection, getLapCompletedTextPosition }

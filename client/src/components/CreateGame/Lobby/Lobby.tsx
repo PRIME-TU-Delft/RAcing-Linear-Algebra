@@ -43,7 +43,7 @@ function Lobby(props: Props) {
         selectedTheme: string
     ) => {
         props.onThemeSelected(selectedTheme)
-        navigate("/Lecturer")
+        navigate("/TeamPreview")
         //Replace teamNameHere with actual teamname
         socket.emit(
             "startGame",

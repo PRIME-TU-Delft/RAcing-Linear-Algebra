@@ -14,8 +14,6 @@
 }
 
 .position-number {
-    font-size: 24px;
-    font-weight: 600;
     position: absolute;
     top: 0;
 }
@@ -25,4 +23,11 @@
     offset-rotate: 0deg;
     height: 30px;
     width: 30px;
+}
+
+.ghost-vehicle-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }

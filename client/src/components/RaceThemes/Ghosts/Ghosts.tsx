@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from "react"
 import { Ghost } from "../SharedUtils"
 import { motion } from "framer-motion"
-import { RaceObject } from "../SharedUtils"
-import { formatRacePositionText } from "../RaceService"
+import { useSpring, animated, a, useTransition, useSpringRef } from '@react-spring/web'
+import {currentGhostIsOpen, getColorForStudy, getGhostStyle, getRacePositionText} from "./GhostService"
+import { getColorForRaceLap, getZIndexValues } from "../RaceService"
 import "./Ghosts.css"
+import GhostText from "./GhostText/GhostText"
+import VehicleImage from "../VehicleImage/VehicleImage"
+import LapCompletedText from "./LapCompletedText/LapCompletedText"
 
 interface Props {
     ghosts: Ghost[] // list of ghosts to display
     path: string // svg path for the ghosts to take
     totalPoints: number // total points required to reach the end of the map
-    sprite: string // sprite to use for the ghosts icon
+    theme: string // sprite to use for the ghosts icon
     time: number // current round time
     mainVehiclePosition: number // race position of the main (currently playing) team
     onGhostScoreUpdate: (newScore: number, ghostIndex: number) => void  // update function for race score
-    getRacePosition: (ghostIndex: number) => number // Retrieves the position for the ghost, given its index
+    onGhostCompletedLap: (ghost: Ghost) => void // triggers parent even when a ghost completes a race lap
 }
 
 function Ghosts(props: Props) {
-
+    const [showTeamNames, setShowTeamNames] = useState<boolean>(false)  // boolean to indicate whether the ghost team names should be shown in favor of the position for a brief period of time
+    const [startShowingPosition, setStartShowingPosition] = useState<boolean>(false) // boolean to indicate that the first ghost train has moved, so it is time to show the positions
+    
     useEffect(() => {
+        // Check whether all data required has been loaded, to prevent errors
         if (!props.ghosts || props.ghosts.length == 0 || props.ghosts[0].timeScores.length == 0) return
+
+        // Every 30 seconds, briefly show the team names of the open ghosts instead of their position number
+        if (props.time % 30 == 0) {
+            setShowTeamNames(curr => true)
+            setTimeout(() => setShowTeamNames(curr => false), 5000)
+        }
+
         for (let i = 0; i < props.ghosts.length; i++) {
             // Introduce constants to reduce code repetition
             const currentTimeScoreIndex = props.ghosts[i].animationStatus.timeScoreIndex
@@ -28,15 +42,18 @@ function Ghosts(props: Props) {
 
             // If the time matches a ghost's time point, it is time to update its score (make it move)
             if (currentGhostTimePoint == props.time) {  
-                console.log(props.ghosts[i].animationStatus.pathProgress)  
+                if (!startShowingPosition) setStartShowingPosition(curr => true)
+
                 const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
                 const newTimeScoreIndex = currentTimeScoreIndex == props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1
                 // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
                 if (props.ghosts[i].animationStatus.pathProgress >= progress) {
 
+                    props.ghosts[i].lapsCompleted += 1  // increase the number of laps completed by the ghost
+
                     props.ghosts[i].animationStatus = {
                         pathProgress: 100,
-                        transitionDuration: 1,
+                        transitionDuration: 1.5,
                         timeScoreIndex: newTimeScoreIndex
                     }
                     
@@ -47,15 +64,17 @@ function Ghosts(props: Props) {
                             timeScoreIndex: newTimeScoreIndex
                         }
 
+                        props.onGhostCompletedLap(props.ghosts[i])
+
                         setTimeout(() => {
                             props.ghosts[i].animationStatus = {
                                 pathProgress: progress, 
                                 transitionDuration: 1, 
                                 timeScoreIndex: newTimeScoreIndex
                             }
-                            props.onGhostScoreUpdate(currentGhostNewScore, i)
+                            props.onGhostScoreUpdate(currentGhostNewScore, props.ghosts[i].key)
                         }, 800)
-                    }, 1500)
+                    }, 2500)
                 } else {
                     props.ghosts[i].animationStatus = {
                         pathProgress: progress, 
@@ -63,60 +82,13 @@ function Ghosts(props: Props) {
                         timeScoreIndex: currentTimeScoreIndex == props.ghosts[i].timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1  // increase index unless last score reached
                     }
                     setTimeout(() => {
-                        props.onGhostScoreUpdate(currentGhostNewScore, i)
+                        props.onGhostScoreUpdate(currentGhostNewScore, props.ghosts[i].key)
                     }, 1000)
                 }
             }
         }
     }, [props.time])
 
-    /**
-     * Determines whether a ghost is classified as open based on its position.
-     * Currently, ghosts are considered open if they fulfill one of the following conditions:
-     *      - the ghost is in the top 3 in terms of position
-     *      - the ghost is just ahead of the playing team
-     *      - the ghost is just below of the playing team
-     * @param ghostIndex    index of the ghost
-     * @returns whether the ghost is considered open or not
-     */
-    const currentGhostIsOpen = (ghostIndex: number) => {
-        const positionIndex = props.getRacePosition(ghostIndex)
-        if (positionIndex < 3) return true  // top 3 ghosts are always open
-        else if (positionIndex - 1 == props.mainVehiclePosition) return true    //  ghost behind main team open
-        else if (positionIndex + 1 == props.mainVehiclePosition) return true    // ghost ahead of main team is open
-        else return false   
-    }
-
-    const getRacePositionText = (ghostIndex: number) => {
-        const positionIndex = props.getRacePosition(ghostIndex)
-        if (positionIndex != -1) return formatRacePositionText(positionIndex + 1)
-        else return ""
-    }
-
-    const getNumberOfLapsCompleted = (ghost: Ghost) => {
-        const timeScoreIndex= ghost.animationStatus.timeScoreIndex
-        const score = ghost.timeScores[Math.max(timeScoreIndex - 1, 0)].score
-        return Math.floor(score / props.totalPoints)
-    }
-
-    console.log(props.ghosts)
-
-    const getGhostStyle = (ghostIndex: number) => {
-        const isOpen = currentGhostIsOpen(ghostIndex)
-        if (isOpen) {
-            return {
-                height: "60px",
-                width: "60px",
-                backgroundColor: "white"
-            }
-        } else {
-            return {
-                height: "30px",
-                width: "30px",
-                backgroundColor: props.ghosts[ghostIndex].color
-            }
-        }
-    }
     return (
         <div>
             {props.ghosts.map((ghost, index) => (
@@ -125,13 +97,12 @@ function Ghosts(props: Props) {
                     key={index}
                     style={{
                         offsetPath: `path("${props.path}")`,
-                        zIndex: 20 - props.getRacePosition(index)    
+                        zIndex: getZIndexValues().ghostVehicle - ghost.racePosition
                     }}
                     className="ghost"
-                    initial={{ offsetDistance: "0%", filter: "saturate(0.3)" }}
+                    initial={{ offsetDistance: "0%"}}
                     animate={{ 
-                        offsetDistance: ghost.animationStatus.pathProgress.toString() + "%",
-                        filter: `saturate(${0.3 + getNumberOfLapsCompleted(ghost) * 0.6})`
+                        offsetDistance: ghost.animationStatus.pathProgress.toString() + "%"
                     }}
                     transition={{
                         ease: "easeInOut",
@@ -140,51 +111,58 @@ function Ghosts(props: Props) {
                     }}
                 >
                     {/* Only show position for ghosts that are open (check function description) */}
-                    {currentGhostIsOpen(index) ? (<motion.div 
+                    {currentGhostIsOpen(ghost.racePosition, props.mainVehiclePosition) && startShowingPosition ? 
+                    (<motion.div 
+                        className="position-number"
                         style={{
-                            color: ghost.color,
-                            borderColor: ghost.color
-                        }}
-                        initial={{
-                            opacity: "0%",
-                        }}
-                        animate={{
-                            opacity: "100%"
-                        }}
-                        transition={{
-                            duration: 0.5
-                        }}
-                        className="position-number">
-                            {getRacePositionText(index)}
+                            borderColor: getColorForRaceLap(ghost.lapsCompleted), 
+                            zIndex: getZIndexValues().ghostVehicle - ghost.racePosition + 20  // + 20 to make sure text is always on top of images
+                        }}>
+                            <GhostText 
+                                ghostTeamName={ghost.teamName} 
+                                ghostStudy={ghost.study}
+                                ghostRacePosition={ghost.racePosition}
+                                showTeamName={showTeamNames}
+                            />
                     </motion.div>) : null}
-                    
+                    <LapCompletedText 
+                        lapsCompleted={ghost.lapsCompleted}/>
                     <motion.div
                         initial={{
-                            height: "60px",
-                            width: "60px",
-                            backgroundColor: "white"
+                            height: "55px",
+                            width: "55px",
                         }}
-                        animate={getGhostStyle(index)}
+                        animate={
+                            getGhostStyle(
+                                currentGhostIsOpen(ghost.racePosition, props.mainVehiclePosition), 
+                                getColorForRaceLap(ghost.lapsCompleted),
+                                getColorForStudy(ghost.study).mainColor
+                            )
+                        }
                         transition={{
                             duration: 0.5,
-                            stiffness: 100
-                        }}
-                        style={{
-                            borderColor: ghost.color
+                            stiffness: 100,
+                            delay: 0.5
                         }}
                         className="ghost-vehicle rounded-circle"
                     >
-                       <motion.img
-                        src={props.sprite}
-                        animate={{
-                            opacity: currentGhostIsOpen(index) ? "100%" : "0%"
-                        }}
-                        transition={{
-                            duration: 0.2,
-                            stiffness: 100
-                        }}
-                        alt="ghost"
-                        className="img-fluid" /> 
+                        <motion.div 
+                            className="ghost-vehicle-image-container"
+                            animate={{
+                                opacity: currentGhostIsOpen(ghost.racePosition, props.mainVehiclePosition) ? "100%" : "0%",
+                            }}
+                            transition={{
+                                duration: 0.2,
+                                stiffness: 100,
+                                delay: 0.5
+                            }}>
+                            <VehicleImage
+                                theme={props.theme}
+                                colors={{
+                                    mainColor: ghost.colors.mainColor,
+                                    highlightColor: ghost.colors.highlightColor
+                                }}/>
+                        </motion.div>
                     </motion.div>
                 
                 </motion.div>
