@@ -33,7 +33,8 @@ interface Ghost {
     checkpoints: number[]
     study: string
     accuracy: number
-    lapsCompleted: number
+    lapsCompleted: number,
+    racePosition: number,
     animationStatus: AnimationStatus
 }
 

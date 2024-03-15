@@ -13,7 +13,7 @@ import {
     Component,
     Dimensions,
 } from "../SharedUtils"
-import {formatRacePositionText, getColorForRaceLap, getRaceVehicleSprite} from "../RaceService"
+import {formatRacePositionText, getColorForRaceLap, getRaceVehicleSprite, getZIndexValues} from "../RaceService"
 import Checkpoints from "../Checkpoints/Checkpoints"
 import Ghosts from "../Ghosts/Ghosts"
 import RacePath from "./RacePath/RacePath"
@@ -38,7 +38,7 @@ function Tracks(props: Props) {
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
     const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
-    const [lapCompletedNotifications, setLapCompleted] = useState<boolean>(false)
+    const [lapCompletedNotifications, setLapCompletedNotifications] = useState<Ghost[]>([])
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
@@ -58,6 +58,7 @@ function Tracks(props: Props) {
             })
         }
 
+
         setRacingTeamStats(curr => [...newRacingTeams])
         setSortedRacingTeamStats(curr => [...newRacingTeams])
     }, [props.ghosts])
@@ -66,6 +67,12 @@ function Tracks(props: Props) {
         const newOrderOfTeams = [...racingTeamStats]
         newOrderOfTeams.sort((x, y) => x.score > y.score ? -1 : x.score < y.score ? 1 : 0)
         setSortedRacingTeamStats(curr => [...newOrderOfTeams])
+
+        props.ghosts.forEach(ghost => {
+            const position = newOrderOfTeams.findIndex(x => x.ghostKey == ghost.key)
+            ghost.racePosition = position
+        })
+
     }, [racingTeamStats])
 
     const updateRacingStats = (newScore: number, ghostKey?: number) => {
@@ -160,21 +167,22 @@ function Tracks(props: Props) {
         return Math.floor(currentPoints / totalPoints)
     }
 
-    const lapCompletedTextAnimation = useSpring({
+    const lapCompletedTextAnimation = useTransition(lapCompletedNotifications, {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 },
         exitBeforeEnter: true,
+        onRest: (_springs, _ctrl, item) => {
+            setLapCompletedNotifications(state =>
+                state.filter(i => {
+                  return i.key !== item.key
+                })
+              )
+        },
     })
 
     return (
         <div>
-            {/* <div className="btn btn-primary" onClick={() => {
-                setShowLapCompletedNotification(curr => true)
-                setTimeout(() => {
-                    setShowLapCompletedNotification(curr => false)
-                }, 1000);
-            }}>CLICK</div> */}
             <RacePath
                 theme={props.theme}
                 components={components}
@@ -188,20 +196,29 @@ function Tracks(props: Props) {
                 components={components}
             ></Checkpoints>
 
-            {/* { showLapCompletedNotification ? (
-                <a.div style={lapCompletedTextAnimation}>Completed!</a.div>
-            ) : null } */}
+            {/* {lapCompletedTextAnimation((style, item) => (
+                <div style={TracksStyle.getLapCompletedTextPosition(components[components.length - 1])}>
+                    <a.div style={style} className="lap-completed-text">Completed!</a.div>
+                </div>
+            ))} */}
 
             {/* Displays the main vehicle, representing the team currently playing */}
             <motion.div
                 data-testid={"main-vehicle"}
                 className="main-vehicle"
-                style={{ offsetPath: `path("${svgPath}")` }}
+                style={{ 
+                    offsetPath: `path("${svgPath}")`,
+                    zIndex: getZIndexValues().mainVehicle
+                }}
                 initial={{ offsetDistance: "0%"}}
                 animate={{ 
                     offsetDistance: `${progressPercent * 100}%`
-                 }}
-                transition={{ duration: 1 }}
+                }}
+                transition={{
+                    ease: "easeInOut",
+                    duration: 2,
+                    stiffness: 100,
+                }}
             >
                 <div className="position-number main-vehicle-text">{getRacePositionText()}</div>
                 <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
@@ -223,7 +240,7 @@ function Tracks(props: Props) {
                     totalPoints={props.totalPoints}
                     mainVehiclePosition={getRacePosition()}
                     onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
-                    getRacePosition={(ghostKey: number) => getRacePosition(ghostKey)}
+                    onGhostCompletedLap = {(ghost: Ghost) => setLapCompletedNotifications(state => [...state, ghost])}
                 />
         </div>
     )

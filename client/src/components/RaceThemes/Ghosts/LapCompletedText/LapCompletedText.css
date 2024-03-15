@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Madimi+One&family=Oswald:wght@200..700&family=Truculenta:opsz,wght@12..72,100..900&display=swap');
+.lap-completed-text {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    transform: translateX(-30%); /* Centering */
+
+    width: 10rem;
+    z-index: 9999;
+    text-shadow: 1px 1px 1px black;
+
+    font-size: 15px;
+    font-family: "Inconsolata", monospace;
+    font-optical-sizing: auto;
+}
