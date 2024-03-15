@@ -10,7 +10,6 @@
     height: 110px;
     display: flex;
     align-items: center;
-    z-index: 7000;
 }
 
 .progress-point {
@@ -42,7 +41,6 @@
     background-color: rgba(255, 255, 255, 0.786);
     border-left: 2px solid;
     border-radius: 20%;
-    z-index: 5000;
     top: 0;
 }
 
@@ -62,7 +60,7 @@
 }
 
 .lap-completed-text {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
 }
 

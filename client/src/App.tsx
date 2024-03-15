@@ -15,6 +15,7 @@ import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
 import { Ghost, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
+import testValues from "./utils/testValues"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)

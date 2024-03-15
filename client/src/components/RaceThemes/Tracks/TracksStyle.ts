@@ -153,7 +153,7 @@ function createFinishLineStyle(startPoint: Point, direction: string) {
         position: "absolute",
         left: `${startPoint.x}px`,
         bottom: `${startPoint.y}px`,
-        width: "25px",
+        width: "22px",
         height: "40px",
         backgroundImage: `url(${direction == "vertical" ? Sprites.finishLineVertical : Sprites.finishLineHorizontal})`,
         backgroundSize: "auto 40px",
@@ -169,28 +169,16 @@ function getComponentDirection(startPoint: Point, endPoint: Point) {
     else return ""
 }
 
-function getLapCompletedTextInitialPosition(endComponent: Component) {
+function getLapCompletedTextPosition(endComponent: Component) {
     const direction = getComponentDirection(endComponent.start, endComponent.end)
     const style = {
         position: "absolute",
-        left: `${direction == "horizontal" ? endComponent.end.x :  endComponent.end.x + 45}px`,
-        bottom: `${ direction == "horizontal" ? endComponent.end.y + 45 :  endComponent.end.y}px`,
+        left: `${direction == "horizontal" ? endComponent.end.x + 10 :  endComponent.end.x + 50}px`,
+        bottom: `${ direction == "horizontal" ? endComponent.end.y + 50 :  endComponent.end.y + 10}px`,
         transform: "translate(-50%, 0)"
     } as React.CSSProperties
 
     return style
 }
 
-function getLapCompletedTextAnimationPosition(endComponent: Component) {
-    const direction = getComponentDirection(endComponent.start, endComponent.end)
-    const style = {
-        position: "absolute",
-        left: `${direction == "horizontal" ? endComponent.end.x :  endComponent.end.x + 60}px`,
-        bottom: `${ direction == "horizontal" ? endComponent.end.y + 60 :  endComponent.end.y}px`,
-        transform: "translate(-50%, 0)"
-    } as React.CSSProperties
-
-    return style
-}
-
-export default { createComponentStyle, createRailTurnComponentStyle, createFinishLineStyle, getComponentDirection, getLapCompletedTextInitialPosition, getLapCompletedTextAnimationPosition }
+export default { createComponentStyle, createRailTurnComponentStyle, createFinishLineStyle, getComponentDirection, getLapCompletedTextPosition }

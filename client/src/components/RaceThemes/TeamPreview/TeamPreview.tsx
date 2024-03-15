@@ -70,7 +70,6 @@ function TeamPreview(props: Props) {
         config: { mass: 5, tension: 2000, friction: 200, duration: 600 },
         from: { opacity: 0, x: 10 },
         enter: { opacity: 1, x: 20 },
-        leave: { opacity: 0, x: 20 },
         trail: 700,
     })
 
