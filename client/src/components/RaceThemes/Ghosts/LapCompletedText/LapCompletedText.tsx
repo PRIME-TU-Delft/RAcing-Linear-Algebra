@@ -27,7 +27,7 @@ function LapCompletedText(props: Props) {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 },
-        delay: 1500
+        delay: 500
     })
 
     return(

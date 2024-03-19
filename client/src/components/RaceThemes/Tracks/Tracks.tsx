@@ -38,7 +38,6 @@ function Tracks(props: Props) {
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
     const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
-    const [lapCompletedNotifications, setLapCompletedNotifications] = useState<Ghost[]>([])
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
@@ -57,7 +56,6 @@ function Tracks(props: Props) {
                 score: 0
             })
         }
-
 
         setRacingTeamStats(curr => [...newRacingTeams])
         setSortedRacingTeamStats(curr => [...newRacingTeams])
@@ -167,20 +165,6 @@ function Tracks(props: Props) {
         return Math.floor(currentPoints / totalPoints)
     }
 
-    const lapCompletedTextAnimation = useTransition(lapCompletedNotifications, {
-        from: { opacity: 0 },
-        enter: { opacity: 1 },
-        leave: { opacity: 0 },
-        exitBeforeEnter: true,
-        onRest: (_springs, _ctrl, item) => {
-            setLapCompletedNotifications(state =>
-                state.filter(i => {
-                  return i.key !== item.key
-                })
-              )
-        },
-    })
-
     return (
         <div>
             <RacePath
@@ -240,7 +224,6 @@ function Tracks(props: Props) {
                     totalPoints={props.totalPoints}
                     mainVehiclePosition={getRacePosition()}
                     onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
-                    onGhostCompletedLap = {(ghost: Ghost) => setLapCompletedNotifications(state => [...state, ghost])}
                 />
         </div>
     )

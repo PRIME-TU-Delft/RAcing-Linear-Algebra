@@ -15,7 +15,7 @@ class Point {
 
 interface AnimationStatus {
     pathProgress: number,
-    transitionDuration: number, 
+    updateAnimation: boolean, 
     timeScoreIndex: number 
 }
 

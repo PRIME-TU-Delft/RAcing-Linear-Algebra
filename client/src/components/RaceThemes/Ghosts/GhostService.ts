@@ -286,7 +286,7 @@ export function initializeFrontendGhostObjects(ghosts: ServerGhost[]) {
         racePosition: -1,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%
-            transitionDuration: 1,  // transition duration initalized at 1, changes when updating
+            updateAnimation: false,  // transition duration initalized at 1, changes when updating
             timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
         }
     }))
