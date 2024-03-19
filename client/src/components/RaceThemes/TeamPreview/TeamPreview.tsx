@@ -92,7 +92,7 @@ function TeamPreview(props: Props) {
     return(
         <div className="team-preview-body">
             <motion.div className="page-content" initial={{ filter: "blur(0px)" }} animate={{ filter: startCountdown ? "blur(2px)" : "blur(0px)"}}>
-                {/* <TrainBackground includeRail={false}/> */}
+                <TrainBackground includeRail={false}/>
                 <a.div className="team-preview-title" style={titleAnimation}>Eigenvalues and Eigenvectors Race</a.div>
                 <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>
                 <a.div className="team-preview-grid" style={teamContainerAnimation}>
@@ -119,7 +119,7 @@ function TeamPreview(props: Props) {
                 </a.div>
                 {showMainTeam ? (
                     <a.div className="main-team-preview" style={mainTeamAnimation}>
-                        <div className="main-team-image-container">
+                        <div className="main-team-image-container rounded-circle">
                             <svg  className="vehicle-main-svg" style={{fill: "#0021A7"}} xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 600 600"><path d="m117.42 434.85.35-257.99h1.12l4 29.54 16.99 185.69v30.7l-22.46 12.06zM474.61 434.61l-.77-262.87L452.16 397l-.91 21.61 23.36 16zM416.79 299.37h-63.03l7.45 12.02.7 3.3 1.61 2.95.28 1.68 1.54 2.67 1.47 3.65.35 1.61h-12.28l-2.25-1.47-2.67-3.16-.49-2.18-1.68-2.53-1.05-3.93-2.18-5.19-1.54-3.93-.98-3.65-.92-1.84h-90.45l-3.3 8.37c-2.81 9.12-5.68 13.05-5.68 13.05l-1.96 3.02-2.88 2.74-2.39.77h-4.14l-2.04-.91-1.4-1.12-1.33-2.32.35-3.23 1.68-2.04 1.47-1.89 2.25-3.93 1.68-3.93 4.91-7.09 1.06-1.49h-63.66v.63s1.05 16.68 2.84 20.79c0 0 3.37 13.47 24.84 15.79l184.42.63s20.63-1.47 25.68-15.26c0 0 4.04-8.77 3.68-22.58ZM175.53 127.95s-15.72-.56-18.95 7.86v5.05s1.26 27.09 4.35 37.19l7.02-6.6h255.86l4.07 2.11 5.05 4.49s4.91-34.39 4.07-43.37c0 0-4.21-5.77-14.04-6.74H175.52ZM382.89 60.79l-171.79-.42c-38.74 9.47-69.89 53.68-69.89 53.68h310.04c-37.96-45.47-68.35-53.26-68.35-53.26Zm-53.4 41.05-2.88 3.05-62.77-.04-2.11-3.23-.07-27.65 2.91-2.98h61.93l3.16 3.09-.18 27.75Z"/><path d="m452.62 419.21-3.23 4.63-309.05-.14s-18.04 4.16-23.58 13.76l23.8 97.18s7.22 15.13 23.36 16.25 271.72 1.17 271.72 1.17 11.51-5.26 15.44-14.24 24.28-93.19 24.28-93.19v-9.4l-22.74-16v-.02Zm-105.55 85.9-3.93 3.37h-95.58l-3.23-4.35v-70.18h102.74v71.16Z"/></svg>
                             <svg  className="vehicle-highlight-svg" style={{fill: "#F8B700"}} xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 600 600"><path d="m451.53 114.47-28.21-2.74H172.79l-32.49 2.88-.7.84s-25.82 32.84-21.05 62.04l19.65 216.14 89.12-.7 4.28 2.74v26.04l-2.67 2.39 133.82.14-2.6-2.53-.56-25.75 3.86-2.95h83.02l3.93 4.21v21.54l-.49 3.37 1.96-2.46 1.82-31.23 20.14-211.23s5.05-33.26-22.32-62.74Zm-14.32 20.42-1.89 30.74c-3.16 6.32-11.16 89.05-11.16 89.05l-8.63 60c-1.89 23.58-28.21 22.53-28.21 22.53L205.85 337c-31.58.42-30.74-28.42-30.74-28.42-.42-9.89-8.84-77.05-8.84-77.05-1.26-12-4.42-33.89-4.42-33.89l-6.25-57.89c-1.54-13.89 23.44-12.35 23.44-12.35l235.86-.91c23.58 2.32 22.32 8.42 22.32 8.42Z"/></svg>                    
                                 <img
