@@ -204,8 +204,8 @@ function Tracks(props: Props) {
                     stiffness: 100,
                 }}
             >
-                <div className="position-number main-vehicle-text">{getRacePositionText()}</div>
-                <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
+                <div className="main-vehicle-position-number main-vehicle-text" style={{zIndex: getZIndexValues().mainVehicle + 20}}>{getRacePositionText()}</div>
+                <div className="vehicle-image-container" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
                     <VehicleImage 
                         theme={props.theme} 
                         colors={{
