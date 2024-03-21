@@ -16,6 +16,7 @@ import { Ghost, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
+import { TimeContext } from "./contexts/TimeContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -23,6 +24,7 @@ function App() {
     const [theme, setTheme] = useState("train")
     const [topic, setTopic] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
+    const [timeUsed, setTimeUsed] = useState<number>(0)
     const [ghostTeams, setGhostTeams] = useState<Ghost[]>([])
 
     const navigate = useNavigate()
@@ -42,6 +44,16 @@ function App() {
 
     const topicHandler = (topic: string) => {
         setTopic((current) => topic)
+    }
+
+    const startGameTimer = () => {
+        const interval = setInterval(() => {
+            if (timeUsed < roundDuration) {
+                setTimeUsed((timeUsed) => timeUsed + 1)
+            } else {
+                clearInterval(interval)
+            }
+        }, 1000)
     }
 
     useEffect(() => {
@@ -107,7 +119,11 @@ function App() {
                                 topic={topic} 
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
-                                onStartGame={() => navigate("/Lecturer")}></TeamPreview>
+                                onStartGame={() => 
+                                    {  
+                                        startGameTimer()
+                                        navigate("/Lecturer")
+                                    }}></TeamPreview>
                         }>
                 </Route>
                 <Route
@@ -124,12 +140,15 @@ function App() {
                 <Route
                     path="/Lecturer"
                     element={
-                        <Lecturer
-                            lobbyId={lobbyId}
-                            teamName={teamName}
-                            ghostTeams={ghostTeams}
-                            theme={theme}
-                        />
+                        <TimeContext.Provider value={timeUsed}>
+                            <Lecturer
+                                lobbyId={lobbyId}
+                                teamName={teamName}
+                                ghostTeams={ghostTeams}
+                                theme={theme}
+                                roundDuration={roundDuration}
+                            />
+                        </TimeContext.Provider>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>

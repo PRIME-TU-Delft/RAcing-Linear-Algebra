@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Checkpoint, Ghost, Map, ServerGhost } from "./SharedUtils"
 import socket from "../../socket"
 import { trainMaps } from "./Maps/TrainMaps"
@@ -9,30 +9,27 @@ import Tracks from "./Tracks/Tracks"
 import Decorations from "./Decorations/Decorations"
 import CheckpointReached from "./CheckpointAnimation/CheckpointReached"
 import ThemeBackground from "./ThemeBackground/ThemeBackground"
-import {initializeFrontendGhostObjects} from "./Ghosts/GhostService"
 import "./RaceTheme.css"
+import { RaceDataContext } from "../../contexts/RaceDataContext"
+import { TimeContext } from "../../contexts/TimeContext"
+import { ScoreContext } from "../../contexts/ScoreContext"
 
 interface Props {
-    mapDimensions: {
-        width: number // screen width of map section
-        height: number // screen height of map section
-    }
     currentPoints: number
-    checkpoints: Checkpoint[]
-    usedTime: number
-    selectedTheme: string
-    ghostTeams: Ghost[]
     setCheckpoint: (data: string) => void
     showCheckPoint: () => void
 }
 
 function RaceTheme(props: Props) {
+    const raceData = useContext(RaceDataContext)
+    const usedTime = useContext(TimeContext)
+
     const [averageFinalTeamScore, setAverageFinalTeamScore] = useState<number>(0)
-    const [nextCheckpoint, setNextCheckpoint] = useState(props.checkpoints[0]) // next checkpoint to be reached
+    const [nextCheckpoint, setNextCheckpoint] = useState(raceData.checkpoints[0]) // next checkpoint to be reached
     const [checkpointReached, setCheckpointReached] = useState(false) // boolean indicating whether a checkpoint has been reached
     
-    const height = props.mapDimensions.height
-    const width = props.mapDimensions.width
+    const height = raceData.mapDimensions.height
+    const width = raceData.mapDimensions.width
 
 
     function getThemeMaps(theme: string) {
@@ -44,7 +41,7 @@ function RaceTheme(props: Props) {
             default: return trainMaps
         }
     }
-    const selectedMap = getThemeMaps(props.selectedTheme)[0] // multiple maps may be used in the future, currently only one exists
+    const selectedMap = getThemeMaps(raceData.theme)[0] // multiple maps may be used in the future, currently only one exists
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({
@@ -66,7 +63,7 @@ function RaceTheme(props: Props) {
     //         }
 
     //         setTimeout(() => {
-    //             const filteredCheckpoints = props.checkpoints.filter(
+    //             const filteredCheckpoints = raceData.checkpoints.filter(
     //                 (checkpoint) => checkpoint.percentage * averageFinalTeamScore > props.currentPoints % averageFinalTeamScore
     //             )
     //             if (filteredCheckpoints.length > 0)
@@ -103,16 +100,14 @@ function RaceTheme(props: Props) {
                 className="map-content"
                 style={{ ...fadeSection }}
             >
-                <Tracks
-                    theme={props.selectedTheme}
-                    totalPoints={averageFinalTeamScore}
-                    currentPoints={props.currentPoints}
-                    ghosts={props.ghostTeams}
-                    usedTime={props.usedTime}
-                    mapDimensions={props.mapDimensions}
-                    trackPoints={selectedMap.path}
-                    checkpoints={props.checkpoints}
-                ></Tracks>
+                <ScoreContext.Provider value={{
+                    totalPoints: averageFinalTeamScore,
+                    currentPoints: props.currentPoints
+                }}>
+                    <Tracks
+                        trackPoints={selectedMap.path}
+                    ></Tracks>
+                </ScoreContext.Provider>
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={selectedMap.decorations}
@@ -132,7 +127,7 @@ function RaceTheme(props: Props) {
                 checkpointText={nextCheckpoint.name.split(" ")}
             ></CheckpointReached> */}
 
-            <ThemeBackground theme={props.selectedTheme}></ThemeBackground>
+            <ThemeBackground theme={raceData.theme}></ThemeBackground>
 
             {/* NOTE: Uncomment the following component to enable the map editor; an interactive tool for designing new maps. Make sure to comment out the <Decorations> component above, to have an empty map to work with.*/}
             {/* <DecorationsEditor 

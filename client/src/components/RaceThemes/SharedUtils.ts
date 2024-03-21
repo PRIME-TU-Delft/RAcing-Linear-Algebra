@@ -35,6 +35,7 @@ interface Ghost {
     accuracy: number
     lapsCompleted: number,
     racePosition: number,
+    isOpen: boolean,
     animationStatus: AnimationStatus
 }
 

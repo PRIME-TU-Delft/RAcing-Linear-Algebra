@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import TrainSprites from "../Sprites/TrainThemeSprites"
 import BoatSprites from "../Sprites/BoatThemeSprites"
 
@@ -20,21 +20,20 @@ import RacePath from "./RacePath/RacePath"
 import VehicleImage from "../VehicleImage/VehicleImage"
 import TracksStyle from "./TracksStyle"
 import { a, useSpring, useTransition } from "react-spring"
+import { RaceDataContext } from "../../../contexts/RaceDataContext"
+import { ScoreContext } from "../../../contexts/ScoreContext"
+import { currentGhostIsOpen } from "../Ghosts/GhostService"
 
 interface Props {
-    theme: string   // theme for the race (e.g. train, boat...)
-    mapDimensions: Dimensions // width and height of the map
     trackPoints: PercentCoordinate[] // list of path corner points
-    totalPoints: number // number of points needed to complete the map section
-    currentPoints: number // current points of the team
-    usedTime: number    // current round time
-    checkpoints: Checkpoint[] // list of checkpoints
-    ghosts: Ghost[] // list of ghost teams
 }
 
 function Tracks(props: Props) {
-    const height = props.mapDimensions.height
-    const width = props.mapDimensions.width
+    const raceData = useContext(RaceDataContext)
+    const scores = useContext(ScoreContext)
+
+    const height = raceData.mapDimensions.height
+    const width = raceData.mapDimensions.width
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
     const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
@@ -49,7 +48,7 @@ function Tracks(props: Props) {
         })
 
         // Adding the ghost teams
-        for (const ghost of props.ghosts) {
+        for (const ghost of raceData.ghostTeams) {
             newRacingTeams.push({
                 isGhost: true,
                 ghostKey: ghost.key,
@@ -59,19 +58,23 @@ function Tracks(props: Props) {
 
         setRacingTeamStats(curr => [...newRacingTeams])
         setSortedRacingTeamStats(curr => [...newRacingTeams])
-    }, [props.ghosts])
+    }, [raceData.ghostTeams])
 
     useEffect(() => {
         const newOrderOfTeams = [...racingTeamStats]
         newOrderOfTeams.sort((x, y) => x.score > y.score ? -1 : x.score < y.score ? 1 : 0)
         setSortedRacingTeamStats(curr => [...newOrderOfTeams])
 
-        props.ghosts.forEach(ghost => {
-            const position = newOrderOfTeams.findIndex(x => x.ghostKey == ghost.key)
-            ghost.racePosition = position
-        })
-
     }, [racingTeamStats])
+
+    useEffect(() => {
+        const mainTeamPosition = getRacePosition()
+        raceData.ghostTeams.forEach(ghost => {
+            const position = getRacePosition(ghost.key)
+            ghost.racePosition = position
+            ghost.isOpen = currentGhostIsOpen(position, mainTeamPosition)
+        })
+    }, [sortedRacingTeamStats])
 
     const updateRacingStats = (newScore: number, ghostKey?: number) => {
         if (racingTeamStats.length == 0) return
@@ -127,12 +130,12 @@ function Tracks(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
-        setProgressPercent((current) => (props.currentPoints % props.totalPoints) / props.totalPoints)
-        updateRacingStats(props.currentPoints)
-    }, [props.currentPoints])
+        setProgressPercent((current) => (scores.currentPoints % scores.totalPoints) / scores.totalPoints)
+        updateRacingStats(scores.currentPoints)
+    }, [scores.currentPoints])
 
     const getCheckpointSprite = () => {
-        switch(props.theme) {
+        switch(raceData.theme) {
             case "train":
                 return TrainSprites.trainStation
             case "boat":
@@ -168,15 +171,15 @@ function Tracks(props: Props) {
     return (
         <div>
             <RacePath
-                theme={props.theme}
+                theme={raceData.theme}
                 components={components}
                 svgPath={svgPath}></RacePath>
 
             <Checkpoints
-                checkpoints={props.checkpoints}
+                checkpoints={raceData.checkpoints}
                 sprite={getCheckpointSprite()}
                 pathLength={tracksLength}
-                totalPoints={props.totalPoints}
+                totalPoints={scores.totalPoints}
                 components={components}
             ></Checkpoints>
 
@@ -205,9 +208,9 @@ function Tracks(props: Props) {
                 }}
             >
                 <div className="main-vehicle-position-number main-vehicle-text" style={{zIndex: getZIndexValues().mainVehicle + 20}}>{getRacePositionText()}</div>
-                <div className="vehicle-image-container" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(props.totalPoints, props.currentPoints)) }}>
+                <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)) }}>
                     <VehicleImage 
-                        theme={props.theme} 
+                        theme={raceData.theme} 
                         colors={{
                             mainColor: "#0021A7",
                             highlightColor: "#F8B700"
@@ -217,12 +220,7 @@ function Tracks(props: Props) {
 
             <Ghosts
                     data-testid={"ghosts"}
-                    ghosts={props.ghosts}
-                    time={props.usedTime}
                     path={svgPath}
-                    theme={props.theme}
-                    totalPoints={props.totalPoints}
-                    mainVehiclePosition={getRacePosition()}
                     onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
                 />
         </div>

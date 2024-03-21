@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import "./Lecturer.css"
 import { useNavigate } from "react-router-dom"
 import socket from "../../../socket"
@@ -10,6 +10,8 @@ import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
 import RaceTheme from "../../RaceThemes/RaceTheme"
 import LecturerService from "./LecturerService"
 import { Ghost } from "../../RaceThemes/SharedUtils"
+import { RaceDataContext } from "../../../contexts/RaceDataContext"
+import { TimeContext } from "../../../contexts/TimeContext"
 
 //score object received from backend
 export interface IScore {
@@ -26,6 +28,7 @@ interface Props {
     teamName: string
     theme: string
     ghostTeams: Ghost[]
+    roundDuration: number
 }
 
 //data to be displayed
@@ -52,9 +55,6 @@ interface checkpointTeams {
 function Lecturer(props: Props) {
     //window size
     const { width, height } = useWindowDimensions()
-
-    //total seconds of count down(10 minutes), added additional of 3 because of the 3s count down
-    const [seconds, setSeconds] = useState(600)
 
     //score of the team
     const [score, setScore] = useState(0)
@@ -85,6 +85,9 @@ function Lecturer(props: Props) {
 
     //to navigate to another screen
     const navigate = useNavigate()
+
+    const usedTime = useContext(TimeContext);
+
 
     //show checkpoint leaderboard for 15s
     const showCheckPoint = () => {
@@ -121,19 +124,9 @@ function Lecturer(props: Props) {
 
     // Timer functionality
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds((seconds) => seconds - 1)
-            } else {
-                timeUp()
-                clearInterval(interval)
-            }
-        }, 1000)
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [seconds])
+        if (usedTime >= props.roundDuration) 
+            timeUp()
+    }, [usedTime])
 
     // Socket changes
     useEffect(() => {
@@ -142,11 +135,6 @@ function Lecturer(props: Props) {
                 current < stats.score ? stats.score : current
             )
             setAccuracy((current) => stats.accuracy)
-        })
-
-        socket.on("round-duration", (roundDuration: number) => {
-            socket.emit("getGhostTeams")
-            setSeconds(curr => roundDuration)
         })
 
         socket.on("game-ended", () => {
@@ -187,7 +175,7 @@ function Lecturer(props: Props) {
             <div className="lecturer-header">
                 <div className="t-name">TeamName: {props.teamName}</div>
                 <div className="countdown">
-                    <div>Time: {LecturerService.formatTime(seconds)}</div>
+                    <div>Time: {LecturerService.formatTime(props.roundDuration - usedTime)}</div>
                 </div>
 
                 <div className="total-score">
@@ -200,18 +188,23 @@ function Lecturer(props: Props) {
                     style={{ width: "100%", height: `${height - 100}px` }}
                     className="map"
                 >
-                    <RaceTheme
-                        selectedTheme={props.theme}
-                        currentPoints={score}
-                        mapDimensions={{ width: width, height: height - 100 }}
-                        checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
-                        usedTime={600 - seconds}
-                        ghostTeams={props.ghostTeams}
-                        setCheckpoint={(data: string) =>
-                            setLocation((current) => data)
-                        }
-                        showCheckPoint={() => showCheckPoint()}
-                    ></RaceTheme>
+                    <RaceDataContext.Provider value={{
+                        mapDimensions: {
+                            width: width,
+                            height: height - 100 
+                        },
+                        theme: props.theme,
+                        ghostTeams: props.ghostTeams,
+                        checkpoints: LecturerService.getCheckpointsForTheme(props.theme)
+                    }}>
+                        <RaceTheme
+                            currentPoints={score}
+                            setCheckpoint={(data: string) =>
+                                setLocation((current) => data)
+                            }
+                            showCheckPoint={() => showCheckPoint()}
+                        ></RaceTheme>
+                    </RaceDataContext.Provider>
                 </div>
             ) : (
                 <div className="statistics-wrapper">
@@ -236,8 +229,8 @@ function Lecturer(props: Props) {
                         location={location}
                         teamName={props.teamName}
                         score={score}
-                        minutes={10 - Math.ceil(seconds / 60)}
-                        seconds={60 - (seconds % 60)}
+                        minutes={10 - Math.ceil((props.roundDuration - usedTime) / 60)}
+                        seconds={60 - ((props.roundDuration - usedTime) % 60)}
                         teams={checkpointData}
                     ></CheckPoint>
                     <button

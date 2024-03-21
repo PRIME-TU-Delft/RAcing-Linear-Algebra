@@ -12,7 +12,7 @@ interface Props {
 function GhostText(props: Props) {
     const [activeTextIndex, setActiveTextIndex] = useState<number>(0)   // index = 0 : race position; index = 1 : team name
     const [racePositionText, setRacePositionText] = useState<string>("")
-
+    console.log(activeTextIndex)
     const transRef = useSpringRef()
     const transitions = useTransition(activeTextIndex, {
         ref: transRef,
@@ -36,16 +36,12 @@ function GhostText(props: Props) {
     }, [activeTextIndex])
 
     return(
-        <div>
-            {transitions((style, i) => (
-                <animated.div style={style} className={(i == 0 ? "position-text" : "team-name-text")}>
-                    { i == 0 ? racePositionText : (
-                        <div>
-                            <span>{props.ghost.study + ":"}</span>{props.ghost.teamName}
-                        </div>
-                    )}
-                </animated.div>
-            ))}
+        <div className={(activeTextIndex == 0 ? "position-text" : "team-name-text")}>
+            {activeTextIndex == 0 ? racePositionText : (
+                <div>
+                    <span>{props.ghost.study + ":"}</span>{props.ghost.teamName}
+                </div>
+            )}
         </div>
     )
 }

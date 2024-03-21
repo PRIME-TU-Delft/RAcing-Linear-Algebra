@@ -2,7 +2,7 @@ import { motion, useAnimationControls } from "framer-motion";
 import React, { useEffect } from "react";
 import { Ghost } from "../../SharedUtils";
 import { getColorForRaceLap, getZIndexValues } from "../../RaceService";
-import { currentGhostIsOpen, getColorForStudy, getGhostStyle } from "../GhostService";
+import { getColorForStudy, getGhostStyle } from "../GhostService";
 import GhostText from "../GhostText/GhostText";
 import LapCompletedText from "../LapCompletedText/LapCompletedText";
 import VehicleImage from "../../VehicleImage/VehicleImage";
@@ -10,7 +10,6 @@ import VehicleImage from "../../VehicleImage/VehicleImage";
 interface Props {
     ghost: Ghost,
     path: string,
-    mainVehiclePosition: number,
     showTeamNames: boolean,
     totalPoints: number,
     startShowingGhosts: boolean,
@@ -89,7 +88,7 @@ function GhostVehicle(props: Props) {
             animate={animationControls}
         >
             {/* Only show position for ghosts that are open (check function description) */}
-            {currentGhostIsOpen(props.ghost.racePosition, props.mainVehiclePosition) && props.startShowingGhosts ? 
+            {props.ghost.isOpen && props.startShowingGhosts ? 
             (<motion.div 
                 className="position-number"
                 style={{
@@ -110,7 +109,7 @@ function GhostVehicle(props: Props) {
                 }}
                 animate={
                     getGhostStyle(
-                        currentGhostIsOpen(props.ghost.racePosition, props.mainVehiclePosition), 
+                        props.ghost.isOpen, 
                         getColorForRaceLap(props.ghost.lapsCompleted),
                         getColorForStudy(props.ghost.study).mainColor
                     )
@@ -125,7 +124,7 @@ function GhostVehicle(props: Props) {
                 <motion.div 
                     className="ghost-vehicle-image-container"
                     animate={{
-                        opacity: currentGhostIsOpen(props.ghost.racePosition, props.mainVehiclePosition) ? "100%" : "0%",
+                        opacity: props.ghost.isOpen ? "100%" : "0%",
                     }}
                     transition={{
                         duration: 0.2,
