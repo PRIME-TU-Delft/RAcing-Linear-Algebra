@@ -21,9 +21,16 @@ interface Props {
 function GhostVehicle(props: Props) {
     const animationControls = useAnimationControls()
 
-    const updateGhostValues = (currentTimeScoreIndex: number, currentGhostNewScore: number, newProgress: number) => {
-        const newTimeScoreIndex = currentTimeScoreIndex == props.ghost.timeScores.length ? currentTimeScoreIndex : currentTimeScoreIndex + 1
-        props.onGhostScoreUpdate(currentGhostNewScore, props.ghost.key)
+    /**
+     * Updates the values of the ghost to account for reaching a new time point.
+     * Also triggers parent event to inform it of the change in score
+     * @param currentTimeScoreIndex index of the current time score
+     * @param newScore  the new score for the ghost  
+     * @param newProgress  the new race path progress of the ghost
+     */
+    const updateGhostValues = (currentTimeScoreIndex: number, newScore: number, newProgress: number) => {
+        const newTimeScoreIndex = Math.min(currentTimeScoreIndex + 1, props.ghost.timeScores.length - 1)    // Clipping to prevent indexing errors
+        props.onGhostScoreUpdate(newScore, props.ghost.key)
         props.ghost.animationStatus.timeScoreIndex = newTimeScoreIndex    
         props.ghost.animationStatus.pathProgress = newProgress
     }
