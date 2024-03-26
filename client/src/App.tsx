@@ -20,9 +20,11 @@ import { TimeContext } from "./contexts/TimeContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
+    const [isPlayer, setIsPlayer] = useState(false)
     const [teamName, setTeamName] = useState("New Team")
     const [theme, setTheme] = useState("train")
     const [topic, setTopic] = useState("")
+    const [gameInProgress, setGameInProgress] = useState(false)
     const [roundDuration, setRoundDuration] = useState<number>(0)
     const [timeUsed, setTimeUsed] = useState<number>(0)
     const [ghostTeams, setGhostTeams] = useState<Ghost[]>([])
@@ -32,6 +34,10 @@ function App() {
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
+    }
+
+    const isPlayerHandler = (isPlayer: boolean) => {
+        setIsPlayer(curr => isPlayer)
     }
 
     const teamNameHandler = (name: string) => {
@@ -56,6 +62,14 @@ function App() {
         }, 1000)
     }
 
+    const gameStartHandler = () => {
+        startGameTimer()
+        if (isPlayer) 
+            navigate("/Game")
+        else 
+            navigate("/Lecturer")
+    }
+
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
             console.log(data)
@@ -63,13 +77,20 @@ function App() {
             setGhostTeams((curr) => [...intializedGhosts])
         }
 
-        function onRoundDuration(roundDuration: number) {
+        function onRoundStarted(roundDuration: number) {
             setRoundDuration(curr => roundDuration)
+            setGameInProgress(curr => true)
             socket.emit("getGhostTeams")
         }
 
-        socket.on("round-duration", onRoundDuration)
+        function onThemeChange(theme: string) {
+            setTheme(curr => theme)
+        }
+
+        socket.on("round-duration", onRoundStarted)
         socket.on("ghost-teams", onGhostTeamsReceived)
+        socket.on("round-started", onRoundStarted)
+        socket.on("themeChange", onThemeChange)
     }, [])
 
     return (
@@ -80,8 +101,10 @@ function App() {
                     path="/CreateGame"
                     element={
                         <CreateGame
-                            onLobbyIdCreated={(id: number) =>
-                                lobbyIdHandler(id)
+                            onLobbyIdCreated={(id: number) => {
+                                    lobbyIdHandler(id)
+                                    isPlayerHandler(false)
+                            }
                             }
                         />
                     }
@@ -89,8 +112,10 @@ function App() {
                 <Route 
                     path="/JoinGame" 
                     element={<JoinGame
-                        onLobbyJoined={(id: number) =>
-                            lobbyIdHandler(id)
+                        onLobbyJoined={(id: number) => {
+                                lobbyIdHandler(id)
+                                isPlayerHandler(true)
+                            }
                         } />}>
                 </Route>
                 <Route
@@ -109,7 +134,7 @@ function App() {
                 ></Route>
                 <Route
                     path="/Waiting"
-                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId}
+                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId} gameIsInProgress={gameInProgress}
                     />}
                 ></Route>
                 <Route 
@@ -119,11 +144,7 @@ function App() {
                                 topic={topic} 
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
-                                onStartGame={() => 
-                                    {  
-                                        startGameTimer()
-                                        navigate("/Lecturer")
-                                    }}></TeamPreview>
+                                onStartGame={() => gameStartHandler()}></TeamPreview>
                         }>
                 </Route>
                 <Route
@@ -136,7 +157,11 @@ function App() {
                         />
                     }
                 ></Route>
-                <Route path="/game" element={<Game theme={theme} />} />
+                <Route path="/Game" element={
+                    <TimeContext.Provider value={roundDuration - timeUsed}>
+                        <Game theme={theme} roundDuration={roundDuration}/>
+                    </TimeContext.Provider>
+                } />
                 <Route
                     path="/Lecturer"
                     element={

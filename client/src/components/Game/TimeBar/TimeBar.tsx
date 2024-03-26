@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProgressBar } from "react-bootstrap";
 import "./TimeBar.css"
 import socket from "../../../socket";
+import { TimeContext } from "../../../contexts/TimeContext";
 
-function TimeBar() {
-    const totalTime = 600
-    const [seconds, setSeconds] = useState(totalTime)
+interface Props {
+    roundDuration: number
+}
 
-    // Timer functionality
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds((seconds) => seconds - 1)
-            } else {
-                clearInterval(interval)
-            }
-        }, 1000)
+function TimeBar(props: Props) {
+    const timeLeft = useContext(TimeContext);
 
-        return () => {
-            clearInterval(interval)
-        }
-    }, [seconds])
-
-    useEffect(() => {
-        socket.off("round-started").on("round-started", () => {
-
-        })
-    })
     return(
         <div className="time-container">
             <div className="time-title">Time:</div>
-            <ProgressBar variant="success" now={((totalTime - seconds) / totalTime) * 100} className="time-bar"/>
+            <ProgressBar variant="success" now={(timeLeft / props.roundDuration) * 100} className="time-bar"/>
 
         </div>
     )

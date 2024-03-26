@@ -24,6 +24,7 @@ export interface IQuestion {
 
 interface Props {
     theme: string
+    roundDuration: number
 }
 
 interface Statistic {
@@ -284,7 +285,7 @@ function Game(props: Props) {
             )}
             <div className="game-container">
                 <div className="game-left-container">
-                    <TimeBar></TimeBar>
+                    <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <Question 
                         hideQuestion={hideQuestion}
                         theme={props.theme}
