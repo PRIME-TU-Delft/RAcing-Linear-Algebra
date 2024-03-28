@@ -39,6 +39,12 @@ interface Ghost {
     animationStatus: AnimationStatus
 }
 
+interface RacePathObject {
+    svgPath: string
+    pathLength: number
+    components: Component[]
+}
+
 interface Checkpoint {
     name: string
     percentage: number
@@ -101,5 +107,6 @@ export {
     type Ghost,
     type Dimensions,
     type Map,
-    type ServerGhost
+    type ServerGhost,
+    type RacePathObject
 }

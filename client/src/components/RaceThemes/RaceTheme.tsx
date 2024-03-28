@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Checkpoint, Ghost, Map, ServerGhost } from "./SharedUtils"
+import React, { useContext, useEffect, useMemo, useState } from "react"
+import { Checkpoint, Ghost, Map, RacePathObject, ServerGhost } from "./SharedUtils"
 import socket from "../../socket"
 import { trainMaps } from "./Maps/TrainMaps"
 import { boatMaps } from "./Maps/BoatMaps"
@@ -13,6 +13,9 @@ import "./RaceTheme.css"
 import { RaceDataContext } from "../../contexts/RaceDataContext"
 import { TimeContext } from "../../contexts/TimeContext"
 import { ScoreContext } from "../../contexts/ScoreContext"
+import { getRacePathObject } from "./RaceService"
+import { RacePathContext } from "../../contexts/RacePathContext"
+import RaceStatus from "./RaceStatus/RaceStatus"
 
 interface Props {
     currentPoints: number
@@ -31,7 +34,6 @@ function RaceTheme(props: Props) {
     const height = raceData.mapDimensions.height
     const width = raceData.mapDimensions.width
 
-
     function getThemeMaps(theme: string) {
         switch (theme) {
             case "train": return trainMaps
@@ -41,7 +43,9 @@ function RaceTheme(props: Props) {
             default: return trainMaps
         }
     }
-    const selectedMap = getThemeMaps(raceData.theme)[0] // multiple maps may be used in the future, currently only one exists
+
+    const selectedMap = useMemo(() => getThemeMaps(raceData.theme)[0], [raceData.theme]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(selectedMap.path, width, height), [selectedMap]) // multiple maps may be used in the future, currently only one exists
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({
@@ -104,10 +108,12 @@ function RaceTheme(props: Props) {
                     totalPoints: averageFinalTeamScore,
                     currentPoints: props.currentPoints
                 }}>
-                    <Tracks
-                        trackPoints={selectedMap.path}
-                    ></Tracks>
+                    <RacePathContext.Provider value={racePath}>
+                        <Tracks/>
+                        <RaceStatus/>
+                    </RacePathContext.Provider>
                 </ScoreContext.Provider>
+
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={selectedMap.decorations}
