@@ -4,7 +4,7 @@ import "./QuestionBoatBackground.css"
 export default function QuestionTrainBackground() {
     return (
         <div className="background-train">
-            <svg
+            {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 width="100vw"
@@ -36,7 +36,7 @@ export default function QuestionTrainBackground() {
                     </mask>
                 </defs>
             </svg>
-            <div className="background-train-2"></div>
+            <div className="background-train-2"></div> */}
         </div>
     )
 }

@@ -1,6 +1,4 @@
-#wheel,
-#wheel2,
-#wheel3 {
+.train-wheel-svg {
     animation: wheel 1s linear infinite;
     transform-origin: center;
     transform-box: fill-box;
@@ -55,4 +53,6 @@
 
 .train-svg {
     margin-bottom: -40px;
+    height: 180px;
+    width: auto;
 }

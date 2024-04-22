@@ -20,6 +20,7 @@ interface Props {
 }
 
 function TeamPreview(props: Props) {
+    props.onStartGame()
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
     const [showMainTeam, setShowMainTeam] = useState<boolean>(false)
     const [sortedTeams, setSortedTeams] = useState<Ghost[]>([])
@@ -97,7 +98,11 @@ function TeamPreview(props: Props) {
         <div className="team-preview-body">
             <motion.div className="page-content" initial={{ filter: "blur(0px)" }} animate={{ filter: startCountdown ? "blur(2px)" : "blur(0px)"}}>
                 <TrainBackground includeRail={false}/>
-                <a.div className="team-preview-title" style={titleAnimation}>Eigenvalues and Eigenvectors Race</a.div>
+                <a.div className="team-preview-title">
+                    <a.div style={titleAnimation}>
+                        Eigenvalues and Eigenvectors Race
+                    </a.div>
+                </a.div>
                 <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (

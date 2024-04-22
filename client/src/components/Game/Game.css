@@ -1,4 +1,6 @@
 .game-container {
+    height: 100vh;
+    padding-top: calc(15vh);
     display: flex;
     flex-direction: row;
 }
@@ -83,4 +85,36 @@
     padding-bottom: 15px;
     padding-right: 15px;
     z-index: 1;
+}
+
+@media only screen and (max-width: 1024px) {
+    .game-left-container {
+        width: 60%;
+    }
+
+    .game-right-container {
+        width: 40%;
+    }
+
+    .minimap-svg-path {
+        padding-right: 0;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .game-left-container {
+        width: 60%;
+    }
+
+    .game-right-container {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-height: 800px) {
+    .game-container {
+        padding-top: 10px;
+    }
 }

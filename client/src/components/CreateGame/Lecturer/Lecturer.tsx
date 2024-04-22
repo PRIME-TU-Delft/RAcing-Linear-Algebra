@@ -96,6 +96,7 @@ function Lecturer(props: Props) {
     //when 10minutes count down is up
     const timeUp = () => {
         //round ends
+        console.log("HERRREEEE")
         socket.emit("endRound")
     }
 
@@ -120,7 +121,7 @@ function Lecturer(props: Props) {
 
     // Timer functionality
     useEffect(() => {
-        if (usedTime >= props.roundDuration) 
+        if (usedTime >= props.roundDuration && props.roundDuration > 0) 
             timeUp()
     }, [usedTime])
 

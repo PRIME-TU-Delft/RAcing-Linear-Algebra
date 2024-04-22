@@ -4,7 +4,6 @@
 }
 
 .question-container {
-    height: 60vh;
     margin-top: 2rem;
     position: relative;
 }
@@ -52,4 +51,10 @@
     font-weight: bold;
     color: #333;
     text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+    .question-container {
+        margin-top: 1rem;
+    }
 }

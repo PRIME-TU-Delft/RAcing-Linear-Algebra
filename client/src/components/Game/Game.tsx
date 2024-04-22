@@ -47,7 +47,6 @@ function Game(props: Props) {
     const width = window.innerWidth
     const height = window.innerHeight
     const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
-    console.log(racePathSizing)
     const raceData = useContext(RaceDataContext)
     const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
 
@@ -348,7 +347,7 @@ function Game(props: Props) {
                                 d={racePath.svgPath}
                                 fill={"none"}
                                 strokeWidth={10}
-                                stroke={"#ffffff5b"}
+                                stroke={"#f8b600a2"}
                             />
                     </svg>
                 </div>

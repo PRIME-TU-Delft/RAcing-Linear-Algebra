@@ -210,7 +210,7 @@ function Question(props: Props) {
                                 ) : question.type === "mc" ? (
                                     <MultipleChoice
                                         latex={question.question}
-                                        answers={[...(question.options ?? [])]}
+                                        answers={question.options ? question.options : []}
                                         questionNum={questionNum}
                                         disableButton={disableButton}
                                         theme={props.theme}
