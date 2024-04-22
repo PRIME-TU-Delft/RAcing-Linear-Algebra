@@ -9,12 +9,12 @@ interface Props {
 }
 
 function TimeBar(props: Props) {
-    const timeLeft = useContext(TimeContext);
+    const timePassed = useContext(TimeContext);
 
     return(
         <div className="time-container">
             <div className="time-title">Time:</div>
-            <ProgressBar variant="success" now={(timeLeft / props.roundDuration) * 100} className="time-bar"/>
+            <ProgressBar variant="success" now={((props.roundDuration - timePassed) / props.roundDuration) * 100} className="time-bar"/>
 
         </div>
     )

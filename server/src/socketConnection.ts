@@ -51,6 +51,9 @@ module.exports = {
                     io.to(`lecturer${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
                     })
+                    io.to(`players${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
 
                 } catch (error) {
                     //If an error is throw it means the game was not started yet
@@ -115,6 +118,9 @@ module.exports = {
                     game.avgScore = game.totalScore / game.users.size
 
                     io.to(`lecturer${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                    })
+                    io.to(`players${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
                     })
                 } catch (error) {
@@ -210,6 +216,10 @@ module.exports = {
                             score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
                         })
+                        io.to(`players${lobbyId}`).emit("score", {
+                            score: Math.floor(game.totalScore),
+                            accuracy: Math.floor(accuracy),
+                        })
                     } else if (attempts === 0) {
                         socket.emit("wrongAnswer", 0)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
@@ -301,7 +311,8 @@ module.exports = {
                         study: x.study,
                         accuracy: x.accuracy
                     }))
-                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                    io.to(`players${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
+                    io.to(`lecturer${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
                     console.log(error)
                 }
@@ -324,7 +335,9 @@ module.exports = {
                         * game.roundDurations[game.round] 
                         * game.users.size 
                         / 3)
-                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+
+                    io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
+                    io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
                     console.log(error)
                 }

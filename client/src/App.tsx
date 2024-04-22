@@ -17,6 +17,10 @@ import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/G
 import socket from "./socket"
 import testValues from "./utils/testValues"
 import { TimeContext } from "./contexts/TimeContext"
+import { RaceDataContext } from "./contexts/RaceDataContext"
+import LecturerService from "./components/CreateGame/Lecturer/LecturerService"
+import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
+import { ScoreContext } from "./contexts/ScoreContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -29,8 +33,11 @@ function App() {
     const [timeUsed, setTimeUsed] = useState<number>(0)
     const [ghostTeams, setGhostTeams] = useState<Ghost[]>([])
 
-    const navigate = useNavigate()
+    const [fullLapScoreValue, setFullLapScoreValue] = useState<number>(1)
+    const [currentScore, setCurrentScore] = useState<number>(0)
+    const [currentAccuracy, setCurrentAccuracy] = useState<number>(0)
 
+    const navigate = useNavigate()
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
@@ -80,17 +87,36 @@ function App() {
         function onRoundStarted(roundDuration: number) {
             setRoundDuration(curr => roundDuration)
             setGameInProgress(curr => true)
+        }
+
+        function onRoundDuration(roundDuration: number) {
+            setRoundDuration(curr => roundDuration)
+            setGameInProgress(curr => true)
             socket.emit("getGhostTeams")
+            socket.emit("getRaceTrackEndScore")
         }
 
         function onThemeChange(theme: string) {
             setTheme(curr => theme)
         }
 
-        socket.on("round-duration", onRoundStarted)
+        function onFullLapScoreValue(score: number) {
+            setFullLapScoreValue(curr => score)
+        }
+
+        function onScoreUpdate(stats: {score: number, accuracy: number}) {
+            setCurrentScore((current) =>
+                current < stats.score ? stats.score : current
+            )
+            setCurrentAccuracy(curr => stats.accuracy)
+        }
+
+        socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
         socket.on("themeChange", onThemeChange)
+        socket.on("race-track-end-score", onFullLapScoreValue)
+        socket.on("score", onScoreUpdate)
     }, [])
 
     return (
@@ -158,21 +184,39 @@ function App() {
                     }
                 ></Route>
                 <Route path="/Game" element={
-                    <TimeContext.Provider value={roundDuration - timeUsed}>
-                        <Game theme={theme} roundDuration={roundDuration}/>
+                    <TimeContext.Provider value={timeUsed}>
+                        <RaceDataContext.Provider value={{
+                            theme: theme,
+                            ghostTeams: ghostTeams,
+                            checkpoints: [],
+                            selectedMap: trainMaps[0]
+                        }}>
+                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, currentAccuracy: currentAccuracy}}>
+                                <Game theme={theme} roundDuration={roundDuration}/>
+                            </ScoreContext.Provider>
+                        </RaceDataContext.Provider>
                     </TimeContext.Provider>
                 } />
                 <Route
                     path="/Lecturer"
                     element={
                         <TimeContext.Provider value={timeUsed}>
-                            <Lecturer
-                                lobbyId={lobbyId}
-                                teamName={teamName}
-                                ghostTeams={ghostTeams}
-                                theme={theme}
-                                roundDuration={roundDuration}
-                            />
+                            <RaceDataContext.Provider value={{
+                            theme: theme,
+                            ghostTeams: ghostTeams,
+                            checkpoints: [],
+                            selectedMap: trainMaps[0]
+                            }}>
+                                <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, currentAccuracy: currentAccuracy}}>
+                                    <Lecturer
+                                        lobbyId={lobbyId}
+                                        teamName={teamName}
+                                        ghostTeams={ghostTeams}
+                                        theme={theme}
+                                        roundDuration={roundDuration}
+                                    />
+                                </ScoreContext.Provider>
+                            </RaceDataContext.Provider>
                         </TimeContext.Provider>
                     }
                 ></Route>

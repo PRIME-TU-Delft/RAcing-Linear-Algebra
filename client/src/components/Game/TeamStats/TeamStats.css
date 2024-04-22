@@ -1,6 +1,6 @@
 .team-stats-container {
-    width: 50%;
-    padding-left: 5rem;
+    width: 100%;
+    position: relative;
 }
 
 .team-stats-container > .scores-container {
@@ -42,8 +42,12 @@
     width: 85%;
     height: 0.5rem;
     margin: auto;
-    margin-top: 2rem;
     background-color: #0C2E4F;
+}
+
+.show-stats-btn-container {
+    position: absolute;
+    width: 100%;
 }
 
 .show-stats-btn {

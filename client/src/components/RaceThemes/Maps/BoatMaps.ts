@@ -1,5 +1,5 @@
 import Sprites from "../Sprites/BoatThemeSprites"
-import { PercentCoordinate, Map } from "../SharedUtils"
+import { PercentCoordinate, RaceMap } from "../SharedUtils"
 
 const mapOne = {
             backgroundColor: "#19CDFF",
@@ -43,6 +43,6 @@ const mapOne = {
                 { xPercent: 1, yPercent: 0.75 },
             ],
 }
-const boatMaps: Map[] = [mapOne]
+const boatMaps: RaceMap[] = [mapOne]
 
 export { boatMaps }

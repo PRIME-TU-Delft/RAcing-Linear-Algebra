@@ -1,0 +1,21 @@
+.ghost {
+    offset-rotate: 0deg;
+    position: absolute;
+    height: 110px;
+    display: flex;
+    align-items: center;
+}
+
+.minimap-ghost-container {
+    offset-rotate: 0deg;
+    position: absolute;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.minimap-ghost {
+    height: 25px;
+    width: 25px;
+    box-shadow: 0px 0px 5px #000000;
+}

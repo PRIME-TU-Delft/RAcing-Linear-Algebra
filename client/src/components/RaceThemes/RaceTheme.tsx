@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { Checkpoint, Ghost, Map, RacePathObject, ServerGhost } from "./SharedUtils"
+import { Checkpoint, Ghost, RaceMap, RacePathObject, ServerGhost } from "./SharedUtils"
 import socket from "../../socket"
 import { trainMaps } from "./Maps/TrainMaps"
 import { boatMaps } from "./Maps/BoatMaps"
@@ -18,7 +18,10 @@ import { RacePathContext } from "../../contexts/RacePathContext"
 import RaceStatus from "./RaceStatus/RaceStatus"
 
 interface Props {
-    currentPoints: number
+    mapDimensions: {
+        height: number,
+        width: number
+    }
     setCheckpoint: (data: string) => void
     showCheckPoint: () => void
 }
@@ -27,25 +30,13 @@ function RaceTheme(props: Props) {
     const raceData = useContext(RaceDataContext)
     const usedTime = useContext(TimeContext)
 
-    const [averageFinalTeamScore, setAverageFinalTeamScore] = useState<number>(0)
     const [nextCheckpoint, setNextCheckpoint] = useState(raceData.checkpoints[0]) // next checkpoint to be reached
     const [checkpointReached, setCheckpointReached] = useState(false) // boolean indicating whether a checkpoint has been reached
     
-    const height = raceData.mapDimensions.height
-    const width = raceData.mapDimensions.width
+    const height = props.mapDimensions.height
+    const width = props.mapDimensions.width
 
-    function getThemeMaps(theme: string) {
-        switch (theme) {
-            case "train": return trainMaps
-
-            case "boat": return boatMaps
-
-            default: return trainMaps
-        }
-    }
-
-    const selectedMap = useMemo(() => getThemeMaps(raceData.theme)[0], [raceData.theme]) // multiple maps may be used in the future, currently only one exists
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(selectedMap.path, width, height), [selectedMap]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, width, height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({
@@ -78,16 +69,6 @@ function RaceTheme(props: Props) {
     //         }, 3000)
     //     }
     // }, [props.currentPoints])
-    
-    useEffect(() => {
-        if (averageFinalTeamScore == 0) socket.emit("getRaceTrackEndScore")
-    }, [averageFinalTeamScore])
-
-    useEffect(() => {
-        socket.on("race-track-end-score", (score: number) => {
-            setAverageFinalTeamScore(curr => score)
-        })
-    }, [socket])
 
     return (
         <a.div
@@ -95,7 +76,7 @@ function RaceTheme(props: Props) {
             style={{
                 ...fadeSection,
                 backgroundColor:
-                    selectedMap.backgroundColor,
+                    raceData.selectedMap.backgroundColor,
             }}
         >
 
@@ -104,19 +85,14 @@ function RaceTheme(props: Props) {
                 className="map-content"
                 style={{ ...fadeSection }}
             >
-                <ScoreContext.Provider value={{
-                    totalPoints: averageFinalTeamScore,
-                    currentPoints: props.currentPoints
-                }}>
-                    <RacePathContext.Provider value={racePath}>
-                        <Tracks/>
-                        <RaceStatus/>
-                    </RacePathContext.Provider>
-                </ScoreContext.Provider>
+                <RacePathContext.Provider value={racePath}>
+                    <Tracks/>
+                    <RaceStatus keepClosed={false}/>
+                </RacePathContext.Provider>
 
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
-                    decorationsList={selectedMap.decorations}
+                    decorationsList={raceData.selectedMap.decorations}
                 ></Decorations>
             </a.div>
 

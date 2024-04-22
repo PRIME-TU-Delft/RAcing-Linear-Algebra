@@ -12,7 +12,7 @@ interface Props {
 function GhostText(props: Props) {
     const [activeTextIndex, setActiveTextIndex] = useState<number>(0)   // index = 0 : race position; index = 1 : team name
     const [racePositionText, setRacePositionText] = useState<string>("")
-    console.log(activeTextIndex)
+
     const transRef = useSpringRef()
     const transitions = useTransition(activeTextIndex, {
         ref: transRef,

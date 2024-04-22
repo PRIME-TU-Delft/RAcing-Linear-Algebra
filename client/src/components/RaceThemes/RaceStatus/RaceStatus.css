@@ -1,0 +1,103 @@
+
+.main-vehicle {
+    position: absolute;
+    offset-rotate: 0deg;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    animation: pulse 2s infinite;
+}
+
+.progress-point {
+    position: relative;
+    offset-rotate: 0deg;
+    height: 60px;
+    width: 60px;
+    background-color: white;
+    border: 3px solid #011fa7;
+}
+
+.main-vehicle-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0021A7;
+}
+
+.minimap-main-vehicle-text {
+    position: absolute;
+    margin-left: 40px;
+    background-color: rgba(255, 255, 255, 0.786);
+    border-left: 2px solid;
+    border-radius: 20%;
+    top: 0;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0021A7;
+}
+
+.main-vehicle-position-number {
+    position: absolute;
+    margin-left: 50px;
+    background-color: rgba(255, 255, 255, 0.786);
+    border-left: 2px solid;
+    border-radius: 20%;
+    top: 0;
+}
+
+.vehicle-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    offset-rotate: 0deg;
+    height: 60px;
+    width: 60px;
+    background-color: white;
+    animation: shadowPulse 2s infinite;
+    
+}
+
+.minimap-vehicle-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    offset-rotate: 0deg;
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    animation: shadowPulse 2s infinite;
+    
+}
+
+.main-vehicle > .vehicle-image-container, .minimap-vehicle-image-container {
+    border: 3px solid;
+}
+
+.lap-completed-text {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.92);
+    }
+
+    70% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.92);
+    }
+}
+
+@keyframes shadowPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 33, 167, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 33, 167, 0);
+    }
+}

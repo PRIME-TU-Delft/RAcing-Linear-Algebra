@@ -8,10 +8,11 @@
     top: 0;
     left: 0;
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding-top: 17rem;
+    padding-left: 4rem;
     height: 100%;
-    width: 100%;
+    width: 50%;
     z-index: 12;
 }
 
@@ -22,7 +23,7 @@
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     z-index: 12;
     border: 1px solid black;
-    width: 50%;
+    width: 100%;
     height: fit-content;
     text-shadow: 1px 0px 0px black;
     font-family: "Century Gothic", sans-serif;

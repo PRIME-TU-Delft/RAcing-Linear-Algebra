@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
@@ -11,6 +11,14 @@ import socket from "../../socket";
 import QuestionBoatBackground from "../Questions/Themes/QuestionBoatBackground";
 import "./Game.css"
 import Question from "../Questions/Question";
+import { getRacePathObject } from "../RaceThemes/RaceService";
+import { RacePathObject } from "../RaceThemes/SharedUtils";
+import { RaceDataContext } from "../../contexts/RaceDataContext";
+import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
+import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
+import { RacePathContext } from "../../contexts/RacePathContext";
+import Tracks from "../RaceThemes/Tracks/Tracks";
+import { getRacePathSizeAndOffsetMargins } from "./GameService";
 
 export interface IQuestion {
     question: string
@@ -36,6 +44,13 @@ interface Statistic {
 }
 
 function Game(props: Props) {
+    const width = window.innerWidth
+    const height = window.innerHeight
+    const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
+    console.log(racePathSizing)
+    const raceData = useContext(RaceDataContext)
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
+
     const [mandatoryNum, setMandatoryNum] = useState(0)
 
     const [showPopup, setShowPopup] = useState(false)
@@ -294,8 +309,9 @@ function Game(props: Props) {
 
                     />  
                 </div>
-                 
-                <TeamStats></TeamStats>
+                 <div className="game-right-container">
+                 <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2}></TeamStats>
+                 </div>
             </div>
                    
             <InfoModal
@@ -319,13 +335,24 @@ function Game(props: Props) {
                 questionNum={numOfQuestions}
             />
             <ToastContainer />
-            <div className={`popup ${showPopup ? "show" : ""}`}>
-                <div className="popup-content">
-                    <p>
-                        <span className="countdown-text">{countdown}</span>
-                    </p>
+            <RacePathContext.Provider value={racePath}>
+                <div className="race-minimap-container" style={{
+                    width: racePathSizing.width,
+                    height: racePathSizing.height,
+                    marginLeft: racePathSizing.offsetX,
+                    marginTop: racePathSizing.offsetY
+                }}>
+                    <RaceStatus keepClosed={true}/>
+                    <svg className="minimap-svg-path">
+                            <path
+                                d={racePath.svgPath}
+                                fill={"none"}
+                                strokeWidth={10}
+                                stroke={"#ffffff5b"}
+                            />
+                    </svg>
                 </div>
-            </div>
+            </RacePathContext.Provider>
         </>
     )
 }

@@ -1,11 +1,3 @@
-.ghost {
-    offset-rotate: 0deg;
-    position: absolute;
-    height: 110px;
-    display: flex;
-    align-items: center;
-}
-
 .ghost-vehicle {
     position: relative;
     offset-rotate: 0deg;

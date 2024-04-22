@@ -6,7 +6,7 @@ import socket from "../../../socket"
 interface Props {
     difficulty: string
     emoji: string
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    onDifficultySelected: () => void
     points: string
     attempts: string
     setEasyCounter: React.Dispatch<React.SetStateAction<number>>
@@ -19,7 +19,7 @@ interface Props {
  */
 export default function DifficultyCard(props: Props) {
     function sendDifficulty() {
-        props.setOpen((open) => !open)
+        props.onDifficultySelected()
         socket.emit("getNewQuestion", props.difficulty.toLowerCase())
         if (props.difficulty === "Easy") {
             props.onEasyCardClick() // Call the click handler only for "Easy" DifficultyCard

@@ -192,7 +192,7 @@ function Question(props: Props) {
             >
                 <DifficultySelection
                     open={showDifficulty}
-                    setOpen={setShowDifficulty}
+                    onDifficultySelected={() => setShowDifficulty(curr => false)}
                     type={question.subject}
                 ></DifficultySelection>
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 

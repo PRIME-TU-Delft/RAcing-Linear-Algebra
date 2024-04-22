@@ -12,6 +12,8 @@ import LecturerService from "./LecturerService"
 import { Ghost } from "../../RaceThemes/SharedUtils"
 import { RaceDataContext } from "../../../contexts/RaceDataContext"
 import { TimeContext } from "../../../contexts/TimeContext"
+import { trainMaps } from "../../RaceThemes/Maps/TrainMaps"
+import { ScoreContext } from "../../../contexts/ScoreContext"
 
 //score object received from backend
 export interface IScore {
@@ -56,12 +58,6 @@ function Lecturer(props: Props) {
     //window size
     const { width, height } = useWindowDimensions()
 
-    //score of the team
-    const [score, setScore] = useState(0)
-
-    //accuracy of the team
-    const [accuracy, setAccuracy] = useState(100)
-
     //check if the round is finished
     const [roundFinished, setRoundFinished] = useState(false)
 
@@ -87,7 +83,7 @@ function Lecturer(props: Props) {
     const navigate = useNavigate()
 
     const usedTime = useContext(TimeContext);
-
+    const scores = useContext(ScoreContext)
 
     //show checkpoint leaderboard for 15s
     const showCheckPoint = () => {
@@ -130,13 +126,6 @@ function Lecturer(props: Props) {
 
     // Socket changes
     useEffect(() => {
-        socket.on("score", (stats: TeamStats) => {
-            setScore((current) =>
-                current < stats.score ? stats.score : current
-            )
-            setAccuracy((current) => stats.accuracy)
-        })
-
         socket.on("game-ended", () => {
             setGameEnds(true)
         })
@@ -163,9 +152,9 @@ function Lecturer(props: Props) {
         if (gameEnds) {
             navigate("/endGame")
         } else {
-            setScore(0)
+            // setScore(0)
             setLocation("Home")
-            setAccuracy(100)
+            // setAccuracy(100)
             setRoundFinished((cur) => false)
         }
     }
@@ -179,8 +168,8 @@ function Lecturer(props: Props) {
                 </div>
 
                 <div className="total-score">
-                    <div>Score: {score}</div>
-                    <div>Accuracy: {accuracy}%</div>
+                    <div>Score: {scores.currentPoints}</div>
+                    <div>Accuracy: {scores.currentAccuracy}%</div>
                 </div>
             </div>
             {!roundFinished ? (
@@ -188,23 +177,16 @@ function Lecturer(props: Props) {
                     style={{ width: "100%", height: `${height - 100}px` }}
                     className="map"
                 >
-                    <RaceDataContext.Provider value={{
-                        mapDimensions: {
-                            width: width,
-                            height: height - 100 
-                        },
-                        theme: props.theme,
-                        ghostTeams: props.ghostTeams,
-                        checkpoints: LecturerService.getCheckpointsForTheme(props.theme)
-                    }}>
                         <RaceTheme
-                            currentPoints={score}
+                            mapDimensions ={{
+                                width: width,
+                                height: height - 100 
+                            }}
                             setCheckpoint={(data: string) =>
                                 setLocation((current) => data)
                             }
                             showCheckPoint={() => showCheckPoint()}
                         ></RaceTheme>
-                    </RaceDataContext.Provider>
                 </div>
             ) : (
                 <div className="statistics-wrapper">
@@ -228,7 +210,7 @@ function Lecturer(props: Props) {
                         data-testid="checkpoint"
                         location={location}
                         teamName={props.teamName}
-                        score={score}
+                        score={scores.currentPoints}
                         minutes={10 - Math.ceil((props.roundDuration - usedTime) / 60)}
                         seconds={60 - ((props.roundDuration - usedTime) % 60)}
                         teams={checkpointData}
@@ -246,8 +228,8 @@ function Lecturer(props: Props) {
                     <LeaderBoard
                         data-testid="leaderboard"
                         teamname={props.teamName}
-                        yourScore={score}
-                        yourAccuracy={accuracy}
+                        yourScore={scores.currentPoints}
+                        yourAccuracy={scores.currentAccuracy}
                         yourCheckPoint={location}
                         teams={teamScores}
                     ></LeaderBoard>

@@ -1,7 +1,7 @@
 import Sprites from "../Sprites/TrainThemeSprites"
-import { PercentCoordinate, Map } from "../SharedUtils"
+import { PercentCoordinate, RaceMap } from "../SharedUtils"
 
-const mapOne: Map = {
+const mapOne: RaceMap = {
             backgroundColor: "#fff6e4",
             decorations: [
                 {
@@ -252,6 +252,6 @@ const netherlandsMap1 = {
     ]
 }
     
-const trainMaps: Map[] = [netherlandsMap1]
+const trainMaps: RaceMap[] = [netherlandsMap1]
 
 export { trainMaps }

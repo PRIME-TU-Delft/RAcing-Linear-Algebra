@@ -23,15 +23,14 @@ interface CardInfo {
 }
 
 interface Props {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
     open: boolean
     type: string
+    onDifficultySelected: () => void
 }
 /**
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
-    const { open, setOpen } = props
     // Animation for the modal to appear
     const springApi = useSpringRef()
     const { size, ...rest } = useSpring({
@@ -43,9 +42,9 @@ export default function DifficultySelection(props: Props) {
             pointerEvent: "none",
         },
         to: {
-            opacity: open ? 1 : 0,
-            size: open ? "85%" : "0%",
-            pointerEvent: open ? "all" : "none",
+            opacity: props.open ? 1 : 0,
+            size: props.open ? "95%" : "0%",
+            pointerEvent: props.open ? "all" : "none",
         },
     })
 
@@ -55,7 +54,7 @@ export default function DifficultySelection(props: Props) {
         "You finished all the mandatory questions! This means that you can now select the difficulty for each of your next questions. The harder a question is the more time it takes, however they also offer more points.",
     ]
     const transApi = useSpringRef()
-    const transitionText = useTransition(open ? modalText : [], {
+    const transitionText = useTransition(props.open ? modalText : [], {
         ref: transApi,
         trail: 100,
         from: { opacity: 0, scale: 0 },
@@ -85,19 +84,25 @@ export default function DifficultySelection(props: Props) {
         },
     ]
     const transApiCard = useSpringRef()
-    const transitionCard = useTransition(open ? cardInfo : [], {
+    // const transitionCard = useTransition(props.open ? cardInfo : [], {
+    //     ref: transApiCard,
+    //     trail: 100,
+    //     from: { opacity: 0, scale: 0, PointerEvent: "none" },
+    //     enter: { opacity: 1, scale: 1, PointerEvent: "all" },
+    //     leave: { opacity: 0, scale: 0, PointerEvent: "none" },
+    // })
+
+    const cardAnimation = useSpring({
         ref: transApiCard,
-        trail: 100,
-        from: { opacity: 0, scale: 0, PointerEvent: "none" },
-        enter: { opacity: 1, scale: 1, PointerEvent: "all" },
-        leave: { opacity: 0, scale: 0, PointerEvent: "none" },
-    })
+        from: { opacity: props.open ? 0 : 1 },
+        to: { opacity: props.open ? 1 : 0 },
+      }) 
 
     useChain(
-        open
+        props.open
             ? [springApi, transApi, transApiCard]
             : [transApiCard, transApi, springApi],
-        [0, open ? 0.3 : 0.6, open ? 0.3 : 0.6]
+        [0, props.open ? 0.3 : 0.6, props.open ? 0.3 : 0.6]
     )
     let i = 0 // used to give each card a unique class name
 
@@ -117,7 +122,7 @@ export default function DifficultySelection(props: Props) {
         <>
             <div
                 className="diff-modal-wrapper"
-                style={{ pointerEvents: open ? "all" : "none" }}
+                style={{ pointerEvents: props.open ? "all" : "none" }}
             >
                 <animated.div
                     className="diff-modal"
@@ -132,17 +137,18 @@ export default function DifficultySelection(props: Props) {
                         </animated.div>
                     ))}
                     <div className="card-grid">
-                        {transitionCard((style, item) => (
+                        {cardInfo.map((item, index) => (
                             <animated.div
                                 className={`card-container`}
-                                style={{ ...style }}
+                                style={cardAnimation}
+                                key={index}
                             >
                                 <DifficultyCard
                                     difficulty={item.difficulty}
                                     emoji={item.emoji}
                                     points={item.points}
                                     attempts={item.attempts}
-                                    setOpen={setOpen}
+                                    onDifficultySelected={props.onDifficultySelected}
                                     setEasyCounter={setEasyCounter}
                                     onEasyCardClick={handleEasyCardClick}
                                     disableButton={disableButton}

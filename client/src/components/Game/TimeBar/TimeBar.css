@@ -18,3 +18,16 @@
     width: 100%;
     margin-top: 4px;
 }
+
+@media only screen and (min-height: 950px) {
+    .time-container {
+        margin-top: 7rem;
+    }
+}
+
+
+@media only screen and (min-width: 1500px) {
+    .time-title {
+        font-size: 40px;
+    }
+}

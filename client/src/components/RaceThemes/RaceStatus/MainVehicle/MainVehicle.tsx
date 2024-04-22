@@ -10,12 +10,12 @@ interface Props {
     racePosition: number
     progressPercent: number
     path: string
+    isOnMinimap: boolean
 }
 
 function MainVehicle(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
-    
     const getNumberOfRaceLapsCompleted = (totalPoints: number, currentPoints: number) => {
         return Math.floor(currentPoints / totalPoints)
     }
@@ -39,8 +39,8 @@ function MainVehicle(props: Props) {
                     stiffness: 100,
                 }}
             >
-                <div className="main-vehicle-position-number main-vehicle-text" style={{zIndex: getZIndexValues().mainVehicle + 20}}>{formatRacePositionText(props.racePosition + 1)}</div>
-                <div className="vehicle-image-container rounded-circle" style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)) }}>
+                <div className={props.isOnMinimap ? "minimap-main-vehicle-text" : "main-vehicle-position-number main-vehicle-text"} style={{zIndex: getZIndexValues().mainVehicle + 20}}>{formatRacePositionText(props.racePosition + 1)}</div>
+                <div className={props.isOnMinimap ? "minimap-vehicle-image-container rounded-circle" : "vehicle-image-container rounded-circle"} style={{ borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)) }}>
                     <VehicleImage 
                         theme={raceData.theme} 
                         colors={{

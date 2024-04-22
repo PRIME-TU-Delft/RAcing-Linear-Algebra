@@ -55,7 +55,7 @@ export function getZIndexValues() {
     return values
 }
 
-export function getRacePathObject(trackPoints: PercentCoordinate[], containerWidth: number, containerHeight: number) {
+export function getRacePathObject(trackPoints: PercentCoordinate[], containerWidth: number, containerHeight: number, offsetX = 0, offsetY = 0) {
     const points: Point[] = [] // list of points computed from track coordinates
     let svgPath = "M" // svg path that the team takes
 
@@ -63,8 +63,8 @@ export function getRacePathObject(trackPoints: PercentCoordinate[], containerWid
     for (let i = 0; i < trackPoints.length; i++) {
         points.push(
             new Point(
-                trackPoints[i].xPercent * containerWidth,
-                trackPoints[i].yPercent * containerHeight
+                trackPoints[i].xPercent * containerWidth + offsetX,
+                trackPoints[i].yPercent * containerHeight + offsetY
             )
         )
 

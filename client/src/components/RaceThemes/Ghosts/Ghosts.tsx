@@ -7,6 +7,7 @@ import { TimeContext } from "../../../contexts/TimeContext"
 
 interface Props {
     path: string // svg path for the ghosts to take
+    keepClosed: boolean
     onGhostScoreUpdate: (newScore: number, ghostIndex: number) => void  // update function for race score
 }
 
@@ -14,7 +15,6 @@ function Ghosts(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
     const usedTime = useContext(TimeContext)
-
     const [showTeamNames, setShowTeamNames] = useState<boolean>(false)  // boolean to indicate whether the ghost team names should be shown in favor of the position for a brief period of time
     const [startShowingGhosts, setStartShowingGhosts] = useState<boolean>(false)    // boolean to begin showing ghosts after the first one moves
     
@@ -32,9 +32,8 @@ function Ghosts(props: Props) {
             // Introduce constants to reduce code repetition
             const currentTimeScoreIndex = raceData.ghostTeams[i].animationStatus.timeScoreIndex
             const currentGhostTimePoint = raceData.ghostTeams[i].timeScores[currentTimeScoreIndex].timePoint
-
             // If the time matches a ghost's time point, it is time to update its score (make it move)
-            if (currentGhostTimePoint == usedTime) {  
+            if (currentGhostTimePoint == usedTime) { 
                 if (!startShowingGhosts) setStartShowingGhosts(true)
                 raceData.ghostTeams[i].animationStatus.updateAnimation = true
             }
@@ -52,6 +51,7 @@ function Ghosts(props: Props) {
                     totalPoints={scores.totalPoints}
                     startShowingGhosts={startShowingGhosts}
                     theme={raceData.theme}
+                    keepClosed={props.keepClosed}
                     onGhostScoreUpdate={(newScore, ghostKey) => props.onGhostScoreUpdate(newScore, ghostKey)}/>
             ))}
         </div>

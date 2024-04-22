@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from "framer-motion";
 import React, { useEffect } from "react";
+import "./GhostVehicle.css"
 import { Ghost } from "../../SharedUtils";
 import { getColorForRaceLap, getZIndexValues } from "../../RaceService";
 import { getColorForStudy, getGhostStyle } from "../GhostService";
@@ -13,6 +14,7 @@ interface Props {
     showTeamNames: boolean,
     totalPoints: number,
     startShowingGhosts: boolean,
+    keepClosed: boolean,
     theme: string,
     onGhostScoreUpdate: (newScore: number, ghostIndex: number) => void  // update function for race score
 }
@@ -83,12 +85,12 @@ function GhostVehicle(props: Props) {
                 offsetPath: `path("${props.path}")`,
                 zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition
             }}
-            className="ghost"
+            className={props.keepClosed ? "minimap-ghost-container" :"ghost"}
             initial={{ offsetDistance: "0%"}}
             animate={animationControls}
         >
             {/* Only show position for ghosts that are open (check function description) */}
-            {props.ghost.isOpen && props.startShowingGhosts ? 
+            {props.ghost.isOpen && props.startShowingGhosts && !props.keepClosed ? 
             (<motion.div 
                 className="position-number"
                 style={{
@@ -102,43 +104,52 @@ function GhostVehicle(props: Props) {
             </motion.div>) : null}
             <LapCompletedText 
                 lapsCompleted={props.ghost.lapsCompleted}/>
-            <motion.div
-                initial={{
-                    height: "55px",
-                    width: "55px",
-                }}
-                animate={
-                    getGhostStyle(
-                        props.ghost.isOpen, 
-                        getColorForRaceLap(props.ghost.lapsCompleted),
-                        getColorForStudy(props.ghost.study).mainColor
-                    )
-                }
-                transition={{
-                    duration: 0.5,
-                    stiffness: 100,
-                    delay: 0.5
-                }}
-                className="ghost-vehicle rounded-circle"
-            >
-                <motion.div 
-                    className="ghost-vehicle-image-container"
-                    animate={{
-                        opacity: props.ghost.isOpen ? "100%" : "0%",
+            {props.keepClosed ? (
+            <div className="minimap-ghost rounded-circle" style={{
+                borderColor: getColorForRaceLap(props.ghost.lapsCompleted),
+                borderWidth: "3px",
+                borderStyle: "solid",
+                backgroundColor: getColorForStudy(props.ghost.study).mainColor
+            }}></div>
+            ) : (
+                <motion.div
+                    initial={{
+                        height: "55px",
+                        width: "55px",
                     }}
+                    animate={
+                        getGhostStyle(
+                            props.ghost.isOpen, 
+                            getColorForRaceLap(props.ghost.lapsCompleted),
+                            getColorForStudy(props.ghost.study).mainColor
+                        )
+                    }
                     transition={{
-                        duration: 0.2,
+                        duration: 0.5,
                         stiffness: 100,
                         delay: 0.5
-                    }}>
-                    <VehicleImage
-                        theme={props.theme}
-                        colors={{
-                            mainColor: props.ghost.colors.mainColor,
-                            highlightColor: props.ghost.colors.highlightColor
-                        }}/>
+                    }}
+                    className="ghost-vehicle rounded-circle"
+                >
+                    <motion.div 
+                        className="ghost-vehicle-image-container"
+                        animate={{
+                            opacity: props.ghost.isOpen ? "100%" : "0%",
+                        }}
+                        transition={{
+                            duration: 0.2,
+                            stiffness: 100,
+                            delay: 0.5
+                        }}>
+                        <VehicleImage
+                            theme={props.theme}
+                            colors={{
+                                mainColor: props.ghost.colors.mainColor,
+                                highlightColor: props.ghost.colors.highlightColor
+                            }}/>
+                    </motion.div>
                 </motion.div>
-            </motion.div>
+            )}
         </motion.div>
     )
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import "./RaceStatus.css"
 import { RaceDataContext } from "../../../contexts/RaceDataContext";
 import { ScoreContext } from "../../../contexts/ScoreContext";
 import { RaceObject } from "../SharedUtils";
@@ -10,7 +11,11 @@ import { motion } from "framer-motion";
 import { RacePathContext } from "../../../contexts/RacePathContext";
 import MainVehicle from "./MainVehicle/MainVehicle";
 
-function RaceStatus() {
+interface Props {
+    keepClosed: boolean
+}
+
+function RaceStatus(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
     const racePath = useContext(RacePathContext)
@@ -115,11 +120,13 @@ function RaceStatus() {
                 racePosition={mainVehiclePosition}
                 progressPercent={progressPercent}
                 path={racePath.svgPath}
+                isOnMinimap={props.keepClosed}
             ></MainVehicle>
 
             <Ghosts
                     data-testid={"ghosts"}
                     path={racePath.svgPath}
+                    keepClosed={props.keepClosed}
                     onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
                 />
         </div>
