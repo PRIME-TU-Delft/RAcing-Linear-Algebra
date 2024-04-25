@@ -1,6 +1,7 @@
 .team-stats-container {
     width: 100%;
     position: relative;
+    font-family: Cherry Bomb, sans-serif;
 }
 
 .team-stats-container > .scores-container {
@@ -23,19 +24,16 @@
 
 .team-stats-score-text {
     font-size: 60px;
-    font-weight: 900;
     color: #003082;
 }
 
 .individual-stats-score-text {
     font-size: 40px;
-    font-weight: 900;
     color: #003082;
 }
 
 .team-stats-score-value {
     font-size: 40px;
-    font-weight: 900;
     color: #003082;
 }
 

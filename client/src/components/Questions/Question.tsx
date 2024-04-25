@@ -78,7 +78,6 @@ function Question(props: Props) {
         socket
             .off("get-next-question")
             .on("get-next-question", (questionReceived: IQuestion) => {
-                console.log("next")
                 setQuestionNum((questionNum) => questionNum + 1)
                 setQuestion(questionReceived)
             })

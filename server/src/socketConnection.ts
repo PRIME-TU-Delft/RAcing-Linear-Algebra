@@ -48,11 +48,18 @@ module.exports = {
 
                     game.avgScore = game.totalScore / game.users.size
 
+                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                    const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+
                     io.to(`lecturer${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
                     io.to(`players${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
 
                 } catch (error) {
@@ -117,11 +124,18 @@ module.exports = {
                     game.users.delete(socket.id)
                     game.avgScore = game.totalScore / game.users.size
 
+                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                    const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+
                     io.to(`lecturer${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
                     io.to(`players${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
                 } catch (error) {
                     console.log(error)
@@ -212,13 +226,17 @@ module.exports = {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                        const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                        
                         io.to(`lecturer${lobbyId}`).emit("score", {
                             score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
+                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
                         io.to(`players${lobbyId}`).emit("score", {
                             score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
+                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
                     } else if (attempts === 0) {
                         socket.emit("wrongAnswer", 0)
@@ -360,6 +378,14 @@ module.exports = {
                     io.to(`players${lobbyId}`).emit("game-ended")
                     socket.emit("game-ended")
                 }
+            })
+
+            /**
+             * Once the lecturer screen countdown is complete, start the game for all players regardless of their individual countdowns
+             */
+            socket.on("beginRace", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                io.to(`players${lobbyId}`).emit("race-started")
             })
 
             /**

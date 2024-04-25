@@ -12,7 +12,7 @@
 .waiting-title {
     font-family: Cherry Bomb, sans-serif;
     font-size: 50px;
-    color: white;
+    color: #003082;
     position: relative;
 }
 
@@ -36,8 +36,8 @@
 }
 
 .train-container {
-    margin-top: 30em;
     left: 0;
+    bottom: 80px;
     position: absolute;
 }
 
@@ -46,7 +46,7 @@
     height: 40px;
     border-radius: 50%;
     border: 8px solid;
-    border-color: #f4f4f4 #0000;
+    border-color: #003082 #0000;
     animation: s1 1s infinite;
 
     margin: 25px;
@@ -57,10 +57,12 @@
     }
 }
 
-.title-container {
+.waiting-title-container {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    top: 12vh;
 }
 
 .back-btn {
@@ -73,13 +75,15 @@
 }
 
 .back-btn.train {
-    border-color: #784212;
-    background-color: #A25918;
+    border-color: #003082;
+    background-color: #0063D3;
+    color: white;
 }
 
 .back-btn.train:hover {
-    border-color: #A25918;
-    background-color: #784212;
+    border-color: #003082;
+    background-color: #004BA0;
+    color: white;
 }
 
 .back-arrow {
@@ -92,7 +96,7 @@
 }
 
 .back-arrow.train {
-    color: #4E2B0C;
+    color: white;
 }
 
 .back-arrow.train:hover {
@@ -101,17 +105,14 @@
 }
 
 .tooltip-container {
-    position: absolute;
-    bottom: 35px;
+    margin-top: 15vh;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    background-color: #c1ebeb;
-    opacity: 0.8;
     width: 50%;
-    height: 5rem;
     padding: 10px;
     border-radius: 55px;
+    z-index: 800;
 }
 
 .tooltip-skip {
@@ -133,10 +134,12 @@
 .tooltip-right-arrow {
     width: 20px;
     height: 20px;
+    color: #003082;
 }
 
 .tooltip-left-arrow {
     width: 20px;
     height: 20px;
     transform: rotate(180deg);
+    color: #003082;
 }

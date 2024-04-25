@@ -51,7 +51,7 @@ export default function DifficultySelection(props: Props) {
     // Animation for the text to appear
     const modalText = [
         "Choose the difficulty for your next question",
-        "You finished all the mandatory questions! This means that you can now select the difficulty for each of your next questions. The harder a question is the more time it takes, however they also offer more points.",
+        "You finished all the mandatory questions! You can now select the difficulty for each of your next questions. The harder the question, the more time it takes, however they it offers more points.",
     ]
     const transApi = useSpringRef()
     const transitionText = useTransition(props.open ? modalText : [], {

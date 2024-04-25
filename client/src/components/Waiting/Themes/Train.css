@@ -9,7 +9,7 @@
         transform: rotate(0deg);
     }
     100% {
-        transform: rotate(-360deg);
+        transform: rotate(360deg);
     }
 }
 
@@ -52,7 +52,30 @@
 }
 
 .train-svg {
-    margin-bottom: -40px;
     height: 180px;
     width: auto;
+    filter: blur(4px);
+}
+
+
+@keyframes trainUpDown {
+    0% {
+        transform: translateY(0px);
+    }
+
+    25% {
+        transform: translateY(2px);
+    }
+
+    50% {
+        transform: translateY(0px);
+    }
+
+    75% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }

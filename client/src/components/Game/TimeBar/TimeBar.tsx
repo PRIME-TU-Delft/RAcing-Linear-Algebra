@@ -40,10 +40,12 @@ function TimeBar(props: Props) {
     }
 
     useEffect(() => {
-        const timeInSeconds = props.roundDuration - timePassed
-        const minutes = getMinutes(timeInSeconds)
-        const seconds = getSeconds(timeInSeconds)
-        setTimeText(curr => minutes + ":" + seconds)
+        if (timePassed < props.roundDuration) {
+            const timeInSeconds = props.roundDuration - timePassed
+            const minutes = getMinutes(timeInSeconds)
+            const seconds = getSeconds(timeInSeconds)
+            setTimeText(curr => minutes + ":" + seconds)
+        }
     }, [timePassed])
 
     return(

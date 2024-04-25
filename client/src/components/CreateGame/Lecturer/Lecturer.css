@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Cherry Bomb";
+    src: url("../../../fonts/CherryBombOne-Regular.ttf");
+}
+
 .lecturer-header {
     height: 100px;
     background-color: #00a6d6;
@@ -8,24 +13,22 @@
     display: flex;
     align-items: center;
     padding: 5px;
+    font-family: Cherry Bomb, sans-serif;
 }
 
 .total-score {
     position: absolute;
-    font-family: "Righteous", sans-serif;
     font-size: xx-large;
     right: 25px;
 }
 
 .t-name {
     position: absolute;
-    font-family: "Righteous", sans-serif;
     left: 25px;
     font-size: xx-large;
 }
 
 .countdown {
-    font-family: "Righteous", sans-serif;
     margin: auto;
     font-size: xx-large;
 }

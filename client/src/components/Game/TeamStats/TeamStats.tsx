@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./TeamStats.css"
 import TeamLeaderboard from "./TeamLeaderboard/TeamLeaderboard";
 import { useSpring, animated, a } from '@react-spring/web'
+import { ScoreContext } from "../../../contexts/ScoreContext";
 
 interface Props {
     buttonTopOffset: number
+    playerScore: number
 }
 
 function TeamStats(props: Props) {
+    const scores = useContext(ScoreContext)
+
     const [showYourStats, setShowYourStats] = useState(true)
     const [yourStatsAnimation, yourStatsAnimationController] = useSpring(() => ({
         config: {duration: 300}
@@ -71,22 +75,22 @@ function TeamStats(props: Props) {
                     {showYourStats ? (
                     <a.div style={{...yourStatsAnimation}}>
                             <div className="individual-stats-score-text">
-                                150
+                                {scores.teamAveragePoints}
                             </div>
-                            <div className="individual-stats-score-text individual-score">
-                                200
+                            <div className="individual-stats-score-text">
+                                {props.playerScore}
                             </div>
                     </a.div>
                     ) : null}
                 </div>
             </div>
             <div className="team-stats-score-text">
-                        Team Score: 2000
+                        Team Score: {scores.currentPoints}
             </div>
             <div className="show-stats-btn-container" >
                 {!showYourStats ? 
-                (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>See how <span className="individual-score">you</span> are doing</div>)
-                : (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>Hide <span className="individual-score">your</span> stats</div>)   }
+                (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>See how you are doing</div>)
+                : (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>Hide your stats</div>)   }
             </div>
         </div>
     )

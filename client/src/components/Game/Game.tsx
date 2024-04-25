@@ -33,6 +33,7 @@ export interface IQuestion {
 interface Props {
     theme: string
     roundDuration: number
+    onLoaded: () => void
 }
 
 interface Statistic {
@@ -69,6 +70,8 @@ function Game(props: Props) {
         event.returnValue = "Are you sure you want to leave this page?"
         //shows an alert when try to reload or leave
     }
+
+    useEffect(() => props.onLoaded(), [])
 
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
@@ -309,7 +312,7 @@ function Game(props: Props) {
                     />  
                 </div>
                  <div className="game-right-container">
-                 <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2}></TeamStats>
+                 <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
                  </div>
             </div>
                    
@@ -342,7 +345,7 @@ function Game(props: Props) {
                     marginTop: racePathSizing.offsetY
                 }}>
                     <RaceStatus keepClosed={true}/>
-                    <svg className="minimap-svg-path">
+                    <svg className="minimap-svg-path" viewBox="20 20 100% 100%">
                             <path
                                 d={racePath.svgPath}
                                 fill={"none"}

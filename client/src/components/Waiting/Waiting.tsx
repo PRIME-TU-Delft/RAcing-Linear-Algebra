@@ -14,7 +14,7 @@ interface Props {
     theme: string
     setTheme: React.Dispatch<React.SetStateAction<string>>
     lobbyId: number
-    gameIsInProgress: boolean
+    startGameCountdown: boolean
 }
 
 function Waiting(props: Props) {
@@ -53,8 +53,8 @@ function Waiting(props: Props) {
     }, [socket])
 
     useEffect(() => {
-        if (props.gameIsInProgress) navigate("/TeamPreview")
-    }, [props.gameIsInProgress])
+        if (props.startGameCountdown) navigate("/TeamPreview")
+    }, [props.startGameCountdown])
 
     return (
         <div className="waiting">
@@ -73,10 +73,10 @@ function Waiting(props: Props) {
                     </div>
                 </>
             )}
-            <div className="title-container">
+            <div className="waiting-title-container">
                 <div className="custom-loader"></div>
                 <div className="waiting-title">
-                    Waiting for the lecturer to start
+                    Waiting for the game to start
                 </div>
             </div>
             <button className={"back-btn" + (props.theme == "Train" ? " train" : "")} onClick={() => backButtonHandler()}>

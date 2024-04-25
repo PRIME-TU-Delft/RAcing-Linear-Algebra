@@ -24,11 +24,11 @@ import { ScoreContext } from "./contexts/ScoreContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
-    const [isPlayer, setIsPlayer] = useState(false)
+    const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
     const [theme, setTheme] = useState("train")
     const [topic, setTopic] = useState("")
-    const [gameInProgress, setGameInProgress] = useState(false)
+    const [startGameCountdown, setStartGameCountdown] = useState(false)
     const [roundDuration, setRoundDuration] = useState<number>(0)
     const [timeUsed, setTimeUsed] = useState<number>(0)
     const [ghostTeams, setGhostTeams] = useState<Ghost[]>([])
@@ -36,6 +36,7 @@ function App() {
     const [fullLapScoreValue, setFullLapScoreValue] = useState<number>(1)
     const [currentScore, setCurrentScore] = useState<number>(0)
     const [currentAccuracy, setCurrentAccuracy] = useState<number>(0)
+    const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -44,6 +45,8 @@ function App() {
     }
 
     const isPlayerHandler = (isPlayer: boolean) => {
+        console.log("CHANGING TO")
+        console.log(isPlayer)
         setIsPlayer(curr => isPlayer)
     }
 
@@ -70,7 +73,6 @@ function App() {
     }
 
     const gameStartHandler = () => {
-        startGameTimer()
         if (isPlayer) 
             navigate("/Game")
         else 
@@ -86,12 +88,12 @@ function App() {
 
         function onRoundStarted(roundDuration: number) {
             setRoundDuration(curr => roundDuration)
-            setGameInProgress(curr => true)
+            setStartGameCountdown(curr => true)
         }
 
         function onRoundDuration(roundDuration: number) {
             setRoundDuration(curr => roundDuration)
-            setGameInProgress(curr => true)
+            setStartGameCountdown(curr => true)
             socket.emit("getGhostTeams")
             socket.emit("getRaceTrackEndScore")
         }
@@ -104,16 +106,22 @@ function App() {
             setFullLapScoreValue(curr => score)
         }
 
-        function onScoreUpdate(stats: {score: number, accuracy: number}) {
+        function onScoreUpdate(stats: {score: number, accuracy: number, averageTeamScore: number}) {
             setCurrentScore((current) =>
                 current < stats.score ? stats.score : current
             )
+            setAverageTeamScore(curr => curr < stats.averageTeamScore ? stats.averageTeamScore : curr)
             setCurrentAccuracy(curr => stats.accuracy)
+        }
+
+        function onRaceStarted() {
+            gameStartHandler()
         }
 
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
+        socket.on("race-started", onRaceStarted)
         socket.on("themeChange", onThemeChange)
         socket.on("race-track-end-score", onFullLapScoreValue)
         socket.on("score", onScoreUpdate)
@@ -160,7 +168,7 @@ function App() {
                 ></Route>
                 <Route
                     path="/Waiting"
-                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId} gameIsInProgress={gameInProgress}
+                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId} startGameCountdown={startGameCountdown}
                     />}
                 ></Route>
                 <Route 
@@ -170,7 +178,10 @@ function App() {
                                 topic={topic} 
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
-                                onStartGame={() => gameStartHandler()}></TeamPreview>
+                                onStartGame={() => {
+                                    socket.emit("beginRace")
+                                    gameStartHandler()}
+                                }></TeamPreview>
                         }>
                 </Route>
                 <Route
@@ -191,8 +202,8 @@ function App() {
                             checkpoints: [],
                             selectedMap: trainMaps[0]
                         }}>
-                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, currentAccuracy: currentAccuracy}}>
-                                <Game theme={theme} roundDuration={roundDuration}/>
+                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                <Game theme={theme} roundDuration={roundDuration} onLoaded={() => startGameTimer()}/>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>
                     </TimeContext.Provider>
@@ -207,13 +218,14 @@ function App() {
                             checkpoints: [],
                             selectedMap: trainMaps[0]
                             }}>
-                                <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, currentAccuracy: currentAccuracy}}>
+                                <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                     <Lecturer
                                         lobbyId={lobbyId}
                                         teamName={teamName}
                                         ghostTeams={ghostTeams}
                                         theme={theme}
                                         roundDuration={roundDuration}
+                                        onLoaded={() => startGameTimer()}
                                     />
                                 </ScoreContext.Provider>
                             </RaceDataContext.Provider>

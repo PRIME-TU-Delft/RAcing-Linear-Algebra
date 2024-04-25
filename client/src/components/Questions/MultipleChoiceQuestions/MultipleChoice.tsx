@@ -92,9 +92,6 @@ function MultipleChoice(props: Props) {
                                 className="answer"
                                 key={index}
                                 onClick={() =>{
-                                        console.log("GOTYA")
-                                        console.log(shuffledAnswers)
-                                        console.log(index)
                                         submitAnswer(shuffledAnswers[index])
                                 }
                                 }

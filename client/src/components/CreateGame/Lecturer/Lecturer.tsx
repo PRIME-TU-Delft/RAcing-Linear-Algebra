@@ -31,7 +31,8 @@ interface Props {
     theme: string
     ghostTeams: Ghost[]
     roundDuration: number
-}
+    onLoaded: () => void
+} 
 
 //data to be displayed
 interface TeamStats {
@@ -96,7 +97,6 @@ function Lecturer(props: Props) {
     //when 10minutes count down is up
     const timeUp = () => {
         //round ends
-        console.log("HERRREEEE")
         socket.emit("endRound")
     }
 
@@ -109,6 +109,7 @@ function Lecturer(props: Props) {
 
     // Give warning before refreshing page to prevent disconnecting
     useEffect(() => {
+        props.onLoaded()
         const unloadCallback = (event: BeforeUnloadEvent) => {
           event.preventDefault();
           event.returnValue = "";
@@ -163,7 +164,7 @@ function Lecturer(props: Props) {
     return (
         <div>
             <div className="lecturer-header">
-                <div className="t-name">TeamName: {props.teamName}</div>
+                <div className="t-name">Team Name: {props.teamName}</div>
                 <div className="countdown">
                     <div>Time: {LecturerService.formatTime(props.roundDuration - usedTime)}</div>
                 </div>

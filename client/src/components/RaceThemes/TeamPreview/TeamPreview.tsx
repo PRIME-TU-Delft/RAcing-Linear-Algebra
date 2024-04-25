@@ -20,7 +20,6 @@ interface Props {
 }
 
 function TeamPreview(props: Props) {
-    props.onStartGame()
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
     const [showMainTeam, setShowMainTeam] = useState<boolean>(false)
     const [sortedTeams, setSortedTeams] = useState<Ghost[]>([])

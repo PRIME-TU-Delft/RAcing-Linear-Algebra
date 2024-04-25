@@ -1,57 +1,70 @@
 import React, { useEffect, useState } from "react"
 import "./Waiting.css"
 import rightArrow from "../../img/right-arrow.png"
+import StationDisplay from "../RaceThemes/StationDisplay/StationDisplay"
+import { title } from "process"
+
+interface Tip {
+    title: string,
+    content: string
+}
 
 export default function Tooltip() {
-    const [tips, setTips] = useState<string>("")
-    const [tipIndex, setTipIndex] = useState<number>(0)
+    const [activeIndices, setActiveIndices] = useState<number[]>([0, 1, 2, 3])
 
     const tipsArray = [
-        "It is reccomended to play on a desktop, laptop or tablet",
-        "The beggining of each round is composed of a set mandatory questions that everyone has to answer",
-        "The team score is the average of all the individual scores",
-        "After the mandatory questions, you can answer bonus questions where you can choose their difficulty",
-        "Answering multiple questions right in a row will provide you with bonus points",
-        "You will be competing against other classrooms, so try and help each other as much as possible",
+        {
+            title: "Recommended device",
+            content: "It is reccomended to play on a desktop, laptop or tablet."
+        },
+        {
+            title: "First questions",
+            content: "The beggining of each round is composed of a set mandatory questions that everyone has to answer."
+        },
+        {
+            title: "Team score",
+            content: "The team score is the aggregation of all of the individual player scores."
+        },
+        {
+            title: "Choosing difficulty",
+            content: "After the initial mandatory questions, you can answer bonus questions where you can choose their difficulty."
+        },
+        {
+            title: "Streaks",
+            content: "Answering multiple questions right in a row will result in a streak, giving you bonus points.",
+        },
+        {
+            title: "Collaboration",
+            content: "You are strongly encouraged to help your classmates when solving the questions. Don't overfocus on your individual score, it's the team score that counts!",
+        },
     ]
+
+    const getNewTipIndex = () => {
+        const currentLastIndex = activeIndices[activeIndices.length - 1]
+        if (currentLastIndex >= tipsArray.length - 1) return 0
+        else return currentLastIndex + 1
+    }
+
+    const updateAciveTips = () => {
+        const newLastIndex = getNewTipIndex()
+        const newActiveIndices = [activeIndices[activeIndices.length - 3], activeIndices[activeIndices.length - 2], activeIndices[activeIndices.length - 1], newLastIndex]
+        setActiveIndices(curr => [...newActiveIndices])
+    }
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTipIndex((index) => {
-                const nextIndex = index + 1
-                return nextIndex >= tipsArray.length ? 0 : nextIndex
-            })
-        }, 5000)
+            updateAciveTips()
+        }, 7000)
 
         return () => {
             clearInterval(interval)
         }
-    }, [])
-
-    useEffect(() => {
-        setTips(tipsArray[tipIndex])
-    }, [tipIndex])
-
-    function nextTip(index: number) {
-        if (index === tipsArray.length - 1) {
-            setTipIndex(0)
-        } else {
-            setTipIndex(index + 1)
-        }
-    }
-
-    function lastTip() {
-        if (tipIndex === 0) {
-            setTipIndex(tipsArray.length - 1)
-        } else {
-            setTipIndex((index) => index - 1)
-        }
-    }
+    }, [activeIndices])
 
     return (
         <>
             <div className="tooltip-container">
-                <div className="tooltip-skip" onClick={lastTip}>
+                {/* <div className="tooltip-skip" onClick={lastTip}>
                     <img
                         src={rightArrow}
                         alt="arrow"
@@ -67,7 +80,12 @@ export default function Tooltip() {
                         className="tooltip-right-arrow"
                         data-testid="tooltip-right-arrow"
                     />
-                </div>
+                </div> */}
+                <StationDisplay
+                stations={tipsArray}
+                activeIndices={activeIndices}
+                nextTip={() => updateAciveTips()}
+               ></StationDisplay>
             </div>
         </>
     )
