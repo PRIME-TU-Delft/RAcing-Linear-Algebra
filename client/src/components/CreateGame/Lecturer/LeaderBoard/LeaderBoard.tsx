@@ -1,126 +1,127 @@
-import React, { useState, useEffect } from "react"
-import "./LeaderBoard.css"
+import React, { useEffect, useState } from "react";
+import "./Leaderboard.css"
+import { Ghost } from "../../../RaceThemes/SharedUtils";
+import { getColorForStudy } from "../../../RaceThemes/Ghosts/GhostService";
+import { a, useTrail } from "react-spring";
+import { useNavigate } from "react-router-dom";
+import socket from "../../../../socket";
 
 interface Props {
-    teamname: string // your team name
-    yourScore: number
-    yourAccuracy: number
-    yourCheckPoint: string
-
-    //teams data to be displayed
-    teams: Teams[]
+    teamname: string
+    teamScore: number
+    teamStudy: string
+    ghosts: Ghost[]
+    lapsCompleted: number
+    isLecturer: boolean
 }
 
-interface Teams {
-    //Team object to store the data of teams to be displayed on database
-    name: string
-    score: number
-    accuracy: number
-    checkpoint: string
+interface LeaderboardItem {
+    teamname: string,
+    lapsCompleted: number,
+    score: number,
+    study: string,
+    isMainTeam: boolean
 }
 
-function LeaderBoard(props: Props) {
-    const [teams, setTeams] = useState<Teams[]>([...props.teams])
+// Name Study Laps Score
 
-    //sort the teams in descending order of score
-    teams.sort((a, b) => b.score - a.score)
+function Leaderboard(props: Props) {
+    const [sortedLeaderboardItems, setSortedLeaderboardItems] = useState<LeaderboardItem[]>([])
+    const navigate = useNavigate()
 
-    //window size
-    const [dimensions, setDimensions] = React.useState({
-        height: window.innerHeight,
-        width: window.innerWidth,
+    useEffect(() => {
+        const team = {
+            teamname: props.teamname,
+            lapsCompleted: props.lapsCompleted,
+            score: props.teamScore,
+            study: props.teamStudy,
+            isMainTeam: true
+        }
+
+        const ghosts = props.ghosts.map(x => ({
+            teamname: x.teamName,
+            lapsCompleted: x.lapsCompleted,
+            score: Math.floor(x.timeScores[x.timeScores.length - 1].score),
+            study: x.study,
+            isMainTeam: false
+        }))
+
+        const leaderboardItems = [...ghosts, team]
+        leaderboardItems.sort(function(a, b) {
+            return b.score - a.score;
+        });
+
+        setSortedLeaderboardItems(curr => [...leaderboardItems])
+    }, [props])
+
+    const leaderboardAnimation = useTrail(sortedLeaderboardItems.length, {
+        config: { mass: 5, tension: 2000, friction: 200, duration: 200},
+        from: { opacity: 0, y: -10 },
+        to: { opacity: 1, y: 0 },
     })
 
-    // find the position of a specific team
-    const findPosition = (
-        teamName: string,
-        score: number,
-        accuracy: number
-    ) => {
-        const index = teams.findIndex(
-            (team) =>
-                team.name == teamName &&
-                team.score == score &&
-                team.accuracy == accuracy
-        )
-        if (index + 1 == 0) return 1
-        return index + 1
-    }
-
-    //handle window resize
-    useEffect(() => {
-        function handleResize() {
-            setDimensions({
-                height: window.innerHeight,
-                width: window.innerWidth,
-            })
-        }
-        window.addEventListener("resize", handleResize)
-        return () => {
-            window.removeEventListener("resize", handleResize)
-        }
-    }, [])
-
-    // make sure fonts and other components resize with window
-    const getClassName = () => {
-        if (dimensions.width < 1000 || dimensions.height < 300) {
-            return "-small"
-        } else if (dimensions.width < 1500 || dimensions.height < 500) {
-            return "-medium"
-        } else return ""
-    }
-
-    //only display top10 teams
-    const top10Teams = teams.slice(0, 10)
-
-    return (
-        <div>
-            <div className="leaderboard-title">Leaderboard</div>
-            <div className="your-position">
-                Your Position:{" "}
-                {findPosition(
-                    props.teamname,
-                    props.yourScore,
-                    props.yourAccuracy
-                )}
+    return(
+        <div className="leaderboard-background">
+            <div className="leaderboard-title">
+                Leaderboard
             </div>
-            <table className={"leaderboard-table" + getClassName()}>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Accuracy</th>
-                        <th>Checkpoint</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {top10Teams.map((item, rank) => (
-                        <tr
-                            key={rank}
-                            className={
-                                item.name == props.teamname &&
-                                item.score == props.yourScore &&
-                                item.accuracy == props.yourAccuracy
-                                    ? "highlighted-row"
-                                    : "normal-row"
-                            }
-                        >
-                            <td className="leaderboard-rank">{rank + 1}</td>
-                            <td className="leaderboard-name">{item.name}</td>
-                            <td className="leaderboard-accuracy">
-                                {item.accuracy}%
-                            </td>
-                            <td className="leaderboard-checkpoints">
-                                {item.checkpoint}
-                            </td>
-                            <td className="leaderboard-score">{item.score}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="header-leaderboard-row header-container">
+                <div className="row">
+                    <div className="col-1">
+                        Rank
+                    </div>
+                    <div className="col-5">
+                        Name
+                    </div>
+                    <div className="col-1"></div>
+                    <div className="col-2 text-center">
+                        Score
+                    </div>
+                    <div className="col-1 text-center">
+                        Study
+                    </div>
+                    <div className="col-1 text-center">
+                        Laps
+                    </div>
+                </div>
+            </div>
+            <div className="leaderboard-container">
+                
+                {leaderboardAnimation.map((props, index) => (
+                    <a.div style={props} className={"leaderboard-item rounded" + (sortedLeaderboardItems[index].isMainTeam ? " main-team-item" : "")} key={index}>
+                        <div className="row">
+                            <div className="col-1">
+                                {index  + 1}
+                                <span className="first-place-crown">{index == 0 ? "👑" : ""}</span>
+                            </div>
+                            <div className="col-5">
+                                {sortedLeaderboardItems[index].teamname}
+                            </div>
+                            <div className="col-1"></div>
+                            <div className="col-2 text-center">
+                                {sortedLeaderboardItems[index].score}
+                            </div>
+                            <div className="col-1 text-center">
+                                {sortedLeaderboardItems[index].study}
+                            </div>
+                            <div className="col-1 text-center">
+                                {sortedLeaderboardItems[index].lapsCompleted}
+                            </div>
+                        </div>
+                    </a.div>
+                ))}
+            </div>
+            {props.isLecturer ? (
+                <div className="leaderboard-continue-button" 
+                    onClick={() => {
+                        socket.emit("getLecturerStatistics")
+                        navigate("/Statistics")
+                    }}>
+                        Continue
+                </div>
+            ) : null}
         </div>
     )
 }
 
-export default LeaderBoard
+export default Leaderboard

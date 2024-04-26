@@ -12,7 +12,11 @@ interface Statistic {
     incorrectlyAnswered: number // number of players who incorrectly answered the question
 }
 
-function QuestionStatistics() {
+interface Props {
+    onContinue: () => void
+}
+
+function QuestionStatistics(props: Props) {
     const [statistics, setStatistics] = useState<Statistic[]>([])
 
     /**
@@ -77,6 +81,12 @@ function QuestionStatistics() {
 
     return (
         <div>
+            <div className="question-statistics-title">
+                Question Statistics
+            </div>
+            <div className="question-statistics-continue" onClick={() => props.onContinue()}>
+                Continue
+            </div>
             {enterAnimation.map(({ ...style }, index) => (
                 <a.div key={index} className="question-statistic" style={style}>
                     <div className="row">

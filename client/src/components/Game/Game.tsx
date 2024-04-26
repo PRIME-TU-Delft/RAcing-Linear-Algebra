@@ -33,7 +33,8 @@ export interface IQuestion {
 interface Props {
     theme: string
     roundDuration: number
-    onLoaded: () => void
+    roundStarted: boolean
+    onRoundEnded: () => void
 }
 
 interface Statistic {
@@ -71,20 +72,34 @@ function Game(props: Props) {
         //shows an alert when try to reload or leave
     }
 
-    useEffect(() => props.onLoaded(), [])
-
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     window.addEventListener("load", () => navigate("/"))
 
     socket.emit("getMandatoryNum")
+    // useEffect(() => {
+    //     if (props.roundStarted) {
+    //         setShowInfoModal(false)
+    //         setScore(0)
+    //         setRightAnswers(0)
+    //         setWrongAnswers(0)
+    //         setStreak(0)
+    //         setMaxStreak(0)
+    //         socket.emit("getNewQuestion")
+    //         console.log("NEW")
+    //         socket.emit("getMandatoryNum")
+    //         setShowRoundOverModal(false)
+    //         setShowPopup(true)
+    //         setCountdown(3)
+    //     }
+    // }, [props.roundStarted])
 
     useEffect(() => {
-
         socket.off("round-ended").on("round-ended", () => {
             setShowInfoModal(false)
             setShowRoundOverModal(true)
             socket.emit("getResults")
+            props.onRoundEnded()
         })
 
         socket.off("round-started").on("round-started", (roundDuration: number) => {

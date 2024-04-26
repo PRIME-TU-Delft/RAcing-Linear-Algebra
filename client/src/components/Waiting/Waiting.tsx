@@ -14,7 +14,6 @@ interface Props {
     theme: string
     setTheme: React.Dispatch<React.SetStateAction<string>>
     lobbyId: number
-    startGameCountdown: boolean
 }
 
 function Waiting(props: Props) {
@@ -51,10 +50,6 @@ function Waiting(props: Props) {
             window.removeEventListener("beforeunload", handleBeforeUnload)
         }
     }, [socket])
-
-    useEffect(() => {
-        if (props.startGameCountdown) navigate("/TeamPreview")
-    }, [props.startGameCountdown])
 
     return (
         <div className="waiting">

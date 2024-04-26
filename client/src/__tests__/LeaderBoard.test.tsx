@@ -1,6 +1,6 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
-import LeaderBoard from "../components/CreateGame/Lecturer/LeaderBoard/LeaderBoard"
+import LeaderBoard from "../components/CreateGame/Lecturer/LeaderBoard/Leaderboard"
 
 describe("LeaderBoard component", () => {
     const teamName = "Your Team"

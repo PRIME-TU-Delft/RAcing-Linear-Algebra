@@ -5,7 +5,6 @@ import socket from "../../../socket"
 import useWindowDimensions from "../../RaceThemes/Tracks/WindowDimensions"
 import StationDisplay from "../../RaceThemes/StationDisplay/StationDisplay"
 import CheckPoint from "./LeaderBoard/CheckPoint"
-import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
 import RaceTheme from "../../RaceThemes/RaceTheme"
 import LecturerService from "./LecturerService"
@@ -31,7 +30,6 @@ interface Props {
     theme: string
     ghostTeams: Ghost[]
     roundDuration: number
-    onLoaded: () => void
 } 
 
 //data to be displayed
@@ -98,18 +96,11 @@ function Lecturer(props: Props) {
     const timeUp = () => {
         //round ends
         socket.emit("endRound")
-    }
-
-    //show statistic screen
-    const showStatistic = () => {
-        setShowLeaderBoard((cur) => false)
-        setRoundFinished((cur) => true)
-        socket.emit("getLecturerStatistics")
+        navigate("/Leaderboard")
     }
 
     // Give warning before refreshing page to prevent disconnecting
     useEffect(() => {
-        props.onLoaded()
         const unloadCallback = (event: BeforeUnloadEvent) => {
           event.preventDefault();
           event.returnValue = "";
@@ -128,9 +119,6 @@ function Lecturer(props: Props) {
 
     // Socket changes
     useEffect(() => {
-        socket.on("game-ended", () => {
-            setGameEnds(true)
-        })
 
         socket.on("get-checkpoints", (result: [string, number][]) => {
             const formattedCheckpointData = LecturerService.transformCheckpointData(result)
@@ -145,22 +133,6 @@ function Lecturer(props: Props) {
 
     }, [socket])
 
-    //reset everything when new round start
-    const startNewRound = () => {
-        socket.emit("startNextRound")
-        socket.emit("getGhostTeams")
-
-        //if no more rounds, end game
-        if (gameEnds) {
-            navigate("/endGame")
-        } else {
-            // setScore(0)
-            setLocation("Home")
-            // setAccuracy(100)
-            setRoundFinished((cur) => false)
-        }
-    }
-
     return (
         <div>
             <div className="lecturer-header">
@@ -174,7 +146,6 @@ function Lecturer(props: Props) {
                     <div>Accuracy: {scores.currentAccuracy}%</div>
                 </div>
             </div>
-            {!roundFinished ? (
                 <div
                     style={{ width: "100%", height: `${height - 100}px` }}
                     className="map"
@@ -190,21 +161,6 @@ function Lecturer(props: Props) {
                             showCheckPoint={() => showCheckPoint()}
                         ></RaceTheme>
                 </div>
-            ) : (
-                <div className="statistics-wrapper">
-                    <h1>Questions</h1>
-
-                    <button
-                        className="next-btn"
-                        onClick={() => {
-                            startNewRound()
-                        }}
-                    >
-                        <p className="forward-arrow">{"\u2192"}</p>
-                    </button>
-                    <QuestionStatistics></QuestionStatistics>
-                </div>
-            )}
 
             {showCP && (
                 <div className="checkpoint-title">
@@ -222,27 +178,6 @@ function Lecturer(props: Props) {
                         onClick={() => setShowCP(false)}
                     >
                         <p className="x">X</p>
-                    </button>
-                </div>
-            )}
-            {showLeaderBoard && (
-                <div className="leaderboard-wrapper">
-                    <LeaderBoard
-                        data-testid="leaderboard"
-                        teamname={props.teamName}
-                        yourScore={scores.currentPoints}
-                        yourAccuracy={scores.currentAccuracy}
-                        yourCheckPoint={location}
-                        teams={teamScores}
-                    ></LeaderBoard>
-                    <p>It is {showLeaderBoard ? "true" : "false"}</p>
-                    <button
-                        className="next-btn"
-                        onClick={() => {
-                            showStatistic()
-                        }}
-                    >
-                        <p className="forward-arrow">{"\u2192"}</p>
                     </button>
                 </div>
             )}

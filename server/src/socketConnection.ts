@@ -161,10 +161,7 @@ module.exports = {
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     startLobby(lobbyId)
                     try {
-                        console.log(study)
-                        console.log(topics)
                         const rounds = await getIRounds(study, topics)
-                        console.log(rounds)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
@@ -275,7 +272,8 @@ module.exports = {
             socket.on("endRound", async () => {
                 const lobbyId = socketToLobbyId.get(socket.id)
                 if (lobbyId == undefined) return
-
+                
+                
                 io.to(`players${lobbyId}`).emit("round-ended")
                 const game: Game = getGame(lobbyId)
 

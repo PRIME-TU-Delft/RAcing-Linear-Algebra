@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import React, { useContext } from "react";
+import { motion, useAnimationControls } from "framer-motion";
+import React, { useContext, useEffect, useState } from "react";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { formatRacePositionText, getColorForRaceLap, getZIndexValues } from "../../RaceService";
 import { RacePathContext } from "../../../../contexts/RacePathContext";
@@ -16,9 +16,45 @@ interface Props {
 function MainVehicle(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
+    const [currentProgress, setCurrentProgress] = useState(0)
+
     const getNumberOfRaceLapsCompleted = (totalPoints: number, currentPoints: number) => {
         return Math.floor(currentPoints / totalPoints)
     }
+    const animationControls = useAnimationControls()
+
+    useEffect(() => {
+        playAnimation()
+    }, [props.progressPercent])
+
+    const playAnimation = () => {
+        // Since the team can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
+        if (props.progressPercent < currentProgress) {
+            animationControls.start({   // First, complete the lap
+                offsetDistance: "100%",
+                transition: { duration: 1.5 }
+            }).then((val) => {
+                animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
+                    offsetDistance: "0%",
+                    transition: { delay: 1000 }
+                })
+            }).then((val) => {
+                animationControls.start({   // Finally, play the animation leading to the new progress value
+                    offsetDistance: (props.progressPercent * 100).toString() + "%",
+                    transition: { duration: 1, delay: 0.5 }
+                })
+                setCurrentProgress(curr => props.progressPercent)
+            })
+        }
+        else {
+            animationControls.start({   // Else, just update the progress normally
+                offsetDistance: (props.progressPercent * 100).toString() + "%",
+                transition: { duration: 1.5 }
+            })
+            setCurrentProgress(curr => props.progressPercent)
+        }
+    }
+
     return(
         <div>
             {/* Displays the main vehicle, representing the team currently playing */}
@@ -30,9 +66,7 @@ function MainVehicle(props: Props) {
                     zIndex: getZIndexValues().mainVehicle
                 }}
                 initial={{ offsetDistance: "0%"}}
-                animate={{ 
-                    offsetDistance: `${props.progressPercent * 100}%`
-                }}
+                animate={animationControls}
                 transition={{
                     ease: "easeInOut",
                     duration: 2,

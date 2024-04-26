@@ -1,6 +1,6 @@
 import TrainThemeSprites from "./Sprites/TrainThemeSprites"
 import BoatThemeSprites from "./Sprites/BoatThemeSprites"
-import { Component, PercentCoordinate, Point } from "./SharedUtils"
+import { Component, PercentCoordinate, Point, RacePathObject } from "./SharedUtils"
 
 export function formatRacePositionText(position: number) {
     switch (position) {
@@ -55,7 +55,7 @@ export function getZIndexValues() {
     return values
 }
 
-export function getRacePathObject(trackPoints: PercentCoordinate[], containerWidth: number, containerHeight: number, offsetX = 0, offsetY = 0) {
+export function getRacePathObject(trackPoints: PercentCoordinate[], containerWidth: number, containerHeight: number, offsetX = 0, offsetY = 0): RacePathObject  {
     const points: Point[] = [] // list of points computed from track coordinates
     let svgPath = "M" // svg path that the team takes
 
