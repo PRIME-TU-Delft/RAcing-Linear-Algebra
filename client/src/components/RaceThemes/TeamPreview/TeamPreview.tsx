@@ -67,7 +67,7 @@ function TeamPreview(props: Props) {
     const teamsAnimationRef = useSpringRef()
     const teamsAnimation = useTrail(sortedTeams.length, {
         ref: teamsAnimationRef,
-        config: { mass: 5, tension: 2000, friction: 200, duration: 400},
+        config: { mass: 5, tension: 2000, friction: 200, duration: 200},
         from: { opacity: 0, x: 10 },
         to: { opacity: 1, x: 20 },
         onRest: () => setNumberOfGhostTeamAnimationsCompleted(curr => curr + 1)
@@ -83,7 +83,7 @@ function TeamPreview(props: Props) {
         if (showMainTeam) {
             setTimeout(() => {
                 setStartCountdown(curr => true)
-            }, 2000);
+            }, 1000);
         }
     }, [showMainTeam])
 
@@ -91,7 +91,7 @@ function TeamPreview(props: Props) {
         if (numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) setShowMainTeam(curr => true)
     }, [numberOfGhostTeamAnimationsCompleted])
 
-    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.2], 10000)
+    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.15], 10000)
 
     return(
         <div className="team-preview-body">
