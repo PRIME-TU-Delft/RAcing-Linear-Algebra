@@ -3,7 +3,6 @@ import { useState, useEffect } from "react"
 // Gets current window dimnesions
 function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
-    console.log(width)
     return {
         width,
         height,

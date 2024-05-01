@@ -26,8 +26,6 @@ function MultipleChoice(props: Props) {
     // Upon rendering parse the latex and display it for the answers. This will also dinamically
     // render divs according to the number of answers available.
     useEffect(() => {
-        console.log("HERE")
-        console.log(props.answers)
         if (props.answers === undefined) return
         const newShuffling = shuffleArray(props.answers)
         
