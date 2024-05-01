@@ -9,7 +9,7 @@ interface Props {
 }
 
 function TimeBar(props: Props) {
-    const timePassed = useContext(TimeContext);
+    const timeLeft = useContext(TimeContext);
     const [timeText, setTimeText] = useState<string>("00:00")
 
     const getMinutes = (currentTimeInSeconds: number) => {
@@ -29,30 +29,28 @@ function TimeBar(props: Props) {
     }
 
     const changeTimeBarColorBasedOnTime = () => {
-        if ((props.roundDuration - timePassed) / props.roundDuration >= 0.5) return "success"
-        else if ((props.roundDuration - timePassed) / props.roundDuration >= 0.25) return "warning"
+        if (timeLeft / props.roundDuration >= 0.5) return "success"
+        else if (timeLeft / props.roundDuration >= 0.25) return "warning"
         else return "danger"
     }
 
     const getTimeBarStyling = () => {
-        if ((props.roundDuration - timePassed) / props.roundDuration >= 0.25) return "time-bar"
+        if (timeLeft / props.roundDuration >= 0.25) return "time-bar"
         else return "time-bar pulsing-time-bar"
     }
 
     useEffect(() => {
-        if (timePassed < props.roundDuration) {
-            const timeInSeconds = props.roundDuration - timePassed
-            const minutes = getMinutes(timeInSeconds)
-            const seconds = getSeconds(timeInSeconds)
+        if (timeLeft < props.roundDuration) {
+            const minutes = getMinutes(timeLeft)
+            const seconds = getSeconds(timeLeft)
             setTimeText(curr => minutes + ":" + seconds)
         }
-    }, [timePassed])
+    }, [timeLeft])
 
     return(
         <div className="time-container">
             <div className="time-title">Time: {timeText}</div>
-            <ProgressBar animated variant={changeTimeBarColorBasedOnTime()} now={((props.roundDuration - timePassed) / props.roundDuration) * 100} className={getTimeBarStyling()}/>
-
+            <ProgressBar animated variant={changeTimeBarColorBasedOnTime()} now={(timeLeft / props.roundDuration) * 100} className={getTimeBarStyling()}/>
         </div>
     )
 }

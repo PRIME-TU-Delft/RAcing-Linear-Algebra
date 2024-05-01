@@ -77,22 +77,18 @@ function Game(props: Props) {
     window.addEventListener("load", () => navigate("/"))
 
     socket.emit("getMandatoryNum")
-    // useEffect(() => {
-    //     if (props.roundStarted) {
-    //         setShowInfoModal(false)
-    //         setScore(0)
-    //         setRightAnswers(0)
-    //         setWrongAnswers(0)
-    //         setStreak(0)
-    //         setMaxStreak(0)
-    //         socket.emit("getNewQuestion")
-    //         console.log("NEW")
-    //         socket.emit("getMandatoryNum")
-    //         setShowRoundOverModal(false)
-    //         setShowPopup(true)
-    //         setCountdown(3)
-    //     }
-    // }, [props.roundStarted])
+
+    useEffect(() => {
+        setShowInfoModal(false)
+        setScore(0)
+        setRightAnswers(0)
+        setWrongAnswers(0)
+        setStreak(0)
+        setMaxStreak(0)
+        setShowRoundOverModal(false)
+        setShowPopup(true)
+        setCountdown(3)
+    }, [props.roundStarted])
 
     useEffect(() => {
         socket.off("round-ended").on("round-ended", () => {
@@ -100,20 +96,6 @@ function Game(props: Props) {
             setShowRoundOverModal(true)
             socket.emit("getResults")
             props.onRoundEnded()
-        })
-
-        socket.off("round-started").on("round-started", (roundDuration: number) => {
-            setShowInfoModal(false)
-            setScore(0)
-            setRightAnswers(0)
-            setWrongAnswers(0)
-            setStreak(0)
-            setMaxStreak(0)
-            socket.emit("getNewQuestion")
-            socket.emit("getMandatoryNum")
-            setShowRoundOverModal(false)
-            setShowPopup(true)
-            setCountdown(3)
         })
 
         socket.off("rightAnswer").on("rightAnswer", (score: number) => {

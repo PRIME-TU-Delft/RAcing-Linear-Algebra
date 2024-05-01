@@ -23,6 +23,7 @@ import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
 import { ScoreContext } from "./contexts/ScoreContext"
 import Leaderboard from "./components/CreateGame/Lecturer/LeaderBoard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
+import { useTimer } from "react-timer-hook"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -31,18 +32,37 @@ function App() {
     const [theme, setTheme] = useState("train")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
-    const roundDuration = 60
-    const [timeUsed, setTimeUsed] = useState<number>(0)
+    const [roundDuration, setRoundDuration] = useState<number>(0)
     const [ghostTeams, setGhostTeams] = useState<Ghost[]>([])
-
+    const [startTimer, setStartTimer] = useState<boolean>(false)
     const [fullLapScoreValue, setFullLapScoreValue] = useState<number>(1)
     const [currentScore, setCurrentScore] = useState<number>(0)
     const [currentAccuracy, setCurrentAccuracy] = useState<number>(0)
     const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
-
     const navigate = useNavigate()
+
+    const timerExpirationHandler = () => {
+        if (roundDuration > 0) {
+            if (!isPlayer) socket.emit("endRound")
+            navigate("/Leaderboard")
+        }
+    }
+
+    const {
+        totalSeconds,
+        seconds,
+        minutes,
+        hours,
+        days,
+        isRunning,
+        start,
+        pause,
+        resume,
+        restart,
+      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler });
+
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
@@ -64,37 +84,37 @@ function App() {
         setTopic((current) => topic)
     }
 
-    const startGameTimer = () => {
-        const interval = setInterval(() => {
-            if (timeUsed < roundDuration) {
-                console.log(timeUsed)
-                console.log(roundDuration)
-                setTimeUsed((timeUsed) => timeUsed + 1)
-            } else {
-                if (!isPlayer) socket.emit("endRound")
-                console.log(timeUsed)
-                console.log(roundDuration)
-                navigate("/Leaderboard")
-                clearInterval(interval)
-            }
-        }, 1000)
-    }
-
     const resetValues = () => {
         setCurrentScore(curr => 0)
         setCurrentAccuracy(curr => 0)
-        setTimeUsed(curr => 0)
+        setStartTimer(curr => false)
     }
 
+    useEffect(() => {
+        if (startTimer && roundDuration > 0) {
+            console.log("ROUND DURATION: " + roundDuration.toString())
+            const time = new Date()
+            time.setSeconds(time.getSeconds() + roundDuration)
+            restart(time)
+        }
+    }, [roundDuration, startTimer])
+
     const gameStartHandler = () => {
+        setStartTimer(curr => true)
+
         if (isPlayer) {
-            startGameTimer()
             navigate("/Game")
         }
         else {
-            startGameTimer()
             navigate("/Lecturer")
         }
+    }
+
+    const initializeRoundValues = (roundDuration: number) => {
+        resetValues()
+        setRoundDuration(curr => 60) // CHANGE
+        setRoundStarted(curr => true)
+        navigate("/TeamPreview")
     }
 
     const nextRoundHandler = () => {
@@ -110,18 +130,13 @@ function App() {
         }
 
         function onRoundStarted(roundDuration: number) {
-            resetValues()
-            navigate("/TeamPreview")
-            // setRoundDuration(curr => 60) // CHANGE
-            setRoundStarted(curr => true)
+            initializeRoundValues(roundDuration)
         }
 
         function onRoundDuration(roundDuration: number) {
-            // setRoundDuration(curr => 60) // CHANGE
-            resetValues()
             socket.emit("getGhostTeams")
             socket.emit("getRaceTrackEndScore")
-            navigate("/TeamPreview")
+            initializeRoundValues(roundDuration)
         }
 
         function onThemeChange(theme: string) {
@@ -141,6 +156,8 @@ function App() {
         }
 
         function onRaceStarted() {
+            socket.emit("getNewQuestion")
+            socket.emit("getMandatoryNum")
             gameStartHandler()
         }
 
@@ -158,6 +175,23 @@ function App() {
         socket.on("score", onScoreUpdate)
         socket.on("game-ended", onGameEnded)
     }, [])
+
+    // useEffect(() => {
+    //     if (timeUsed < roundDuration) {
+    //         const currentTime = new Date()
+    //         const timeDifference = endOfRound.getTime() - currentTime.getTime()
+    //         const remainingTime = Math.floor(timeDifference / 1000)
+
+    //         const newTimeUsed = roundDuration - remainingTime
+    //         console.log(newTimeUsed)
+    //         setTimeUsed(curr => newTimeUsed)
+    //     } else if (roundDuration > 0) {
+    //         if (!isPlayer) socket.emit("endRound")
+    //         console.log(timeUsed)
+    //         console.log(roundDuration)
+    //         navigate("/Leaderboard")
+    //     }
+    // }, [timeUsed, endOfRound])
 
     return (
         <div className="App">
@@ -214,8 +248,10 @@ function App() {
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
                                 onStartGame={() => {
-                                    socket.emit("beginRace")
-                                    gameStartHandler()}
+                                    if (!isPlayer)  {
+                                        socket.emit("beginRace")
+                                        gameStartHandler()
+                                }}
                                 }></TeamPreview>
                         }>
                 </Route>
@@ -230,7 +266,7 @@ function App() {
                     }
                 ></Route>
                 <Route path="/Game" element={
-                    <TimeContext.Provider value={timeUsed}>
+                    <TimeContext.Provider value={seconds}>
                         <RaceDataContext.Provider value={{
                             theme: theme,
                             ghostTeams: ghostTeams,
@@ -246,7 +282,7 @@ function App() {
                 <Route
                     path="/Lecturer"
                     element={
-                        <TimeContext.Provider value={timeUsed}>
+                        <TimeContext.Provider value={seconds}>
                             <RaceDataContext.Provider value={{
                             theme: theme,
                             ghostTeams: ghostTeams,

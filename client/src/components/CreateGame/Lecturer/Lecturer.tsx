@@ -138,7 +138,7 @@ function Lecturer(props: Props) {
             <div className="lecturer-header">
                 <div className="t-name">Team Name: {props.teamName}</div>
                 <div className="countdown">
-                    <div>Time: {LecturerService.formatTime(props.roundDuration - usedTime)}</div>
+                    <div>Time: {LecturerService.formatTime(usedTime)}</div>
                 </div>
 
                 <div className="total-score">
