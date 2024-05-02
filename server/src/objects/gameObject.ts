@@ -154,6 +154,7 @@ export class Game {
         if (user === undefined) throw Error("This user is not in this game")
 
         const question = user.currentQuestion
+        const finalAnswer = question.answer
         const result = checkAnswerEqual(question, question.answer, answer)
         const usedAttempts = user.questions.get(question)?.attempts ?? 0
         let score = 0
