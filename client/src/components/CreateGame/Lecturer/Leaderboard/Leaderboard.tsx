@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Temp.css"
+import "./Leaderboard.css"
 import { Ghost } from "../../../RaceThemes/SharedUtils";
 import { getColorForStudy } from "../../../RaceThemes/Ghosts/GhostService";
 import { a, useTrail } from "react-spring";

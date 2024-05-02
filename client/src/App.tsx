@@ -21,7 +21,7 @@ import { RaceDataContext } from "./contexts/RaceDataContext"
 import LecturerService from "./components/CreateGame/Lecturer/LecturerService"
 import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
 import { ScoreContext } from "./contexts/ScoreContext"
-import Leaderboard from "./components/CreateGame/Lecturer/Temp/Temp"
+import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
 import { useTimer } from "react-timer-hook"
 
