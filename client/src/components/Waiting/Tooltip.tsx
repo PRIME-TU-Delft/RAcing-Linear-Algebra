@@ -14,29 +14,45 @@ export default function Tooltip() {
 
     const tipsArray = [
         {
-            title: "Recommended device",
-            content: "It is reccomended to play on a desktop, laptop or tablet."
+            title: "Recommended Device",
+            content: "It is recommended to play on a desktop, laptop, or tablet."
         },
         {
-            title: "First questions",
-            content: "The beggining of each round is composed of a set mandatory questions that everyone has to answer."
+            title: "First Questions",
+            content: "The beginning of each round is composed of a set of mandatory questions that everyone has to answer."
         },
         {
-            title: "Team score",
-            content: "The team score is the aggregation of all of the individual player scores."
+            title: "Team Score",
+            content: "The team score is the aggregation of all the individual player scores."
         },
         {
-            title: "Choosing difficulty",
+            title: "Choosing Difficulty",
             content: "After the initial mandatory questions, you can answer bonus questions where you can choose their difficulty."
         },
         {
             title: "Streaks",
-            content: "Answering multiple questions right in a row will result in a streak, giving you bonus points.",
+            content: "Answering multiple questions correctly in a row will result in a streak, giving you bonus points."
         },
         {
             title: "Collaboration",
-            content: "You are strongly encouraged to help your classmates when solving the questions. Don't overfocus on your individual score, it's the team score that counts!",
+            content: "You are strongly encouraged to help your classmates when solving the questions. Don't overfocus on your individual score; it's the team score that counts!"
         },
+        {
+            title: "Race Laps",
+            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team. They go from green to yellow to red. And if you perform particularly well, you might even see a few others!"
+        },
+        {
+            title: "Question Attempts",
+            content: "The questions have a different number of attempts based on their difficulty. This means you don't always have to be right on the first try!"
+        },
+        {
+            title: "Lecturer's Screen",
+            content: "While you will be busy answering the questions, the race will be shown on the lecturer's screen. But don't worry, you will still have a minimap on your screen to get a general idea of the race!"
+        },
+        {
+            title: "The Minimap",
+            content: "While answering questions, you will be able to see a minimap on the right of your screen. This reflects the race progress displayed on the lecturer's screen, but in a simplified manner!"
+        }        
     ]
 
     const getNewTipIndex = () => {
@@ -54,7 +70,7 @@ export default function Tooltip() {
     useEffect(() => {
         const interval = setInterval(() => {
             updateAciveTips()
-        }, 7000)
+        }, 10000)
 
         return () => {
             clearInterval(interval)
