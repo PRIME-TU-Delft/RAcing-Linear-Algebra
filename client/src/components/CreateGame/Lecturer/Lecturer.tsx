@@ -95,8 +95,9 @@ function Lecturer(props: Props) {
     //when 10minutes count down is up
     const timeUp = () => {
         //round ends
-        socket.emit("endRound")
-        navigate("/Leaderboard")
+        // console.log("HERE")
+        // socket.emit("endRound")
+        // navigate("/Leaderboard")
     }
 
     // Give warning before refreshing page to prevent disconnecting
