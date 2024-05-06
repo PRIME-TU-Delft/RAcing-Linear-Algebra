@@ -1,8 +1,12 @@
+@font-face {
+    font-family: "Cherry Bomb";
+    src: url("../../../fonts/CherryBombOne-Regular.ttf");
+}
 
 .main-vehicle {
     position: absolute;
     offset-rotate: 0deg;
-    height: 110px;
+    height: 125px;
     display: flex;
     align-items: center;
     animation: pulse 2s infinite;
@@ -18,30 +22,38 @@
 }
 
 .main-vehicle-text {
-    font-size: 24px;
-    font-weight: 700;
-    color: #0021A7;
+    font-size: 22px;
+    color: #F8B700;
+    background-color: #0021A7;
+    font-family: Cherry Bomb, sans-serif;
+    font-weight: 200;
+    padding: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    border-radius: 20%;
+
 }
 
 .minimap-main-vehicle-text {
     position: absolute;
     margin-left: 40px;
+    padding-left: 2px;
     background-color: rgba(255, 255, 255, 0.786);
     border-left: 2px solid;
     border-radius: 20%;
     top: 0;
     margin-top: 15px;
     font-size: 16px;
-    font-weight: 700;
     color: #0021A7;
+    font-family: Cherry Bomb, sans-serif;
 }
 
 .main-vehicle-position-number {
     position: absolute;
-    margin-left: 50px;
-    background-color: rgba(255, 255, 255, 0.786);
-    border-left: 2px solid;
-    border-radius: 20%;
+    margin-left: 52px;
+    /* background-color: rgba(255, 255, 255, 0.786); */
+    background-color: #0021A7;
     top: 0;
 }
 
@@ -50,8 +62,8 @@
     display: flex;
     justify-content: center;
     offset-rotate: 0deg;
-    height: 60px;
-    width: 60px;
+    height: 70px;
+    width: 70px;
     background-color: white;
     animation: shadowPulse 2s infinite;
     
@@ -75,20 +87,20 @@
 
 .lap-completed-text {
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 @keyframes pulse {
     0% {
-        transform: scale(0.92);
+        transform: scale(0.9);
     }
 
     70% {
-        transform: scale(1);
+        transform: scale(1.2);
     }
 
     100% {
-        transform: scale(0.92);
+        transform: scale(0.9);
     }
 }
 

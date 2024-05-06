@@ -7,11 +7,12 @@
 
 .position-number {
     position: absolute;
-    margin-left: 50px;
+    margin-left: 43px;
     background-color: rgba(255, 255, 255, 0.786);
     border-left: 2px solid;
     border-radius: 20%;
     top: 0;
+    font-family: Cherry Bomb, sans-serif;
 }
 
 .closed-ghost {
