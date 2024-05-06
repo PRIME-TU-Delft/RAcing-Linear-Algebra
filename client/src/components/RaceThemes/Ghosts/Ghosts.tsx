@@ -18,6 +18,11 @@ function Ghosts(props: Props) {
     const [showTeamNames, setShowTeamNames] = useState<boolean>(false)  // boolean to indicate whether the ghost team names should be shown in favor of the position for a brief period of time
     const [startShowingGhosts, setStartShowingGhosts] = useState<boolean>(false)    // boolean to begin showing ghosts after the first one moves
     
+    const ghostScoreUpdateHandler = (newScore: number, ghostIndex: number) => {
+        if (!startShowingGhosts) setStartShowingGhosts(curr => true)
+        props.onGhostScoreUpdate(newScore, ghostIndex)
+    }
+
     useEffect(() => {
         // Check whether all data required has been loaded, to prevent errors
         if (!raceData.ghostTeams || raceData.ghostTeams.length == 0 || raceData.ghostTeams[0].timeScores.length == 0) return
@@ -26,17 +31,6 @@ function Ghosts(props: Props) {
         if (usedTime % 30 == 0) {
             setShowTeamNames(curr => true)
             setTimeout(() => setShowTeamNames(curr => false), 5000)
-        }
-
-        for (let i = 0; i < raceData.ghostTeams.length; i++) {
-            // Introduce constants to reduce code repetition
-            const currentTimeScoreIndex = raceData.ghostTeams[i].animationStatus.timeScoreIndex
-            const currentGhostTimePoint = raceData.ghostTeams[i].timeScores[currentTimeScoreIndex].timePoint
-            // If the time matches a ghost's time point, it is time to update its score (make it move)
-            if (currentGhostTimePoint == usedTime) { 
-                if (!startShowingGhosts) setStartShowingGhosts(true)
-                raceData.ghostTeams[i].animationStatus.updateAnimation = true
-            }
         }
     }, [usedTime])
 
@@ -52,7 +46,7 @@ function Ghosts(props: Props) {
                     startShowingGhosts={startShowingGhosts}
                     theme={raceData.theme}
                     keepClosed={props.keepClosed}
-                    onGhostScoreUpdate={(newScore, ghostKey) => props.onGhostScoreUpdate(newScore, ghostKey)}/>
+                    onGhostScoreUpdate={(newScore, ghostKey) => ghostScoreUpdateHandler(newScore, ghostKey)}/>
             ))}
         </div>
     )

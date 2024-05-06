@@ -112,7 +112,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 60) // CHANGE
+        setRoundDuration(curr => 600) // CHANGE
         setRoundStarted(curr => true)
         navigate("/TeamPreview")
     }
@@ -266,7 +266,7 @@ function App() {
                     }
                 ></Route>
                 <Route path="/Game" element={
-                    <TimeContext.Provider value={seconds}>
+                    <TimeContext.Provider value={totalSeconds}>
                         <RaceDataContext.Provider value={{
                             theme: theme,
                             ghostTeams: ghostTeams,
@@ -282,7 +282,7 @@ function App() {
                 <Route
                     path="/Lecturer"
                     element={
-                        <TimeContext.Provider value={seconds}>
+                        <TimeContext.Provider value={totalSeconds}>
                             <RaceDataContext.Provider value={{
                             theme: theme,
                             ghostTeams: ghostTeams,

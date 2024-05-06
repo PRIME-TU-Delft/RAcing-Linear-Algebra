@@ -24,6 +24,7 @@ interface Props {
     }
     setCheckpoint: (data: string) => void
     showCheckPoint: () => void
+    roundDuration: number
 }
 
 function RaceTheme(props: Props) {
@@ -87,7 +88,7 @@ function RaceTheme(props: Props) {
             >
                 <RacePathContext.Provider value={racePath}>
                     <Tracks/>
-                    <RaceStatus keepClosed={false}/>
+                    <RaceStatus keepClosed={false} roundDuration={props.roundDuration}/>
                 </RacePathContext.Provider>
 
                 <Decorations

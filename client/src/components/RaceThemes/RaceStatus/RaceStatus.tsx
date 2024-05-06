@@ -10,15 +10,18 @@ import VehicleImage from "../VehicleImage/VehicleImage";
 import { motion } from "framer-motion";
 import { RacePathContext } from "../../../contexts/RacePathContext";
 import MainVehicle from "./MainVehicle/MainVehicle";
+import { TimeContext } from "../../../contexts/TimeContext";
 
 interface Props {
     keepClosed: boolean
+    roundDuration: number
 }
 
 function RaceStatus(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
     const racePath = useContext(RacePathContext)
+    const remainingTime = useContext(TimeContext)
 
     const [progressPercent, setProgressPercent] = useState(0) // percent of team progress, initialized at 0%
     const [mainVehiclePosition, setMainVehiclePosition] = useState(0) // position of the team
@@ -122,13 +125,15 @@ function RaceStatus(props: Props) {
                 path={racePath.svgPath}
                 isOnMinimap={props.keepClosed}
             ></MainVehicle>
-
+            
+            <TimeContext.Provider value={remainingTime > 0 ? props.roundDuration - remainingTime : 0}>
             <Ghosts
                     data-testid={"ghosts"}
                     path={racePath.svgPath}
                     keepClosed={props.keepClosed}
                     onGhostScoreUpdate={(newScore, ghostKey) => updateRacingStats(newScore, ghostKey)}
                 />
+            </TimeContext.Provider>
         </div>
     )
 }
