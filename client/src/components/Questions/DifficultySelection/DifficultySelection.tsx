@@ -56,7 +56,6 @@ export default function DifficultySelection(props: Props) {
     const transApi = useSpringRef()
     const transitionText = useTransition(props.open ? modalText : [], {
         ref: transApi,
-        trail: 100,
         from: { opacity: 0, scale: 0 },
         enter: { opacity: 1, scale: 1 },
         leave: { opacity: 0, scale: 0 },
@@ -102,7 +101,7 @@ export default function DifficultySelection(props: Props) {
         props.open
             ? [springApi, transApi, transApiCard]
             : [transApiCard, transApi, springApi],
-        [0, props.open ? 0.3 : 0.6, props.open ? 0.3 : 0.6]
+        [0, 0.1, 0.2]
     )
     let i = 0 // used to give each card a unique class name
 

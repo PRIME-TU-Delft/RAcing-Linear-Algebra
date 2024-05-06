@@ -287,7 +287,7 @@ function Game(props: Props) {
         showRoundOverModal
             ? [bodyAnimationRef, modalAnimationRef2]
             : [modalAnimationRef2, bodyAnimationRef],
-        [0, showRoundOverModal ? 0.3 : 0.1]
+        [0, showRoundOverModal ? 0.1 : 0.1]
     )
 
     return (
