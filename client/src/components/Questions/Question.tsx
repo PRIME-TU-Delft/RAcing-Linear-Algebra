@@ -72,7 +72,7 @@ function Question(props: Props) {
             setTimeout(() => {
                 setShowDifficulty(true)
                 setDisableButton(false)
-            }, 4500)
+            }, 1500)
         })
 
         socket
@@ -155,7 +155,7 @@ function Question(props: Props) {
         showInfoModal
             ? [bodyAnimationRef, modalAnimationRef]
             : [modalAnimationRef, bodyAnimationRef],
-        [0, showInfoModal ? 0.3 : 0.1]
+        [0, showInfoModal ? 0.1 : 0.1]
     )
 
     const modalAnimationRef2 = useSpringRef()
@@ -180,7 +180,7 @@ function Question(props: Props) {
         showRoundOverModal
             ? [bodyAnimationRef, modalAnimationRef2]
             : [modalAnimationRef2, bodyAnimationRef],
-        [0, showRoundOverModal ? 0.3 : 0.1]
+        [0, showRoundOverModal ? 0.1 : 0.1]
     )
 
     return (
