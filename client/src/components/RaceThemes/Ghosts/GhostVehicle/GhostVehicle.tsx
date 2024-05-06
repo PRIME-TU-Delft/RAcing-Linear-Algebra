@@ -28,6 +28,25 @@ function GhostVehicle(props: Props) {
     const animationControls = useAnimationControls()
 
     /**
+     * Retrieves the next time score index the team will aim to reach
+     * @returns the new time score index, or -1 if there are no more time scores
+     */
+    const getNewTimeScoreIndex = () => {
+        const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
+        if (currentTimeScoreIndex == props.ghost.timeScores.length - 1) return -1
+
+        // Finds the last index which has expired in terms of time, in order to set the next goal to its next neighbour
+        let newIndex = currentTimeScoreIndex
+        for (let i = currentTimeScoreIndex; i < props.ghost.timeScores.length; i++) {
+            const timeScore = props.ghost.timeScores[i]
+            if (timeScore.timePoint <= usedTime) newIndex = i
+            else break
+        }
+
+        return newIndex + 1
+    }
+
+    /**
      * Updates the values of the ghost to account for reaching a new time point.
      * Also triggers parent event to inform it of the change in score
      * @param currentTimeScoreIndex index of the current time score
@@ -35,7 +54,7 @@ function GhostVehicle(props: Props) {
      * @param newProgress  the new race path progress of the ghost
      */
     const updateGhostValues = (currentTimeScoreIndex: number, newScore: number, newProgress: number) => {
-        const newTimeScoreIndex = Math.min(currentTimeScoreIndex + 1, props.ghost.timeScores.length - 1)    // Clipping to prevent indexing errors
+        const newTimeScoreIndex = getNewTimeScoreIndex() 
         props.onGhostScoreUpdate(newScore, props.ghost.key)
         props.ghost.animationStatus.timeScoreIndex = newTimeScoreIndex    
         props.ghost.animationStatus.pathProgress = newProgress
@@ -43,46 +62,15 @@ function GhostVehicle(props: Props) {
     }
 
     const playGhostAnimation = () => {
-        // Introduce constants to reduce code repetition
-        const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
-        const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
-        const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
-    
-        // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
-        if (props.ghost.animationStatus.pathProgress >= progress) {
-            animationControls.start({   // First, complete the lap
-                offsetDistance: "100%",
-                transition: { duration: 1.5 }
-            }).then((val) => {
-                animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
-                    offsetDistance: "0%",
-                    transition: { delay: 1000 }
-                })
-            }).then((val) => {
-                animationControls.start({   // Finally, play the animation leading to the new progress value
-                    offsetDistance: progress.toString() + "%",
-                    transition: { duration: 1, delay: 0.5 }
-                })
-                updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
-            })
-        }
-        else {
-            animationControls.start({   // Else, just update the progress normally
-                offsetDistance: progress.toString() + "%",
-                transition: { duration: 1.5 }
-            })
-            updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
-        }
     }
 
     useEffect(() => {
         // Introduce constants to reduce code repetition
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
         const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
-        console.log(currentGhostTimePoint)
 
         // If the time matches a ghost's time point, it is time to update its score (make it move)
-        if (currentGhostTimePoint <= usedTime && usedTime > 0) { 
+        if (currentGhostTimePoint <= usedTime) { 
             setStartAnimation(curr => true)
         }
     }, [usedTime])
@@ -90,7 +78,38 @@ function GhostVehicle(props: Props) {
     useEffect(() => {
         if (startAnimation) {
             setStartAnimation(curr => false)
-            playGhostAnimation()
+            // Introduce constants to reduce code repetition
+            const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
+            if (currentTimeScoreIndex == -1) return // if the time score index was reset to -1, no more animations should be played
+
+            const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
+            const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
+        
+            // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
+            if (props.ghost.animationStatus.pathProgress >= progress) {
+                animationControls.start({   // First, complete the lap
+                    offsetDistance: "100%",
+                    transition: { duration: 1.5 }
+                }).then((val) => {
+                    animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
+                        offsetDistance: "0%",
+                        transition: { delay: 1000 }
+                    })
+                }).then((val) => {
+                    animationControls.start({   // Finally, play the animation leading to the new progress value
+                        offsetDistance: progress.toString() + "%",
+                        transition: { duration: 1, delay: 0.5 }
+                    })
+                    updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
+                })
+            }
+            else {
+                animationControls.start({   // Else, just update the progress normally
+                    offsetDistance: progress.toString() + "%",
+                    transition: { duration: 1.5 }
+                })
+                updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
+            }
         }
     }, [startAnimation])
 

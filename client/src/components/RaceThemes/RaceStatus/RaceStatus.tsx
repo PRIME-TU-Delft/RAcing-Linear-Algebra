@@ -126,7 +126,7 @@ function RaceStatus(props: Props) {
                 isOnMinimap={props.keepClosed}
             ></MainVehicle>
             
-            <TimeContext.Provider value={props.roundDuration - remainingTime}>
+            <TimeContext.Provider value={remainingTime > 0 ? props.roundDuration - remainingTime : 0}>
             <Ghosts
                     data-testid={"ghosts"}
                     path={racePath.svgPath}
