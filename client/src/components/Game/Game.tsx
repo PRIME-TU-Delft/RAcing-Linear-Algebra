@@ -341,7 +341,7 @@ function Game(props: Props) {
                     marginLeft: racePathSizing.offsetX,
                     marginTop: racePathSizing.offsetY
                 }}>
-                    <RaceStatus keepClosed={true}/>
+                    <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
                     <svg className="minimap-svg-path" viewBox="20 20 100% 100%">
                             <path
                                 d={racePath.svgPath}

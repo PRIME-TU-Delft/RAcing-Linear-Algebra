@@ -160,6 +160,7 @@ function Lecturer(props: Props) {
                                 setLocation((current) => data)
                             }
                             showCheckPoint={() => showCheckPoint()}
+                            roundDuration={props.roundDuration}
                         ></RaceTheme>
                 </div>
 
