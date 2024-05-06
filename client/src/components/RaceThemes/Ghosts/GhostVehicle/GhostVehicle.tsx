@@ -39,6 +39,7 @@ function GhostVehicle(props: Props) {
         props.onGhostScoreUpdate(newScore, props.ghost.key)
         props.ghost.animationStatus.timeScoreIndex = newTimeScoreIndex    
         props.ghost.animationStatus.pathProgress = newProgress
+        props.ghost.lapsCompleted = Math.floor(newScore / props.totalPoints)
     }
 
     const playGhostAnimation = () => {
@@ -57,7 +58,6 @@ function GhostVehicle(props: Props) {
                     offsetDistance: "0%",
                     transition: { delay: 1000 }
                 })
-                props.ghost.lapsCompleted += 1  // increase the number of laps completed by the ghost
             }).then((val) => {
                 animationControls.start({   // Finally, play the animation leading to the new progress value
                     offsetDistance: progress.toString() + "%",
@@ -76,16 +76,14 @@ function GhostVehicle(props: Props) {
     }
 
     useEffect(() => {
-        if (props.startShowingGhosts) {
-            // Introduce constants to reduce code repetition
-            const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
-            const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
-            console.log(currentGhostTimePoint)
+        // Introduce constants to reduce code repetition
+        const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
+        const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
+        console.log(currentGhostTimePoint)
 
-            // If the time matches a ghost's time point, it is time to update its score (make it move)
-            if (currentGhostTimePoint <= usedTime && usedTime > 0) { 
-                setStartAnimation(curr => true)
-            }
+        // If the time matches a ghost's time point, it is time to update its score (make it move)
+        if (currentGhostTimePoint <= usedTime && usedTime > 0) { 
+            setStartAnimation(curr => true)
         }
     }, [usedTime])
 
