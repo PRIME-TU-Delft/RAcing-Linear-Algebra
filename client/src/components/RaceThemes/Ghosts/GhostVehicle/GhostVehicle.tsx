@@ -1,5 +1,5 @@
 import { motion, useAnimationControls } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./GhostVehicle.css"
 import { Ghost } from "../../SharedUtils";
 import { getColorForRaceLap, getZIndexValues } from "../../RaceService";
@@ -7,6 +7,7 @@ import { getColorForStudy, getGhostStyle } from "../GhostService";
 import GhostText from "../GhostText/GhostText";
 import LapCompletedText from "../LapCompletedText/LapCompletedText";
 import VehicleImage from "../../VehicleImage/VehicleImage";
+import { TimeContext } from "../../../../contexts/TimeContext";
 
 interface Props {
     ghost: Ghost,
@@ -20,6 +21,10 @@ interface Props {
 }
 
 function GhostVehicle(props: Props) {
+    const [startAnimation, setStartAnimation] = useState<boolean>(false)
+
+    const usedTime = useContext(TimeContext)
+
     const animationControls = useAnimationControls()
 
     /**
@@ -71,11 +76,25 @@ function GhostVehicle(props: Props) {
     }
 
     useEffect(() => {
-        if (props.ghost.animationStatus.updateAnimation) {
-            props.ghost.animationStatus.updateAnimation = false
+        if (props.startShowingGhosts) {
+            // Introduce constants to reduce code repetition
+            const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
+            const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
+            console.log(currentGhostTimePoint)
+
+            // If the time matches a ghost's time point, it is time to update its score (make it move)
+            if (currentGhostTimePoint <= usedTime && usedTime > 0) { 
+                setStartAnimation(curr => true)
+            }
+        }
+    }, [usedTime])
+
+    useEffect(() => {
+        if (startAnimation) {
+            setStartAnimation(curr => false)
             playGhostAnimation()
         }
-    }, [props.ghost.animationStatus.updateAnimation])
+    }, [startAnimation])
 
     return(
         <motion.div
