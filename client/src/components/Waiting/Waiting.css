@@ -143,3 +143,9 @@
     transform: rotate(180deg);
     color: #003082;
 }
+
+@media only screen and (max-width: 1300px) {
+    .tooltip-container {
+        width: 90%;
+    }
+}
