@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, ServerGhost } from "./components/RaceThemes/SharedUtils"
+import { Ghost, IQuestion, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -41,6 +41,11 @@ function App() {
     const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
+    
+    const [currentQuestion, setCurrentQuestion] = useState<IQuestion>()
+    const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
+    const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
+
     const navigate = useNavigate()
 
     const timerExpirationHandler = () => {
@@ -165,6 +170,11 @@ function App() {
             setAllRoundsFinished(curr => true)
         }
 
+        function onGetNewQuestion(newQuestion: IQuestion) {
+            setCurrentQuestion(curr => newQuestion)
+            setCurrentQuestionNumber(curr => curr + 1)
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -174,6 +184,7 @@ function App() {
         socket.on("race-track-end-score", onFullLapScoreValue)
         socket.on("score", onScoreUpdate)
         socket.on("game-ended", onGameEnded)
+        socket.on("get-next-question", onGetNewQuestion)
     }, [])
 
     // useEffect(() => {
