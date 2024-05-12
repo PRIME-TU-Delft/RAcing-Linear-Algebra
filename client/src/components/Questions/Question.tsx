@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import "./Question.css"
 import MultipleChoice from "./MultipleChoiceQuestions/MultipleChoice"
 import OpenQuestion from "./OpenQuestion/OpenQuestion"
@@ -19,41 +19,16 @@ import {
 import RoundOverModal from "./RoundOverModal"
 import QuestionTrainBackground from "./Themes/QuestionTrainBackground"
 import { useNavigate } from "react-router-dom"
-
-export interface IQuestion {
-    question: string
-    answer: string
-    difficulty: string
-    subject: string
-    type: string
-    options?: string[]
-    variants?: any[]
-}
+import { QuestionContext } from "../../contexts/QuestionContext"
 
 interface Props {
     hideQuestion: boolean,
     theme: string,
-    getQuestionNumber: (questionNumber: number) => void,
     getQuestionAnswer: (questionAnswer: string) => void,
 }
 
-interface Statistic {
-    question: string
-    answer: string
-    difficulty: string
-    correctlyAnswered: number
-    incorrectlyAnswered: number
-}
-
 function Question(props: Props) {
-    const [question, setQuestion] = useState<IQuestion>({
-        question: "",
-        answer: "",
-        difficulty: "",
-        subject: "",
-        type: "",
-        options: [],
-    })
+    const questionData = useContext(QuestionContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -64,8 +39,6 @@ function Question(props: Props) {
     // All the socket events for the questions are handled here
     useEffect(() => {
         
-        socket.emit("getNewQuestion") // Get the first question
-
         socket.off("chooseDifficulty").on("chooseDifficulty", () => {
             setDisableButton(true)
             // Wait for the info modal to be closed
@@ -74,13 +47,6 @@ function Question(props: Props) {
                 setDisableButton(false)
             }, 1500)
         })
-
-        socket
-            .off("get-next-question")
-            .on("get-next-question", (questionReceived: IQuestion) => {
-                setQuestionNum((questionNum) => questionNum + 1)
-                setQuestion(questionReceived)
-            })
     }, [])
 
     // Variable to display the difficulty selection screen
@@ -98,7 +64,6 @@ function Question(props: Props) {
     const [maxStreak, setMaxStreak] = useState<number>(0) // Max streak of the user
     const [score, setScore] = useState<number>(0) // Total score of the user
     const [scoreToAdd, setScoreToAdd] = useState<number>(0) // Score gained for the current question
-    const [questionNum, setQuestionNum] = useState<number>(0) // Number of the current question
     const [numOfQuestions, setNumOfQuestions] = useState<number>(0) // Number of questions in the round
 
     // Variables to dinamically decide what to display on info modal
@@ -106,13 +71,10 @@ function Question(props: Props) {
     const [modalType, setModalType] = useState<string>("")
     const [modalAnswer, setModalAnswer] = useState<string>("")
 
-    useEffect(() => {
-        props.getQuestionNumber(questionNum)
-    }, [questionNum])
 
     useEffect(() => {
-        props.getQuestionAnswer(question.answer)
-    }, [question])
+        props.getQuestionAnswer(questionData.iQuestion.answer)
+    }, [questionData.iQuestion])
 
     // Animations
     const bodyAnimationRef = useSpringRef()
@@ -192,32 +154,32 @@ function Question(props: Props) {
                 <DifficultySelection
                     open={showDifficulty}
                     onDifficultySelected={() => setShowDifficulty(curr => false)}
-                    type={question.subject}
+                    type={questionData.iQuestion.subject}
                 ></DifficultySelection>
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div>
-                        {question !== null && (
+                        {questionData.iQuestion !== null && (
                             <>
-                                {question.type === "open" ||
-                                question.type === "open-infinite" ? (
+                                {questionData.iQuestion.type === "open" ||
+                                questionData.iQuestion.type === "open-infinite" ? (
                                     <OpenQuestion
-                                        latex={question.question}
-                                        questionNum={questionNum}
+                                        latex={questionData.iQuestion.question}
+                                        questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
                                     />
-                                ) : question.type === "mc" ? (
+                                ) : questionData.iQuestion.type === "mc" ? (
                                     <MultipleChoice
-                                        latex={question.question}
-                                        answers={question.options ? question.options : []}
-                                        questionNum={questionNum}
+                                        latex={questionData.iQuestion.question}
+                                        answers={questionData.iQuestion.options ? questionData.iQuestion.options : []}
+                                        questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
                                     />
-                                ) : question.type === "true/false" ? (
+                                ) : questionData.iQuestion.type === "true/false" ? (
                                     <TrueFalseQuestion
-                                        latex={question.question}
-                                        questionNum={questionNum}
+                                        latex={questionData.iQuestion.question}
+                                        questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
                                     />

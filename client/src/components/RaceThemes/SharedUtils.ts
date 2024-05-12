@@ -98,6 +98,16 @@ interface ServerGhost {
     accuracy: number 
 }
 
+interface IQuestion {
+    question: string
+    answer: string
+    difficulty: string
+    subject: string
+    type: string
+    options?: string[]
+    variants?: any[]
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -108,5 +118,6 @@ export {
     type Dimensions,
     type RaceMap,
     type ServerGhost,
-    type RacePathObject
+    type RacePathObject,
+    type IQuestion
 }

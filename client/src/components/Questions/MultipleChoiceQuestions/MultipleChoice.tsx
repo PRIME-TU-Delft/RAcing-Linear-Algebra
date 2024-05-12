@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import katex from "katex"
 import { useRenderLatex, renderLatex } from "../useRenderLatex"
 import { getQuestionsRoute } from "../../../utils/APIRoutes"
-import { IQuestion } from "../Question"
 import socket from "../../../socket"
 
 interface Props {

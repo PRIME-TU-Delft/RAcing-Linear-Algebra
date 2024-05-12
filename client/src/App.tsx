@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, ServerGhost } from "./components/RaceThemes/SharedUtils"
+import { Ghost, IQuestion, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -24,6 +24,7 @@ import { ScoreContext } from "./contexts/ScoreContext"
 import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
 import { useTimer } from "react-timer-hook"
+import { QuestionContext } from "./contexts/QuestionContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -41,6 +42,19 @@ function App() {
     const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
+    
+    const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
+        question: "",
+        answer: "",
+        difficulty: "",
+        subject: "",
+        type: "",
+        options: [],
+        variants: []
+    })
+    const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
+    const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
+
     const navigate = useNavigate()
 
     const timerExpirationHandler = () => {
@@ -101,7 +115,6 @@ function App() {
 
     const gameStartHandler = () => {
         setStartTimer(curr => true)
-
         if (isPlayer) {
             navigate("/Game")
         }
@@ -114,6 +127,7 @@ function App() {
         resetValues()
         setRoundDuration(curr => 600) // CHANGE
         setRoundStarted(curr => true)
+        if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
     }
 
@@ -165,6 +179,15 @@ function App() {
             setAllRoundsFinished(curr => true)
         }
 
+        function onGetNewQuestion(newQuestion: IQuestion) {
+            setCurrentQuestion(curr => newQuestion)
+            setCurrentQuestionNumber(curr => curr + 1)
+        }
+
+        function onGetNumberOfMandatoryQuestions(num: number) {
+            setNumberOfMandatoryQuestions(curr => num)
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -174,6 +197,8 @@ function App() {
         socket.on("race-track-end-score", onFullLapScoreValue)
         socket.on("score", onScoreUpdate)
         socket.on("game-ended", onGameEnded)
+        socket.on("get-next-question", onGetNewQuestion)
+        socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
     }, [])
 
     // useEffect(() => {
@@ -274,7 +299,9 @@ function App() {
                             selectedMap: trainMaps[0]
                         }}>
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                    <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                </QuestionContext.Provider>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>
                     </TimeContext.Provider>

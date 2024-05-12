@@ -19,6 +19,7 @@ import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
 import { RacePathContext } from "../../contexts/RacePathContext";
 import Tracks from "../RaceThemes/Tracks/Tracks";
 import { getRacePathSizeAndOffsetMargins } from "./GameService";
+import { QuestionContext } from "../../contexts/QuestionContext";
 
 export interface IQuestion {
     question: string
@@ -51,14 +52,11 @@ function Game(props: Props) {
     const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
     const raceData = useContext(RaceDataContext)
     const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
-
-    const [mandatoryNum, setMandatoryNum] = useState(0)
+    const questionData = useContext(QuestionContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
-
-    const [currentQuestionNum, setCurrentQuestionNum] = useState(0)
 
     const [currentQuestionAnswer, setCurrentQuestionAnswer] = useState("")
 
@@ -106,7 +104,7 @@ function Game(props: Props) {
             setRightAnswers((rightAnswers) => rightAnswers + 1)
             setStreak((streak) => streak + 1)
             setShowInfoModal(true)
-            if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+            if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
         })
 
         socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
@@ -121,7 +119,7 @@ function Game(props: Props) {
                 setScoreToAdd(0)
                 setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
                 setShowInfoModal(true)
-                if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+                if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
             } else {
                 wrongAnswerToast(triesLeft)
             }
@@ -134,11 +132,7 @@ function Game(props: Props) {
         socket.off("end-game").on("end-game", () => {
             navigate("/endGame")
         })
-
-        socket.off("mandatoryNum").on("mandatoryNum", (num: number) => {
-            setMandatoryNum(curr => num)
-        })
-    }, [socket, currentQuestionNum, mandatoryNum])
+    }, [socket, questionData.questionNumber, questionData.numberOfMandatory])
 
     useEffect(() => {
         const countdownInterval = setInterval(() => {
@@ -154,10 +148,10 @@ function Game(props: Props) {
     }, [countdown])
 
     useEffect(() => {
-        if (currentQuestionNum > 2) {
+        if (questionData.questionNumber > 2) {
             setScoreToAdd(curr => 0)
         }
-    }, [currentQuestionNum])
+    }, [questionData.questionNumber])
 
     // Variable to display the info modal
     const [showInfoModal, setShowInfoModal] = useState<boolean>(false)
@@ -303,7 +297,6 @@ function Game(props: Props) {
                     <Question 
                         hideQuestion={hideQuestion}
                         theme={props.theme}
-                        getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
                         getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
 
                     />  
