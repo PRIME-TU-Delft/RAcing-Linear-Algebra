@@ -30,7 +30,7 @@ function App() {
     const [lobbyId, setLobbyId] = useState(0)
     const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
-    const [theme, setTheme] = useState("train")
+    const [theme, setTheme] = useState("Train")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
@@ -262,7 +262,7 @@ function App() {
                 ></Route>
                 <Route
                     path="/Waiting"
-                    element={<Waiting theme={theme} setTheme={setTheme} lobbyId={lobbyId} 
+                    element={<Waiting theme={theme} lobbyId={lobbyId} 
                     />}
                 ></Route>
                 <Route 
