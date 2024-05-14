@@ -508,12 +508,18 @@ module.exports = {
 
                     const lobbyIdString = lobbyId.toString()
                     const theme = themes.get(parseInt(lobbyIdString))
-
-                    socket.emit("round-information", ({
+                    
+                    io.to(`players${lobbyId}`).emit("round-information", ({
                         topic: topic,
                         teamName: teamName,
                         theme: theme
                     }))
+                    io.to(`lectuer${lobbyId}`).emit("round-information", ({
+                        topic: topic,
+                        teamName: teamName,
+                        theme: theme
+                    }))
+
                 } catch (error) {
                     console.log(error)
                 }
