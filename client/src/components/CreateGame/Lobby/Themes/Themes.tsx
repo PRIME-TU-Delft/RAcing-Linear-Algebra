@@ -35,13 +35,13 @@ function Themes(props: Props) {
                 icon={trainIcon}
             ></Theme>
 
-            <Theme
+            {/* <Theme
                 title="Boat"
                 description="Head to the sea!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Boat")}
                 icon={boatIcon}
-            ></Theme>
+            ></Theme> */}
         </div>
     )
 }
