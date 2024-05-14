@@ -335,14 +335,21 @@ function Game(props: Props) {
             />
             <ToastContainer />
             <RacePathContext.Provider value={racePath}>
-                <div className="race-minimap-container" style={{
-                    width: racePathSizing.width,
-                    height: racePathSizing.height,
-                    marginLeft: racePathSizing.offsetX,
-                    marginTop: racePathSizing.offsetY
-                }}>
-                    <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
-                    <svg className="minimap-svg-path" viewBox="20 20 100% 100%">
+                <div className="race-minimap-container">
+                    <div className="race-status-container"  style={{
+                        width: racePathSizing.width,
+                        height: racePathSizing.height,
+                        marginLeft: racePathSizing.offsetX,
+                        marginTop: racePathSizing.offsetY
+                    }}>
+                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
+                    </div>
+                    <svg className="minimap-svg-path" style={{
+                        width: racePathSizing.width,
+                        height: racePathSizing.height,
+                        marginLeft: racePathSizing.offsetX,
+                        marginTop: racePathSizing.offsetY
+                    }}>
                             <path
                                 d={racePath.svgPath}
                                 fill={"none"}
