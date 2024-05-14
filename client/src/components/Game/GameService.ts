@@ -42,6 +42,10 @@ export function getRacePathSizeAndOffsetMargins(viewportWidth: number, viewportH
         offsetY = viewportHeight * 0.4
     }
 
+    if (viewportWidth >= 2000 && viewportHeight <= 1350) {
+        offsetY = viewportHeight * 0.5
+    }
+
     return {
         width: newWidth,
         height: newHeight,
