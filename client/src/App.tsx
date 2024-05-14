@@ -180,7 +180,7 @@ function App() {
         }
 
         function onGetNewQuestion(newQuestion: IQuestion) {
-            setCurrentQuestion(curr => newQuestion)
+            setCurrentQuestion(newQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
