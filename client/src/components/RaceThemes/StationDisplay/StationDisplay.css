@@ -28,7 +28,8 @@
 .active-station {
     text-align: left;
     padding-left: 1em;
-    height: 7.5rem;
+    padding-right: 1em;
+    padding-bottom: 1em;
     color: #003082;
     background-color: white;
 }
@@ -73,4 +74,8 @@
 .station-connector {
     height: 100%;
     width: 100%;
+}
+
+@media only screen and (max-width: 1300px) {
+    
 }

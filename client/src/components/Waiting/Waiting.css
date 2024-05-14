@@ -143,3 +143,25 @@
     transform: rotate(180deg);
     color: #003082;
 }
+
+@media only screen and (max-width: 1300px) {
+    .tooltip-container {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 1080px) {
+    .train-container {
+        left: -200px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .train-container {
+        left: -400px;
+    }
+
+    .waiting-title {
+        font-size: 40px;
+    }
+}
