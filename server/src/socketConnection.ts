@@ -509,7 +509,7 @@ module.exports = {
                     const lobbyIdString = lobbyId.toString()
                     const theme = themes.get(parseInt(lobbyIdString))
 
-                    socket.emit("getInformation", ({
+                    socket.emit("round-information", ({
                         topic: topic,
                         teamName: teamName,
                         theme: theme
