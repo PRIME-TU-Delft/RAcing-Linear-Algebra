@@ -12,7 +12,6 @@ import Train from "./Themes/Train"
 
 interface Props {
     theme: string
-    setTheme: React.Dispatch<React.SetStateAction<string>>
     lobbyId: number
 }
 
@@ -42,9 +41,6 @@ function Waiting(props: Props) {
         window.addEventListener("beforeunload", handleBeforeUnload)
         window.addEventListener("unload", () => socket.disconnect())
         window.addEventListener("load", () => navigate("/"))
-
-        // On load get the current theme
-        socket.emit("getTheme")
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload)
