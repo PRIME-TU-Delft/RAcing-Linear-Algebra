@@ -111,7 +111,8 @@ interface IQuestion {
 interface RoundInformation {
     topic: string,
     teamName: string,
-    theme: string
+    theme: string,
+    study: string
 }
 
 export {
