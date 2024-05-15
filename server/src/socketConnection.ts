@@ -512,12 +512,14 @@ module.exports = {
                     io.to(`players${lobbyId}`).emit("round-information", ({
                         topic: topic,
                         teamName: teamName,
-                        theme: theme
+                        theme: theme,
+                        study: game.study
                     }))
                     io.to(`lectuer${lobbyId}`).emit("round-information", ({
                         topic: topic,
                         teamName: teamName,
-                        theme: theme
+                        theme: theme,
+                        study: game.study
                     }))
 
                 } catch (error) {
