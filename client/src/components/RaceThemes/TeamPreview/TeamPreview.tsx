@@ -99,7 +99,7 @@ function TeamPreview(props: Props) {
                 <TrainBackground includeRail={false}/>
                 <a.div className="team-preview-title">
                     <a.div style={titleAnimation}>
-                        Eigenvalues and Eigenvectors Race
+                        {props.topic}
                     </a.div>
                 </a.div>
                 <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>
