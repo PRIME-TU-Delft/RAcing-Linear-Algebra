@@ -380,8 +380,6 @@ module.exports = {
                     return accuracyA - accuracyB;
                 });
 
-                console.log(stats)
-
                 socket.emit("statistics", JSON.stringify(stats))
 
                 //If this was the last round display end game button for lecturer

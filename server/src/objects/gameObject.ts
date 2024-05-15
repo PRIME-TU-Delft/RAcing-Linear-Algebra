@@ -243,6 +243,14 @@ export class Game {
             timePoint: x,
             score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
         }))
+
+        // Modify the score of the last element
+        const lastElement = result[result.length - 1]
+        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.round] * this.users.size
+        result[result.length - 1] = lastElement
+
+        console.log(result)
+
         return result
     }
 
