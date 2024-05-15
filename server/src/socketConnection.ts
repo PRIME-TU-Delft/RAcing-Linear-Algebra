@@ -515,7 +515,8 @@ module.exports = {
                         theme: theme,
                         study: game.study
                     }))
-                    io.to(`lectuer${lobbyId}`).emit("round-information", ({
+                    
+                    socket.emit("round-information", ({
                         topic: topic,
                         teamName: teamName,
                         theme: theme,

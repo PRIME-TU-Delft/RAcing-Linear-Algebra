@@ -125,7 +125,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 600) // CHANGE
+        setRoundDuration(curr => 60) // CHANGE
         setRoundStarted(curr => true)
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
@@ -190,10 +190,10 @@ function App() {
         }
 
         function onRoundInformation(roundInformation: RoundInformation) {
-            setTheme(curr => roundInformation.theme)
-            setTeamName(curr => roundInformation.teamName)
-            setTopic(curr => roundInformation.topic)
-            console.log("GOTCHA")
+            setTheme(roundInformation.theme)
+            setTeamName(roundInformation.teamName)
+            setTopic(roundInformation.topic)
+            setStudy(roundInformation.study)
         }
 
         socket.on("round-duration", onRoundDuration)
