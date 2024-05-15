@@ -33,7 +33,7 @@ function GhostVehicle(props: Props) {
      */
     const getNewTimeScoreIndex = () => {
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
-        if (currentTimeScoreIndex == props.ghost.timeScores.length - 1) return -1
+        if (currentTimeScoreIndex >= props.ghost.timeScores.length - 1) return -1
 
         // Finds the last index which has expired in terms of time, in order to set the next goal to its next neighbour
         let newIndex = currentTimeScoreIndex
@@ -67,6 +67,10 @@ function GhostVehicle(props: Props) {
     useEffect(() => {
         // Introduce constants to reduce code repetition
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
+
+        // If all time scores have been used, the index will be -1 thus no new animation will be played till the end of round
+        if (currentTimeScoreIndex == -1) return
+        
         const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
 
         // If the time matches a ghost's time point, it is time to update its score (make it move)

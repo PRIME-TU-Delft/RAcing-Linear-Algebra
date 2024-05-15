@@ -99,7 +99,7 @@
     font-size: 15px;
 }
 
-@media (max-width: 1300px) {
+@media only screen and (max-width: 1300px) {
     /* Adjust the width for smaller screens */
     .card-body {
         height: 10em;
@@ -114,6 +114,34 @@
     }
     .difficulty-card,
     .card {
-        width: 12rem;
+        width: 10rem;
+    }
+
+    .diff-modal-wrapper {
+        padding-left: 1rem;
+    }
+}
+
+@media only screen and (max-width: 1090px) {
+    .card-body {
+        height: 8em;
+    }
+
+    .difficulty-card,
+    .card {
+        width: 8rem;
+    }
+
+    .emoji {
+        margin-top: 5px;
+        font-size: 45px;
+    }
+
+    .diff-modal-text0 {
+        font-size: 30px;
+    }
+
+    .diff-modal-text1 {
+        font-size: 15px;
     }
 }

@@ -5,6 +5,7 @@
 
 .question-container {
     margin-top: 2rem;
+    height: 60rem;
     position: relative;
 }
 
@@ -56,5 +57,11 @@
 @media screen and (max-width: 1200px) {
     .question-container {
         margin-top: 1rem;
+    }
+}
+
+@media only screen and (max-height: 1050px) {
+    .question-container {
+        height: 35rem;
     }
 }
