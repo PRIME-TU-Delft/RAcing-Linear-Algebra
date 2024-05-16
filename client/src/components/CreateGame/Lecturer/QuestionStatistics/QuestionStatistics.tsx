@@ -101,35 +101,24 @@ function QuestionStatistics(props: Props) {
                         <div className="col-4 stats">
                             <div className="row">
                                 <div className="row accuracy">
-                                    Accuracy:{" "}
-                                    {(
-                                        (statistics[index].correctlyAnswered /
-                                            (statistics[index]
-                                                .correctlyAnswered +
-                                                statistics[index]
-                                                    .incorrectlyAnswered)) *
-                                        100
-                                    )
-                                        .toString()
-                                        .slice(0, 5)}
-                                    %
+                                    Wrong attempts:{" "}
+                                        {statistics[index].incorrectlyAnswered}
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="row total-attemptys">
-                                    Raw accuracy:{" "}
-                                    {statistics[index].correctlyAnswered} /{" "}
-                                    {statistics[index].correctlyAnswered +
-                                        statistics[index].incorrectlyAnswered}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="row difficulty">
-                                    Difficulty:{" "}
-                                    {statistics[index].difficulty
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        statistics[index].difficulty.slice(1)}
+                                    Accuracy:{" "}
+                                        {(
+                                            (statistics[index].correctlyAnswered /
+                                                (statistics[index]
+                                                    .correctlyAnswered +
+                                                    statistics[index]
+                                                        .incorrectlyAnswered)) *
+                                            100
+                                        )
+                                            .toString()
+                                            .slice(0, 5)}
+                                        %
                                 </div>
                             </div>
                         </div>
