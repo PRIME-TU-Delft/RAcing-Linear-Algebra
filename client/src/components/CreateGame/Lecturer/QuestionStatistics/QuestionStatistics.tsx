@@ -39,6 +39,18 @@ function QuestionStatistics(props: Props) {
         })
     }
 
+    function renderLatexAnswer(latex: string): string {
+        try {
+            return katex.renderToString(latex, {
+                throwOnError: false,
+                output: "mathml",
+            })
+        } catch (error) {
+            console.error("Error rendering equation:", latex)
+            return ""
+        }
+    }
+
     // Enter animation for the statistics, created using react-spring
     const enterAnimation = useTrail(statistics.length, {
         config: { mass: 5, tension: 2000, friction: 200 },
@@ -112,7 +124,7 @@ function QuestionStatistics(props: Props) {
                         <div
                             className="col-11 answer-value"
                             dangerouslySetInnerHTML={{
-                                __html: renderLatexQuestion(
+                                __html: renderLatexAnswer(
                                     statistics[index].answer
                                 ),
                             }}
