@@ -227,6 +227,14 @@ function App() {
     //     }
     // }, [timeUsed, endOfRound])
 
+    useEffect(() => {
+        // Saves the current team score every 30 seconds, later interpolated to simulate this team's performance
+        // in other team's games in the form of a ghost
+        if (!isPlayer && totalSeconds % 30 == 0) {
+            socket.emit("saveTimeScore")
+        } 
+    }, [totalSeconds])
+
     return (
         <div className="App">
             <Routes>

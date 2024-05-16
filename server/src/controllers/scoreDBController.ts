@@ -8,7 +8,7 @@ const shuffle = require( '@stdlib/random-shuffle' );
 
 export async function saveNewScore(
     teamname: string,
-    score: number[],
+    scores: number[],
     checkpoints: number[],
     roundId: string,
     roundDuration: number,
@@ -17,7 +17,7 @@ export async function saveNewScore(
 ) {
     const newScore: IScore = new Score({
         teamname,
-        score,
+        scores,
         checkpoints,
         roundId,
         roundDuration,
