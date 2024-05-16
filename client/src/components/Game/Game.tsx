@@ -312,7 +312,7 @@ function Game(props: Props) {
                 correctAnswer={modalAnswer}
                 streak={streak}
                 scoreToAdd={scoreToAdd}
-                questionType={answeredQuestionType}
+                questionType={questionData.iQuestion.type}
             />
             <RoundOverModal
                 showRoundOverModal={showRoundOverModal}
