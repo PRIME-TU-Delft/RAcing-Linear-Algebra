@@ -85,7 +85,7 @@ function Leaderboard(props: Props) {
                     </div>
                 </div>
             </div>
-            <div className="leaderboard-container">
+            <div className="end-leaderboard-container">
                 
                 {leaderboardAnimation.map((props, index) => (
                     <a.div style={props} className={"leaderboard-item rounded" + (sortedLeaderboardItems[index].isMainTeam ? " main-team-item" : "")} key={index}>
@@ -111,7 +111,7 @@ function Leaderboard(props: Props) {
                     </a.div>
                 ))}
             </div>
-            {props.isLecturer ? (
+            {!props.isLecturer ? (
                 <div className="leaderboard-continue-button" 
                     onClick={() => {
                         socket.emit("getLecturerStatistics")
