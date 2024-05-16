@@ -27,7 +27,7 @@ export default function Tooltip() {
         },
         {
             title: "Choosing Difficulty",
-            content: "After the initial mandatory questions, you can answer bonus questions where you can choose their difficulty."
+            content: "After the initial mandatory questions, you can choose the difficulty for your next question."
         },
         {
             title: "Streaks",
@@ -39,7 +39,7 @@ export default function Tooltip() {
         },
         {
             title: "Race Laps",
-            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team. They go from green to yellow to red. And if you perform particularly well, you might even see a few others!"
+            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team. They go from green, to yellow, to red. And if you perform particularly well, you might even see a few others!"
         },
         {
             title: "Question Attempts",
