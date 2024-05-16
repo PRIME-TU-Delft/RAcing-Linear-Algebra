@@ -24,7 +24,6 @@ import { QuestionContext } from "../../contexts/QuestionContext"
 interface Props {
     hideQuestion: boolean,
     theme: string,
-    getQuestionAnswer: (questionAnswer: string) => void,
 }
 
 function Question(props: Props) {
@@ -70,11 +69,6 @@ function Question(props: Props) {
     const [modalText, setModalText] = useState<string[]>([])
     const [modalType, setModalType] = useState<string>("")
     const [modalAnswer, setModalAnswer] = useState<string>("")
-
-
-    useEffect(() => {
-        props.getQuestionAnswer(questionData.iQuestion.answer)
-    }, [questionData.iQuestion])
 
     // Animations
     const bodyAnimationRef = useSpringRef()

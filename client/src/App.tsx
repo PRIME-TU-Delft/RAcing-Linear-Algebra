@@ -127,6 +127,8 @@ function App() {
         resetValues()
         setRoundDuration(curr => 60) // CHANGE
         setRoundStarted(curr => true)
+        setCurrentQuestionNumber(0)
+    
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
     }
