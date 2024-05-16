@@ -58,8 +58,6 @@ function Game(props: Props) {
 
     const [countdown, setCountdown] = useState(-1)
 
-    const [currentQuestionAnswer, setCurrentQuestionAnswer] = useState("")
-
     const navigate = useNavigate()
 
      // Safety check for if the page is reloaded
@@ -114,7 +112,7 @@ function Game(props: Props) {
             ])
             if (triesLeft === 0) {
                 setModalType("incorrectAnswer")
-                setModalAnswer(currentQuestionAnswer)
+                setModalAnswer(questionData.iQuestion.answer)
                 setStreak(0)
                 setScoreToAdd(0)
                 setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
@@ -297,8 +295,6 @@ function Game(props: Props) {
                     <Question 
                         hideQuestion={hideQuestion}
                         theme={props.theme}
-                        getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
-
                     />  
                 </div>
                  <div className="game-right-container">
