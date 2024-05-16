@@ -52,30 +52,7 @@ function QuestionStatistics(props: Props) {
         // When statistics are received, filters them based on number of attempts and sorts them based on accuracy and difficulty
         socket.on("statistics", (data: string) => {
             const parsedStatistics: Statistic[] = JSON.parse(data)
-            const filteredStatistics: Statistic[] = parsedStatistics
-                .filter(
-                    (stat) =>
-                        stat.incorrectlyAnswered > 0 ||
-                        stat.correctlyAnswered > 0
-                )
-                .sort(
-                    (first, second) =>
-                        first.correctlyAnswered /
-                            (first.correctlyAnswered +
-                                first.incorrectlyAnswered) -
-                        second.correctlyAnswered /
-                            (second.correctlyAnswered +
-                                second.incorrectlyAnswered)
-                )
-                .sort((first, second) =>
-                    first.difficulty > second.difficulty
-                        ? 1
-                        : second.difficulty > first.difficulty
-                        ? -1
-                        : 0
-                )
-
-            setStatistics((curr) => filteredStatistics)
+            setStatistics((curr) => parsedStatistics)
         })
     }, [socket])
 
