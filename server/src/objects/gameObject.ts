@@ -34,7 +34,7 @@ export class Game {
         this.teamName = teamName
         this.avgScore = 0
         this.totalScore = 0
-        this.timeScores = [0]
+        this.timeScores = []
         this.users = users
         this.checkpoints = []
         this.study = study
