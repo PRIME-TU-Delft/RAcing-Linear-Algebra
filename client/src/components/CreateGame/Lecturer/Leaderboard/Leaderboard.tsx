@@ -111,7 +111,7 @@ function Leaderboard(props: Props) {
                     </a.div>
                 ))}
             </div>
-            {!props.isLecturer ? (
+            {props.isLecturer ? (
                 <div className="leaderboard-continue-button" 
                     onClick={() => {
                         socket.emit("getLecturerStatistics")

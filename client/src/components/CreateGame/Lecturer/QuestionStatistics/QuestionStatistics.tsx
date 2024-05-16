@@ -121,6 +121,13 @@ function QuestionStatistics(props: Props) {
                                         %
                                 </div>
                             </div>
+                            <div className="row difficulty">
+                                    Difficulty:{" "}
+                                    {statistics[index].difficulty
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                        statistics[index].difficulty.slice(1)}
+                            </div>
                         </div>
                     </div>
                     <div className="row question-answer">
