@@ -495,6 +495,38 @@ module.exports = {
                     socket.emit("authenticated", false)
                 }
             })
+
+            socket.on("getInformation", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+
+                    const game = getGame(lobbyId)
+                    
+                    const round = game.rounds[game.round]
+                    const topic = round.subject
+                    const teamName = game.teamName
+
+                    const lobbyIdString = lobbyId.toString()
+                    const theme = themes.get(parseInt(lobbyIdString))
+                    
+                    io.to(`players${lobbyId}`).emit("round-information", ({
+                        topic: topic,
+                        teamName: teamName,
+                        theme: theme,
+                        study: game.study
+                    }))
+                    
+                    socket.emit("round-information", ({
+                        topic: topic,
+                        teamName: teamName,
+                        theme: theme,
+                        study: game.study
+                    }))
+
+                } catch (error) {
+                    console.log(error)
+                }
+            })
         })
 
         return io

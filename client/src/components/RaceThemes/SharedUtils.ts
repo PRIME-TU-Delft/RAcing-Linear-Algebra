@@ -108,6 +108,13 @@ interface IQuestion {
     variants?: any[]
 }
 
+interface RoundInformation {
+    topic: string,
+    teamName: string,
+    theme: string,
+    study: string
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -119,5 +126,6 @@ export {
     type RaceMap,
     type ServerGhost,
     type RacePathObject,
-    type IQuestion
+    type IQuestion,
+    type RoundInformation
 }

@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, IQuestion, ServerGhost } from "./components/RaceThemes/SharedUtils"
+import { Ghost, IQuestion, RoundInformation, ServerGhost } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -125,7 +125,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 600) // CHANGE
+        setRoundDuration(curr => 60) // CHANGE
         setRoundStarted(curr => true)
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
@@ -150,6 +150,7 @@ function App() {
         function onRoundDuration(roundDuration: number) {
             socket.emit("getGhostTeams")
             socket.emit("getRaceTrackEndScore")
+            socket.emit("getInformation")
             initializeRoundValues(roundDuration)
         }
 
@@ -188,6 +189,13 @@ function App() {
             setNumberOfMandatoryQuestions(curr => num)
         }
 
+        function onRoundInformation(roundInformation: RoundInformation) {
+            setTheme(roundInformation.theme)
+            setTeamName(roundInformation.teamName)
+            setTopic(roundInformation.topic)
+            setStudy(roundInformation.study)
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -199,6 +207,7 @@ function App() {
         socket.on("game-ended", onGameEnded)
         socket.on("get-next-question", onGetNewQuestion)
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
+        socket.on("round-information", onRoundInformation)
     }, [])
 
     // useEffect(() => {
