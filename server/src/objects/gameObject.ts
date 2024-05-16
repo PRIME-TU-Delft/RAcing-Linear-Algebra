@@ -155,15 +155,15 @@ export class Game {
 
         const question = user.currentQuestion
         const finalAnswer = question.answer
-        const result = checkAnswerEqual(question, question.answer, answer)
+        const result = checkAnswerEqual(question, finalAnswer, answer)
         const usedAttempts = user.questions.get(question)?.attempts ?? 0
         let score = 0
 
         //Case of incorrect answer
         if (!result) {
             user.attempts--
-            this.incorrect++
-            if (user.attempts === 0) user.streak = 0
+            if (user.attempts === 0) this.incorrect++
+            user.streak = 0
             //Increases the amount of attempts used for this question
             user.questions = user.questions.set(question, {
                 attempts: usedAttempts + 1,
@@ -224,6 +224,7 @@ export class Game {
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
         this.timeScores.push(newTimeScore)
+        console.log(this.timeScores)
     }
 
     /**
@@ -242,6 +243,14 @@ export class Game {
             timePoint: x,
             score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
         }))
+
+        // Modify the score of the last element
+        const lastElement = result[result.length - 1]
+        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.round] * this.users.size
+        result[result.length - 1] = lastElement
+
+        console.log(result)
+
         return result
     }
 

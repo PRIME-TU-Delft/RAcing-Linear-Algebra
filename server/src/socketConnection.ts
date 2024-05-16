@@ -368,6 +368,18 @@ module.exports = {
                 const game = getGame(lobbyId)
                 const stats = game.calculateStatistics()
 
+                stats.sort((a, b) => {
+                    // First, sort by incorrectly answered in descending order
+                    if (b.incorrectlyAnswered !== a.incorrectlyAnswered) {
+                        return b.incorrectlyAnswered - a.incorrectlyAnswered;
+                    }
+                    
+                    // If incorrectly answered are the same, sort by accuracy in ascending order
+                    const accuracyA = a.correctlyAnswered / (a.correctlyAnswered + a.incorrectlyAnswered);
+                    const accuracyB = b.correctlyAnswered / (b.correctlyAnswered + b.incorrectlyAnswered);
+                    return accuracyA - accuracyB;
+                });
+
                 socket.emit("statistics", JSON.stringify(stats))
 
                 //If this was the last round display end game button for lecturer
@@ -478,10 +490,14 @@ module.exports = {
              * This is used to determine when the user needs to get the difficulty selections screen
              */
             socket.on("getMandatoryNum", () => {
-                const lobbyId = socketToLobbyId.get(socket.id)!
-                const game = getGame(lobbyId)
-                const num = game.getMandatoryNum()
-                socket.emit("mandatoryNum", num)
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+                    const game = getGame(lobbyId)
+                    const num = game.getMandatoryNum()
+                    socket.emit("mandatoryNum", num)
+                } catch (error) {
+                    console.log(error)
+                }
             })
 
             /**
