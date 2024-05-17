@@ -24,7 +24,7 @@ export async function saveNewScore(
         study,
         accuracy,
     })
-    if (score === null || score.length === 0) return    
+    if (scores === null || scores.length === 0) return    
     await Score.create(newScore)
 }
 
