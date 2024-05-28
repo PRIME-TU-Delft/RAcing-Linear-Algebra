@@ -16,6 +16,7 @@ interface Props {
     lobbyId: number // lobby id to display
     onThemeSelected: (theme: string) => void // event called when a theme is selected
     onTeamNameCreated: (name: string) => void // event called when a team name is created
+    onStudySelected: (study: string) => void // event called when a study is selected
 }
 
 function Lobby(props: Props) {
@@ -43,6 +44,7 @@ function Lobby(props: Props) {
         selectedTheme: string
     ) => {
         props.onThemeSelected(selectedTheme)
+        props.onStudySelected(selectedStudy.toUpperCase())
         navigate("/TeamPreview")
         //Replace teamNameHere with actual teamname
         socket.emit(

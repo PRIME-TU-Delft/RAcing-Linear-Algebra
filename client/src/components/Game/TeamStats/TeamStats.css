@@ -1,14 +1,14 @@
 .team-stats-container {
-    width: 50%;
-    padding-left: 5rem;
+    width: 100%;
+    position: relative;
+    font-family: Cherry Bomb, sans-serif;
 }
 
 .team-stats-container > .scores-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    height: 11rem;
-    margin-top: 1rem;
+    height: 7rem;
 }
 
 .scores-container > .scores-title-container {
@@ -23,69 +23,146 @@
 }
 
 .team-stats-score-text {
+    font-size: 60px;
+    color: #003082;
+}
+
+.individual-stats-score-text {
     font-size: 40px;
-    font-weight: 900;
-    color: white;
+    color: #003082;
 }
 
 .team-stats-score-value {
     font-size: 40px;
-    font-weight: 900;
-    color: #0C2E4F;
+    color: #003082;
 }
 
 .individual-score {
-    color: yellow;
+    color: #F8B700;
 }
 
 .horizontal-division-bar {
     width: 85%;
     height: 0.5rem;
     margin: auto;
-    margin-top: 2rem;
-    background-color: #0C2E4F;
+    background-color: #0063D3;
+}
+
+.show-stats-btn-container {
+    position: absolute;
+    margin-top: 1.5rem;
+    width: 100%;
 }
 
 .show-stats-btn {
     width: 20rem;
     height: 3.5rem;
     line-height: 3.5rem;
-    background-color: #081D33;
+    background-color: #0063D3;
 
     font-size: 18px;
     color: white;
     margin: auto;
-    margin-top: 1rem;
     transition-duration: 0.3s;
 }
 
 .show-stats-btn:hover {
-    width: 21rem;
-    height: 4rem;
-    line-height: 4rem;
-    background-color: #061526;
+    background-color: #004BA0;
     transition-duration: 0.3s;
     cursor: pointer;
 }
 
-.hide-stats-btn {
-    width: 15rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    background-color: #081D33;
+@media only screen and (max-width: 1024px) {
+    .team-stats-score-text {
+        font-size: 30px;
+    }
+    
+    .individual-stats-score-text {
+        font-size: 20px;
+    }
+    
+    .team-stats-score-value {
+        font-size: 20px;
+    }
 
-    font-size: 16px;
-    color: white;
-    margin: auto;
-    margin-top: 1rem;
-    transition-duration: 0.3s;
+    .show-stats-btn-container {
+        margin-top: 0.5rem;
+    }
+
+    .show-stats-btn {
+        width: 15rem;
+        height: 2rem;
+        line-height: 2rem;
+        background-color: #0063D3;
+    
+        font-size: 13px;
+        color: white;
+        margin: auto;
+        transition-duration: 0.3s;
+    }
+
+    .scores-container {
+        padding-top: 3.5rem;
+    }
 }
 
-.hide-stats-btn:hover {
-    width: 16rem;
-    height: 2.8rem;
-    line-height: 2.8rem;
-    background-color: #061526;
-    transition-duration: 0.3s;
-    cursor: pointer;
+@media only screen and (min-width: 1025px) {
+    .team-stats-score-text {
+        font-size: 50px;
+    }
+    
+    .individual-stats-score-text {
+        font-size: 35px;
+    }
+    
+    .team-stats-score-value {
+        font-size: 35px;
+    }
+
+    .show-stats-btn-container {
+        margin-top: 1rem;
+    }
+
+    .show-stats-btn {
+        width: 25rem;
+        height: 3rem;
+        line-height: 3rem;
+        background-color: #0063D3;
+    
+        font-size: 16px;
+        color: white;
+        margin: auto;
+        transition-duration: 0.3s;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .team-stats-score-text {
+        font-size: 75px;
+        margin-top: 2rem;
+    }
+    
+    .individual-stats-score-text {
+        font-size: 50px;
+    }
+    
+    .team-stats-score-value {
+        font-size: 50px;
+    }
+
+    .show-stats-btn-container {
+        margin-top: 1rem;
+    }
+
+    .show-stats-btn {
+        width: 35rem;
+        height: 4rem;
+        line-height: 4rem;
+        background-color: #0063D3;
+    
+        font-size: 20px;
+        color: white;
+        margin: auto;
+        transition-duration: 0.3s;
+    }
 }

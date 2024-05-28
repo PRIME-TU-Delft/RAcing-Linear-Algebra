@@ -8,7 +8,7 @@ interface Props {
 export default function TrainBackground(props: Props) {
     return (
         <div className="background-train">
-            <svg
+            {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 width="100vw"
@@ -39,8 +39,12 @@ export default function TrainBackground(props: Props) {
                         <rect width="1440" height="560" fill="#ffffff"></rect>
                     </mask>
                 </defs>
-            </svg>
-            {props.includeRail ? <div className="background-train-track"></div> : null}
+            </svg> */}
+            {props.includeRail ? 
+                <div>
+                    <div className="sliding-background-clouds"></div>
+                    <div className="background-train-track"></div>
+                </div> : null}
         </div>
     )
 }

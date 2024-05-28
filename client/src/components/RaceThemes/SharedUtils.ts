@@ -35,7 +35,14 @@ interface Ghost {
     accuracy: number
     lapsCompleted: number,
     racePosition: number,
+    isOpen: boolean,
     animationStatus: AnimationStatus
+}
+
+interface RacePathObject {
+    svgPath: string
+    pathLength: number
+    components: Component[]
 }
 
 interface Checkpoint {
@@ -74,7 +81,7 @@ interface DecorationElement {
     sprite: string
 }
 
-interface Map {
+interface RaceMap {
     backgroundColor: string // the color of the background for the given theme
     decorations: DecorationElement[] // list of decorations for the map
     path: PercentCoordinate[] // list of corner points for the tracks of the train theme
@@ -91,6 +98,23 @@ interface ServerGhost {
     accuracy: number 
 }
 
+interface IQuestion {
+    question: string
+    answer: string
+    difficulty: string
+    subject: string
+    type: string
+    options?: string[]
+    variants?: any[]
+}
+
+interface RoundInformation {
+    topic: string,
+    teamName: string,
+    theme: string,
+    study: string
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -99,6 +123,9 @@ export {
     type RaceObject,
     type Ghost,
     type Dimensions,
-    type Map,
-    type ServerGhost
+    type RaceMap,
+    type ServerGhost,
+    type RacePathObject,
+    type IQuestion,
+    type RoundInformation
 }

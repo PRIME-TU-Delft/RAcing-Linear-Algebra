@@ -3,83 +3,76 @@ import "./StationDisplay.css"
 import { a, useSpring } from "react-spring"
 import { Checkpoint } from "../SharedUtils"
 
+interface Tip {
+    title: string,
+    content: string
+}
+
 interface Props {
-    fullRacePoints: number,
-    stations: Checkpoint[] // list of stations (checkpoints) available for the map
-    points: number // current number of points
+    stations: Tip[] // list of tips
+    activeIndices: number[]
+    nextTip: () => void
 }
 
 function StationDisplay(props: Props) {
-    const filteredStations = props.stations.filter(
-        (station, index) => station.percentage * props.fullRacePoints > props.points % props.fullRacePoints
-    ) // list of stations that haven't been reached yet by the team
-
-    const nextStationIndex =
-        filteredStations.length > 0
-            ? props.stations.indexOf(filteredStations[0])
-            : props.stations.length - 1 // compute the index of the next station to be reached
-
-    const [stationDisplayShown, setStationDisplayShown] = useState(
-        props.stations.map((station) => false) // boolean list to determine which stations were shown
-    )
-
-    const [show, setShow] = useState(false) // boolean set to true when the display is being shown on the screen
-
-    // When number of points changes, check whether to display the station schedule
-    useEffect(() => {
-        if (
-            props.points % props.fullRacePoints >= props.stations[nextStationIndex].percentage * props.fullRacePoints - 0.1 * props.fullRacePoints &&
-            !stationDisplayShown[nextStationIndex] // approaching the next station and schedule hasn't been shown yet
-        ) {
-            setShow((val) => true) // show station schedule
-            stationDisplayShown[nextStationIndex] = true // mark the station as shown
-            setStationDisplayShown([...stationDisplayShown])
-            setTimeout(() => setShow((val) => false), 5000) // stop showing the schedule after 5s
-        }
-    }, [props.points])
-
-    // Entrance and leave animation for the schedule, created using react-spring
-    const spring = useSpring({
-        config: { mass: 2, friction: 40, tension: 170 },
-        from: { x: show || !stationDisplayShown[nextStationIndex] ? -400 : 0 },
-        to: { x: show ? 0 : -400 },
-    })
 
     return (
-        <a.div className="station-display" style={{ ...spring }}>
+        <a.div className="station-display">
             <div className="header row">
                 <div className="col train-info">
-                    <b>Train</b> to{" "}
-                    <b>{props.stations[props.stations.length - 1].name}</b>
-                </div>
-                <div className="col-3 current-points">
-                    <b>{props.points}</b>
+                    <b>Tips</b>
                 </div>
             </div>
             <div className="schedule">
-                {props.stations
-                    .filter((station, index) => index >= nextStationIndex)
-                    .map((station, index) => (
-                        <div
-                            data-testid={`scheduleStation${index}`}
+                {props.activeIndices
+                    .map((index, displayIndex) => (displayIndex == 0 ?
+                        (<div
                             key={index}
-                            className={
-                                index == 0 ? "active-station" : "station"
-                            }
+                            className={"active-station"}
                         >
-                            {index == 0 ? (
-                                <div className="next-text">Next station:</div>
-                            ) : null}
+                            <div className="row">
+                                <div className="col next-text">{props.stations[index].title}</div>
+                            </div>
                             <div className="station-info row">
-                                <div className="col-2 station-points text-center">
-                                    {Math.floor(station.percentage * props.fullRacePoints)}
+                                <div className="col station-name">
+                                    {props.stations[index].content}
+                              </div>
+                            </div>
+                        </div>)
+                        :
+                        (<div
+                            key={index}
+                            className={"station"}
+                        >
+                            <div className="row station-info">
+                                <div className={"col-1 connector-container" + (displayIndex == props.activeIndices.length - 1 ? " hide-overflow" : "")}>
+                                    <svg
+                                        id="Layer_2"
+                                        data-name="Layer 2"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 62.5 281.05"
+                                        className="station-connector"
+                                    >
+                                        <defs>
+                                        <style>
+                                            {
+                                            "\n      .cls-station {\n        fill: #fff;\n        stroke: #fff;\n        stroke-miterlimit: 10;\n        stroke-width: 3px;\n      }\n    "
+                                            }
+                                        </style>
+                                        </defs>
+                                        <g id="Layer_2-2" data-name="Layer 2">
+                                            <circle className="cls-station" cx={48} cy={140} r={46.5} />
+                                            <rect className="cls-station" x={44.87} y={1.5} width={6.63} height={278.05} />
+                                        </g>
+                                    </svg>
                                 </div>
                                 <div className="col station-name">
-                                    {station.name}
-                                </div>
+                                {props.stations[index].title}
+                              </div>
                             </div>
-                        </div>
-                    ))}
+                        </div>)
+                     )
+                    )}
             </div>
         </a.div>
     )

@@ -3,10 +3,9 @@
     width: 30em;
     height: 15em;
     line-height: 15em;
-    color: black;
-    -webkit-text-stroke: 2px white;
+    color: #003082;
     border: 3px solid black;
-    background-color: #00A6D6;
+    background-color: #F8B700;
 
     top: 50%;
     left: 50%;

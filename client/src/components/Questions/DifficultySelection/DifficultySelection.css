@@ -10,6 +10,7 @@
 
 .diff-modal-wrapper {
     position: absolute;
+    padding-left: 4rem;
     top: 0;
     left: 0;
     display: flex;
@@ -59,7 +60,7 @@
 }
 
 .card-title {
-    font-size: 35px;
+    font-size: 30px;
     font-family: Century Gothic, sans-serif;
     font-style: bold;
     text-align: center;
@@ -98,7 +99,7 @@
     font-size: 15px;
 }
 
-@media (max-width: 1300px) {
+@media only screen and (max-width: 1300px) {
     /* Adjust the width for smaller screens */
     .card-body {
         height: 10em;
@@ -113,6 +114,34 @@
     }
     .difficulty-card,
     .card {
-        width: 12rem;
+        width: 10rem;
+    }
+
+    .diff-modal-wrapper {
+        padding-left: 1rem;
+    }
+}
+
+@media only screen and (max-width: 1090px) {
+    .card-body {
+        height: 8em;
+    }
+
+    .difficulty-card,
+    .card {
+        width: 8rem;
+    }
+
+    .emoji {
+        margin-top: 5px;
+        font-size: 45px;
+    }
+
+    .diff-modal-text0 {
+        font-size: 30px;
+    }
+
+    .diff-modal-text1 {
+        font-size: 15px;
     }
 }

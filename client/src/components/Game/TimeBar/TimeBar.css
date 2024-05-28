@@ -1,20 +1,66 @@
 .time-container {
     height: 10vh;
     margin-left: 4rem;
-    margin-top: 4rem;
     display: flex;
     flex-direction: column;
     padding-left: 5px;
 }
 
 .time-title {
-    width: 8%;
-    font-size: 28px;
-    font-weight: 600;
-    color: white;
+    width: 100%;
+    font-family: Cherry Bomb, sans-serif;
+    text-align: left;
+    font-size: 50px;
+    color: #003082;
 }
 
 .time-bar {
     width: 100%;
     margin-top: 4px;
+    box-shadow: 0px 0px 5px #000000;
+}
+
+.pulsing-time-bar {
+    animation: pulse 1s infinite;
+}
+
+@media only screen and (max-width: 1024px) {
+    .time-title {
+        font-size: 30px;
+    }
+}
+
+@media only screen and (min-width: 1025px) {
+    .time-title {
+        font-size: 44px;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .time-title {
+        font-size: 55px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .time-container {
+        margin-left: 1rem;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scaleY(1);
+        transform: scaleX(1);
+    }
+
+    70% {
+        transform: scaleY(1.15);
+        transform: scaleX(1.01);
+    }
+
+    100% {
+        transform: scaleY(1);
+        transform: scaleX(1);
+    }
 }

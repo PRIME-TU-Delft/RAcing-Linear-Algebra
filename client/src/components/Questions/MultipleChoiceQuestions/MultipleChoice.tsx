@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import katex from "katex"
 import { useRenderLatex, renderLatex } from "../useRenderLatex"
 import { getQuestionsRoute } from "../../../utils/APIRoutes"
-import { IQuestion } from "../Question"
 import socket from "../../../socket"
 
 interface Props {
@@ -17,24 +16,25 @@ interface Props {
 
 function MultipleChoice(props: Props) {
     const { questionNum } = props
+    const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([])
 
     // Reference to the div that will have the question text
     const question = useRenderLatex(props.latex)
     const answerRefs = props.answers.map(() => createRef<HTMLDivElement>())
-    let shuffledAnswers: string[]
 
     // Upon rendering parse the latex and display it for the answers. This will also dinamically
     // render divs according to the number of answers available.
     useEffect(() => {
         if (props.answers === undefined) return
-        shuffledAnswers = shuffleArray(props.answers)
-
-        shuffledAnswers.forEach((answer, index) => {
+        const newShuffling = shuffleArray(props.answers)
+        
+        newShuffling.forEach((answer, index) => {
             const ref = answerRefs[index].current
             if (ref) {
                 ref.innerHTML = renderLatex(answer)
             }
         })
+        setShuffledAnswers(curr => [...newShuffling])
     }, [props.answers])
 
     /**
@@ -88,8 +88,9 @@ function MultipleChoice(props: Props) {
                             <button
                                 className="answer"
                                 key={index}
-                                onClick={() =>
-                                    submitAnswer(shuffledAnswers[index])
+                                onClick={() =>{
+                                        submitAnswer(shuffledAnswers[index])
+                                }
                                 }
                                 style={{
                                     pointerEvents: props.disableButton

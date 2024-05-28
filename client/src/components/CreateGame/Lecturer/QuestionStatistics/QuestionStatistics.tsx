@@ -12,7 +12,11 @@ interface Statistic {
     incorrectlyAnswered: number // number of players who incorrectly answered the question
 }
 
-function QuestionStatistics() {
+interface Props {
+    onContinue: () => void
+}
+
+function QuestionStatistics(props: Props) {
     const [statistics, setStatistics] = useState<Statistic[]>([])
 
     /**
@@ -35,6 +39,18 @@ function QuestionStatistics() {
         })
     }
 
+    function renderLatexAnswer(latex: string): string {
+        try {
+            return katex.renderToString(latex, {
+                throwOnError: false,
+                output: "mathml",
+            })
+        } catch (error) {
+            console.error("Error rendering equation:", latex)
+            return ""
+        }
+    }
+
     // Enter animation for the statistics, created using react-spring
     const enterAnimation = useTrail(statistics.length, {
         config: { mass: 5, tension: 2000, friction: 200 },
@@ -48,35 +64,18 @@ function QuestionStatistics() {
         // When statistics are received, filters them based on number of attempts and sorts them based on accuracy and difficulty
         socket.on("statistics", (data: string) => {
             const parsedStatistics: Statistic[] = JSON.parse(data)
-            const filteredStatistics: Statistic[] = parsedStatistics
-                .filter(
-                    (stat) =>
-                        stat.incorrectlyAnswered > 0 ||
-                        stat.correctlyAnswered > 0
-                )
-                .sort(
-                    (first, second) =>
-                        first.correctlyAnswered /
-                            (first.correctlyAnswered +
-                                first.incorrectlyAnswered) -
-                        second.correctlyAnswered /
-                            (second.correctlyAnswered +
-                                second.incorrectlyAnswered)
-                )
-                .sort((first, second) =>
-                    first.difficulty > second.difficulty
-                        ? 1
-                        : second.difficulty > first.difficulty
-                        ? -1
-                        : 0
-                )
-
-            setStatistics((curr) => filteredStatistics)
+            setStatistics((curr) => parsedStatistics)
         })
     }, [socket])
 
     return (
         <div>
+            <div className="question-statistics-title">
+                Question Statistics
+            </div>
+            <div className="question-statistics-continue" onClick={() => props.onContinue()}>
+                Continue
+            </div>
             {enterAnimation.map(({ ...style }, index) => (
                 <a.div key={index} className="question-statistic" style={style}>
                     <div className="row">
@@ -91,36 +90,32 @@ function QuestionStatistics() {
                         <div className="col-4 stats">
                             <div className="row">
                                 <div className="row accuracy">
-                                    Accuracy:{" "}
-                                    {(
-                                        (statistics[index].correctlyAnswered /
-                                            (statistics[index]
-                                                .correctlyAnswered +
-                                                statistics[index]
-                                                    .incorrectlyAnswered)) *
-                                        100
-                                    )
-                                        .toString()
-                                        .slice(0, 5)}
-                                    %
+                                    Wrong attempts:{" "}
+                                        {statistics[index].incorrectlyAnswered}
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="row total-attemptys">
-                                    Raw accuracy:{" "}
-                                    {statistics[index].correctlyAnswered} /{" "}
-                                    {statistics[index].correctlyAnswered +
-                                        statistics[index].incorrectlyAnswered}
+                                    Accuracy:{" "}
+                                        {(
+                                            (statistics[index].correctlyAnswered /
+                                                (statistics[index]
+                                                    .correctlyAnswered +
+                                                    statistics[index]
+                                                        .incorrectlyAnswered)) *
+                                            100
+                                        )
+                                            .toString()
+                                            .slice(0, 5)}
+                                        %
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="row difficulty">
+                            <div className="row difficulty">
                                     Difficulty:{" "}
                                     {statistics[index].difficulty
                                         .charAt(0)
                                         .toUpperCase() +
                                         statistics[index].difficulty.slice(1)}
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +124,7 @@ function QuestionStatistics() {
                         <div
                             className="col-11 answer-value"
                             dangerouslySetInnerHTML={{
-                                __html: renderLatexQuestion(
+                                __html: renderLatexAnswer(
                                     statistics[index].answer
                                 ),
                             }}

@@ -1,18 +1,16 @@
 .station-display {
-    z-index: 9999;
-    position: absolute;
-    width: 400px;
-    height: 240px;
+    width: 50rem;
     background-color: #003082;
     color: white;
+    border: 2px solid white;
 }
 
 .station-display > .header {
     width: 100%;
-    height: 35px;
-    padding-top: 0.2em;
-    padding-left: 1em;
-    font-size: 18px;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 0.5em;
+    font-size: 30px;
 }
 
 .train-info {
@@ -28,32 +26,56 @@
 }
 
 .active-station {
-    height: 80px;
     text-align: left;
     padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
     color: #003082;
     background-color: white;
 }
 
 .station {
     padding-left: 1em;
-    height: 30px;
+    height: 50px;
+    line-height: 50px;
     font-size: 17px;
     font-weight: 600;
 }
 
+.station > .station-info {
+    height: 100%;
+}
+
 .next-text {
     font-size: 18px;
+    font-weight: 600;
     padding-top: 0.3em;
     padding-bottom: 0;
 }
 
 .active-station > .station-info {
     padding-top: 0;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
 }
 
 .btn {
     float: left;
+}
+
+.connector-container {
+    height: 100%;
+}
+
+.hide-overflow {
+    overflow: hidden;
+}
+
+.station-connector {
+    height: 100%;
+    width: 100%;
+}
+
+@media only screen and (max-width: 1300px) {
+    
 }

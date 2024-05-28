@@ -19,6 +19,7 @@ export const scoreSchema: mongoose.Schema = new mongoose.Schema({
     scores: {
         type: [Number],
         required: true,
+        default: undefined
     },
     // Used to compare teams between each other when they reach a checkpoint
     checkpoints: {

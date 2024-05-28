@@ -48,9 +48,6 @@ export default function InfoModal(props: Props) {
 
     useEffect(() => {
         if (!showInfoModal) return
-        const interval = setInterval(() => {
-            setProgress((prevProgress) => prevProgress - 1)
-        }, 30) // Update progress every 30 milliseconds
 
         // Clear interval after 3 seconds
         setTimeout(() => {
@@ -58,11 +55,8 @@ export default function InfoModal(props: Props) {
             setShowCorrectnessModal(false)
             setProgress(100)
             props.endInfoModal()
-        }, 3500)
+        }, 1500)
 
-        return () => {
-            clearInterval(interval)
-        }
     }, [showInfoModal])
 
     useEffect(() => {
@@ -114,11 +108,7 @@ export default function InfoModal(props: Props) {
                             </>
                         ) : null}
                     </div>
-                    <ProgressBar
-                        variant="info"
-                        now={progress}
-                        className="info-progress-bar"
-                    ></ProgressBar>
+
                 </animated.div>
             </div>
         </>
