@@ -1,16 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./TeamStats.css"
 import TeamLeaderboard from "./TeamLeaderboard/TeamLeaderboard";
 import { useSpring, animated, a } from '@react-spring/web'
+import { ScoreContext } from "../../../contexts/ScoreContext";
 
-function TeamStats() {
-    const [showYourStats, setShowYourStats] = useState(false)
+interface Props {
+    buttonTopOffset: number
+    playerScore: number
+}
+
+function TeamStats(props: Props) {
+    const scores = useContext(ScoreContext)
+
+    const [showYourStats, setShowYourStats] = useState(true)
     const [yourStatsAnimation, yourStatsAnimationController] = useSpring(() => ({
         config: {duration: 300}
       }))
     const [teamStatsAnimation, teamStatsAnimationController] = useSpring(() => ({
         config: {duration: 300}
     }))
+
+    const startStyle = {
+        fontSize: "50px",
+        marginTop: "7rem"
+    }
 
     const handleShowStatsButton = () => {
         if (!showYourStats) {
@@ -22,8 +35,8 @@ function TeamStats() {
             })
 
             teamStatsAnimationController.start({
-                from: {    fontSize: "50px", marginTop: "6.5rem"   },
-                to: {   fontSize: "40px", marginTop: "2rem"   }
+                from: {    fontSize: "50px"  },
+                to: {   fontSize: "40px" }
             })
         }
         else {
@@ -33,8 +46,8 @@ function TeamStats() {
             })
 
             teamStatsAnimationController.start({
-                from: {    fontSize: "40px", marginTop: "2rem" },
-                to: {   fontSize: "50px", marginTop: "6.5rem"  }
+                from: {    fontSize: "40px"},
+                to: {   fontSize: "50px" }
             })
 
             setTimeout(() => {
@@ -49,39 +62,36 @@ function TeamStats() {
                 <div className="scores-title-container">
                     {showYourStats ? (
                         <a.div style={{...yourStatsAnimation}}>
-                            <div className="team-stats-score-text">
-                                Your Score:
-                            </div>
-                            <div className="team-stats-score-text">
+                            <div className="individual-stats-score-text">
                                 Average Score:
+                            </div>
+                            <div className="individual-stats-score-text">
+                                Your Score:
                             </div>
                         </a.div>
                     ) : null}
-                    <a.div style={{...teamStatsAnimation}} className="team-stats-score-text">
-                        Team Score:
-                    </a.div>
                 </div>
                 <div className="scores-values-container">
                     {showYourStats ? (
                     <a.div style={{...yourStatsAnimation}}>
-                            <div className="team-stats-score-value individual-score">
-                                200
+                            <div className="individual-stats-score-text">
+                                {scores.teamAveragePoints}
                             </div>
-                            <div className="team-stats-score-value">
-                                150
+                            <div className="individual-stats-score-text">
+                                {props.playerScore}
                             </div>
                     </a.div>
                     ) : null}
-                    <a.div style={{...teamStatsAnimation}} className="team-stats-score-value">
-                        2000
-                    </a.div>
                 </div>
             </div>
-            <TeamLeaderboard yourTeamData={{teamScore: 2000, teamName: "Your team"}}></TeamLeaderboard>
-            <div className="horizontal-division-bar"></div>
-            {showYourStats ? 
-            (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>See how <span className="individual-score">you</span> are doing</div>)
-            : (<div className="hide-stats-btn" onClick={() => handleShowStatsButton()}>Hide <span className="individual-score">your</span> stats</div>)   }
+            <div className="team-stats-score-text">
+                        Team Score: {scores.currentPoints}
+            </div>
+            <div className="show-stats-btn-container" >
+                {!showYourStats ? 
+                (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>See how you are doing</div>)
+                : (<div className="show-stats-btn" onClick={() => handleShowStatsButton()}>Hide your stats</div>)   }
+            </div>
         </div>
     )
 }

@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react"
 import { animated, useSpringRef, useTransition } from "react-spring"
 import "./GhostText.css"
 import { getColorForStudy, getRacePositionText } from "../GhostService"
+import { Ghost } from "../../SharedUtils"
 
 interface Props {
-    ghostTeamName: string,
-    ghostStudy: string,
-    ghostRacePosition: number,
+    ghost: Ghost,
     showTeamName: boolean
 }
 
@@ -29,24 +28,20 @@ function GhostText(props: Props) {
     }, [props.showTeamName])
 
     useEffect(() => {
-        setRacePositionText(curr => getRacePositionText(props.ghostRacePosition))
-    }, [props.ghostRacePosition])
+        setRacePositionText(curr => getRacePositionText(props.ghost.racePosition))
+    }, [props.ghost.racePosition])
 
     useEffect(() => {
         transRef.start()
     }, [activeTextIndex])
 
     return(
-        <div>
-            {transitions((style, i) => (
-                <animated.div style={style} className={(i == 0 ? "position-text" : "team-name-text")}>
-                    { i == 0 ? racePositionText : (
-                        <div>
-                            <span>{props.ghostStudy + ":"}</span>{props.ghostTeamName}
-                        </div>
-                    )}
-                </animated.div>
-            ))}
+        <div className={(activeTextIndex == 0 ? "position-text" : "team-name-text")}>
+            {activeTextIndex == 0 ? racePositionText : (
+                <div>
+                    <span>{props.ghost.study + ":"}</span>{props.ghost.teamName}
+                </div>
+            )}
         </div>
     )
 }

@@ -13,6 +13,8 @@
     justify-content: center;
     align-items: center;
     margin-top: 35px;
+    width: 95%;
+    margin-left: 1em;
 }
 
 .answer-mc {
@@ -25,6 +27,7 @@
     cursor: pointer;
     padding: 15px;
     border: 1px solid #717171;
+    background-color: white;
     border-radius: 5px;
 }
 

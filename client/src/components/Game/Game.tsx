@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
@@ -11,6 +11,15 @@ import socket from "../../socket";
 import QuestionBoatBackground from "../Questions/Themes/QuestionBoatBackground";
 import "./Game.css"
 import Question from "../Questions/Question";
+import { getRacePathObject } from "../RaceThemes/RaceService";
+import { RacePathObject } from "../RaceThemes/SharedUtils";
+import { RaceDataContext } from "../../contexts/RaceDataContext";
+import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
+import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
+import { RacePathContext } from "../../contexts/RacePathContext";
+import Tracks from "../RaceThemes/Tracks/Tracks";
+import { getRacePathSizeAndOffsetMargins } from "./GameService";
+import { QuestionContext } from "../../contexts/QuestionContext";
 
 export interface IQuestion {
     question: string
@@ -24,6 +33,9 @@ export interface IQuestion {
 
 interface Props {
     theme: string
+    roundDuration: number
+    roundStarted: boolean
+    onRoundEnded: () => void
 }
 
 interface Statistic {
@@ -35,15 +47,16 @@ interface Statistic {
 }
 
 function Game(props: Props) {
-    const [mandatoryNum, setMandatoryNum] = useState(0)
+    const width = window.innerWidth
+    const height = window.innerHeight
+    const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
+    const raceData = useContext(RaceDataContext)
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
+    const questionData = useContext(QuestionContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
-
-    const [currentQuestionNum, setCurrentQuestionNum] = useState(0)
-
-    const [currentQuestionAnswer, setCurrentQuestionAnswer] = useState("")
 
     const navigate = useNavigate()
 
@@ -62,25 +75,23 @@ function Game(props: Props) {
     socket.emit("getMandatoryNum")
 
     useEffect(() => {
+        setShowInfoModal(false)
+        setScore(0)
+        setRightAnswers(0)
+        setWrongAnswers(0)
+        setStreak(0)
+        setMaxStreak(0)
+        setShowRoundOverModal(false)
+        setShowPopup(true)
+        setCountdown(3)
+    }, [props.roundStarted])
 
+    useEffect(() => {
         socket.off("round-ended").on("round-ended", () => {
             setShowInfoModal(false)
             setShowRoundOverModal(true)
             socket.emit("getResults")
-        })
-
-        socket.off("round-started").on("round-started", (roundDuration: number) => {
-            setShowInfoModal(false)
-            setScore(0)
-            setRightAnswers(0)
-            setWrongAnswers(0)
-            setStreak(0)
-            setMaxStreak(0)
-            socket.emit("getNewQuestion")
-            socket.emit("getMandatoryNum")
-            setShowRoundOverModal(false)
-            setShowPopup(true)
-            setCountdown(3)
+            props.onRoundEnded()
         })
 
         socket.off("rightAnswer").on("rightAnswer", (score: number) => {
@@ -91,7 +102,7 @@ function Game(props: Props) {
             setRightAnswers((rightAnswers) => rightAnswers + 1)
             setStreak((streak) => streak + 1)
             setShowInfoModal(true)
-            if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+            if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
         })
 
         socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
@@ -101,12 +112,12 @@ function Game(props: Props) {
             ])
             if (triesLeft === 0) {
                 setModalType("incorrectAnswer")
-                setModalAnswer(currentQuestionAnswer)
+                setModalAnswer(questionData.iQuestion.answer)
                 setStreak(0)
                 setScoreToAdd(0)
                 setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
                 setShowInfoModal(true)
-                if (currentQuestionNum < mandatoryNum) socket.emit("getNewQuestion")
+                if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
             } else {
                 wrongAnswerToast(triesLeft)
             }
@@ -119,11 +130,7 @@ function Game(props: Props) {
         socket.off("end-game").on("end-game", () => {
             navigate("/endGame")
         })
-
-        socket.off("mandatoryNum").on("mandatoryNum", (num: number) => {
-            setMandatoryNum(curr => num)
-        })
-    }, [socket, currentQuestionNum, mandatoryNum])
+    }, [socket, questionData.questionNumber, questionData.numberOfMandatory])
 
     useEffect(() => {
         const countdownInterval = setInterval(() => {
@@ -139,10 +146,10 @@ function Game(props: Props) {
     }, [countdown])
 
     useEffect(() => {
-        if (currentQuestionNum > 2) {
+        if (questionData.questionNumber > 2) {
             setScoreToAdd(curr => 0)
         }
-    }, [currentQuestionNum])
+    }, [questionData.questionNumber])
 
     // Variable to display the info modal
     const [showInfoModal, setShowInfoModal] = useState<boolean>(false)
@@ -272,7 +279,7 @@ function Game(props: Props) {
         showRoundOverModal
             ? [bodyAnimationRef, modalAnimationRef2]
             : [modalAnimationRef2, bodyAnimationRef],
-        [0, showRoundOverModal ? 0.3 : 0.1]
+        [0, showRoundOverModal ? 0.1 : 0.1]
     )
 
     return (
@@ -284,17 +291,15 @@ function Game(props: Props) {
             )}
             <div className="game-container">
                 <div className="game-left-container">
-                    <TimeBar></TimeBar>
+                    <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <Question 
                         hideQuestion={hideQuestion}
                         theme={props.theme}
-                        getQuestionNumber={(questionNumber) => setCurrentQuestionNum(questionNumber)}
-                        getQuestionAnswer={(questionAnswer) => setCurrentQuestionAnswer(questionAnswer)}
-
                     />  
                 </div>
-                 
-                <TeamStats></TeamStats>
+                 <div className="game-right-container">
+                 <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
+                 </div>
             </div>
                    
             <InfoModal
@@ -307,7 +312,7 @@ function Game(props: Props) {
                 correctAnswer={modalAnswer}
                 streak={streak}
                 scoreToAdd={scoreToAdd}
-                questionType={answeredQuestionType}
+                questionType={questionData.iQuestion.type}
             />
             <RoundOverModal
                 showRoundOverModal={showRoundOverModal}
@@ -318,13 +323,31 @@ function Game(props: Props) {
                 questionNum={numOfQuestions}
             />
             <ToastContainer />
-            <div className={`popup ${showPopup ? "show" : ""}`}>
-                <div className="popup-content">
-                    <p>
-                        <span className="countdown-text">{countdown}</span>
-                    </p>
+            <RacePathContext.Provider value={racePath}>
+                <div className="race-minimap-container">
+                    <div className="race-status-container"  style={{
+                        width: racePathSizing.width,
+                        height: racePathSizing.height,
+                        marginLeft: racePathSizing.offsetX,
+                        marginTop: racePathSizing.offsetY
+                    }}>
+                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
+                    </div>
+                    <svg className="minimap-svg-path" style={{
+                        width: racePathSizing.width,
+                        height: racePathSizing.height,
+                        marginLeft: racePathSizing.offsetX,
+                        marginTop: racePathSizing.offsetY
+                    }}>
+                            <path
+                                d={racePath.svgPath}
+                                fill={"none"}
+                                strokeWidth={10}
+                                stroke={"#f8b600a2"}
+                            />
+                    </svg>
                 </div>
-            </div>
+            </RacePathContext.Provider>
         </>
     )
 }

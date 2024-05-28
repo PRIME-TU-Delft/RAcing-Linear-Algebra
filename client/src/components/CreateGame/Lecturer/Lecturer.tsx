@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import "./Lecturer.css"
 import { useNavigate } from "react-router-dom"
 import socket from "../../../socket"
 import useWindowDimensions from "../../RaceThemes/Tracks/WindowDimensions"
 import StationDisplay from "../../RaceThemes/StationDisplay/StationDisplay"
-import CheckPoint from "./LeaderBoard/CheckPoint"
-import LeaderBoard from "./LeaderBoard/LeaderBoard"
+import CheckPoint from "./CheckPoint"
 import QuestionStatistics from "./QuestionStatistics/QuestionStatistics"
 import RaceTheme from "../../RaceThemes/RaceTheme"
 import LecturerService from "./LecturerService"
 import { Ghost } from "../../RaceThemes/SharedUtils"
+import { RaceDataContext } from "../../../contexts/RaceDataContext"
+import { TimeContext } from "../../../contexts/TimeContext"
+import { trainMaps } from "../../RaceThemes/Maps/TrainMaps"
+import { ScoreContext } from "../../../contexts/ScoreContext"
 
 //score object received from backend
 export interface IScore {
@@ -26,7 +29,8 @@ interface Props {
     teamName: string
     theme: string
     ghostTeams: Ghost[]
-}
+    roundDuration: number
+} 
 
 //data to be displayed
 interface TeamStats {
@@ -53,15 +57,6 @@ function Lecturer(props: Props) {
     //window size
     const { width, height } = useWindowDimensions()
 
-    //total seconds of count down(10 minutes), added additional of 3 because of the 3s count down
-    const [seconds, setSeconds] = useState(600)
-
-    //score of the team
-    const [score, setScore] = useState(0)
-
-    //accuracy of the team
-    const [accuracy, setAccuracy] = useState(100)
-
     //check if the round is finished
     const [roundFinished, setRoundFinished] = useState(false)
 
@@ -86,6 +81,9 @@ function Lecturer(props: Props) {
     //to navigate to another screen
     const navigate = useNavigate()
 
+    const usedTime = useContext(TimeContext);
+    const scores = useContext(ScoreContext)
+
     //show checkpoint leaderboard for 15s
     const showCheckPoint = () => {
         // setShowCP(true)
@@ -97,14 +95,9 @@ function Lecturer(props: Props) {
     //when 10minutes count down is up
     const timeUp = () => {
         //round ends
-        socket.emit("endRound")
-    }
-
-    //show statistic screen
-    const showStatistic = () => {
-        setShowLeaderBoard((cur) => false)
-        setRoundFinished((cur) => true)
-        socket.emit("getLecturerStatistics")
+        // console.log("HERE")
+        // socket.emit("endRound")
+        // navigate("/Leaderboard")
     }
 
     // Give warning before refreshing page to prevent disconnecting
@@ -121,37 +114,12 @@ function Lecturer(props: Props) {
 
     // Timer functionality
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds((seconds) => seconds - 1)
-            } else {
-                timeUp()
-                clearInterval(interval)
-            }
-        }, 1000)
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [seconds])
+        if (usedTime >= props.roundDuration && props.roundDuration > 0) 
+            timeUp()
+    }, [usedTime])
 
     // Socket changes
     useEffect(() => {
-        socket.on("score", (stats: TeamStats) => {
-            setScore((current) =>
-                current < stats.score ? stats.score : current
-            )
-            setAccuracy((current) => stats.accuracy)
-        })
-
-        socket.on("round-duration", (roundDuration: number) => {
-            socket.emit("getGhostTeams")
-            setSeconds(curr => roundDuration)
-        })
-
-        socket.on("game-ended", () => {
-            setGameEnds(true)
-        })
 
         socket.on("get-checkpoints", (result: [string, number][]) => {
             const formattedCheckpointData = LecturerService.transformCheckpointData(result)
@@ -166,68 +134,35 @@ function Lecturer(props: Props) {
 
     }, [socket])
 
-    //reset everything when new round start
-    const startNewRound = () => {
-        socket.emit("startNextRound")
-        socket.emit("getGhostTeams")
-
-        //if no more rounds, end game
-        if (gameEnds) {
-            navigate("/endGame")
-        } else {
-            setScore(0)
-            setLocation("Home")
-            setAccuracy(100)
-            setRoundFinished((cur) => false)
-        }
-    }
-
     return (
         <div>
             <div className="lecturer-header">
-                <div className="t-name">TeamName: {props.teamName}</div>
+                <div className="t-name">Team Name: {props.teamName}</div>
                 <div className="countdown">
-                    <div>Time: {LecturerService.formatTime(seconds)}</div>
+                    <div>Time: {LecturerService.formatTime(usedTime)}</div>
                 </div>
 
                 <div className="total-score">
-                    <div>Score: {score}</div>
-                    <div>Accuracy: {accuracy}%</div>
+                    <div>Score: {scores.currentPoints}</div>
+                    <div>Accuracy: {scores.currentAccuracy}%</div>
                 </div>
             </div>
-            {!roundFinished ? (
                 <div
                     style={{ width: "100%", height: `${height - 100}px` }}
                     className="map"
                 >
-                    <RaceTheme
-                        selectedTheme={props.theme}
-                        currentPoints={score}
-                        mapDimensions={{ width: width, height: height - 100 }}
-                        checkpoints={LecturerService.getCheckpointsForTheme(props.theme)}
-                        usedTime={600 - seconds}
-                        ghostTeams={props.ghostTeams}
-                        setCheckpoint={(data: string) =>
-                            setLocation((current) => data)
-                        }
-                        showCheckPoint={() => showCheckPoint()}
-                    ></RaceTheme>
+                        <RaceTheme
+                            mapDimensions ={{
+                                width: width,
+                                height: height - 100 
+                            }}
+                            setCheckpoint={(data: string) =>
+                                setLocation((current) => data)
+                            }
+                            showCheckPoint={() => showCheckPoint()}
+                            roundDuration={props.roundDuration}
+                        ></RaceTheme>
                 </div>
-            ) : (
-                <div className="statistics-wrapper">
-                    <h1>Questions</h1>
-
-                    <button
-                        className="next-btn"
-                        onClick={() => {
-                            startNewRound()
-                        }}
-                    >
-                        <p className="forward-arrow">{"\u2192"}</p>
-                    </button>
-                    <QuestionStatistics></QuestionStatistics>
-                </div>
-            )}
 
             {showCP && (
                 <div className="checkpoint-title">
@@ -235,9 +170,9 @@ function Lecturer(props: Props) {
                         data-testid="checkpoint"
                         location={location}
                         teamName={props.teamName}
-                        score={score}
-                        minutes={10 - Math.ceil(seconds / 60)}
-                        seconds={60 - (seconds % 60)}
+                        score={scores.currentPoints}
+                        minutes={10 - Math.ceil((props.roundDuration - usedTime) / 60)}
+                        seconds={60 - ((props.roundDuration - usedTime) % 60)}
                         teams={checkpointData}
                     ></CheckPoint>
                     <button
@@ -245,27 +180,6 @@ function Lecturer(props: Props) {
                         onClick={() => setShowCP(false)}
                     >
                         <p className="x">X</p>
-                    </button>
-                </div>
-            )}
-            {showLeaderBoard && (
-                <div className="leaderboard-wrapper">
-                    <LeaderBoard
-                        data-testid="leaderboard"
-                        teamname={props.teamName}
-                        yourScore={score}
-                        yourAccuracy={accuracy}
-                        yourCheckPoint={location}
-                        teams={teamScores}
-                    ></LeaderBoard>
-                    <p>It is {showLeaderBoard ? "true" : "false"}</p>
-                    <button
-                        className="next-btn"
-                        onClick={() => {
-                            showStatistic()
-                        }}
-                    >
-                        <p className="forward-arrow">{"\u2192"}</p>
                     </button>
                 </div>
             )}

@@ -1,9 +1,15 @@
+.team-preview-body {
+    color: #003082;
+}
+
 .team-preview-title {
     width: 100%;
+    height: 8rem;    
     font-size: 55px;
     font-weight: 600;
     padding: 0.7rem 0rem;
-    border-bottom: 5px solid #00A6D6;
+    background-color: #F8B700;
+    border-bottom: 5px solid #0063D3;
 
 }
 
@@ -17,10 +23,11 @@
 .team-preview-grid {
     width: 80%;
     margin: auto;
-    margin-top: 3em;
+    margin-top: 1em;
     padding-bottom: 20px;
     text-align: left;
     border-radius: 20px;
+    color: black;
 }
 
 .team-preview-grid > div {
@@ -51,7 +58,8 @@
 }
 
 .team-image-container {
-    box-shadow: 0px 0px 5px #000000;
+    box-shadow: 0px 0px 10px #000000;
+    background-color: white;
     position: relative;
     display: flex;
     margin: auto;
@@ -84,11 +92,12 @@
 }
 
 .main-team-preview {
-    width: 90%;
+    width: 80%;
     margin: auto;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 5px solid black;
+    border-top: 5px solid #0063D3;
+    color: black;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -98,6 +107,8 @@
     position: relative;
     display: flex;
     justify-content: center;
+    box-shadow: 0px 0px 15px #F8B700;
+    background-color: white;
     height: 200px;
     width: 200px;
 }
@@ -106,6 +117,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-left: 1rem;
     font-size: 40px;
     font-weight: 700;
 }
@@ -207,5 +219,44 @@
 
     .team-preview-name-container > div {
         font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .team-preview-title {
+        font-size: 45px;
+    }
+}
+
+@media only screen and (max-height: 950px) {
+    .team-image-container {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media only screen and (max-height: 890px) {
+    
+    .team-preview-grid {
+        margin-top: 0em;
+    }
+
+    .main-team-preview {
+        margin-top: 0em;
+    }
+    
+    .main-team-image-container {
+        width: 140px;
+        height: 140px;
+        box-shadow: 0px 0px 5px #F8B700;
+    }
+}
+
+@media only screen and (max-height: 800px) {
+
+    .main-team-image-container {
+        width: 120px;
+        height: 120px;
+        box-shadow: 0px 0px 5px #F8B700;
     }
 }

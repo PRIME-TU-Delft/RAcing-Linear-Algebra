@@ -48,8 +48,18 @@ module.exports = {
 
                     game.avgScore = game.totalScore / game.users.size
 
+                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                    const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+
                     io.to(`lecturer${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+                    })
+                    io.to(`players${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
 
                 } catch (error) {
@@ -114,8 +124,18 @@ module.exports = {
                     game.users.delete(socket.id)
                     game.avgScore = game.totalScore / game.users.size
 
+                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                    const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+
                     io.to(`lecturer${lobbyId}`).emit("score", {
                         score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+                    })
+                    io.to(`players${lobbyId}`).emit("score", {
+                        score: Math.floor(game.totalScore),
+                        accuracy: Math.floor(accuracy),
+                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                     })
                 } catch (error) {
                     console.log(error)
@@ -141,10 +161,7 @@ module.exports = {
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     startLobby(lobbyId)
                     try {
-                        console.log(study)
-                        console.log(topics)
                         const rounds = await getIRounds(study, topics)
-                        console.log(rounds)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
@@ -206,9 +223,17 @@ module.exports = {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+                        const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                        
                         io.to(`lecturer${lobbyId}`).emit("score", {
                             score: Math.floor(game.totalScore),
                             accuracy: Math.floor(accuracy),
+                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+                        })
+                        io.to(`players${lobbyId}`).emit("score", {
+                            score: Math.floor(game.totalScore),
+                            accuracy: Math.floor(accuracy),
+                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
                     } else if (attempts === 0) {
                         socket.emit("wrongAnswer", 0)
@@ -247,7 +272,8 @@ module.exports = {
             socket.on("endRound", async () => {
                 const lobbyId = socketToLobbyId.get(socket.id)
                 if (lobbyId == undefined) return
-
+                
+                
                 io.to(`players${lobbyId}`).emit("round-ended")
                 const game: Game = getGame(lobbyId)
 
@@ -301,7 +327,8 @@ module.exports = {
                         study: x.study,
                         accuracy: x.accuracy
                     }))
-                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                    io.to(`players${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
+                    io.to(`lecturer${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
                     console.log(error)
                 }
@@ -324,7 +351,9 @@ module.exports = {
                         * game.roundDurations[game.round] 
                         * game.users.size 
                         / 3)
-                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+
+                    io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
+                    io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
                     console.log(error)
                 }
@@ -339,6 +368,18 @@ module.exports = {
                 const game = getGame(lobbyId)
                 const stats = game.calculateStatistics()
 
+                stats.sort((a, b) => {
+                    // First, sort by incorrectly answered in descending order
+                    if (b.incorrectlyAnswered !== a.incorrectlyAnswered) {
+                        return b.incorrectlyAnswered - a.incorrectlyAnswered;
+                    }
+                    
+                    // If incorrectly answered are the same, sort by accuracy in ascending order
+                    const accuracyA = a.correctlyAnswered / (a.correctlyAnswered + a.incorrectlyAnswered);
+                    const accuracyB = b.correctlyAnswered / (b.correctlyAnswered + b.incorrectlyAnswered);
+                    return accuracyA - accuracyB;
+                });
+
                 socket.emit("statistics", JSON.stringify(stats))
 
                 //If this was the last round display end game button for lecturer
@@ -347,6 +388,14 @@ module.exports = {
                     io.to(`players${lobbyId}`).emit("game-ended")
                     socket.emit("game-ended")
                 }
+            })
+
+            /**
+             * Once the lecturer screen countdown is complete, start the game for all players regardless of their individual countdowns
+             */
+            socket.on("beginRace", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                io.to(`players${lobbyId}`).emit("race-started")
             })
 
             /**
@@ -441,10 +490,14 @@ module.exports = {
              * This is used to determine when the user needs to get the difficulty selections screen
              */
             socket.on("getMandatoryNum", () => {
-                const lobbyId = socketToLobbyId.get(socket.id)!
-                const game = getGame(lobbyId)
-                const num = game.getMandatoryNum()
-                socket.emit("mandatoryNum", num)
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+                    const game = getGame(lobbyId)
+                    const num = game.getMandatoryNum()
+                    socket.emit("mandatoryNum", num)
+                } catch (error) {
+                    console.log(error)
+                }
             })
 
             /**
@@ -456,6 +509,38 @@ module.exports = {
                     socket.emit("authenticated", true)
                 } else {
                     socket.emit("authenticated", false)
+                }
+            })
+
+            socket.on("getInformation", async () => {
+                try {
+                    const lobbyId = socketToLobbyId.get(socket.id)!
+
+                    const game = getGame(lobbyId)
+                    
+                    const round = game.rounds[game.round]
+                    const topic = round.subject
+                    const teamName = game.teamName
+
+                    const lobbyIdString = lobbyId.toString()
+                    const theme = themes.get(parseInt(lobbyIdString))
+                    
+                    io.to(`players${lobbyId}`).emit("round-information", ({
+                        topic: topic,
+                        teamName: teamName,
+                        theme: theme,
+                        study: game.study
+                    }))
+                    
+                    socket.emit("round-information", ({
+                        topic: topic,
+                        teamName: teamName,
+                        theme: theme,
+                        study: game.study
+                    }))
+
+                } catch (error) {
+                    console.log(error)
                 }
             })
         })

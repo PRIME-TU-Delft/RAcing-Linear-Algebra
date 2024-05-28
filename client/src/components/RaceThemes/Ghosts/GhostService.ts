@@ -284,9 +284,10 @@ export function initializeFrontendGhostObjects(ghosts: ServerGhost[]) {
         colors: { mainColor: getColorForStudy(x.study).mainColor, highlightColor: getColorForStudy(x.study).highlightColor },
         lapsCompleted: 0,
         racePosition: -1,
+        isOpen: false,
         animationStatus: {
             pathProgress: 0,    // initialize all ghost to progress of 0%
-            transitionDuration: 1,  // transition duration initalized at 1, changes when updating
+            updateAnimation: false,  // transition duration initalized at 1, changes when updating
             timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
         }
     }))

@@ -127,7 +127,6 @@ function DecorationsEditor(props: Props) {
                 )
 
             result += "]"
-            console.log(result)
         }
     }
 
