@@ -21,6 +21,14 @@ services:
     environment:
       - MONGO_URL=mongodb://db:27017/racingla?directConnection=true
 
+  frontend:
+    build: ./client
+    restart: unless-stopped
+    ports:
+      - 8000:3000
+    environment:
+      - BACKEND_URL=http://localhost:8001
+
 
 volumes:
   data:
