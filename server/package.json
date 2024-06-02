@@ -2,16 +2,23 @@
     "name": "server",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
-        "start": "node dist/index.js",
+        "build": "parcel build",
+        "start": "parcel build && node dist/index.js",
         "dev": "nodemon src/index.ts",
         "test": "jest",
         "test:ci": "jest --ci --testResultsProcessor=jest-junit --watchAll=false --ci --coverage",
         "lint": "npx eslint . --ext .ts,.tsx,.js,.jsx",
         "prettier": "npx prettier -w .",
         "debug": "nodemon --exec \"node --inspect-brk=0.0.0.0:9229 --require ts-node/register src/index.ts\""
+    },
+    "targets": {
+        "default": {
+            "context": "node",
+            "includeNodeModules": true,
+            "source": "src/index.ts"
+        }
     },
     "author": "",
     "license": "ISC",
