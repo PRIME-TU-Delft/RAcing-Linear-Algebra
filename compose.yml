@@ -22,12 +22,15 @@ services:
       - MONGO_URL=mongodb://db:27017/racingla?directConnection=true
 
   frontend:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        - REACT_APP_BACKEND_URL=http://localhost:8001
     restart: unless-stopped
     ports:
       - 8000:3000
-    environment:
-      - BACKEND_URL=http://localhost:8001
+    # environment:
+    #   - BACKEND_URL=http://localhost:8001
 
 
 volumes:

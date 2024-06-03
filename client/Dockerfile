@@ -1,6 +1,9 @@
 FROM node:20 AS builder
 WORKDIR /app
 
+ARG REACT_APP_BACKEND_URL=http://localhost:8001
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+
 RUN corepack enable
 # RUN corepack prepare pnpm@latest --activate
 
