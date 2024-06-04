@@ -2,10 +2,20 @@ name: racingla
 
 
 services:
-  db:
-    image: mongo
+  caddy:
+    image: docker.io/caddy:2.8-alpine
+    ports:
+      - 80:80
+      - 443:443
     volumes:
-      - data:/data/db
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+  db:
+    image: docker.io/mongo:7.0
+    volumes:
+      - mongo_data:/data/db
     environment:
       - MONGO_INITDB_DATABASE=racingla
     healthcheck:
@@ -14,8 +24,6 @@ services:
   backend:
     image: ghcr.io/prime-tu-delft/racing-la-backend
     restart: unless-stopped
-    ports:
-      - 8001:5000
     depends_on:
       - db
     environment:
@@ -24,9 +32,9 @@ services:
   frontend:
     image: ghcr.io/prime-tu-delft/racing-la-frontend
     restart: unless-stopped
-    ports:
-      - 8000:3000
 
 
 volumes:
-  data:
+  mongo_data:
+  caddy_data:
+  caddy_config:

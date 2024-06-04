@@ -1,0 +1,9 @@
+racingla.ewi.tudelft.nl {
+	header X-Clacks-Overhead "GNU Terry Pratchett"
+	reverse_proxy frontend:3000
+}
+
+api.racingla.ewi.tudelft.nl {
+	header X-Clacks-Overhead "GNU Terry Pratchett"
+	reverse_proxy backend:5000
+}
