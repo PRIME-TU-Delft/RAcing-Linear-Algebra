@@ -28,13 +28,13 @@ jobs:
       - name: Build and push (backend)
         uses: docker/build-push-action@v5
         with:
-          context: 'server'
+          context: '{{defaultContext}}:server'
           push: true
           tags: ghcr.io/${{ env.OWNER_LOWERCASE }}/racing-la-backend:latest
 
       - name: Build and push (frontend)
         uses: docker/build-push-action@v5
         with:
-          context: 'client'
+          context: '{{defaultContext}}:client'
           push: true
           tags: ghcr.io/${{ env.OWNER_LOWERCASE }}/racing-la-frontend:latest
