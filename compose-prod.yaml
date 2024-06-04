@@ -12,7 +12,7 @@ services:
       test: echo 'db.stats().ok' | mongo localhost:27017/racingla --quiet
 
   backend:
-    build: ./server
+    image: ghcr.io/prime-tu-delft/racing-la-backend
     restart: unless-stopped
     ports:
       - 8001:5000
@@ -22,10 +22,7 @@ services:
       - MONGO_URL=mongodb://db:27017/racingla?directConnection=true
 
   frontend:
-    build:
-      context: ./client
-      args:
-        - REACT_APP_BACKEND_URL=http://localhost:8001
+    image: ghcr.io/prime-tu-delft/racing-la-frontend
     restart: unless-stopped
     ports:
       - 8000:3000
