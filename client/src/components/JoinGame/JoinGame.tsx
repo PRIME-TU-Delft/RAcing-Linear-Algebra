@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 
 import "./JoinGame.css"
 import { useForm } from "react-hook-form"
+import { host } from "../../utils/APIRoutes"
 import socket from "../../socket"
 
 interface Props {
@@ -31,7 +32,7 @@ function JoinGame(props: Props) {
 
         //validate
         const res = await fetch(
-            `http://localhost:5000/api/lobby/validate/${lobbyId}`,
+            `${host}/api/lobby/validate/${lobbyId}`,
             {
                 method: "GET",
                 headers: {

@@ -7,6 +7,7 @@ import Rounds from "../Rounds/Rounds"
 import StartGame from "../StartGame/StartGame"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer, toast } from "react-toastify"
+import { host } from "../../../../utils/APIRoutes"
 import socket from "../../../../socket"
 import SelectName from "../SelectName/SelectName"
 
@@ -81,7 +82,7 @@ function Steps(props: Props) {
      */
     const getRoundsByStudy = async (study: string) => {
         const url =
-            "http://localhost:5000/api/lobby/getRounds/" + study.toUpperCase()
+            `${host}/api/lobby/getRounds/${study.toUpperCase()}`
         const res = await fetch(url, {
             method: "GET",
             headers: {

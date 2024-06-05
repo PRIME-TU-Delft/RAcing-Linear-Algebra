@@ -1,5 +1,6 @@
 import { io } from "socket.io-client"
+import { host } from "./utils/APIRoutes"
 
-const socket = io("http://localhost:5000")
+const socket = io(host)
 
 export default socket
