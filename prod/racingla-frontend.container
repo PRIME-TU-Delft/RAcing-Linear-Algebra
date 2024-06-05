@@ -1,0 +1,11 @@
+[Container]
+Image=ghcr.io/prime-tu-delft/racing-la-frontend
+Network=racingla.network
+HostName=frontend
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

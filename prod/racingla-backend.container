@@ -1,0 +1,16 @@
+[Unit]
+Requires=db.service
+After=db.service
+
+[Container]
+Environment=MONGO_URL=mongodb://db:27017/racingla?directConnection=true
+Image=ghcr.io/prime-tu-delft/racing-la-backend
+Network=racingla.network
+HostName=backend
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
