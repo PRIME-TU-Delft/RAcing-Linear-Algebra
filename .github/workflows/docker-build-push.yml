@@ -38,3 +38,5 @@ jobs:
           context: '{{defaultContext}}:client'
           push: true
           tags: ghcr.io/${{ env.OWNER_LOWERCASE }}/racing-la-frontend:latest
+          build-args: |
+            REACT_APP_BACKEND_URL=https://api.racingla.ewi.tudelft.nl
