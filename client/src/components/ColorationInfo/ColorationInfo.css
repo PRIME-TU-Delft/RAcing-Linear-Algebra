@@ -130,3 +130,90 @@
 .react-multi-carousel-list{
     position: unset !important;
   }
+
+@media only screen and (max-width: 1430px) {
+    .coloration-info {
+        width: 35em;
+    }
+
+    .coloration-info > .carousel-title {
+        font-size: 17px;
+    }
+
+    .react-multiple-carousel__arrow--left {
+        right: 31em !important;
+        left: auto !important;
+    }
+    
+    .react-multiple-carousel__arrow--right {
+        right: 0.2em !important;
+    }
+
+    .race-laps-carousel-container {
+        width: 30rem;
+        margin: auto;
+    }
+    
+    .study-carousel-container {
+        width: 30rem;
+        margin: auto;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .coloration-info {
+        width: 30em;
+    }
+
+    .coloration-info > .carousel-title {
+        font-size: 16px;
+    }
+
+    .react-multiple-carousel__arrow--left {
+        right: 26em !important;
+        left: auto !important;
+    }
+    
+    .react-multiple-carousel__arrow--right {
+        right: 0.1em !important;
+    }
+
+    .race-laps-carousel-container {
+        width: 25rem;
+        margin: auto;
+    }
+    
+    .study-carousel-container {
+        width: 25rem;
+        margin: auto;
+    }
+}
+
+@media only screen and (min-width: 2500px) {
+    .coloration-info {
+        width: 50rem;
+    }
+
+    .coloration-info > .carousel-title {
+        font-size: 22px;
+    }
+
+    .react-multiple-carousel__arrow--left {
+        right: 48rem !important;
+        left: auto !important;
+    }
+    
+    .react-multiple-carousel__arrow--right {
+        right: 1em !important;
+    }
+
+    .race-laps-carousel-container {
+        width: 45rem;
+        margin: auto;
+    }
+    
+    .study-carousel-container {
+        width: 45rem;
+        margin: auto;
+    }
+}

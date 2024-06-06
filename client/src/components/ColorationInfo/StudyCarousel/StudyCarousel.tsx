@@ -51,12 +51,26 @@ function StudyCarousel() {
             renderButtonGroupOutside={false}
             renderDotsOutside={false}
             responsive={{
+                largeDesktop: {
+                    breakpoint: {
+                        max: 6000,
+                        min: 2500
+                    },
+                    items: 5,
+                    },
                 desktop: {
                 breakpoint: {
-                    max: 3000,
-                    min: 1024
+                    max: 2500,
+                    min: 1430
                 },
                 items: 4,
+                },
+                laptop: {
+                    breakpoint: {
+                        max: 1430,
+                        min: 1200
+                    },
+                    items: 3,
                 },
                 mobile: {
                 breakpoint: {
@@ -67,10 +81,10 @@ function StudyCarousel() {
                 },
                 tablet: {
                 breakpoint: {
-                    max: 1024,
+                    max: 1200,
                     min: 464
                 },
-                items: 4,
+                items: 3,
                 }
             }}
             rewind={false}
