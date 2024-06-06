@@ -93,6 +93,12 @@
     z-index: 1;
 }
 
+.coloration-information-element {
+    position: absolute;
+    width: inherit;
+    bottom: 20px;
+}
+
 @media only screen and (max-width: 1024px) {
     .game-left-container {
         width: 60%;

@@ -230,7 +230,11 @@ export function getColorForStudy(study: string) {
         case "mch":
             return { mainColor: "#F98F46", highlightColor: "#274BFF" }
         case "mar":
-            return { mainColor: "#003B91", highlightColor: "#D585FF" }
+            return { mainColor: "#9E1976", highlightColor: "#2AD8D3" }
+        case "as":
+            return { mainColor: "#4ABF32", highlightColor: "#C652E2" }
+         case "ce":
+            return { mainColor: "#FFFF5A", highlightColor: "#539AE0" }
         default:
             return { mainColor: "#003B91", highlightColor: "#D585FF" }
     }

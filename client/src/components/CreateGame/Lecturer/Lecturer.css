@@ -133,3 +133,9 @@
     font-weight: bold;
     color: #0c2340;
 }
+
+.lecturer-screen-coloration-information {
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}

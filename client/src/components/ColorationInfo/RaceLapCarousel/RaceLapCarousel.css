@@ -1,0 +1,22 @@
+.race-lap-carousel-item {
+    width: auto;
+    height: 7em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.race-lap-carousel-item > .lap-color {
+    width: 2em;
+    height: 2em;
+    border-width: 5px;
+    border-style: solid;
+    border-radius: 50%;
+}
+
+.race-lap-carousel-item > .carousel-item-caption {
+    color: black;
+    margin-top: 5px;
+
+}
