@@ -13,6 +13,7 @@ import { RaceDataContext } from "../../../contexts/RaceDataContext"
 import { TimeContext } from "../../../contexts/TimeContext"
 import { trainMaps } from "../../RaceThemes/Maps/TrainMaps"
 import { ScoreContext } from "../../../contexts/ScoreContext"
+import ColorationInfo from "../../ColorationInfo/ColorationInfo"
 
 //score object received from backend
 export interface IScore {
@@ -147,22 +148,25 @@ function Lecturer(props: Props) {
                     <div>Accuracy: {scores.currentAccuracy}%</div>
                 </div>
             </div>
-                <div
-                    style={{ width: "100%", height: `${height - 100}px` }}
-                    className="map"
-                >
-                        <RaceTheme
-                            mapDimensions ={{
-                                width: width,
-                                height: height - 100 
-                            }}
-                            setCheckpoint={(data: string) =>
-                                setLocation((current) => data)
-                            }
-                            showCheckPoint={() => showCheckPoint()}
-                            roundDuration={props.roundDuration}
-                        ></RaceTheme>
-                </div>
+            <div
+                style={{ width: "100%", height: `${height - 100}px` }}
+                className="map"
+            >
+                    <RaceTheme
+                        mapDimensions ={{
+                            width: width,
+                            height: height - 100 
+                        }}
+                        setCheckpoint={(data: string) =>
+                            setLocation((current) => data)
+                        }
+                        showCheckPoint={() => showCheckPoint()}
+                        roundDuration={props.roundDuration}
+                    ></RaceTheme>
+            </div>
+            <div className="lecturer-screen-coloration-information">
+                <ColorationInfo></ColorationInfo>
+            </div>
 
             {showCP && (
                 <div className="checkpoint-title">
