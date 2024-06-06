@@ -1,0 +1,132 @@
+@font-face {
+    font-family: "Cherry Bomb";
+    src: url("../../fonts/CherryBombOne-Regular.ttf");
+}
+
+.coloration-info-container {
+    font-family: Cherry Bomb, sans-serif;
+}
+
+.coloration-info-btn {
+    width: 3rem;
+    height: 3rem;
+    color: white;
+    line-height: 3rem;
+    background-color: #0063D3;
+
+    font-size: 17px;
+    margin-left: auto;
+    color: white;
+    transition-duration: 0.3s;
+    overflow: hidden;
+}
+
+.coloration-info-btn-open {
+    width: 15rem;
+    background-color: #004BA0;
+    cursor: pointer;
+}
+
+.info-icon {
+    color: white;
+}
+
+.coloration-info-btn-open > .info-icon {
+    margin-right: 10px;
+}
+
+.coloration-info-text {
+    opacity: 0;
+}
+
+.coloration-info-btn-open > .coloration-info-text {
+    transition-duration: 0.3s;
+    opacity: 1;
+}
+
+.hide-coloration-text {
+    display: none;
+}
+
+.coloration-info {
+    background-color: white;
+    width: 40rem;
+    height: 20rem;
+    margin-left: auto;
+
+    transition-duration: 0.3s;
+    opacity: 1;
+}
+
+.coloration-info-container {
+    width: 100%;
+    padding-right: 10px;
+    z-index: 9999;
+}
+
+/* .carousel-race-laps {
+    position: absolute;
+} */
+
+.carousel-element {
+    width: 100%;
+    height: 5rem;
+    background-color: #F8B700;
+    margin: auto;
+
+}
+
+.race-laps-carousel-container {
+    width: 35rem;
+    margin: auto;
+}
+
+.study-carousel-container {
+    width: 35rem;
+    margin: auto;
+}
+
+.coloration-info > .carousel-title {
+    text-align: left;
+    width: 40rem;
+    padding-left: 40px;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.coloration-info > .horizontal-line-seperator {
+    border-top: 2px solid black;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+.exit-coloration-info {
+    color: red;
+    font-size: 35px;
+    position: absolute;
+    right: 20px;
+}
+
+.exit-coloration-info:hover {
+    cursor: pointer;
+}
+
+/* .react-multiple-carousel__arrow { 
+    right:0 !important; 
+    width: ;
+    left:0 !important; 
+} */
+
+.react-multiple-carousel__arrow--left {
+    right: 37em !important;
+    left: auto !important;
+}
+
+.react-multiple-carousel__arrow--right {
+    right: 1em !important;
+}
+
+.react-multi-carousel-list{
+    position: unset !important;
+  }
