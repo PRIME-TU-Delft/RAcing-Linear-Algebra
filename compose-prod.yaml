@@ -16,6 +16,8 @@ services:
     image: docker.io/mongo:7.0
     volumes:
       - mongo_data:/data/db
+    ports:
+      - 27017:27017  # Remember to put behind firewall! Meant only for SSH tunneling
     environment:
       - MONGO_INITDB_DATABASE=racingla
     healthcheck:
