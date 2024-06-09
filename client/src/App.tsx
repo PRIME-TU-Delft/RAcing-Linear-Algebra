@@ -125,9 +125,10 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 60) // CHANGE
+        setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(0)
+        setAllRoundsFinished(curr => false)
     
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
@@ -358,6 +359,7 @@ function App() {
                             teamStudy={study}
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
+                            isLastRound={allRoundsFinished}
                         />
                     }
                 ></Route>

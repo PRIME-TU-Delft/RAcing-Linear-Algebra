@@ -20,6 +20,7 @@ import { RacePathContext } from "../../contexts/RacePathContext";
 import Tracks from "../RaceThemes/Tracks/Tracks";
 import { getRacePathSizeAndOffsetMargins } from "./GameService";
 import { QuestionContext } from "../../contexts/QuestionContext";
+import ColorationInfo from "../ColorationInfo/ColorationInfo";
 
 export interface IQuestion {
     question: string
@@ -298,7 +299,10 @@ function Game(props: Props) {
                     />  
                 </div>
                  <div className="game-right-container">
-                 <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
+                    <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
+                    <div className="coloration-information-element">
+                        <ColorationInfo></ColorationInfo>
+                    </div>
                  </div>
             </div>
                    

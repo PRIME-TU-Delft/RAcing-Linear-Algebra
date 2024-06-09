@@ -4,10 +4,10 @@
 }
 
 .end-game-text {
-    font-size: 35px;
+    font-size: 60px;
     font-family: "Century Gothic";
     font-weight: bold;
-    margin-top: 125px;
+    margin-top: 100px;
 }
 
 .qrCode {
@@ -20,9 +20,44 @@
     border: 1px solid black;
 }
 
+.qrCode:hover {
+    cursor: pointer;
+}
+
 .end-game-text2 {
     font-size: 20px;
     font-family: "Century Gothic";
-    align-self: center;
-    align-items: center;
+    margin: auto;
+    width: 80%;
+}
+
+.end-game-subtext {
+    font-size: 25px;
+    color: rgb(68, 68, 68);
+    font-family: "Century Gothic";
+    margin: auto;
+}
+
+.end-game-home-btn {
+    width: 20rem;
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 20px;
+    background-color: #0063D3;
+    color: white;
+    margin: auto;
+    margin-top: 2rem;
+}
+
+.end-game-home-btn:hover {
+    background-color: #004BA0;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.end-game-btn-container {
+    border-top: 2px solid #0063D3;
+    width: 80%;
+    margin: auto;
+    margin-top: 2rem;
 }

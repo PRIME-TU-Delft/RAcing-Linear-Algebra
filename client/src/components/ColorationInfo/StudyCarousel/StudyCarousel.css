@@ -1,0 +1,21 @@
+.study-carousel-item {
+    width: auto;
+    height: 7em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.study-carousel-item > .study-color {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+}
+
+.study-carousel-item > .carousel-item-caption {
+    color: black;
+    margin-top: 5px;
+    font-size: 11px;
+
+}
