@@ -359,6 +359,7 @@ function App() {
                             teamStudy={study}
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
+                            isLastRound={allRoundsFinished}
                         />
                     }
                 ></Route>

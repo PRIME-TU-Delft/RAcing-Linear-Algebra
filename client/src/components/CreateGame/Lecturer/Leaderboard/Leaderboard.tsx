@@ -13,6 +13,7 @@ interface Props {
     ghosts: Ghost[]
     lapsCompleted: number
     isLecturer: boolean
+    isLastRound: boolean
 }
 
 interface LeaderboardItem {
@@ -20,7 +21,7 @@ interface LeaderboardItem {
     lapsCompleted: number,
     score: number,
     study: string,
-    isMainTeam: boolean
+    isMainTeam: boolean,
 }
 
 // Name Study Laps Score
@@ -116,6 +117,14 @@ function Leaderboard(props: Props) {
                     onClick={() => {
                         socket.emit("getLecturerStatistics")
                         navigate("/Statistics")
+                    }}>
+                        Continue
+                </div>
+            ) : null}
+            {!props.isLecturer && props.isLastRound ? (
+                <div className="leaderboard-continue-button" 
+                    onClick={() => {
+                        navigate("/endGame")
                     }}>
                         Continue
                 </div>
