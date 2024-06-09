@@ -67,6 +67,7 @@ export function endRound(lobbyId: number): boolean {
         user.resetUser()
     }
     game.checkpoints = []
+    game.timeScores = []
     game.correct = 0
     game.incorrect = 0
     return game.round < game.rounds.length

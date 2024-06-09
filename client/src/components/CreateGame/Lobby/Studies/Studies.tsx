@@ -31,7 +31,13 @@ function Studies(props: Props) {
                 </div>
                 <div className="checked">&#9989;</div>
             </div>
-
+            <div
+                className={"study-container " + studyClassHandler("ae")}
+                onClick={() => selectStudyHandler("ae")}
+            >
+                <div className="study-title">Aerospace Engineering</div>
+                <div className="checked">&#9989;</div>
+            </div>
             {/*<div
                 className={"study-container " + studyClassHandler("ae")}
                 onClick={() => selectStudyHandler("ae")}
