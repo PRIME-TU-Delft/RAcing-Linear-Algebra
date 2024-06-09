@@ -128,6 +128,7 @@ function App() {
         setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(0)
+        setAllRoundsFinished(curr => false)
     
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
