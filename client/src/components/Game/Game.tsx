@@ -21,6 +21,8 @@ import Tracks from "../RaceThemes/Tracks/Tracks";
 import { getRacePathSizeAndOffsetMargins } from "./GameService";
 import { QuestionContext } from "../../contexts/QuestionContext";
 import ColorationInfo from "../ColorationInfo/ColorationInfo";
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 export interface IQuestion {
     question: string
@@ -75,6 +77,22 @@ function Game(props: Props) {
 
     socket.emit("getMandatoryNum")
 
+    function show_notification() {
+        Store.addNotification({
+            title: "Color Coding",
+            message: "Click the information button to learn about the game's color coding!",
+            type: "info",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true
+            }
+        });
+    }
+
     useEffect(() => {
         setShowInfoModal(false)
         setScore(0)
@@ -85,6 +103,7 @@ function Game(props: Props) {
         setShowRoundOverModal(false)
         setShowPopup(true)
         setCountdown(3)
+        show_notification()
     }, [props.roundStarted])
 
     useEffect(() => {
