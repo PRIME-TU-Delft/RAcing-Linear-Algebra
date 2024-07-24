@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from "react"
 import "./Login.css"
 import { useNavigate } from "react-router-dom"
+import { host } from "../../../utils/APIRoutes"
 import socket from "../../../socket"
 
 interface Props {
@@ -32,7 +33,7 @@ function Login(props: Props) {
     const navigate = useNavigate()
     const loginHandler = async () => {
         // Login stuf...
-        const res = await fetch("http://localhost:5000/api/lobby/create", {
+        const res = await fetch(`${host}/api/lobby/create`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

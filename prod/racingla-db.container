@@ -1,0 +1,12 @@
+[Container]
+Environment=MONGO_INITDB_DATABASE=racingla
+HealthCmd=echo 'db.stats().ok' | mongo localhost:27017/racingla --quiet
+Image=docker.io/mongo:7.0
+PublishPort=27017:27017
+Volume=mongo_data:/data/db
+Network=racingla.network
+HostName=db
+AutoUpdate=registry
+
+[Install]
+WantedBy=default.target

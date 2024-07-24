@@ -1,0 +1,42 @@
+name: racingla
+
+
+services:
+  caddy:
+    image: docker.io/caddy:2.8-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+  db:
+    image: docker.io/mongo:7.0
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 27017:27017  # Remember to put behind firewall! Meant only for SSH tunneling
+    environment:
+      - MONGO_INITDB_DATABASE=racingla
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/racingla --quiet
+
+  backend:
+    image: ghcr.io/prime-tu-delft/racing-la-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - MONGO_URL=mongodb://db:27017/racingla?directConnection=true
+
+  frontend:
+    image: ghcr.io/prime-tu-delft/racing-la-frontend
+    restart: unless-stopped
+
+
+volumes:
+  mongo_data:
+  caddy_data:
+  caddy_config:

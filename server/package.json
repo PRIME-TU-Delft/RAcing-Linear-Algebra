@@ -2,8 +2,10 @@
     "name": "server",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
+        "build": "tsc",
+        "build-broken-for-some-reason": "parcel build",
         "start": "node dist/index.js",
         "dev": "nodemon src/index.ts",
         "test": "jest",
@@ -12,13 +14,19 @@
         "prettier": "npx prettier -w .",
         "debug": "nodemon --exec \"node --inspect-brk=0.0.0.0:9229 --require ts-node/register src/index.ts\""
     },
+    "targets": {
+        "default": {
+            "context": "node",
+            "includeNodeModules": true,
+            "source": "src/index.ts"
+        }
+    },
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "@types/express": "^4.17.1",
         "@types/jest": "^29.5.1",
         "@types/node": "^20.1.0",
-        "@types/react-toastify": "^4.1.0",
         "@types/supertest": "^2.0.12",
         "@typescript-eslint/eslint-plugin": "^5.59.2",
         "@typescript-eslint/parser": "^5.59.2",
@@ -40,6 +48,7 @@
     "dependencies": {
         "@stdlib/random-sample": "^0.1.0",
         "@stdlib/random-shuffle": "^0.1.0",
+        "cors": "^2.8.5",
         "curve-interpolator": "^3.3.1",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
@@ -56,7 +65,6 @@
         "socket.io": "^4.6.1",
         "socket.io-client": "^4.6.1",
         "supertest": "^6.3.3",
-        "tex-math-parser": "^2.0.4",
-        "tsc": "^2.0.4"
+        "tex-math-parser": "^2.0.4"
     }
 }
