@@ -80,14 +80,14 @@ function Game(props: Props) {
     function show_notification() {
         Store.addNotification({
             title: "Color Coding",
-            message: "Click the information button to learn about the game's color coding!",
-            type: "info",
-            insert: "top",
-            container: "top-right",
+            message: "Click this information button to learn about the game's color coding!",
+            type: "default",
+            insert: "bottom",
+            container: "bottom-right",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
-              duration: 5000,
+              duration: 10000,
               onScreen: true
             }
         });
