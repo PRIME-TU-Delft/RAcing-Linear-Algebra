@@ -41,6 +41,7 @@
         "react-mathquill": "^1.0.3",
         "react-modal": "^3.16.1",
         "react-multi-carousel": "^2.8.5",
+        "react-notifications-component": "^4.0.1",
         "react-router-dom": "^6.11.1",
         "react-spring": "^9.7.1",
         "react-time-sync": "^5.2.1",

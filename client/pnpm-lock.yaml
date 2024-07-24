@@ -89,6 +89,9 @@ dependencies:
   react-multi-carousel:
     specifier: ^2.8.5
     version: 2.8.5
+  react-notifications-component:
+    specifier: ^4.0.1
+    version: 4.0.1(react@18.3.1)
   react-router-dom:
     specifier: ^6.11.1
     version: 6.23.1(react-dom@18.3.1)(react@18.3.1)
@@ -2500,6 +2503,7 @@ packages:
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
       debug: 4.3.5
@@ -2515,6 +2519,7 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.3:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    deprecated: Use @eslint/object-schema instead
     dev: true
 
   /@isaacs/cliui@8.0.2:
@@ -14864,6 +14869,14 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /react-notifications-component@4.0.1(react@18.3.1):
+    resolution: {integrity: sha512-NRBkWO19AsXmN0b8YQ0L12eoCAhrnmIZtGm77ATWSfQEXPL5PYSyeACpx7tePP+R2De9b0IP4yk9vY4TtzC02w==}
+    peerDependencies:
+      react: ^18.0.1
+    dependencies:
+      react: 18.3.1
     dev: false
 
   /react-reconciler@0.27.0(react@18.3.1):
