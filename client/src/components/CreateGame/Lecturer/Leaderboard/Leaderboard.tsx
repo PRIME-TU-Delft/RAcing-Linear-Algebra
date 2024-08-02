@@ -24,13 +24,13 @@ interface LeaderboardItem {
     isMainTeam: boolean,
 }
 
-// Name Study Laps Score
-
 function Leaderboard(props: Props) {
-    const [sortedLeaderboardItems, setSortedLeaderboardItems] = useState<LeaderboardItem[]>([])
-    const navigate = useNavigate()
+    const [sortedLeaderboardItems, setSortedLeaderboardItems] = useState<LeaderboardItem[]>([]) // list of leaderboard items sorted by final score
+    const navigate = useNavigate()  // defining access to the navigation component
 
+    // When data from props updates, sort the leaderboard items accordingly
     useEffect(() => {
+        // Defining the playing team object
         const team = {
             teamname: props.teamname,
             lapsCompleted: props.lapsCompleted,
@@ -39,6 +39,7 @@ function Leaderboard(props: Props) {
             isMainTeam: true
         }
 
+        // Defining the ghost team objects by mapping the data into appropriate form
         const ghosts = props.ghosts.map(x => ({
             teamname: x.teamName,
             lapsCompleted: x.lapsCompleted,
@@ -46,15 +47,22 @@ function Leaderboard(props: Props) {
             study: x.study,
             isMainTeam: false
         }))
-
+        
+        // Constructing an array with both the ghost teams and the playing team
         const leaderboardItems = [...ghosts, team]
+
+        // Sorting the defined array in regards to the final score of each team 
+        // (descending, as first place is the team with the highest score)
         leaderboardItems.sort(function(a, b) {
             return b.score - a.score;
         });
 
+        // Updating the stored sorted values for teams
         setSortedLeaderboardItems(curr => [...leaderboardItems])
     }, [props])
 
+    // Defining the trail animation used for showing the leaderboard items upon entry
+    // ReactSpring requires you to define the length of the list whose items will be displayed in the configuration
     const leaderboardAnimation = useTrail(sortedLeaderboardItems.length, {
         config: { mass: 5, tension: 2000, friction: 200, duration: 200},
         from: { opacity: 0, y: -10 },
@@ -88,6 +96,8 @@ function Leaderboard(props: Props) {
             </div>
             <div className="end-leaderboard-container">
                 
+                {/* Mapping each of the leaderboard items to an element, displaying their stats and using the index of the sorted array
+                    to display the ranking number (being index + 1, since we don't want to start from 0)*/}
                 {leaderboardAnimation.map((props, index) => (
                     <a.div style={props} className={"leaderboard-item rounded" + (sortedLeaderboardItems[index].isMainTeam ? " main-team-item" : "")} key={index}>
                         <div className="row">
@@ -112,6 +122,9 @@ function Leaderboard(props: Props) {
                     </a.div>
                 ))}
             </div>
+
+            {/* If the leaderboard is displayed on the lecturer screen, the continue button should navigate the user to the
+                QuestionStatistics screen before ending the round / game */}
             {props.isLecturer ? (
                 <div className="leaderboard-continue-button" 
                     onClick={() => {
@@ -121,6 +134,9 @@ function Leaderboard(props: Props) {
                         Continue
                 </div>
             ) : null}
+
+            {/* If the leaderboard is displayed on the player screen and it is the last round of the game, 
+                the continue button navigates to the end screen */}
             {!props.isLecturer && props.isLastRound ? (
                 <div className="leaderboard-continue-button" 
                     onClick={() => {
