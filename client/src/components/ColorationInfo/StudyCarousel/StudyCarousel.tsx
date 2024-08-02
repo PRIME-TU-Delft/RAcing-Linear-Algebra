@@ -5,6 +5,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { getColorForStudy } from "../../RaceThemes/Ghosts/GhostService";
 
 function StudyCarousel() {
+    // Hard coding the studies for now, should be automated when expanding to new studies
     const studies = [{
         study: "Computer Science",
         abbreviation: "CSE"
@@ -33,68 +34,69 @@ function StudyCarousel() {
     return(
         <div>
             <Carousel  additionalTransfrom={0}
-            arrows
-            autoPlaySpeed={3000}
-            autoPlay={true}
-            centerMode={false}
-            className=""
-            containerClass="container"
-            dotListClass=""
-            draggable
-            focusOnSelect={false}
-            infinite
-            itemClass=""
-            keyBoardControl
-            minimumTouchDrag={80}
-            pauseOnHover
-            renderArrowsWhenDisabled={false}
-            renderButtonGroupOutside={false}
-            renderDotsOutside={false}
-            responsive={{
-                largeDesktop: {
+                arrows
+                autoPlaySpeed={3000}
+                autoPlay={true}
+                centerMode={false}
+                className=""
+                containerClass="container"
+                dotListClass=""
+                draggable
+                focusOnSelect={false}
+                infinite
+                itemClass=""
+                keyBoardControl
+                minimumTouchDrag={80}
+                pauseOnHover
+                renderArrowsWhenDisabled={false}
+                renderButtonGroupOutside={false}
+                renderDotsOutside={false}
+                responsive={{
+                    largeDesktop: {
+                        breakpoint: {
+                            max: 6000,
+                            min: 2500
+                        },
+                        items: 5,
+                        },
+                    desktop: {
                     breakpoint: {
-                        max: 6000,
-                        min: 2500
+                        max: 2500,
+                        min: 1430
                     },
-                    items: 5,
+                    items: 4,
                     },
-                desktop: {
-                breakpoint: {
-                    max: 2500,
-                    min: 1430
-                },
-                items: 4,
-                },
-                laptop: {
+                    laptop: {
+                        breakpoint: {
+                            max: 1430,
+                            min: 1200
+                        },
+                        items: 3,
+                    },
+                    mobile: {
                     breakpoint: {
-                        max: 1430,
-                        min: 1200
+                        max: 464,
+                        min: 0
+                    },
+                    items: 2,
+                    },
+                    tablet: {
+                    breakpoint: {
+                        max: 1200,
+                        min: 464
                     },
                     items: 3,
-                },
-                mobile: {
-                breakpoint: {
-                    max: 464,
-                    min: 0
-                },
-                items: 2,
-                },
-                tablet: {
-                breakpoint: {
-                    max: 1200,
-                    min: 464
-                },
-                items: 3,
-                }
-            }}
-            rewind={false}
-            rewindWithAnimation={false}
-            rtl={false}
-            shouldResetAutoplay
-            showDots={false}
-            sliderClass=""
-            slidesToSlide={1}
-            swipeable>
+                    }
+                }}
+                rewind={false}
+                rewindWithAnimation={false}
+                rtl={false}
+                shouldResetAutoplay
+                showDots={false}
+                sliderClass=""
+                slidesToSlide={1}
+                swipeable>
+                        {/* For each of the studies, show an element linking the study to a color */}
                         {studies.map((study, index) => (
                             <div key={index} className="study-carousel-item">
                                 <div className="study-color" style={{backgroundColor: getColorForStudy(study.abbreviation).mainColor}}></div>
