@@ -17,35 +17,21 @@ import ColorationInfo from "../../ColorationInfo/ColorationInfo"
 
 //score object received from backend
 export interface IScore {
-    teamname: string
-    score: number
-    checkpoints: number[]
-    roundId: string
-    study: string
-    accuracy: number
+    teamname: string        // name of the team
+    score: number           // score of the team
+    checkpoints: number[]   // list of checkpoints of the team
+    roundId: string         // id of the round
+    study: string           // study of the team
+    accuracy: number        // accuracy of the team
 }
 
 interface Props {
-    lobbyId: number
-    teamName: string
-    theme: string
-    ghostTeams: Ghost[]
-    roundDuration: number
+    lobbyId: number         // id of the current lobby
+    teamName: string        // name of the playing team
+    theme: string           // selected visual theme (train, boat...)
+    ghostTeams: Ghost[]     // list of ghost teams
+    roundDuration: number   // selected duration of the round
 } 
-
-//data to be displayed
-interface TeamStats {
-    score: number
-    accuracy: number
-}
-
-//Team object to store information about your team on the final leaderboard
-interface Teams {
-    name: string
-    score: number
-    accuracy: number
-    checkpoint: string
-}
 
 //Team object to store information about your team on the checkpoint leaderboard
 interface checkpointTeams {
@@ -58,48 +44,8 @@ function Lecturer(props: Props) {
     //window size
     const { width, height } = useWindowDimensions()
 
-    //check if the round is finished
-    const [roundFinished, setRoundFinished] = useState(false)
-
-    //shows the checkpoint leaderboard or not
-    const [showCP, setShowCP] = useState(false)
-
-    //shows the final leaderboard or not
-    const [showLeaderBoard, setShowLeaderBoard] = useState(false)
-
-    //checkpoint
-    const [location, setLocation] = useState("Home")
-
-    //score data for all teams for the final leaderboard
-    const [teamScores, setTeamScores] = useState<Teams[]>([])
-
-    //data for all teams for checkpoint leaderboard
-    const [checkpointData, setCheckpointData] = useState<checkpointTeams[]>([])
-
-    //check if game ends
-    const [gameEnds, setGameEnds] = useState(false)
-
-    //to navigate to another screen
-    const navigate = useNavigate()
-
-    const usedTime = useContext(TimeContext);
-    const scores = useContext(ScoreContext)
-
-    //show checkpoint leaderboard for 15s
-    const showCheckPoint = () => {
-        // setShowCP(true)
-        // setTimeout(() => {
-        //     setShowCP(false)
-        // }, 15000)
-    }
-
-    //when 10minutes count down is up
-    const timeUp = () => {
-        //round ends
-        // console.log("HERE")
-        // socket.emit("endRound")
-        // navigate("/Leaderboard")
-    }
+    const usedTime = useContext(TimeContext)    // get time used so far from the TimeContext
+    const scores = useContext(ScoreContext)     // get the scores from the ScoreContext
 
     // Give warning before refreshing page to prevent disconnecting
     useEffect(() => {
@@ -112,28 +58,6 @@ function Lecturer(props: Props) {
         window.addEventListener("beforeunload", unloadCallback);
         return () => window.removeEventListener("beforeunload", unloadCallback);
       }, []);    
-
-    // Timer functionality
-    useEffect(() => {
-        if (usedTime >= props.roundDuration && props.roundDuration > 0) 
-            timeUp()
-    }, [usedTime])
-
-    // Socket changes
-    useEffect(() => {
-
-        socket.on("get-checkpoints", (result: [string, number][]) => {
-            const formattedCheckpointData = LecturerService.transformCheckpointData(result)
-            setCheckpointData(curr => [...formattedCheckpointData])
-        })
-
-        socket.on("get-all-scores", (allScores: IScore[]) => {
-            const formattedTeamScores = LecturerService.formatTeamScores(allScores, props.theme)
-            setTeamScores(curr => [...formattedTeamScores])
-            setShowLeaderBoard(curr => true)
-        })
-
-    }, [socket])
 
     return (
         <div>
@@ -157,36 +81,12 @@ function Lecturer(props: Props) {
                             width: width,
                             height: height - 100 
                         }}
-                        setCheckpoint={(data: string) =>
-                            setLocation((current) => data)
-                        }
-                        showCheckPoint={() => showCheckPoint()}
                         roundDuration={props.roundDuration}
                     ></RaceTheme>
             </div>
             <div className="lecturer-screen-coloration-information">
                 <ColorationInfo></ColorationInfo>
             </div>
-
-            {showCP && (
-                <div className="checkpoint-title">
-                    <CheckPoint
-                        data-testid="checkpoint"
-                        location={location}
-                        teamName={props.teamName}
-                        score={scores.currentPoints}
-                        minutes={10 - Math.ceil((props.roundDuration - usedTime) / 60)}
-                        seconds={60 - ((props.roundDuration - usedTime) % 60)}
-                        teams={checkpointData}
-                    ></CheckPoint>
-                    <button
-                        className="close-btn"
-                        onClick={() => setShowCP(false)}
-                    >
-                        <p className="x">X</p>
-                    </button>
-                </div>
-            )}
         </div>
     )
 }

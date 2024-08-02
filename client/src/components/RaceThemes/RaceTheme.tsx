@@ -22,8 +22,6 @@ interface Props {
         height: number,
         width: number
     }
-    setCheckpoint: (data: string) => void
-    showCheckPoint: () => void
     roundDuration: number
 }
 
