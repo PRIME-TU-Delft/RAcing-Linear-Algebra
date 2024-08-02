@@ -13,11 +13,11 @@ interface Statistic {
 }
 
 interface Props {
-    onContinue: () => void
+    onContinue: () => void  // event triggered when the continue button is pressed
 }
 
 function QuestionStatistics(props: Props) {
-    const [statistics, setStatistics] = useState<Statistic[]>([])
+    const [statistics, setStatistics] = useState<Statistic[]>([])   // list of question statistics items
 
     /**
      * Renders the latex question to string
@@ -39,6 +39,11 @@ function QuestionStatistics(props: Props) {
         })
     }
 
+    /**
+     * Renders the latex answer to string
+     * @param latex     // the latext form of the answer
+     * @returns         // the string form of the answer
+     */
     function renderLatexAnswer(latex: string): string {
         try {
             return katex.renderToString(latex, {
@@ -76,6 +81,8 @@ function QuestionStatistics(props: Props) {
             <div className="question-statistics-continue" onClick={() => props.onContinue()}>
                 Continue
             </div>
+
+            {/* List the number of wrong attempts, overall student accuracy and question difficulty for each question */}
             {enterAnimation.map(({ ...style }, index) => (
                 <a.div key={index} className="question-statistic" style={style}>
                     <div className="row">
@@ -119,6 +126,8 @@ function QuestionStatistics(props: Props) {
                             </div>
                         </div>
                     </div>
+
+                    {/* Show the correct answer for the question */}
                     <div className="row question-answer">
                         <div className="col-1 answer-title">Answer:</div>
                         <div
