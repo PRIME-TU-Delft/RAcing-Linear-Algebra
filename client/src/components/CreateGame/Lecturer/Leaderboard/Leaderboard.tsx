@@ -7,21 +7,21 @@ import { useNavigate } from "react-router-dom";
 import socket from "../../../../socket";
 
 interface Props {
-    teamname: string
-    teamScore: number
-    teamStudy: string
-    ghosts: Ghost[]
-    lapsCompleted: number
-    isLecturer: boolean
-    isLastRound: boolean
+    teamname: string        // name of the playing team
+    teamScore: number       // final score of the playing team
+    teamStudy: string       // study of the playing team (CSE, MCH, AE...)
+    ghosts: Ghost[]         // list of ghost teams
+    lapsCompleted: number   // number of race laps completed by the playing team
+    isLecturer: boolean     // is the user a lecturer or a player
+    isLastRound: boolean    // is the current round the last one
 }
 
 interface LeaderboardItem {
-    teamname: string,
-    lapsCompleted: number,
-    score: number,
-    study: string,
-    isMainTeam: boolean,
+    teamname: string,       // name of a team
+    lapsCompleted: number,  // number of laps completed by the team
+    score: number,          // final score of the team
+    study: string,          // study of the team (CSE, MCH, AE...)
+    isMainTeam: boolean,    // is the team the playing team
 }
 
 function Leaderboard(props: Props) {
