@@ -6,11 +6,12 @@ import RaceLapCarousel from "./RaceLapCarousel/RaceLapCarousel";
 import StudyCarousel from "./StudyCarousel/StudyCarousel";
 
 function ColorationInfo() {
-    const [isOpen, setIsOpen] = useState(false)
-    const [hoveringButton, setHoveringButton] = useState(false)
+    const [isOpen, setIsOpen] = useState(false) // boolean to indicate whether the carousel should be displayed
+    const [hoveringButton, setHoveringButton] = useState(false) // boolean to indicate whether the button is being hovered
 
     return(
         <div className="coloration-info-container">
+            {/* Showing the color coding information carousel, when it's opened */}
             {isOpen ? 
             (<div className="coloration-info">
                 <div className="exit-coloration-info" onClick={() => setIsOpen(curr => false)}><FontAwesomeIcon icon={faXmark}/></div>
@@ -25,6 +26,8 @@ function ColorationInfo() {
                 </div>
         
             </div>
+            // Logic for animating the button that opens / closes the carousel
+            // Adjusts the button classes based on values of `isOpen` and `hoveringButton` booleans (the button expands when either is true)
             ) : (
                 <div className={"coloration-info-btn " + (isOpen || hoveringButton ? "coloration-info-btn-open" : "")} onClick={() => setIsOpen(curr => !curr)} onMouseLeave={() => setHoveringButton(false)} onMouseEnter={() => setHoveringButton(true)}>
                     <FontAwesomeIcon icon={faCircleInfo} className="info-icon" />   
