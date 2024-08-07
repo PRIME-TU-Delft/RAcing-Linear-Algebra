@@ -44,6 +44,7 @@ function App() {
     const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
+    const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
     
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -61,6 +62,8 @@ function App() {
 
     const timerExpirationHandler = () => {
         if (roundDuration > 0) {
+            setIsFirstRound(curr => false)
+
             if (!isPlayer) socket.emit("endRound")
             navigate("/Leaderboard")
         }
@@ -323,7 +326,7 @@ function App() {
                         }}>
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                 <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                    <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={() => navigate("/Leaderboard")}/>
                                 </QuestionContext.Provider>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>

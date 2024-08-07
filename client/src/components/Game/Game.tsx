@@ -39,6 +39,7 @@ interface Props {
     theme: string
     roundDuration: number
     roundStarted: boolean
+    isFirstRound: boolean
     onRoundEnded: () => void
 }
 
@@ -104,7 +105,10 @@ function Game(props: Props) {
         setShowRoundOverModal(false)
         setShowPopup(true)
         setCountdown(3)
-        show_notification()
+
+        // Only show the color coding information notification at the start of the first round
+        if (props.isFirstRound)
+            show_notification()
 
     }, [props.roundStarted])
 
