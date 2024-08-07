@@ -96,7 +96,7 @@ const transformCheckpointData = (
             name: item.teamname,
             score: item.score,
             accuracy: item.accuracy,
-            checkpoint: themeCheckpoints[Math.min(item.checkpoints.length, numberOfCheckpoints - 1)].name,
+            checkpoint: "",
         }))
 
         return teamScores
