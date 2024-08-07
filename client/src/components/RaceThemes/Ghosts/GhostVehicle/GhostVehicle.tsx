@@ -39,7 +39,7 @@ function GhostVehicle(props: Props) {
         let newIndex = currentTimeScoreIndex
         for (let i = currentTimeScoreIndex; i < props.ghost.timeScores.length; i++) {
             const timeScore = props.ghost.timeScores[i]
-            if (timeScore.timePoint <= usedTime) newIndex = i
+            if (timeScore && timeScore.timePoint <= usedTime) newIndex = i
             else break
         }
 
@@ -69,7 +69,7 @@ function GhostVehicle(props: Props) {
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
 
         // If all time scores have been used, the index will be -1 thus no new animation will be played till the end of round
-        if (currentTimeScoreIndex == -1) return
+        if (currentTimeScoreIndex == -1 || currentTimeScoreIndex >= props.ghost.timeScores.length) return
         
         const currentGhostTimePoint = props.ghost.timeScores[currentTimeScoreIndex].timePoint
 

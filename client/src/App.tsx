@@ -26,6 +26,7 @@ import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatist
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
+import { ReactNotifications } from "react-notifications-component"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -241,6 +242,7 @@ function App() {
 
     return (
         <div className="App">
+            <ReactNotifications/>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route
