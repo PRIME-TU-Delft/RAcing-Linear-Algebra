@@ -260,13 +260,11 @@ function Game(props: Props) {
             scale: 0,
             opacity: 0,
             size: "0%",
-            pointerEvents: "none",
         },
         to: {
             scale: showInfoModal ? 1 : 0,
             opacity: showInfoModal ? 1 : 0,
-            size: showInfoModal ? 1 : "0%",
-            pointerEvents: showInfoModal ? "all" : "none",
+            size: showInfoModal ? "100%" : "0%",
         },
     })
 
