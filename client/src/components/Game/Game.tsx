@@ -21,6 +21,9 @@ import Tracks from "../RaceThemes/Tracks/Tracks";
 import { getRacePathSizeAndOffsetMargins } from "./GameService";
 import { QuestionContext } from "../../contexts/QuestionContext";
 import ColorationInfo from "../ColorationInfo/ColorationInfo";
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css';
 
 export interface IQuestion {
     question: string
@@ -36,6 +39,7 @@ interface Props {
     theme: string
     roundDuration: number
     roundStarted: boolean
+    isFirstRound: boolean
     onRoundEnded: () => void
 }
 
@@ -75,6 +79,22 @@ function Game(props: Props) {
 
     socket.emit("getMandatoryNum")
 
+    function show_notification() {
+        Store.addNotification({
+            title: "Color Coding",
+            message: "Click this information button to learn about the game's color coding!",
+            type: "default",
+            insert: "bottom",
+            container: "bottom-right",
+            animationIn: ["animate__animated", "animate__jackInTheBox"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 10000,
+              onScreen: true
+            }
+        });
+    }
+
     useEffect(() => {
         setShowInfoModal(false)
         setScore(0)
@@ -85,6 +105,11 @@ function Game(props: Props) {
         setShowRoundOverModal(false)
         setShowPopup(true)
         setCountdown(3)
+
+        // Only show the color coding information notification at the start of the first round
+        if (props.isFirstRound)
+            show_notification()
+
     }, [props.roundStarted])
 
     useEffect(() => {
@@ -241,13 +266,11 @@ function Game(props: Props) {
             scale: 0,
             opacity: 0,
             size: "0%",
-            pointerEvents: "none",
         },
         to: {
             scale: showInfoModal ? 1 : 0,
             opacity: showInfoModal ? 1 : 0,
-            size: showInfoModal ? 1 : "0%",
-            pointerEvents: showInfoModal ? "all" : "none",
+            size: showInfoModal ? "100%" : "0%",
         },
     })
 
