@@ -25,7 +25,6 @@ import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboar
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
-import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 
 function App() {
@@ -242,7 +241,6 @@ function App() {
 
     return (
         <div className="App">
-            <ReactNotifications/>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route

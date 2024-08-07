@@ -23,6 +23,7 @@ import { QuestionContext } from "../../contexts/QuestionContext";
 import ColorationInfo from "../ColorationInfo/ColorationInfo";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
+import 'animate.css';
 
 export interface IQuestion {
     question: string
@@ -84,7 +85,7 @@ function Game(props: Props) {
             type: "default",
             insert: "bottom",
             container: "bottom-right",
-            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationIn: ["animate__animated", "animate__jackInTheBox"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
               duration: 10000,
@@ -104,6 +105,7 @@ function Game(props: Props) {
         setShowPopup(true)
         setCountdown(3)
         show_notification()
+
     }, [props.roundStarted])
 
     useEffect(() => {

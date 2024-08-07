@@ -5,10 +5,13 @@ import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import { BrowserRouter as Router } from "react-router-dom"
+import { ReactNotifications } from "react-notifications-component"
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
     //    <React.StrictMode>
     <Router>
+        <ReactNotifications/>
         <App />
     </Router>
     //    </React.StrictMode>
