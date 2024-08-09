@@ -24,6 +24,7 @@ interface CardInfo {
 
 interface Props {
     open: boolean
+    showDescription: boolean
     type: string
     onDifficultySelected: () => void
 }
@@ -53,12 +54,24 @@ export default function DifficultySelection(props: Props) {
         "Choose the difficulty for your next question",
         "You finished all the mandatory questions! You can now select the difficulty for each of your next questions. The harder the question, the more time it takes; however, it offers more points."
     ]
-    const transApi = useSpringRef()
-    const transitionText = useTransition(props.open ? modalText : [], {
-        ref: transApi,
-        from: { opacity: 0, scale: 0 },
-        enter: { opacity: 1, scale: 1 },
-        leave: { opacity: 0, scale: 0 },
+
+    const getTextElements = () => {
+        if (props.showDescription) 
+            return [
+                "Choose the difficulty for your next question",
+                "You finished all the mandatory questions! You can now select the difficulty for each of your next questions. The harder the question, the more time it takes; however, it offers more points."
+            ]
+        else
+            return [
+                "Choose the difficulty for your next question"
+            ]
+    }
+
+    const textAnimationApi = useSpringRef()
+    const textAnimation = useSpring({
+        ref: textAnimationApi,
+        from: { opacity: props.open ? 0 : 1, scale: props.open ? 0 : 1 },
+        to: { opacity: props.open ? 1 : 0, scale: props.open ? 1 : 0 },
     })
 
     // Animation for the difficulty cards to appear
@@ -99,11 +112,10 @@ export default function DifficultySelection(props: Props) {
 
     useChain(
         props.open
-            ? [springApi, transApi, transApiCard]
-            : [transApiCard, transApi, springApi],
+            ? [springApi, textAnimationApi, transApiCard]
+            : [transApiCard, textAnimationApi, springApi],
         [0, 0.1, 0.2]
     )
-    let i = 0 // used to give each card a unique class name
 
     const [easyCounter, setEasyCounter] = useState(0)
     const [disableButton, setDisableButton] = useState(false)
@@ -127,10 +139,11 @@ export default function DifficultySelection(props: Props) {
                     className="diff-modal"
                     style={{ ...rest, width: size }}
                 >
-                    {transitionText((style, item) => (
+                    {getTextElements().map((item, index) => (
                         <animated.div
-                            className={`diff-modal-text${i++}`}
-                            style={{ ...style }}
+                            className={`diff-modal-text${index}`}
+                            style={textAnimation}
+                            key={index}
                         >
                             {item}
                         </animated.div>

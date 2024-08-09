@@ -33,6 +33,8 @@ function Question(props: Props) {
 
     const [countdown, setCountdown] = useState(-1)
 
+    const [showDifficultySelectionDescription, setShowDifficultySelectionDescription] = useState(true)
+
     const navigate = useNavigate()
 
     // All the socket events for the questions are handled here
@@ -139,6 +141,11 @@ function Question(props: Props) {
         [0, showRoundOverModal ? 0.1 : 0.1]
     )
 
+    const difficultySelectedHandler = () => {
+        setShowDifficulty(curr => false)
+        setShowDifficultySelectionDescription(curr => false)
+    }
+
     return (
            <animated.div
                 className="question-container"
@@ -147,7 +154,8 @@ function Question(props: Props) {
             >
                 <DifficultySelection
                     open={showDifficulty}
-                    onDifficultySelected={() => setShowDifficulty(curr => false)}
+                    showDescription={showDifficultySelectionDescription}
+                    onDifficultySelected={difficultySelectedHandler}
                     type={questionData.iQuestion.subject}
                 ></DifficultySelection>
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
