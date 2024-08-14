@@ -62,6 +62,64 @@ export class User {
         return question
     }
 
+    /**
+     * Resets the streak of the user for a particular question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns void
+     */
+    resetUserStreak(difficulty: string) {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak) 
+            return
+
+        streak.resetStreak()
+    }
+
+     /**
+     * Updates the streak of the user for a particular question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns void
+     */
+    continueUserStreak(difficulty: string) {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak) 
+            return
+
+        streak.continueStreak()
+    }
+
+    /**
+     * Retrieves the affected streak from the streaks array, based on the question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns the affected streak
+     */
+    getStreakForDifficulty(difficulty: string) {
+        let difficulty_type = -1
+
+        switch(difficulty) {
+            case "easy":
+                difficulty_type = 0
+                break
+            
+            case "medium":
+                difficulty_type = 1
+                break
+            
+            case "hard":
+                difficulty_type = 2
+                break
+        }
+
+        const filtered_streak_indices = this.streaks.map((x, i) => i).filter(i => this.streaks[i].questionType == difficulty_type)
+
+        if (filtered_streak_indices.length > 0)
+            return this.streaks[filtered_streak_indices[0]]
+        else
+            return null
+    }
+
     resetUser() {
         this.questionIds = []
         this.questions = new Map()
