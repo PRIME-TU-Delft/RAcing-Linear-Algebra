@@ -212,13 +212,17 @@ module.exports = {
              * If they have no more mandatory questions left, they get the choose difficulty screen
              * If they answered correctly the new score gets sent to the lecturer
              */
-            socket.on("checkAnswer", (answer: string) => {
+            socket.on("checkAnswer", (answer: string, difficulty: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     console.log(`Given answer: ${answer}`)
                     const game = getGame(lobbyId)
-                    const [correctAnswer, score] = game.checkAnswer(socket.id, answer)
+                    const [correctAnswer, score] = game.checkAnswer(socket.id, answer, difficulty)
                     const attempts = game.attemptChecker(socket.id)
+
+                    const user = game.users.get(socket.id)
+                    if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+
                     if (correctAnswer) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
