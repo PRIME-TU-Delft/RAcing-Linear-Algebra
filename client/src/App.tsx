@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, IQuestion, RoundInformation, ServerGhost } from "./components/RaceThemes/SharedUtils"
+import { Ghost, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -45,6 +45,7 @@ function App() {
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
     const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
+    const [streaks, setStreaks] = useState<Streak[]>([])
     
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -204,6 +205,10 @@ function App() {
             setStudy(roundInformation.study)
         }
 
+        function onCurrentStreaks(new_streaks: Streak[]) {
+            setStreaks(curr => [...new_streaks])
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -216,6 +221,7 @@ function App() {
         socket.on("get-next-question", onGetNewQuestion)
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
         socket.on("round-information", onRoundInformation)
+        socket.on("currentStreaks", onCurrentStreaks)
     }, [])
 
     // useEffect(() => {
