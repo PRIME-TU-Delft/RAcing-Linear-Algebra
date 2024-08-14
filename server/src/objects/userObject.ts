@@ -28,9 +28,9 @@ export class User {
      */
     initializeUserStreaks() {
         const initialized_streaks = [
-            new Streak(0),
-            new Streak(1),
-            new Streak(2)
+            new Streak("easy"),
+            new Streak("medium"),
+            new Streak("hard")
         ]
 
         this.streaks = initialized_streaks
@@ -96,23 +96,7 @@ export class User {
      * @returns the affected streak
      */
     getStreakForDifficulty(difficulty: string) {
-        let difficulty_type = -1
-
-        switch(difficulty) {
-            case "easy":
-                difficulty_type = 0
-                break
-            
-            case "medium":
-                difficulty_type = 1
-                break
-            
-            case "hard":
-                difficulty_type = 2
-                break
-        }
-
-        const filtered_streak_indices = this.streaks.map((x, i) => i).filter(i => this.streaks[i].questionType == difficulty_type)
+        const filtered_streak_indices = this.streaks.map((x, i) => i).filter(i => this.streaks[i].questionType == difficulty)
 
         if (filtered_streak_indices.length > 0)
             return this.streaks[filtered_streak_indices[0]]

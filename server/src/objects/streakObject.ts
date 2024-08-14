@@ -1,12 +1,5 @@
-// The QuestionType value corresponds to the question difficulty
-enum QuestionType {
-    Easy = 0,
-    Medium,
-    Hard
-}
-
 export class Streak {
-    questionType: QuestionType
+    questionType: string
     streakValue: number
     streakMultiplier: number
 
@@ -15,7 +8,7 @@ export class Streak {
      * 
      * @param questionType difficulty of the questions the streak corresponds to
      */
-    constructor(questionType: QuestionType) {
+    constructor(questionType: string) {
         this.questionType = questionType
         this.resetStreak()
     }
