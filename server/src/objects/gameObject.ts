@@ -149,7 +149,7 @@ export class Game {
      * @param answer the answer from the user
      * @returns boolean depending on correctness of the answer
      */
-    checkAnswer(socketId: string, answer: any): (boolean | number)[] {
+    checkAnswer(socketId: string, answer: any, questionDifficulty: string): (boolean | number)[] {
         const user = this.users.get(socketId)
         if (user === undefined) throw Error("This user is not in this game")
 
@@ -163,7 +163,7 @@ export class Game {
         if (!result) {
             user.attempts--
             if (user.attempts === 0) this.incorrect++
-            user.streak = 0
+            user.resetUserStreak(questionDifficulty)
             //Increases the amount of attempts used for this question
             user.questions = user.questions.set(question, {
                 attempts: usedAttempts + 1,
@@ -171,7 +171,7 @@ export class Game {
             })
         } else {
             //Calculate score and update values
-            user.streak++
+            user.continueUserStreak(questionDifficulty)
             score = this.calculateScore(question, user)
             user.score += score
             this.totalScore += score
@@ -195,22 +195,18 @@ export class Game {
         const difficulties = ["easy", "medium", "hard", "mandatory"]
         const scores = [10, 50, 150, 50]
 
-        let score
         const scoreIdx = difficulties.indexOf(difficulty)
         if (scoreIdx == -1) {
             throw new Error("The difficulty of this question is invalid")
         }
-        score = scores.at(scoreIdx)
 
-        if (user.streak == 2) {
-            score = score * 1.2
-        } else if (user.streak == 3) {
-            score = score * 1.3
-        } else if (user.streak >= 4) {
-            score = score * 1.5
-        }
+        let score = scores.at(scoreIdx)
+        if (score == undefined)
+            score = 0
+        
+        const multiplier = user.getStreakMultiplier(difficulty)
 
-        return score
+        return score * multiplier
     }
 
     /**
