@@ -80,19 +80,19 @@ export default function DifficultySelection(props: Props) {
             difficulty: "Easy",
             emoji: "😃",
             points: "Base points: 10",
-            attempts: "1 attempt",
+            attempts: "Tries: 1",
         },
         {
             difficulty: "Medium",
             emoji: "😐",
             points: "Base points: 50",
-            attempts: "2 attempts",
+            attempts: "Tries: 2",
         },
         {
             difficulty: "Hard",
             emoji: "😈",
             points: "Base points: 150",
-            attempts: "3 attempts",
+            attempts: "Tries: 3",
         },
     ]
     const transApiCard = useSpringRef()
