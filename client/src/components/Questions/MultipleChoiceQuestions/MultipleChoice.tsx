@@ -12,6 +12,7 @@ interface Props {
     questionNum: number
     disableButton: boolean
     theme: string
+    questionDifficulty: string
 }
 
 function MultipleChoice(props: Props) {
@@ -55,7 +56,7 @@ function MultipleChoice(props: Props) {
 
     function submitAnswer(answer: string | number | undefined) {
         if (answer !== undefined) {
-            socket.emit("checkAnswer", answer)
+            socket.emit("checkAnswer", answer, props.questionDifficulty)
         }
     }
 

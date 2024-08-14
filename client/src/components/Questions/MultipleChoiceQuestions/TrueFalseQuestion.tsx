@@ -10,6 +10,7 @@ interface Props {
     questionNum: number
     disableButton: boolean
     theme: string
+    questionDifficulty: string
 }
 
 export default function TrueFalseQuestion(props: Props) {
@@ -18,7 +19,7 @@ export default function TrueFalseQuestion(props: Props) {
     const { questionNum } = props
 
     function submitAnswer(answer: string) {
-        socket.emit("checkAnswer", answer)
+        socket.emit("checkAnswer", answer, props.questionDifficulty)
     }
 
     return (

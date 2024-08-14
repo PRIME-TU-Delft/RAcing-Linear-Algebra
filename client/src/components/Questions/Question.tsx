@@ -169,6 +169,7 @@ function Question(props: Props) {
                                         questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
+                                        questionDifficulty={questionData.iQuestion.difficulty}
                                     />
                                 ) : questionData.iQuestion.type === "mc" ? (
                                     <MultipleChoice
@@ -177,6 +178,7 @@ function Question(props: Props) {
                                         questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
+                                        questionDifficulty={questionData.iQuestion.difficulty}
                                     />
                                 ) : questionData.iQuestion.type === "true/false" ? (
                                     <TrueFalseQuestion
@@ -184,6 +186,7 @@ function Question(props: Props) {
                                         questionNum={questionData.questionNumber}
                                         disableButton={disableButton}
                                         theme={props.theme}
+                                        questionDifficulty={questionData.iQuestion.difficulty}
                                     />
                                 ) : null}
                             </>
