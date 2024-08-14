@@ -1,4 +1,5 @@
 import type { IQuestion } from "../models/questionModel"
+import { Streak } from "./streakObject";
 
 export class User {
     questionIds: string[] //The ids of the questions/variants that have already been used
@@ -7,7 +8,7 @@ export class User {
     attempts: number //The amount of attempts on the current question
     score: number //The score of the player
     isOnMandatory: boolean //A check to see if the player is done with the mandatory questions
-    streak: number //The current amount of questions answered correctly in a row
+    streaks: Streak[] // Array of streak objects for the user
 
     /**
      * Constructor for the user object
@@ -19,7 +20,20 @@ export class User {
         this.attempts = 3
         this.score = 0
         this.isOnMandatory = true
-        this.streak = 0
+        this.initializeUserStreaks()
+    }
+
+    /**
+     * Initialize the streak objects for the 3 question difficulties
+     */
+    initializeUserStreaks() {
+        const initialized_streaks = [
+            new Streak(0),
+            new Streak(1),
+            new Streak(2)
+        ]
+
+        this.streaks = initialized_streaks
     }
 
     /**
@@ -54,5 +68,6 @@ export class User {
         this.attempts = 3
         this.score = 0
         this.isOnMandatory = true
+        this.streaks.map((streak: Streak) => streak.resetStreak())
     }
 }
