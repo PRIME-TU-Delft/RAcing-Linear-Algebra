@@ -91,6 +91,20 @@ export class User {
     }
 
     /**
+     * Retrieves the multiplier of the streak for a particular question difficulty
+     * @param difficulty difficulty of the answered question
+     * @returns the multiplier of the streak
+     */
+    getStreakMultiplier(difficulty: string): number {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak)
+            return 1
+        
+        return streak.streakMultiplier
+    }
+
+    /**
      * Retrieves the affected streak from the streaks array, based on the question difficulty.
      * @param difficulty difficulty of the answered question
      * @returns the affected streak
