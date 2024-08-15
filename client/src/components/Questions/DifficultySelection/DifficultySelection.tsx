@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import "./DifficultySelection.css"
 import {
     useTransition,
@@ -9,6 +9,8 @@ import {
     useSpringRef,
 } from "@react-spring/web"
 import DifficultyCard from "./DifficultyCard"
+import { StreakContext } from "../../../contexts/StreakContext"
+import { Streak } from "../../RaceThemes/SharedUtils"
 
 /**
  * @interface CardInfo - interface used due to the animations, has info related to the difficulty card
@@ -32,6 +34,8 @@ interface Props {
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
+    const streaks = useContext(StreakContext)
+
     // Animation for the modal to appear
     const springApi = useSpringRef()
     const { size, ...rest } = useSpring({
@@ -129,6 +133,19 @@ export default function DifficultySelection(props: Props) {
             setDisableButton(true)
     }, [easyCounter])
 
+    const getStreakForDifficulty = (difficulty: string) => {
+        const streak: Streak | undefined = streaks.find(x => x.questionType == difficulty.toLowerCase())
+
+        if (streak)
+            return streak
+        else 
+            return {
+                questionType: "",
+                streakValue: 0,
+                streakMultiplier: 1
+            }
+    }
+
     return (
         <>
             <div
@@ -160,6 +177,7 @@ export default function DifficultySelection(props: Props) {
                                     emoji={item.emoji}
                                     points={item.points}
                                     attempts={item.attempts}
+                                    streak={getStreakForDifficulty(item.difficulty)}
                                     onDifficultySelected={props.onDifficultySelected}
                                     setEasyCounter={setEasyCounter}
                                     onEasyCardClick={handleEasyCardClick}
