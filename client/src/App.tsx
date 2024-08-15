@@ -27,6 +27,7 @@ import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
 import { ReactNotifications } from "react-notifications-component"
+import { StreakContext } from "./contexts/StreakContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -332,7 +333,9 @@ function App() {
                         }}>
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                 <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                    <StreakContext.Provider value={streaks}>
+                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                    </StreakContext.Provider>
                                 </QuestionContext.Provider>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>
