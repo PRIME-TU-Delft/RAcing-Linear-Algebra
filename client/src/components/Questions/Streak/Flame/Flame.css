@@ -1,17 +1,23 @@
+:root {
+  --base-width: 2vw;
+  --calculated-width: calc(var(--base-width) * (-11));
+}
+
 .flame-wrapper {
     display: inline-block;
-    width: 256px;
-    height: 256px; 
+    width: var(--base-width);
+    height: var(--base-width);
     overflow: hidden;
     position: relative;
   }
   
   .flame-animation {
-    width: 256px;
-    height: 256px;
+    width: var(--base-width);
+    height: var(--base-width);
     background-image: url('../../../../img/flame_spritesheet.png');
+    background-size: auto var(--base-width);
     background-repeat: no-repeat;
-    animation: burn 0.7s steps(11) forwards;
+    animation: burn 0.7s steps(11) forwards infinite;
     transform-origin: center;
     position: absolute;
     top: 0;
@@ -23,14 +29,15 @@
       background-position: 0 0;
     }
     100% {
-      background-position: -2816px 0;
+      background-position: var(--calculated-width) 0;
     }
   }
   
   .flame-static {
-    width: 256px;
-    height: 256px;
+    width: var(--base-width);
+    height: var(--base-width);
     background-image: url('../../../../img/flame_static.png');
+    background-size: var(--base-width) var(--base-width);
     background-repeat: no-repeat;
     transform-origin: center;
     position: absolute;

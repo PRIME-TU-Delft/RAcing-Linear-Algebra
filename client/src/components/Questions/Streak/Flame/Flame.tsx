@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import "./Flame.css"
 
-function FlameAnimation() {
+interface Props {
+  showAnimation: boolean
+}
+
+function FlameAnimation(props: Props) {
     const [isBurning, setIsBurning] = useState(true);
 
-//   useEffect(() => {
-//     const timer = setTimeout(() => setIsBurning(false), 1000);
-//     return () => clearTimeout(timer);
-//   }, []);
+  // useEffect(() => {
+  //   if (props.showAnimation) {
+  //     setIsBurning(curr => true)
+  //     const timer = setTimeout(() => setIsBurning(false), 1000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [props.showAnimation]);
 
   return (
     <div
-      className="flame-wrapper  animate__animated animate__fadeIn"
-      style={{
-        scale: `0.15` /* Scale based on original size */
-      }}
+      className="flame-wrapper animate__animated animate__fadeIn"
     >
       <div
         className={isBurning ? 'flame-animation' : 'flame-static'}

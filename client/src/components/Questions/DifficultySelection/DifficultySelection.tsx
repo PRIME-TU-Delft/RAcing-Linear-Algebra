@@ -35,6 +35,15 @@ interface Props {
  */
 export default function DifficultySelection(props: Props) {
     const streaks = useContext(StreakContext)
+    const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)
+
+    const updateFlameAnimationStatus = () => {
+        if (props.open) {
+            setShowFlameAnimation(curr => true)
+        }
+        
+        else setShowFlameAnimation(curr => false)
+    }
 
     // Animation for the modal to appear
     const springApi = useSpringRef()
@@ -51,6 +60,7 @@ export default function DifficultySelection(props: Props) {
             size: props.open ? "95%" : "0%",
             pointerEvent: props.open ? "all" : "none",
         },
+        onRest: updateFlameAnimationStatus
     })
 
     // Animation for the text to appear
@@ -182,6 +192,7 @@ export default function DifficultySelection(props: Props) {
                                     setEasyCounter={setEasyCounter}
                                     onEasyCardClick={handleEasyCardClick}
                                     disableButton={disableButton}
+                                    showFlame={showFlameAnimation}
                                 ></DifficultyCard>
                             </animated.div>
                         ))}
