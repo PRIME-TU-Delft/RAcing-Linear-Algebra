@@ -49,13 +49,15 @@ export default function InfoModal(props: Props) {
     useEffect(() => {
         if (!showInfoModal) return
 
+        const duration = type === "correctAnswer" ? 1500 : 5000
+
         // Clear interval after 3 seconds
         setTimeout(() => {
             setProgress(0)
             setShowCorrectnessModal(false)
             setProgress(100)
             props.endInfoModal()
-        }, 1500)
+        }, duration)
 
     }, [showInfoModal])
 

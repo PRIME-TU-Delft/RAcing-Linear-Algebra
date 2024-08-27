@@ -319,6 +319,7 @@ function Game(props: Props) {
                     <Question 
                         hideQuestion={hideQuestion}
                         theme={props.theme}
+                        infoModalDisplayed={showInfoModal}
                     />  
                 </div>
                  <div className="game-right-container">

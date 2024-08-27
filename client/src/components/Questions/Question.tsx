@@ -24,6 +24,7 @@ import { QuestionContext } from "../../contexts/QuestionContext"
 interface Props {
     hideQuestion: boolean,
     theme: string,
+    infoModalDisplayed: boolean
 }
 
 function Question(props: Props) {
@@ -35,21 +36,7 @@ function Question(props: Props) {
 
     const [showDifficultySelectionDescription, setShowDifficultySelectionDescription] = useState(true)
 
-    const navigate = useNavigate()
-
-    // All the socket events for the questions are handled here
-    useEffect(() => {
-        
-        socket.off("chooseDifficulty").on("chooseDifficulty", () => {
-            setDisableButton(true)
-            // Wait for the info modal to be closed
-            setTimeout(() => {
-                setShowDifficulty(true)
-                setDisableButton(false)
-            }, 1500)
-        })
-    }, [])
-
+    const [hasToSelectDifficulty, setHasToSelectDifficulty] = useState(false)
     // Variable to display the difficulty selection screen
     const [showDifficulty, setShowDifficulty] = useState<boolean>(false)
     // Variable to display the info modal
@@ -58,19 +45,25 @@ function Question(props: Props) {
     const [showRoundOverModal, setShowRoundOverModal] = useState<boolean>(false)
     // This will be used to disable the submit button for a short period of time when the user submits an answer
     const [disableButton, setDisableButton] = useState<boolean>(false)
-    // Used to track when to not call get new question, because of the difficulty selection screen
-    const [rightAnswers, setRightAnswers] = useState<number>(0)
-    const [wrongAnswers, setWrongAnswers] = useState<number>(0)
-    const [streak, setStreak] = useState<number>(0) // Streak of the user
-    const [maxStreak, setMaxStreak] = useState<number>(0) // Max streak of the user
-    const [score, setScore] = useState<number>(0) // Total score of the user
-    const [scoreToAdd, setScoreToAdd] = useState<number>(0) // Score gained for the current question
-    const [numOfQuestions, setNumOfQuestions] = useState<number>(0) // Number of questions in the round
 
-    // Variables to dinamically decide what to display on info modal
-    const [modalText, setModalText] = useState<string[]>([])
-    const [modalType, setModalType] = useState<string>("")
-    const [modalAnswer, setModalAnswer] = useState<string>("")
+    const navigate = useNavigate()
+
+    // All the socket events for the questions are handled here
+    useEffect(() => {
+        
+        socket.off("chooseDifficulty").on("chooseDifficulty", () => {
+            setDisableButton(true)
+            setHasToSelectDifficulty(true)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (hasToSelectDifficulty && !props.infoModalDisplayed) {
+            setHasToSelectDifficulty(false)
+            setShowDifficulty(true)
+            setDisableButton(false)
+        }
+    }, [props.infoModalDisplayed, hasToSelectDifficulty])
 
     // Animations
     const bodyAnimationRef = useSpringRef()
