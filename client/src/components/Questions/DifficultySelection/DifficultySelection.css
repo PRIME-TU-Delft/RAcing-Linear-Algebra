@@ -87,7 +87,8 @@
 }
 
 .card-points,
-.card-attempts {
+.card-attempts,
+.card-streak {
     font-family: Century Gothic, sans-serif;
     font-style: bold;
     text-align: center;

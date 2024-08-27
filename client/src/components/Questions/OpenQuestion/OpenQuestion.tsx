@@ -10,6 +10,7 @@ interface Props {
     questionNum: number
     disableButton: boolean
     theme: string
+    questionDifficulty: string
 }
 
 function OpenQuestion(props: Props) {
@@ -73,6 +74,7 @@ function OpenQuestion(props: Props) {
                         latex={props.latex}
                         disableButton={props.disableButton}
                         theme={props.theme}
+                        questionDifficulty={props.questionDifficulty}
                     />
                 </div>
             </div>
