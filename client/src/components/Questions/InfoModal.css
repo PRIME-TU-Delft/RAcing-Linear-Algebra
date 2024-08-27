@@ -30,7 +30,7 @@
 }
 
 .info-modal-text1 {
-    margin-top: 15px;
+    margin-top: 45px;
     font-size: 35px;
 }
 
@@ -62,4 +62,15 @@
 
 .correct-answer-display {
     font-size: 25px;
+}
+
+.exit-info-modal {
+    color: rgb(255, 255, 0);
+    font-size: 40px;
+    position: absolute;
+    right: 20px;
+}
+
+.exit-info-modal:hover {
+    cursor: pointer;
 }

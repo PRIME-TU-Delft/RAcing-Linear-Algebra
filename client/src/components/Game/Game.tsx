@@ -134,7 +134,7 @@ function Game(props: Props) {
         socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
             // What happens if the answer is incorrect and you have no tries left
             setModalText([
-                "❌ Your answer is incorrect! The correct answer is:",
+                "Your answer is incorrect! The correct answer is:",
             ])
             if (triesLeft === 0) {
                 setModalType("incorrectAnswer")
