@@ -11,6 +11,7 @@ interface Props {
     disableButton: boolean
     theme: string
     questionDifficulty: string
+    onAnswerSubmitted: (answer_time: number) => void
 }
 
 function OpenQuestion(props: Props) {
@@ -75,6 +76,7 @@ function OpenQuestion(props: Props) {
                         disableButton={props.disableButton}
                         theme={props.theme}
                         questionDifficulty={props.questionDifficulty}
+                        onAnswerSubmitted={props.onAnswerSubmitted}
                     />
                 </div>
             </div>
