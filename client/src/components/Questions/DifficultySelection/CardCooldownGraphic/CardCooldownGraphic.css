@@ -1,0 +1,23 @@
+.cooldown-image {
+    height: 100px;
+    width: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.cooldown-image-container {
+    height: 100%;
+    overflow: hidden;
+}
+
+.cooldown-card {
+    cursor: pointer;
+    flex: 1;
+    margin: 15px;
+    width: 10rem;
+    cursor: default;
+}
+
+.cooldown-card-title {
+    position: absolute;
+}

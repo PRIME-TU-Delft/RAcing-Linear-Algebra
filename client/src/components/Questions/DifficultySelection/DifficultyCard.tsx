@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card"
 import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import FlameAnimation from "../Streak/Flame/Flame"
+import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 
 interface Props {
     difficulty: string
@@ -16,6 +17,7 @@ interface Props {
     onEasyCardClick: () => void
     disableButton: boolean
     showFlame: boolean
+    isOnCooldown: boolean
 }
 /**
  * DifficultyCard component that will displyed in the select difficulty modal.
@@ -42,23 +44,28 @@ export default function DifficultyCard(props: Props) {
     return (
         <>
             <div className="card-flexbox">
-                <Card className="difficulty-card">
-                    <Card.Body
-                        style={{
-                            pointerEvents:
-                                props.disableButton &&
-                                props.difficulty === "Easy"
-                                    ? "none"
-                                    : "auto",
-                        }}
-                        onClick={sendDifficulty}
-                    >
-                        <Card.Title className="card-title">
-                            {props.difficulty}
-                        </Card.Title>
-                        <Card.Text className="emoji">{props.emoji}</Card.Text>
-                    </Card.Body>
-                </Card>
+                {props.isOnCooldown ? (
+                    <CardCooldownGraphic></CardCooldownGraphic>
+                ): (
+                    <Card className="difficulty-card">
+                        <Card.Body
+                            style={{
+                                pointerEvents:
+                                    props.disableButton &&
+                                    props.difficulty === "Easy"
+                                        ? "none"
+                                        : "auto",
+                            }}
+                            onClick={sendDifficulty}
+                        >
+                            <Card.Title className="card-title">
+                                {props.difficulty}
+                            </Card.Title>
+                            <Card.Text className="emoji"> {props.emoji}</Card.Text>
+                        </Card.Body>
+                    </Card>
+                )}
+
                 {props.disableButton && props.difficulty === "Easy" && (
                     <p className="optional-text-diff">
                         You have to select a different difficulty

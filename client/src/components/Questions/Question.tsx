@@ -66,7 +66,7 @@ function Question(props: Props) {
             setDisableButton(false)
         }
     }, [props.infoModalDisplayed, hasToSelectDifficulty])
-    
+
     // Animations
     const bodyAnimationRef = useSpringRef()
     const bodyAnimation = useSpring({
@@ -153,6 +153,7 @@ function Question(props: Props) {
                     showDescription={showDifficultySelectionDescription}
                     onDifficultySelected={difficultySelectedHandler}
                     type={questionData.iQuestion.subject}
+                    easyIsOnCooldown={props.easyQuestionsOnCooldown}
                 ></DifficultySelection>
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div>
