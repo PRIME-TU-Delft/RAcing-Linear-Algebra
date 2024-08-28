@@ -24,7 +24,9 @@ import { QuestionContext } from "../../contexts/QuestionContext"
 interface Props {
     hideQuestion: boolean,
     theme: string,
-    infoModalDisplayed: boolean
+    infoModalDisplayed: boolean,
+    calculateResponseTime: (startTime: number, endTime: number) => void,
+    easyQuestionsOnCooldown: boolean
 }
 
 function Question(props: Props) {
@@ -48,8 +50,6 @@ function Question(props: Props) {
     
     const [questionStartTime, setQuestionStartTime] = useState<number>(0)
 
-    const navigate = useNavigate()
-
     // All the socket events for the questions are handled here
     useEffect(() => {
         
@@ -66,12 +66,7 @@ function Question(props: Props) {
             setDisableButton(false)
         }
     }, [props.infoModalDisplayed, hasToSelectDifficulty])
-
-    const calculateResponseTime = (answerTime: number) => {
-        const responseTime = (answerTime - questionStartTime) / 1000
-        console.log("Response time is " + responseTime.toString())
-    }
-
+    
     // Animations
     const bodyAnimationRef = useSpringRef()
     const bodyAnimation = useSpring({
@@ -171,7 +166,7 @@ function Question(props: Props) {
                                         disableButton={disableButton}
                                         theme={props.theme}
                                         questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={calculateResponseTime}
+                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
                                     />
                                 ) : questionData.iQuestion.type === "mc" ? (
                                     <MultipleChoice
@@ -181,7 +176,7 @@ function Question(props: Props) {
                                         disableButton={disableButton}
                                         theme={props.theme}
                                         questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={calculateResponseTime}
+                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
                                     />
                                 ) : questionData.iQuestion.type === "true/false" ? (
                                     <TrueFalseQuestion
@@ -190,7 +185,7 @@ function Question(props: Props) {
                                         disableButton={disableButton}
                                         theme={props.theme}
                                         questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={calculateResponseTime}
+                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
                                     />
                                 ) : null}
                             </>

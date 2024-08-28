@@ -95,6 +95,26 @@ function Game(props: Props) {
         });
     }
 
+    /**
+     * Applies the logic for detecting spam answering of an easy question.
+     *  - if the question was answered correctly, reset incorrect streak and decrement the spam counter by 2
+     *  - if it was increased incorrectly, but the player hasn't spammed twice in a row, 
+     *    decrement both the spam counter and the incorrect streak
+     *  - otherwise, simply continue the incorrect streak
+     * @param answeredCorrectly 
+     */
+    function easyQuestionAnswered(answeredCorrectly: boolean) {
+        if (answeredCorrectly) {
+            setIncorrectAnswerStreak(curr => 0)
+            setSpamAnswerCounter(curr => Math.max(curr - 2, 0))
+        } else if (nonSpamAnswerCounter >= 2) {
+            setSpamAnswerCounter(curr => Math.max(curr - 1, 0))
+            setIncorrectAnswerStreak(curr => Math.max(curr - 1, 0))
+        } else {
+            setIncorrectAnswerStreak(curr => curr + 1)
+        }
+    }
+
     useEffect(() => {
         setShowInfoModal(false)
         setScore(0)
@@ -128,6 +148,10 @@ function Game(props: Props) {
             setRightAnswers((rightAnswers) => rightAnswers + 1)
             setStreak((streak) => streak + 1)
             setShowInfoModal(true)
+
+            if (questionData.iQuestion.difficulty.toLowerCase() === "easy")
+                easyQuestionAnswered(true)
+
             if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
         })
 
@@ -143,6 +167,10 @@ function Game(props: Props) {
                 setScoreToAdd(0)
                 setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
                 setShowInfoModal(true)
+
+                if (questionData.iQuestion.difficulty.toLowerCase() === "easy")
+                    easyQuestionAnswered(false)
+
                 if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
             } else {
                 wrongAnswerToast(triesLeft)
@@ -198,6 +226,12 @@ function Game(props: Props) {
     const [modalType, setModalType] = useState<string>("")
     const [modalAnswer, setModalAnswer] = useState<string>("")
 
+    // Spam detection for easy questions
+    const [spamAnswerCounter, setSpamAnswerCounter] = useState<number>(0)
+    const [incorrectAnswerStreak, setIncorrectAnswerStreak] = useState<number>(0)
+    const [easyQuestionsOnCooldown, setEasyQuestionsOnCooldown] = useState<boolean>(false)
+    const [nonSpamAnswerCounter, setNonSpamAnswerCounter] = useState<number>(0)
+
     // Update the score when the scoreToAdd variable changes
     useEffect(() => {
         setScore((score) => score + scoreToAdd)
@@ -238,6 +272,43 @@ function Game(props: Props) {
         setWrongAnswers(wrongAnswers)
         setNumOfQuestions(rightAnswers + wrongAnswers)
     }
+
+    /**
+     * Calculates the player response time, and keeps track of internal spam counter, to prevent spam answering of easy questions
+     * This is because easy questions are dominated by MCQ and True/False questions, which can be spam answered to amass points
+     * by chance (since the player will select a correct answer eventually by chance)
+     * 
+     * @param answerTime    the time at which the player submitted the answer
+     */
+    function calculateResponseTime(questionStartTime: number, answerTime: number) {
+        // Spam checking only for easy questions
+        if (questionData.iQuestion.difficulty.toLowerCase() !== "easy") return
+
+        const responseTime = (answerTime - questionStartTime) / 1000
+
+        const baseSpamAnswerTimeThreshold = 2
+        const spamAnswerTimeIncrement = 1
+
+        if (responseTime < baseSpamAnswerTimeThreshold + incorrectAnswerStreak * spamAnswerTimeIncrement) {
+            setSpamAnswerCounter(curr => curr + 1)
+            setNonSpamAnswerCounter(curr => 0)
+        } 
+        else {
+            setNonSpamAnswerCounter(curr => curr + 1)
+        }
+    }
+
+    useEffect(() => {
+        if (spamAnswerCounter >= 3) {
+            setEasyQuestionsOnCooldown(curr => true)
+            setSpamAnswerCounter(curr => 0)
+            setIncorrectAnswerStreak(curr => 0)
+
+            setTimeout(() => {
+                setEasyQuestionsOnCooldown(curr => false)
+            }, 15000);
+        }
+    }, [spamAnswerCounter])
 
     // Animations
     const bodyAnimationRef = useSpringRef()
@@ -320,6 +391,8 @@ function Game(props: Props) {
                         hideQuestion={hideQuestion}
                         theme={props.theme}
                         infoModalDisplayed={showInfoModal}
+                        calculateResponseTime={calculateResponseTime}
+                        easyQuestionsOnCooldown={easyQuestionsOnCooldown}
                     />  
                 </div>
                  <div className="game-right-container">
