@@ -21,3 +21,7 @@
 .cooldown-card-title {
     position: absolute;
 }
+
+.cooldownt-tooltip {
+    background-color: blueviolet;
+}

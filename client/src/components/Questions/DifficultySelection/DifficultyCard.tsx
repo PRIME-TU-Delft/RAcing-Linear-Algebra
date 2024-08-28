@@ -5,7 +5,8 @@ import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import FlameAnimation from "../Streak/Flame/Flame"
 import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
-
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 interface Props {
     difficulty: string
     emoji: string
@@ -45,7 +46,11 @@ export default function DifficultyCard(props: Props) {
         <>
             <div className="card-flexbox">
                 {props.isOnCooldown ? (
-                    <CardCooldownGraphic></CardCooldownGraphic>
+                    <div
+                        data-tooltip-id="cooldown-tooltip" 
+                        data-tooltip-html="It seems that you were spam answering questions and the tracks got damaged!<br /> Don't worry, our team is already on the scene and the problem should be resolved shortly.<br /> In the meantime, try out a different difficulty!">
+                        <CardCooldownGraphic></CardCooldownGraphic>
+                    </div>
                 ): (
                     <Card className="difficulty-card">
                         <Card.Body
@@ -65,7 +70,11 @@ export default function DifficultyCard(props: Props) {
                         </Card.Body>
                     </Card>
                 )}
-
+                <Tooltip 
+                     id="cooldown-tooltip" 
+                     place="right"
+                     style={{backgroundColor: "#A4CF37", fontSize: "17px", zIndex: 9999}}
+                />
                 {props.disableButton && props.difficulty === "Easy" && (
                     <p className="optional-text-diff">
                         You have to select a different difficulty

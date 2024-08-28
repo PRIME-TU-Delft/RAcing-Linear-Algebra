@@ -306,7 +306,7 @@ function Game(props: Props) {
 
             setTimeout(() => {
                 setEasyQuestionsOnCooldown(curr => false)
-            }, 15000);
+            }, 30000);
         }
     }, [spamAnswerCounter])
 
