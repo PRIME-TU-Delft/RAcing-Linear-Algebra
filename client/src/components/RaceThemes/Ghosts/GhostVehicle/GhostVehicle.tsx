@@ -8,6 +8,7 @@ import GhostText from "../GhostText/GhostText";
 import LapCompletedText from "../LapCompletedText/LapCompletedText";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { TimeContext } from "../../../../contexts/TimeContext";
+import { RaceProgressContext } from "../../../../contexts/RaceProgressContext";
 
 interface Props {
     ghost: Ghost,
@@ -24,6 +25,7 @@ function GhostVehicle(props: Props) {
     const [startAnimation, setStartAnimation] = useState<boolean>(false)
 
     const usedTime = useContext(TimeContext)
+    const stopShowingRace = useContext(RaceProgressContext)
 
     const animationControls = useAnimationControls()
 
@@ -90,7 +92,7 @@ function GhostVehicle(props: Props) {
             const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
         
             // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
-            if (props.ghost.animationStatus.pathProgress >= progress) {
+            if (props.ghost.animationStatus.pathProgress >= progress && !stopShowingRace) {
                 animationControls.start({   // First, complete the lap
                     offsetDistance: "100%",
                     transition: { duration: 1.5 }

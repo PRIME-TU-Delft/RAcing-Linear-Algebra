@@ -28,6 +28,7 @@ import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
 import { ReactNotifications } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
+import { RaceProgressContext } from "./contexts/RaceProgressContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -47,6 +48,7 @@ function App() {
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
     const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
     const [streaks, setStreaks] = useState<Streak[]>([])
+    const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
     
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -67,7 +69,7 @@ function App() {
             setIsFirstRound(curr => false)
 
             if (!isPlayer) socket.emit("endRound")
-            navigate("/Leaderboard")
+                leaderboardNavigationHandler()
         }
     }
 
@@ -136,6 +138,7 @@ function App() {
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(0)
         setAllRoundsFinished(curr => false)
+        setStopShowingRace(false)
     
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
@@ -146,6 +149,15 @@ function App() {
         if (allRoundsFinished) navigate("/endGame")
         else socket.emit("startNextRound")
     }
+
+    const leaderboardNavigationHandler = () => {
+        setStopShowingRace(true)
+    }
+
+    useEffect(() => {
+        if (stopShowingRace)
+            navigate("/Leaderboard")
+    }, [stopShowingRace])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -334,7 +346,9 @@ function App() {
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                 <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
                                     <StreakContext.Provider value={streaks}>
-                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                        <RaceProgressContext.Provider value={stopShowingRace}>
+                                            <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
+                                        </RaceProgressContext.Provider>
                                     </StreakContext.Provider>
                                 </QuestionContext.Provider>
                             </ScoreContext.Provider>
@@ -352,13 +366,15 @@ function App() {
                             selectedMap: trainMaps[0]
                             }}>
                                 <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                   <RaceProgressContext.Provider value={stopShowingRace}>
                                     <Lecturer
-                                        lobbyId={lobbyId}
-                                        teamName={teamName}
-                                        ghostTeams={ghostTeams}
-                                        theme={theme}
-                                        roundDuration={roundDuration}
-                                    />
+                                            lobbyId={lobbyId}
+                                            teamName={teamName}
+                                            ghostTeams={ghostTeams}
+                                            theme={theme}
+                                            roundDuration={roundDuration}
+                                        />
+                                   </RaceProgressContext.Provider>
                                 </ScoreContext.Provider>
                             </RaceDataContext.Provider>
                         </TimeContext.Provider>
