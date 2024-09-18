@@ -33,6 +33,7 @@ interface Props {
     disableButton: boolean
     theme: string
     questionDifficulty: string
+    onAnswerSubmitted: (answer_time: number) => void
 }
 
 function QuestionForm(props: Props) {
@@ -179,6 +180,7 @@ function QuestionForm(props: Props) {
 
     // Function that sends the answer to the backend for checking
     function checkAnswer() {
+        props.onAnswerSubmitted(Date.now())
         socket.emit("checkAnswer", mathField.latex(), props.questionDifficulty)
     }
 

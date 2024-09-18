@@ -4,7 +4,9 @@ import Card from "react-bootstrap/Card"
 import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import FlameAnimation from "../Streak/Flame/Flame"
-
+import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 interface Props {
     difficulty: string
     emoji: string
@@ -16,6 +18,7 @@ interface Props {
     onEasyCardClick: () => void
     disableButton: boolean
     showFlame: boolean
+    isOnCooldown: boolean
 }
 /**
  * DifficultyCard component that will displyed in the select difficulty modal.
@@ -42,23 +45,36 @@ export default function DifficultyCard(props: Props) {
     return (
         <>
             <div className="card-flexbox">
-                <Card className="difficulty-card">
-                    <Card.Body
-                        style={{
-                            pointerEvents:
-                                props.disableButton &&
-                                props.difficulty === "Easy"
-                                    ? "none"
-                                    : "auto",
-                        }}
-                        onClick={sendDifficulty}
-                    >
-                        <Card.Title className="card-title">
-                            {props.difficulty}
-                        </Card.Title>
-                        <Card.Text className="emoji">{props.emoji}</Card.Text>
-                    </Card.Body>
-                </Card>
+                {props.isOnCooldown ? (
+                    <div
+                        data-tooltip-id="cooldown-tooltip" 
+                        data-tooltip-html="It seems that you were spam answering questions and the tracks got damaged!<br /> Don't worry, our team is already on the scene and the problem should be resolved shortly.<br /> In the meantime, try out a different difficulty!">
+                        <CardCooldownGraphic></CardCooldownGraphic>
+                    </div>
+                ): (
+                    <Card className="difficulty-card">
+                        <Card.Body
+                            style={{
+                                pointerEvents:
+                                    props.disableButton &&
+                                    props.difficulty === "Easy"
+                                        ? "none"
+                                        : "auto",
+                            }}
+                            onClick={sendDifficulty}
+                        >
+                            <Card.Title className="card-title">
+                                {props.difficulty}
+                            </Card.Title>
+                            <Card.Text className="emoji"> {props.emoji}</Card.Text>
+                        </Card.Body>
+                    </Card>
+                )}
+                <Tooltip 
+                     id="cooldown-tooltip" 
+                     place="right"
+                     style={{backgroundColor: "#F0C80F", fontSize: "17px", zIndex: 9999}}
+                />
                 {props.disableButton && props.difficulty === "Easy" && (
                     <p className="optional-text-diff">
                         You have to select a different difficulty

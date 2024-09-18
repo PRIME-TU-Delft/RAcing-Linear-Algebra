@@ -8,6 +8,7 @@ import GhostText from "../GhostText/GhostText";
 import LapCompletedText from "../LapCompletedText/LapCompletedText";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { TimeContext } from "../../../../contexts/TimeContext";
+import { RaceProgressContext } from "../../../../contexts/RaceProgressContext";
 
 interface Props {
     ghost: Ghost,
@@ -24,6 +25,7 @@ function GhostVehicle(props: Props) {
     const [startAnimation, setStartAnimation] = useState<boolean>(false)
 
     const usedTime = useContext(TimeContext)
+    const stopShowingRace = useContext(RaceProgressContext)
 
     const animationControls = useAnimationControls()
 
@@ -87,30 +89,16 @@ function GhostVehicle(props: Props) {
             if (currentTimeScoreIndex == -1) return // if the time score index was reset to -1, no more animations should be played
 
             const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
-            const progress = ((currentGhostNewScore % props.totalPoints) / props.totalPoints) * 100 // progress determined as the ratio of points and total points
+            const progress = (currentGhostNewScore/ props.totalPoints) * 100 // progress determined as the ratio of points and total points
         
-            // Since the ghosts can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
-            if (props.ghost.animationStatus.pathProgress >= progress) {
-                animationControls.start({   // First, complete the lap
-                    offsetDistance: "100%",
-                    transition: { duration: 1.5 }
-                }).then((val) => {
-                    animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
-                        offsetDistance: "0%",
-                        transition: { delay: 1000 }
-                    })
-                }).then((val) => {
-                    animationControls.start({   // Finally, play the animation leading to the new progress value
-                        offsetDistance: progress.toString() + "%",
-                        transition: { duration: 1, delay: 0.5 }
-                    })
-                    updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
-                })
-            }
-            else {
-                animationControls.start({   // Else, just update the progress normally
+            const currentGhostPreviousScore = props.ghost.timeScores[Math.max(currentTimeScoreIndex - 1, 0)].score
+            const previousProgress = (currentGhostPreviousScore/ props.totalPoints) * 100 
+
+            // Prevent possible bug of team going backwards due to miscalculations / incorrect score storing
+            if (progress >= previousProgress) {
+                animationControls.start({  
                     offsetDistance: progress.toString() + "%",
-                    transition: { duration: 1.5 }
+                    transition: {duration: 2}
                 })
                 updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
             }

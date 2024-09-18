@@ -29,6 +29,7 @@ interface Props {
     showDescription: boolean
     type: string
     onDifficultySelected: () => void
+    easyIsOnCooldown: boolean
 }
 /**
  * Component that displays the difficulty selection modal
@@ -193,6 +194,7 @@ export default function DifficultySelection(props: Props) {
                                     onEasyCardClick={handleEasyCardClick}
                                     disableButton={disableButton}
                                     showFlame={showFlameAnimation}
+                                    isOnCooldown={item.difficulty.toLowerCase() === "easy" ? props.easyIsOnCooldown : false}
                                 ></DifficultyCard>
                             </animated.div>
                         ))}
