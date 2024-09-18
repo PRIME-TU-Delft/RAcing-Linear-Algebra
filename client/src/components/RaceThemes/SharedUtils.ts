@@ -121,6 +121,13 @@ interface RoundInformation {
     study: string
 }
 
+
+interface GraspleQuestion {
+    difficulty: string, 
+    subject: string,
+    questionUrl: string
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -134,5 +141,6 @@ export {
     type RacePathObject,
     type IQuestion,
     type RoundInformation,
-    type Streak
+    type Streak,
+    type GraspleQuestion
 }

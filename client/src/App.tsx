@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleQuestion, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -29,6 +29,7 @@ import 'react-notifications-component/dist/theme.css'
 import { ReactNotifications } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
+import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -59,6 +60,12 @@ function App() {
         options: [],
         variants: []
     })
+    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleQuestion>({
+        questionUrl: "",
+        difficulty: "",
+        subject: ""
+    })
+
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
     const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
 
@@ -207,6 +214,11 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
+            setCurrentGraspleQuestion(newGraspleQuestion)
+            setCurrentQuestionNumber(curr => curr + 1)
+        }
+
         function onGetNumberOfMandatoryQuestions(num: number) {
             setNumberOfMandatoryQuestions(curr => num)
         }
@@ -232,6 +244,7 @@ function App() {
         socket.on("score", onScoreUpdate)
         socket.on("game-ended", onGameEnded)
         socket.on("get-next-question", onGetNewQuestion)
+        socket.on("get-next-grasple-question", onGetNewGraspleQuestion)
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
@@ -345,11 +358,13 @@ function App() {
                         }}>
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                 <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <StreakContext.Provider value={streaks}>
-                                        <RaceProgressContext.Provider value={stopShowingRace}>
-                                            <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
-                                        </RaceProgressContext.Provider>
-                                    </StreakContext.Provider>
+                                    <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                        <StreakContext.Provider value={streaks}>
+                                            <RaceProgressContext.Provider value={stopShowingRace}>
+                                                <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
+                                            </RaceProgressContext.Provider>
+                                        </StreakContext.Provider>
+                                    </GraspleQuestionContext.Provider>
                                 </QuestionContext.Provider>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>
