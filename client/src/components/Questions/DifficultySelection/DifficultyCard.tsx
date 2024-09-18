@@ -73,7 +73,7 @@ export default function DifficultyCard(props: Props) {
                 <Tooltip 
                      id="cooldown-tooltip" 
                      place="right"
-                     style={{backgroundColor: "#A4CF37", fontSize: "17px", zIndex: 9999}}
+                     style={{backgroundColor: "#F0C80F", fontSize: "17px", zIndex: 9999}}
                 />
                 {props.disableButton && props.difficulty === "Easy" && (
                     <p className="optional-text-diff">
