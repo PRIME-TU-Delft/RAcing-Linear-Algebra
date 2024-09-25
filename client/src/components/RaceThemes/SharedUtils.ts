@@ -56,6 +56,12 @@ interface Dimensions {
     height: number
 }
 
+interface Streak {
+    questionType: string, 
+    streakValue: number,
+    streakMultiplier: number
+}
+
 class Component {
     start: Point
     end: Point
@@ -127,5 +133,6 @@ export {
     type ServerGhost,
     type RacePathObject,
     type IQuestion,
-    type RoundInformation
+    type RoundInformation,
+    type Streak
 }

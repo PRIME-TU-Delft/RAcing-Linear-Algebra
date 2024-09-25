@@ -1,4 +1,5 @@
 import type { IQuestion } from "../models/questionModel"
+import { Streak } from "./streakObject";
 
 export class User {
     questionIds: string[] //The ids of the questions/variants that have already been used
@@ -7,7 +8,7 @@ export class User {
     attempts: number //The amount of attempts on the current question
     score: number //The score of the player
     isOnMandatory: boolean //A check to see if the player is done with the mandatory questions
-    streak: number //The current amount of questions answered correctly in a row
+    streaks: Streak[] // Array of streak objects for the user
 
     /**
      * Constructor for the user object
@@ -19,7 +20,20 @@ export class User {
         this.attempts = 3
         this.score = 0
         this.isOnMandatory = true
-        this.streak = 0
+        this.initializeUserStreaks()
+    }
+
+    /**
+     * Initialize the streak objects for the 3 question difficulties
+     */
+    initializeUserStreaks() {
+        const initialized_streaks = [
+            new Streak("easy"),
+            new Streak("medium"),
+            new Streak("hard")
+        ]
+
+        this.streaks = initialized_streaks
     }
 
     /**
@@ -48,11 +62,68 @@ export class User {
         return question
     }
 
+    /**
+     * Resets the streak of the user for a particular question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns void
+     */
+    resetUserStreak(difficulty: string) {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak) 
+            return
+
+        streak.resetStreak()
+    }
+
+     /**
+     * Updates the streak of the user for a particular question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns void
+     */
+    continueUserStreak(difficulty: string) {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak) 
+            return
+
+        streak.continueStreak()
+    }
+
+    /**
+     * Retrieves the multiplier of the streak for a particular question difficulty
+     * @param difficulty difficulty of the answered question
+     * @returns the multiplier of the streak
+     */
+    getStreakMultiplier(difficulty: string): number {
+        const streak = this.getStreakForDifficulty(difficulty)
+
+        if (!streak)
+            return 1
+        
+        return streak.streakMultiplier
+    }
+
+    /**
+     * Retrieves the affected streak from the streaks array, based on the question difficulty.
+     * @param difficulty difficulty of the answered question
+     * @returns the affected streak
+     */
+    getStreakForDifficulty(difficulty: string) {
+        const filtered_streak_indices = this.streaks.map((x, i) => i).filter(i => this.streaks[i].questionType == difficulty)
+
+        if (filtered_streak_indices.length > 0)
+            return this.streaks[filtered_streak_indices[0]]
+        else
+            return null
+    }
+
     resetUser() {
         this.questionIds = []
         this.questions = new Map()
         this.attempts = 3
         this.score = 0
         this.isOnMandatory = true
+        this.streaks.map((streak: Streak) => streak.resetStreak())
     }
 }

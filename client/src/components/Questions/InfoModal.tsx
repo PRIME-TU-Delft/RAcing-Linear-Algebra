@@ -9,6 +9,8 @@ import {
 } from "@react-spring/web"
 import { ProgressBar } from "react-bootstrap"
 import { renderLatex, useRenderLatex } from "./useRenderLatex"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 interface Props {
     endInfoModal: () => void,
@@ -46,16 +48,22 @@ export default function InfoModal(props: Props) {
     // Progress bar functionality
     const [progress, setProgress] = useState(100)
 
+    const closeInfoModal = () => {
+        setProgress(0)
+        setShowCorrectnessModal(false)
+        setProgress(100)
+        props.endInfoModal()
+    }
+
     useEffect(() => {
         if (!showInfoModal) return
 
+        const duration = type === "correctAnswer" ? 1500 : 5000
+
         // Clear interval after 3 seconds
         setTimeout(() => {
-            setProgress(0)
-            setShowCorrectnessModal(false)
-            setProgress(100)
-            props.endInfoModal()
-        }, 1500)
+            closeInfoModal()
+        }, duration)
 
     }, [showInfoModal])
 
@@ -86,6 +94,7 @@ export default function InfoModal(props: Props) {
                     }`}
                     style={modalAnimation}
                 >
+                    <div className="exit-info-modal" onClick={closeInfoModal}><FontAwesomeIcon icon={faXmark}/></div>
                     <div className="info-modal-text-container">
                         <p className="info-modal-text1">{modalText[0]}</p>
                         {type === "incorrectAnswer" ||

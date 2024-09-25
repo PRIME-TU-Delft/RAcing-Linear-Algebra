@@ -46,7 +46,7 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor:
             borderColor: raceLapColor,
             borderWidth: "3px",
             boxShadow: "0px 0px 5px #000000",
-            backgroundColor: "white"
+            backgroundColor: "#ffffff"
         }
     } else {
         return {

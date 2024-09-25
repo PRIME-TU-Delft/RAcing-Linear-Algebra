@@ -68,13 +68,17 @@ export function getRacePathObject(trackPoints: PercentCoordinate[], containerWid
             )
         )
 
-        if (i != 0) svgPath += "L" // L means move to coordinates x y, e.g. L 1 2
-        svgPath +=
-            (points[i].x + 20).toString() +
-            " " +
-            (containerHeight - points[i].y - 20).toString() +
-            " "
+        if (i < trackPoints.length - 1) {
+            if (i != 0 ) svgPath += "L" // L means move to coordinates x y, e.g. L 1 2
+            svgPath +=
+                (points[i].x + 20).toString() +
+                " " +
+                (containerHeight - points[i].y - 20).toString() +
+                " "
+        }
     }
+
+    svgPath += "z"
 
     const components: Component[] = []
     let tracksLength = 0

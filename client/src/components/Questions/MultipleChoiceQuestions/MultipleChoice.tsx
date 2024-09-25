@@ -12,6 +12,8 @@ interface Props {
     questionNum: number
     disableButton: boolean
     theme: string
+    questionDifficulty: string
+    onAnswerSubmitted: (answer_time: number) => void
 }
 
 function MultipleChoice(props: Props) {
@@ -55,7 +57,8 @@ function MultipleChoice(props: Props) {
 
     function submitAnswer(answer: string | number | undefined) {
         if (answer !== undefined) {
-            socket.emit("checkAnswer", answer)
+            props.onAnswerSubmitted(Date.now())
+            socket.emit("checkAnswer", answer, props.questionDifficulty)
         }
     }
 

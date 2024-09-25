@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, IQuestion, RoundInformation, ServerGhost } from "./components/RaceThemes/SharedUtils"
+import { Ghost, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -25,6 +25,10 @@ import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboar
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
+import 'react-notifications-component/dist/theme.css'
+import { ReactNotifications } from "react-notifications-component"
+import { StreakContext } from "./contexts/StreakContext"
+import { RaceProgressContext } from "./contexts/RaceProgressContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -42,6 +46,9 @@ function App() {
     const [averageTeamScore, setAverageTeamScore] = useState<number>(0)
     const [allRoundsFinished, setAllRoundsFinished] = useState<boolean>(false)
     const [roundstarted, setRoundStarted] = useState<boolean>(false)
+    const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
+    const [streaks, setStreaks] = useState<Streak[]>([])
+    const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
     
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -59,8 +66,10 @@ function App() {
 
     const timerExpirationHandler = () => {
         if (roundDuration > 0) {
+            setIsFirstRound(curr => false)
+
             if (!isPlayer) socket.emit("endRound")
-            navigate("/Leaderboard")
+                leaderboardNavigationHandler()
         }
     }
 
@@ -129,6 +138,7 @@ function App() {
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(0)
         setAllRoundsFinished(curr => false)
+        setStopShowingRace(false)
     
         if (isPlayer) socket.emit("getMandatoryNum")
         navigate("/TeamPreview")
@@ -139,6 +149,15 @@ function App() {
         if (allRoundsFinished) navigate("/endGame")
         else socket.emit("startNextRound")
     }
+
+    const leaderboardNavigationHandler = () => {
+        setStopShowingRace(true)
+    }
+
+    useEffect(() => {
+        if (stopShowingRace)
+            navigate("/Leaderboard")
+    }, [stopShowingRace])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -199,6 +218,10 @@ function App() {
             setStudy(roundInformation.study)
         }
 
+        function onCurrentStreaks(new_streaks: Streak[]) {
+            setStreaks(curr => [...new_streaks])
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -211,6 +234,7 @@ function App() {
         socket.on("get-next-question", onGetNewQuestion)
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
         socket.on("round-information", onRoundInformation)
+        socket.on("currentStreaks", onCurrentStreaks)
     }, [])
 
     // useEffect(() => {
@@ -240,6 +264,7 @@ function App() {
 
     return (
         <div className="App">
+            <ReactNotifications/>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route
@@ -320,7 +345,11 @@ function App() {
                         }}>
                             <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                 <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} onRoundEnded={() => navigate("/Leaderboard")}/>
+                                    <StreakContext.Provider value={streaks}>
+                                        <RaceProgressContext.Provider value={stopShowingRace}>
+                                            <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
+                                        </RaceProgressContext.Provider>
+                                    </StreakContext.Provider>
                                 </QuestionContext.Provider>
                             </ScoreContext.Provider>
                         </RaceDataContext.Provider>
@@ -337,13 +366,15 @@ function App() {
                             selectedMap: trainMaps[0]
                             }}>
                                 <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                   <RaceProgressContext.Provider value={stopShowingRace}>
                                     <Lecturer
-                                        lobbyId={lobbyId}
-                                        teamName={teamName}
-                                        ghostTeams={ghostTeams}
-                                        theme={theme}
-                                        roundDuration={roundDuration}
-                                    />
+                                            lobbyId={lobbyId}
+                                            teamName={teamName}
+                                            ghostTeams={ghostTeams}
+                                            theme={theme}
+                                            roundDuration={roundDuration}
+                                        />
+                                   </RaceProgressContext.Provider>
                                 </ScoreContext.Provider>
                             </RaceDataContext.Provider>
                         </TimeContext.Provider>
