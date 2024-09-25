@@ -24,6 +24,7 @@ import ColorationInfo from "../ColorationInfo/ColorationInfo";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
+import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 
 export interface IQuestion {
     question: string
@@ -58,6 +59,8 @@ function Game(props: Props) {
     const raceData = useContext(RaceDataContext)
     const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
     const questionData = useContext(QuestionContext)
+    const graspleQuestionData = useContext(GraspleQuestionContext)
+    const [currentNumberOfAttempts, setCurrentNumberOfAttempts] = useState<number>(0)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -76,6 +79,16 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     window.addEventListener("load", () => navigate("/"))
+
+    window.onmessage = function(e) {
+        if (e.data.v === "0.0.1" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
+            if (e.data.properties.correct) {
+                onQuestionAnsweredCorrectly()
+            } else {
+                onQuestionAnsweredIncorrectly(currentNumberOfAttempts - 1)
+            }
+        }
+    };
 
     socket.emit("getMandatoryNum")
 
@@ -114,6 +127,48 @@ function Game(props: Props) {
             setIncorrectAnswerStreak(curr => curr + 1)
         }
     }
+
+    function onQuestionAnsweredCorrectly() {
+        // What happens if the answer is correct
+        setModalText(["✔️ Your answer is correct!"])
+        setModalType("correctAnswer")
+        setScoreToAdd((cur) => score)
+        setRightAnswers((rightAnswers) => rightAnswers + 1)
+        setStreak((streak) => streak + 1)
+        setShowInfoModal(true)
+
+        if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
+            easyQuestionAnswered(true)
+
+        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) socket.emit("getNewQuestion")
+    }
+
+    function onQuestionAnsweredIncorrectly(triesLeft: number) {
+        setModalText([
+            "Your answer is incorrect! The correct answer is:",
+        ])
+        if (triesLeft === 0) {
+            setModalType("incorrectAnswer")
+            setModalAnswer("")
+            setStreak(0)
+            setScoreToAdd(0)
+            setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
+            setShowInfoModal(true)
+
+            if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
+                easyQuestionAnswered(false)
+
+            if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) socket.emit("getNewQuestion")
+        } else {
+            wrongAnswerToast(triesLeft)
+            setCurrentNumberOfAttempts(curr => Math.max(0, curr - 1))
+        }
+    }
+
+    useEffect(() => {
+        console.log("HERE")
+        setCurrentNumberOfAttempts(curr => 2)
+    }, [graspleQuestionData.questionNumber])
 
     useEffect(() => {
         setShowInfoModal(false)

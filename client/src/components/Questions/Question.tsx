@@ -20,6 +20,7 @@ import RoundOverModal from "./RoundOverModal"
 import QuestionTrainBackground from "./Themes/QuestionTrainBackground"
 import { useNavigate } from "react-router-dom"
 import { QuestionContext } from "../../contexts/QuestionContext"
+import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext"
 
 interface Props {
     hideQuestion: boolean,
@@ -31,6 +32,7 @@ interface Props {
 
 function Question(props: Props) {
     const questionData = useContext(QuestionContext)
+    const graspleQuestionData = useContext(GraspleQuestionContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -155,43 +157,47 @@ function Question(props: Props) {
                     type={questionData.iQuestion.subject}
                     easyIsOnCooldown={props.easyQuestionsOnCooldown}
                 ></DifficultySelection>
+
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div>
-                        {questionData.iQuestion !== null && (
-                            <>
-                                {questionData.iQuestion.type === "open" ||
-                                questionData.iQuestion.type === "open-infinite" ? (
-                                    <OpenQuestion
-                                        latex={questionData.iQuestion.question}
-                                        questionNum={questionData.questionNumber}
-                                        disableButton={disableButton}
-                                        theme={props.theme}
-                                        questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                                    />
-                                ) : questionData.iQuestion.type === "mc" ? (
-                                    <MultipleChoice
-                                        latex={questionData.iQuestion.question}
-                                        answers={questionData.iQuestion.options ? questionData.iQuestion.options : []}
-                                        questionNum={questionData.questionNumber}
-                                        disableButton={disableButton}
-                                        theme={props.theme}
-                                        questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                                    />
-                                ) : questionData.iQuestion.type === "true/false" ? (
-                                    <TrueFalseQuestion
-                                        latex={questionData.iQuestion.question}
-                                        questionNum={questionData.questionNumber}
-                                        disableButton={disableButton}
-                                        theme={props.theme}
-                                        questionDifficulty={questionData.iQuestion.difficulty}
-                                        onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                                    />
-                                ) : null}
-                            </>
-                        )}
-                    </div> 
+                        <iframe height="560" src={graspleQuestionData.questionData.questionUrl} title="Grasple Exercise 77975" width="100%" allow="clipboard-read; clipboard-write"></iframe>
+                    </div>
+                    // <div>
+                    //     {questionData.iQuestion !== null && (
+                    //         <>
+                    //             {questionData.iQuestion.type === "open" ||
+                    //             questionData.iQuestion.type === "open-infinite" ? (
+                    //                 <OpenQuestion
+                    //                     latex={questionData.iQuestion.question}
+                    //                     questionNum={questionData.questionNumber}
+                    //                     disableButton={disableButton}
+                    //                     theme={props.theme}
+                    //                     questionDifficulty={questionData.iQuestion.difficulty}
+                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+                    //                 />
+                    //             ) : questionData.iQuestion.type === "mc" ? (
+                    //                 <MultipleChoice
+                    //                     latex={questionData.iQuestion.question}
+                    //                     answers={questionData.iQuestion.options ? questionData.iQuestion.options : []}
+                    //                     questionNum={questionData.questionNumber}
+                    //                     disableButton={disableButton}
+                    //                     theme={props.theme}
+                    //                     questionDifficulty={questionData.iQuestion.difficulty}
+                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+                    //                 />
+                    //             ) : questionData.iQuestion.type === "true/false" ? (
+                    //                 <TrueFalseQuestion
+                    //                     latex={questionData.iQuestion.question}
+                    //                     questionNum={questionData.questionNumber}
+                    //                     disableButton={disableButton}
+                    //                     theme={props.theme}
+                    //                     questionDifficulty={questionData.iQuestion.difficulty}
+                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+                    //                 />
+                    //             ) : null}
+                    //         </>
+                    //     )}
+                    // </div> 
                 : null}
             </animated.div>
     )

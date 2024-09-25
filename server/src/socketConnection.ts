@@ -16,6 +16,25 @@ import { Statistic } from "./objects/statisticObject"
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
 
+const graspleQuestionExamples = [{
+    difficulty: "mandatory",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/8cea917e-4c9b-4e18-90ce-3c0ada0294cf?id=77975"
+},
+{
+    difficulty: "mandatory",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/13091e5e-f7bd-4e7b-b915-a525c1a28773?id=77983"
+},
+{
+    difficulty: "medium",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"
+},
+]
+
+let current_index = 0
+
 module.exports = {
     getIo: (server) => {
         const io = require("socket.io")(server, {
@@ -199,7 +218,15 @@ module.exports = {
                 try {
                     const game = getGame(lobbyId)
                     const question = await game.getNewQuestion(socket.id, difficulty)
-                    socket.emit("get-next-question", question)
+
+                    const graspleQuestion = graspleQuestionExamples[current_index]
+                    if (current_index >= graspleQuestionExamples.length)
+                        current_index = 0
+                    else
+                        current_index += 1
+                    
+                    // socket.emit("get-next-question", question)
+                    socket.emit("get-next-grasple-question", graspleQuestion)
                     console.log(question?.answer)
                 } catch (error) {
                     console.error(error)

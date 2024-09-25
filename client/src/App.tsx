@@ -215,6 +215,7 @@ function App() {
         }
 
         function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
+            console.log(newGraspleQuestion)
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }
