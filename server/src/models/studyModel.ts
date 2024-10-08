@@ -18,4 +18,4 @@ export const studySchema: mongoose.Schema = new mongoose.Schema({
     },
 })
 
-export const Study: mongoose.Model<IStudy> = mongoose.model<IStudy>("Study", studySchema)
+export const Study: mongoose.Model<IStudy> = mongoose.model<IStudy>("Studies", studySchema)

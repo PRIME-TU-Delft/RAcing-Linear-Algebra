@@ -36,4 +36,4 @@ export const exerciseSchema: mongoose.Schema = new mongoose.Schema({
     }
 })
 
-export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercise", exerciseSchema)
+export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercises", exerciseSchema)
