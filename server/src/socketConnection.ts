@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
 import { IStudy } from "./models/studyModel"
 import { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addExerciseToTopic, addNewTopic, addStudiesToTopic, addStudyToTopic } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, getALlTopics, updateTopicName } from "./controllers/topicDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -593,15 +593,6 @@ module.exports = {
                     socket.emit("error", {message: error.message})
                 }
             })
-
-            socket.on("addExerciseToTopic", async(topicId: string, exerciseId: string, isMandatory: boolean) => {
-                try {
-                    const updatedTopic = await addExerciseToTopic(topicId, exerciseId, isMandatory);
-                    socket.emit("added-exercise-to-topic", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
             
             socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
                 try {
@@ -613,19 +604,46 @@ module.exports = {
                 }
             })
 
-            socket.on("addStudyToTopic", async(topicId: string, studyId: string) => {
+            socket.on("addStudiesToTopic", async(topicId: string, studyIds: string[]) => {
                 try {
-                    const updatedTopic = await addStudyToTopic(topicId, studyId);
+                    const updatedTopic = await addStudiesToTopic(topicId, studyIds);
                     socket.emit("added-study-to-topic", updatedTopic);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
             })
 
-            socket.on("addStudiesToTopic", async(topicId: string, studyIds: string[]) => {
+            socket.on("getExercisesForTopic", async(topicId: string) => {
                 try {
-                    const updatedTopic = await addStudiesToTopic(topicId, studyIds);
-                    socket.emit("added-study-to-topic", updatedTopic);
+                    const exercises = await getAllExercisesFromTopic(topicId);
+                    socket.emit("exercises-for-topic", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getStudiesForTopic", async(topicId: string) => {
+                try {
+                    const studies = await getAllStudiesFromTopic(topicId);
+                    socket.emit("studies-for-topic", studies);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getAllTopics", async() => {
+                try {
+                    const topics = await getAllTopics();
+                    socket.emit("all-topics", topics);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("updateTopicName", async(topicId: string, newName: string) => {
+                try {
+                    const updatedTopic = await updateTopicName(topicId, newName);
+                    socket.emit("updated-topic", updatedTopic);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }

@@ -25,32 +25,6 @@ export async function addNewTopic(
     }
 }
 
-export async function addExerciseToTopic(topicId: string, exerciseId: string, isMandatory: boolean): Promise<ITopic> {
-    try {
-        const topic = await Topic.findById(topicId);
-        if (!topic) {
-            throw new Error('Topic not found');
-        }
-
-        const exercise = await Exercise.findById(exerciseId);
-        if (!exercise) {
-            throw new Error('Exercise not found');
-        }
-
-        if (isMandatory) {
-            topic.mandatoryExercises.push(exercise);
-        } else {
-            topic.difficultyExercises.push(exercise);
-        }
-
-        const updatedTopic = await topic.save();
-        return updatedTopic;
-    } catch (error) {
-        console.error("Error adding exercise to topic:", error);
-        throw error;
-    }
-}
-
 export async function addExercisesToTopic(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]): Promise<ITopic> {
     try {
         const topic = await Topic.findById(topicId);
@@ -85,27 +59,6 @@ export async function addExercisesToTopic(topicId: string, exercises: {exerciseI
     }
 }
 
-export async function addStudyToTopic(topicId: string, studyId: string): Promise<ITopic> {
-    try {
-        const topic = await Topic.findById(topicId);
-        if (!topic) {
-            throw new Error('Topic not found');
-        }
-
-        const study = await Study.findById(studyId);
-        if (!study) {
-            throw new Error('Study not found');
-        }
-
-        topic.studies.push(study);
-        const updatedTopic = await topic.save();
-        return updatedTopic;
-    } catch (error) {
-        console.error("Error adding exercise to topic:", error);
-        throw error;
-    }
-}
-
 export async function addStudiesToTopic(topicId: string, studyIds: string[]): Promise<ITopic> {
     try {
         const topic = await Topic.findById(topicId);
@@ -129,6 +82,65 @@ export async function addStudiesToTopic(topicId: string, studyIds: string[]): Pr
         return updatedTopic;
     } catch (error) {
         console.error("Error adding exercise to topic:", error);
+        throw error;
+    }
+}
+
+export async function getAllExercisesFromTopic(topicId: string): Promise<{mandatoryExercises: IExercise[], difficultyExercises: IExercise[]}> {
+    try {
+        const topic = await Topic.findById(topicId)
+
+        if (!topic) {
+            throw new Error('Topic not found');
+        }
+
+        return {
+            mandatoryExercises: topic.mandatoryExercises,
+            difficultyExercises: topic.difficultyExercises,
+        };
+    } catch (error) {
+        console.error("Error retrieving exercises from topic:", error);
+        throw error;
+    }
+}
+
+export async function getAllStudiesFromTopic(topicId: string): Promise<IStudy[]> {
+    try {
+        const topic = await Topic.findById(topicId)
+
+        if (!topic) {
+            throw new Error('Topic not found');
+        }
+
+        return topic.studies;
+    } catch (error) {
+        console.error("Error retrieving exercises from topic:", error);
+        throw error;
+    }
+}
+
+export async function updateTopicName(
+    topicId: string, 
+    name: string
+): Promise<ITopic | null> {
+    try {
+        const updatedTopic = await Topic.findByIdAndUpdate(
+            topicId,
+            { $set: {name: name} },
+            { new: true }
+        );
+
+        return updatedTopic;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getAllTopics(): Promise<ITopic[]> {
+    try {
+        const result: ITopic[] = await Topic.find();
+        return result;
+    } catch (error) {
         throw error;
     }
 }
