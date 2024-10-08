@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
-import { IStudy } from "./studyModel"
-import { IExercise } from "./exerciseModel"
+import type { IStudy } from "./studyModel"
+import type { IExercise } from "./exerciseModel"
 
 export interface ITopic extends mongoose.Document {
     name: string
