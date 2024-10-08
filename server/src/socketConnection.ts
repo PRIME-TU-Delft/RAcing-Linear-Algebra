@@ -12,6 +12,7 @@ import {
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
+import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -528,6 +529,28 @@ module.exports = {
                     socket.emit("mandatoryNum", num)
                 } catch (error) {
                     console.log(error)
+                }
+            })
+
+            socket.on('addNewStudy', async (name: string, abbreviation: string) => {
+                try {
+                    const newStudy = await addNewStudy(name, abbreviation);
+                    socket.emit('new-study-added', newStudy);
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            });
+
+            socket.on('getAllStudies', async () => {
+                try {
+                    const allStudies = await getAllStudies();
+                    const formattedStudies = allStudies.map(x => ({
+                        name: x.name,
+                        abbreviation: x.abbreviation
+                    }));
+                    socket.emit("all-studies", formattedStudies);
+                } catch (error) {
+                    socket.emit('error', {message: error.message} )
                 }
             })
 
