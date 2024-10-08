@@ -14,6 +14,9 @@ import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
+import { IStudy } from "./models/studyModel"
+import { IExercise } from "./models/exerciseModel"
+import { addExercisesToTopic, addExerciseToTopic, addNewTopic, addStudiesToTopic, addStudyToTopic } from "./controllers/topicDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -575,12 +578,56 @@ module.exports = {
 
             socket.on("updateExercise", async(exerciseId: number, updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }) => {
                 try {
-                    console.log("HERE")
                     const updatedExercise = await updateExercise(exerciseId, updateData);
-                    console.log(updatedExercise);
                     socket.emit("updated-exercise", updatedExercise);
                 } catch (error) {
                     socket.emit("error", { message: error.message })
+                }
+            })
+
+            socket.on("addNewTopic", async(name: string, studies: IStudy[], difficultyExercises: IExercise[], mandatoryExercises: IExercise[]) => {
+                try {
+                    const newTopic = await addNewTopic(name, studies, difficultyExercises, mandatoryExercises);
+                    socket.emit("new-topic", newTopic);
+                } catch (error) {
+                    socket.emit("error", {message: error.message})
+                }
+            })
+
+            socket.on("addExerciseToTopic", async(topicId: string, exerciseId: string, isMandatory: boolean) => {
+                try {
+                    const updatedTopic = await addExerciseToTopic(topicId, exerciseId, isMandatory);
+                    socket.emit("added-exercise-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+            
+            socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
+                try {
+                    
+                    const updatedTopic = await addExercisesToTopic(topicId, exercises);
+                    socket.emit("added-exercises-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("addStudyToTopic", async(topicId: string, studyId: string) => {
+                try {
+                    const updatedTopic = await addStudyToTopic(topicId, studyId);
+                    socket.emit("added-study-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("addStudiesToTopic", async(topicId: string, studyIds: string[]) => {
+                try {
+                    const updatedTopic = await addStudiesToTopic(topicId, studyIds);
+                    socket.emit("added-study-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
                 }
             })
 

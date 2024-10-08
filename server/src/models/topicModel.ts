@@ -24,7 +24,8 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
         {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Studies",
-            required: true
+            required: true,
+            default: undefined
         }
     ],
     difficultyExercises: [
@@ -33,6 +34,7 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Exercises",
             required: true,
+            default: undefined
         },
     ],
     mandatoryExercises: [
@@ -41,8 +43,9 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
             type: mongoose.SchemaTypes.ObjectId,
             ref: "Exercises",
             required: true,
+            default: undefined
         },
     ],
 })
 
-export const Round: mongoose.Model<ITopic> = mongoose.model<ITopic>("Topics", topicSchema)
+export const Topic: mongoose.Model<ITopic> = mongoose.model<ITopic>("Topics", topicSchema)
