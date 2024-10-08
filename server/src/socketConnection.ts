@@ -13,6 +13,7 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
+import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -551,6 +552,35 @@ module.exports = {
                     socket.emit("all-studies", formattedStudies);
                 } catch (error) {
                     socket.emit('error', {message: error.message} )
+                }
+            })
+
+            socket.on('addNewExercise', async (exerciseId: number, url: string, difficulty: string, numOfAttempts: number, name: string) => {
+                try {
+                    const newExercise = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
+                    socket.emit('new-exercise-added', newExercise);
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            });
+
+            socket.on("getExercise", async(exerciseId: number | null, name: string | null) => {
+                try {
+                    const matchingExercises = await findExercise(exerciseId, name);
+                    socket.emit("matching-exercises", matchingExercises)
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            })
+
+            socket.on("updateExercise", async(exerciseId: number, updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }) => {
+                try {
+                    console.log("HERE")
+                    const updatedExercise = await updateExercise(exerciseId, updateData);
+                    console.log(updatedExercise);
+                    socket.emit("updated-exercise", updatedExercise);
+                } catch (error) {
+                    socket.emit("error", { message: error.message })
                 }
             })
 
