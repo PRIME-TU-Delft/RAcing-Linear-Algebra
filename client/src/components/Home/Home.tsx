@@ -1,6 +1,8 @@
 import React from "react"
 import "./Home.css"
 import { useNavigate } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faGear } from "@fortawesome/free-solid-svg-icons"
 
 function Home() {
     const navigate = useNavigate()
@@ -13,6 +15,8 @@ function Home() {
                     <p>RAcing Linear Algebra</p>
                 </div>
 
+                <FontAwesomeIcon icon={faGear} size="2xl" className="settings-icon"/> 
+                
                 <div className="home-buttons">
                     <button
                         className="home-btn"
