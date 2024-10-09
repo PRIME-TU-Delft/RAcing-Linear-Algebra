@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
 import { IStudy } from "./models/studyModel"
 import { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, getALlTopics, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicName } from "./controllers/topicDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
