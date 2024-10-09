@@ -12,6 +12,11 @@ import {
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
+import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
+import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
+import { IStudy } from "./models/studyModel"
+import { IExercise } from "./models/exerciseModel"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicName } from "./controllers/topicDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -528,6 +533,119 @@ module.exports = {
                     socket.emit("mandatoryNum", num)
                 } catch (error) {
                     console.log(error)
+                }
+            })
+
+            socket.on('addNewStudy', async (name: string, abbreviation: string) => {
+                try {
+                    const newStudy = await addNewStudy(name, abbreviation);
+                    socket.emit('new-study-added', newStudy);
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            });
+
+            socket.on('getAllStudies', async () => {
+                try {
+                    const allStudies = await getAllStudies();
+                    const formattedStudies = allStudies.map(x => ({
+                        name: x.name,
+                        abbreviation: x.abbreviation
+                    }));
+                    socket.emit("all-studies", formattedStudies);
+                } catch (error) {
+                    socket.emit('error', {message: error.message} )
+                }
+            })
+
+            socket.on('addNewExercise', async (exerciseId: number, url: string, difficulty: string, numOfAttempts: number, name: string) => {
+                try {
+                    const newExercise = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
+                    socket.emit('new-exercise-added', newExercise);
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            });
+
+            socket.on("getExercise", async(exerciseId: number | null, name: string | null) => {
+                try {
+                    const matchingExercises = await findExercise(exerciseId, name);
+                    socket.emit("matching-exercises", matchingExercises)
+                } catch (error) {
+                    socket.emit('error', { message: error.message });
+                }
+            })
+
+            socket.on("updateExercise", async(exerciseId: number, updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }) => {
+                try {
+                    const updatedExercise = await updateExercise(exerciseId, updateData);
+                    socket.emit("updated-exercise", updatedExercise);
+                } catch (error) {
+                    socket.emit("error", { message: error.message })
+                }
+            })
+
+            socket.on("addNewTopic", async(name: string, studies: IStudy[], difficultyExercises: IExercise[], mandatoryExercises: IExercise[]) => {
+                try {
+                    const newTopic = await addNewTopic(name, studies, difficultyExercises, mandatoryExercises);
+                    socket.emit("new-topic", newTopic);
+                } catch (error) {
+                    socket.emit("error", {message: error.message})
+                }
+            })
+            
+            socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
+                try {
+                    
+                    const updatedTopic = await addExercisesToTopic(topicId, exercises);
+                    socket.emit("added-exercises-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("addStudiesToTopic", async(topicId: string, studyIds: string[]) => {
+                try {
+                    const updatedTopic = await addStudiesToTopic(topicId, studyIds);
+                    socket.emit("added-study-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getExercisesForTopic", async(topicId: string) => {
+                try {
+                    const exercises = await getAllExercisesFromTopic(topicId);
+                    socket.emit("exercises-for-topic", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getStudiesForTopic", async(topicId: string) => {
+                try {
+                    const studies = await getAllStudiesFromTopic(topicId);
+                    socket.emit("studies-for-topic", studies);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getAllTopics", async() => {
+                try {
+                    const topics = await getAllTopics();
+                    socket.emit("all-topics", topics);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("updateTopicName", async(topicId: string, newName: string) => {
+                try {
+                    const updatedTopic = await updateTopicName(topicId, newName);
+                    socket.emit("updated-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
                 }
             })
 
