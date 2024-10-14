@@ -17,9 +17,11 @@ import { addNewExercise, findExercise, updateExercise } from "./controllers/exer
 import { IStudy } from "./models/studyModel"
 import { IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicName } from "./controllers/topicDBController"
+import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
+const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
 
 const graspleQuestionExamples = [{
     difficulty: "mandatory",
@@ -39,6 +41,12 @@ const graspleQuestionExamples = [{
 ]
 
 let current_index = 0
+
+function hashString(input: string): string {
+    const hash = createHash('sha256')
+    hash.update(input)
+    return hash.digest('hex')
+}
 
 module.exports = {
     getIo: (server) => {
@@ -654,10 +662,18 @@ module.exports = {
              * This function is used when trying to create a game so only people who know the password can create them
              */
             socket.on("authenticate", (password: string) => {
-                if (password === "matematica123") {
+                if (hashString(password) === password_hash) {
                     socket.emit("authenticated", true)
                 } else {
                     socket.emit("authenticated", false)
+                }
+            })
+
+            socket.on("lecturerPlatformLogin", (password: string) => {
+                if (hashString(password) === password_hash) {
+                    socket.emit("access-granted", true)
+                } else {
+                    socket.emit("access-granted", false)
                 }
             })
 
