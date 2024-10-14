@@ -15,6 +15,8 @@ interface Props {
 }
 
 function LecturerPlatform(props: Props) {
+    const [activeTab, setActiveTab] = useState<string>("topics")
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,8 +34,8 @@ function LecturerPlatform(props: Props) {
                         RAcing Linear Algebra
                     </Typography>
                     <Tabs sx={{ flexGrow: 1 }} className="lecturer-platform-tabs">
-                        <Tab label="Topics"/>
-                        <Tab label="Exercises" />
+                        <Tab label="Topics" onClick={() => setActiveTab("topics")}/>
+                        <Tab label="Exercises" onClick={() => setActiveTab("exercises")}/>
                     </Tabs>
                     <IconButton color="inherit" onClick={() => navigate("/")}>
                         <FontAwesomeIcon icon={faHome} />
