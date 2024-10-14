@@ -1,0 +1,12 @@
+.topic-element {
+    margin: auto;
+    margin-top: 2rem;
+    width: 80%;
+    text-align: left;
+}
+
+.topic-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}

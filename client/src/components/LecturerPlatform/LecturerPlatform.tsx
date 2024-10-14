@@ -9,6 +9,7 @@ import Tab from '@mui/material/Tab';
 import IconButton from '@mui/material/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
+import TopicElement from "./TopicElement/TopicElement";
 
 interface Props {
     loggedIn: boolean;
@@ -42,6 +43,7 @@ function LecturerPlatform(props: Props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
+            <TopicElement></TopicElement>
         </div>
     );
 }
