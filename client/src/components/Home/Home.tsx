@@ -5,12 +5,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { Button, Menu, Modal, TextField } from '@mui/material';
 import { MenuItem } from "@mui/material"
+import socket from "../../socket"
 
-function Home() {
+interface Props {
+    loggedIn: boolean
+}
+
+function Home(props: Props) {
     const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [lecturerLoginModalActive, setLecturerLoginModalActive] = useState<boolean>()
-    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [password, setPassword] = useState<string>("")
+    const [attemptedLogIn, setAttemptedLogIn] = useState<boolean>(false)
 
     const handleClick = (event: React.MouseEvent<HTMLOrSVGElement>) => {
         setAnchorEl(event.currentTarget as HTMLElement);
@@ -19,6 +25,11 @@ function Home() {
     const closeModalHandler = () => {
         setLecturerLoginModalActive(curr => false)
         setAnchorEl(null)
+    }
+
+    const logInHandler = () => {
+        setAttemptedLogIn(true)
+        socket.emit("lecturerPlatformLogin", password)
     }
 
     return (
@@ -83,12 +94,24 @@ function Home() {
                             margin="normal"
                             fullWidth
                             required
+                            onChange={(e) => {
+                                setPassword(e.target.value)
+                            }}
                         />
+                        {attemptedLogIn && !props.loggedIn && (
+                            <p className="password-incorrect-text">
+                                Password is incorrect. Please try again.
+                            </p>
+                        )}
                         <Button
                             type="submit"
                             variant="contained"
                             color="primary"
                             fullWidth
+                            onClick={(e) => {
+                                e.preventDefault()
+                                logInHandler()
+                            }}
                         >
                             Log In
                         </Button>

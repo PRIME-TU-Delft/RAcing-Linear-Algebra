@@ -46,7 +46,6 @@ function Lobby(props: Props) {
         props.onThemeSelected(selectedTheme)
         props.onStudySelected(selectedStudy.toUpperCase())
         navigate("/TeamPreview")
-        //Replace teamNameHere with actual teamname
         socket.emit(
             "startGame",
             props.lobbyId,

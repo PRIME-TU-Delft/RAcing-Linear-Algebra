@@ -85,3 +85,8 @@
     padding: 1rem;
     padding-bottom: 2rem;
 }
+
+.password-incorrect-text {
+    color: red;
+    margin-top: 5px;
+}

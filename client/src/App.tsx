@@ -51,7 +51,8 @@ function App() {
     const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
     const [streaks, setStreaks] = useState<Streak[]>([])
     const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
-    
+    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
         answer: "",
@@ -236,6 +237,14 @@ function App() {
             setStreaks(curr => [...new_streaks])
         }
 
+        function onAccessGranted(hasBeenGranted: boolean) {
+            if (hasBeenGranted) {
+                setLoggedIn(true)
+            } else {
+                setLoggedIn(false)
+            }
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -250,6 +259,7 @@ function App() {
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
+        socket.on("access-granted", onAccessGranted)
     }, [])
 
     // useEffect(() => {
@@ -277,11 +287,17 @@ function App() {
         } 
     }, [totalSeconds])
 
+    useEffect(() => {
+        if (loggedIn) {
+            navigate("/LecturerPlatform")
+        }
+    }, [loggedIn])
+
     return (
         <div className="App">
             <ReactNotifications/>
             <Routes>
-                <Route path="/" element={<Home />}></Route>
+                <Route path="/" element={<Home loggedIn={loggedIn}/>}></Route>
                 <Route
                     path="/CreateGame"
                     element={
@@ -414,7 +430,7 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <LecturerPlatform/>
+                        <LecturerPlatform loggedIn={loggedIn}/>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>
