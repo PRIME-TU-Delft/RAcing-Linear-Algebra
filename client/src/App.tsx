@@ -30,6 +30,7 @@ import { ReactNotifications } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
+import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -408,6 +409,12 @@ function App() {
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
                         />
+                    }
+                ></Route>
+                <Route
+                    path="/LecturerPlatform"
+                    element={
+                        <LecturerPlatform/>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>
