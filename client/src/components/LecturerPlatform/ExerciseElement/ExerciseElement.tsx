@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import "./ExerciseElement.css";
 import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
+import { url } from "inspector";
+import { Store } from 'react-notifications-component';
 
 interface Exercise {
     id: number,
@@ -36,6 +38,36 @@ function ExerciseElement(props: Props) {
         url: props.url,
         numOfAttempts: props.numOfAttempts
     })
+
+    useEffect(() => {
+        console.log("Setting new exercise data");
+        setNewExerciseData({
+            id: props.id,
+            name: props.name,
+            grasple_id: props.grasple_id,
+            difficuly: props.difficuly,
+            url: props.url,
+            numOfAttempts: props.numOfAttempts
+        });
+    }, [props.id, props.name, props.grasple_id, props.difficuly, props.url, props.numOfAttempts])
+
+    const saveExerciseHandler = () => {
+        if (newExerciseData.name == "" || newExerciseData.url == "") {
+            Store.addNotification({
+                title: "Warning",
+                message: "The exercise data is incomplete and cannot be saved",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else {
+            props.onFinishEditingExercise(newExerciseData);
+        }
+    }
 
     useEffect(() => {
         if (props.beingEdited) {
@@ -107,7 +139,7 @@ function ExerciseElement(props: Props) {
                                         variant="outlined"
                                         size="small"
                                         defaultValue={props.name}
-                                        onChange={(e) => console.log(e.target.value)}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, name: e.target.value })}
                                         sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
                                         className="d-flex justify-content-center"
                                     />
@@ -118,7 +150,7 @@ function ExerciseElement(props: Props) {
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
                             )  : (
-                                <ExerciseURLInput url={props.url}></ExerciseURLInput>
+                                <ExerciseURLInput url={props.url} onURLValueChange={(newValue: string) => setNewExerciseData({...newExerciseData, url: newValue})}></ExerciseURLInput>
                             )}
                             {!props.beingEdited ? (
                                 <div>
@@ -130,7 +162,7 @@ function ExerciseElement(props: Props) {
                                         select
                                         variant="outlined"
                                         size="small"
-                                        defaultValue={newExerciseData.difficuly}
+                                        defaultValue={newExerciseData.difficuly == "" ? "Easy" : newExerciseData.difficuly}
                                         onChange={(e) => setNewExerciseData({ ...newExerciseData, difficuly: e.target.value })}
                                         sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
                                         className="d-flex justify-content-center"
@@ -155,7 +187,7 @@ function ExerciseElement(props: Props) {
                                         select
                                         variant="outlined"
                                         size="small"
-                                        defaultValue={newExerciseData.difficuly}
+                                        defaultValue={newExerciseData.numOfAttempts == 0 ? 1 : newExerciseData.numOfAttempts}
                                         onChange={(e) => setNewExerciseData({ ...newExerciseData, numOfAttempts: parseInt(e.target.value)})}
                                         sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
                                         className="d-flex justify-content-center"
@@ -174,7 +206,7 @@ function ExerciseElement(props: Props) {
                 {props.beingEdited && (
                     <AccordionActions>
                         <Button onClick={() => props.onDiscardEditingExercise()}>Discard</Button>
-                        <Button onClick={() => props.onFinishEditingExercise(newExerciseData)} variant="contained">Save</Button>
+                        <Button onClick={saveExerciseHandler} variant="contained">Save</Button>
                     </AccordionActions>
                 )}
             </Accordion>

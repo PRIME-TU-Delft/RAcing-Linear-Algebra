@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/material";
 import "./TopicElement.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
@@ -86,15 +86,16 @@ function TopicElement() {
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        console.log(exerciseData)
-        setExercises(curr => [...curr.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)])
+        const newExercises = exercises.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
+        console.log(newExercises)
+        setExercises(curr => [...newExercises])
         setEditingExerciseIndex(-1)
     }
 
     const addNewExerciseHandler = () => {
         const newExercise: ExerciseListElement = {
             exercise:{
-                id: Date.now(),
+                id: -1,
                 name: "",
                 grasple_id: 0,
                 difficuly: "",
@@ -103,7 +104,8 @@ function TopicElement() {
             },
             incompleteExercise: true
         }
-        setExercises(curr => [newExercise, ...curr]);
+        const newExercises = [newExercise, ...exercises];
+        setExercises(curr => [...newExercises]);
         setEditingExerciseIndex(0);
     }
 

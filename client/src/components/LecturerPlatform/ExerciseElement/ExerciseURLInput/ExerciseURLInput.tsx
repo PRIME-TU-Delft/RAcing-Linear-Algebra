@@ -1,33 +1,43 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 interface Props {
     url: string
+    onURLValueChange: (url: string) => void
 }
 
 function ExerciseURLInput(props: Props) {
-    const [urlValue, setUrlValue] = useState<string>(props.url);
-    const [loading, setLoading] = useState(false);
-    const [checked, setChecked] = useState(false);
+    const [urlValue, setUrlValue] = useState<string>(props.url)
+    const [loading, setLoading] = useState(false)
+    const [checked, setChecked] = useState(false)
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true);
-        setChecked(false);
-        const newValue = e.target.value;
-        console.log(newValue);
+        setLoading(true)
+        setChecked(false)
+        const newValue = e.target.value
+        setUrlValue(newValue)
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        setLoading(false);
-        setChecked(false);
+        setLoading(false)
+        setChecked(true)
     };
 
     const getIdValue = () => {
-        const idMatch = urlValue.match(/id=(\d+)$/);
-        return idMatch ? `#${idMatch[1]}` : "";
+        const idMatch = urlValue.match(/id=(\d+)$/)
+        if (!idMatch) {
+            setLoading(false)
+            setChecked(false)
+        }
+        return idMatch ? `#${idMatch[1]}` : ""
     }
+
+    useEffect(() => {
+        if (checked) {
+            props.onURLValueChange(urlValue);
+        }
+    }, [checked])
 
     return (
         <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
