@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/material";
 import "./TopicElement.css";
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,23 +20,20 @@ function TopicElement() {
                         <div className="number-of-exercises">Exercises: 25</div>
                     </div>
                 </AccordionSummary>
+                <Divider/>
                 <AccordionDetails>
-                    <AccordionDetails>
-                        <div className="studies-section">
-                            <div className="studies-header">
-                                Studies <FontAwesomeIcon icon={faPen} size="xs" />
-                            </div>
-                            <div className="studies-list">
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    {studies.map((study, index) => (
-                                        <div key={index} style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#fff' }}>
-                                            {study}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                    <div className="studies-section">
+                        <div className="studies-header">
+                            Studies <FontAwesomeIcon icon={faPen} size="xs" className="edit-icon"/>
                         </div>
-                    </AccordionDetails>
+                        <div className="studies-list">
+                            {studies.map((study, index) => (
+                                <div key={index} className="study-element">
+                                    {study}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </AccordionDetails>
                 <AccordionDetails>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse

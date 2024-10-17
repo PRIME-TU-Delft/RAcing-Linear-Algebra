@@ -6,7 +6,32 @@
 }
 
 .topic-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 500;
     margin-bottom: 0.5rem;
+}
+
+.edit-icon {
+    margin-left: 0.5rem;
+}
+
+.number-of-exercises {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.studies-header {
+    margin-bottom: 0.5rem;
+}
+
+.studies-list {
+    display: flex;
+    gap: 10px;
+}
+
+.study-element {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
 }
