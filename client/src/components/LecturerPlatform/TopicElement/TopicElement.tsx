@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button} from "@mui/material";
 import "./TopicElement.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,6 +24,7 @@ interface ExerciseListElement {
 function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
+    const [exercisesMode, setExercisesMode] = useState<string>("edit");
     const [exercises, setExercises] = useState<ExerciseListElement[]>([
         {
             exercise: {
@@ -59,6 +60,9 @@ function TopicElement() {
             incompleteExercise: false
         },
     ]);
+    
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
 
     const [studies, setStudies] = useState<string[]>(["Study 1", "Study 2", "Study 3"]);
 
@@ -87,7 +91,6 @@ function TopicElement() {
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
         const newExercises = exercises.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
-        console.log(newExercises)
         setExercises(curr => [...newExercises])
         setEditingExerciseIndex(-1)
     }
@@ -107,6 +110,33 @@ function TopicElement() {
         const newExercises = [newExercise, ...exercises];
         setExercises(curr => [...newExercises]);
         setEditingExerciseIndex(0);
+    }
+
+    const handleDeleteExercise = (index: number) => {
+        setExerciseToDelete(index);
+        setOpenDialog(true);
+    };
+
+    const confirmDeleteExercise = () => {
+        if (exerciseToDelete !== null) {
+            const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete);
+            setExercises(newExercises);
+            setExerciseToDelete(null);
+        }
+        setOpenDialog(false);
+    };
+
+    const cancelDeleteExercise = () => {
+        setExerciseToDelete(null);
+        setOpenDialog(false);
+    };
+
+    const removingExercisesHandler = () => {
+        setExercisesMode("remove");
+    }
+
+    const editingExercisesHandler = () => {
+        setExercisesMode("edit");
     }
 
     const discardEditingExerciseHandler = () => {
@@ -154,7 +184,11 @@ function TopicElement() {
                         <div className="exercises-header" style={{marginBottom: "0.5rem"}}>
                             Exercises 
                             <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                            <FontAwesomeIcon icon={faTrash} className="remove-exercises-icon" onClick={() => setChangingStudies(curr => true)}/>
+                            {exercisesMode == "edit" ? (
+                                <FontAwesomeIcon icon={faTrash} className="remove-exercises-icon" onClick={() => removingExercisesHandler()}/>
+                            ) : (
+                                <FontAwesomeIcon icon={faPen} className="edit-exercises-icon" onClick={() => editingExercisesHandler()}/>
+                            )}
                         </div>
                         <div className="exercises-list">
                             {exercises.map((exerciseElement, index) => (
@@ -171,13 +205,33 @@ function TopicElement() {
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
                                     ></ExerciseElement>
-                                    <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
+                                    {exercisesMode == "edit" ? (
+                                        <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
+                                    ) : (
+                                        <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
+                                    )}
                                 </div>
                             ))}
                         </div>
                     </div>
                 </AccordionDetails>
             </Accordion>
+            <Dialog open={openDialog} onClose={cancelDeleteExercise}>
+                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to delete the exercise {exercises[exerciseToDelete!]?.exercise.name} (#{exercises[exerciseToDelete!]?.exercise.grasple_id})?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={cancelDeleteExercise} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={confirmDeleteExercise} color="primary">
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
         </div>
     );
 }

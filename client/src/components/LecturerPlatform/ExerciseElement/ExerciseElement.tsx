@@ -69,6 +69,10 @@ function ExerciseElement(props: Props) {
         }
     }
 
+    const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
+        setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId });
+    }
+
     useEffect(() => {
         if (props.beingEdited) {
             setManuallyExpanded(true);
@@ -150,7 +154,7 @@ function ExerciseElement(props: Props) {
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
                             )  : (
-                                <ExerciseURLInput url={props.url} onURLValueChange={(newValue: string) => setNewExerciseData({...newExerciseData, url: newValue})}></ExerciseURLInput>
+                                <ExerciseURLInput url={props.url} onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}></ExerciseURLInput>
                             )}
                             {!props.beingEdited ? (
                                 <div>

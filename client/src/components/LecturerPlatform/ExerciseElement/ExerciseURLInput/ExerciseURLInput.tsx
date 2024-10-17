@@ -5,11 +5,12 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 interface Props {
     url: string
-    onURLValueChange: (url: string) => void
+    onURLValueChange: (url: string, grasple_id: number) => void
 }
 
 function ExerciseURLInput(props: Props) {
     const [urlValue, setUrlValue] = useState<string>(props.url)
+    const [graspleId, setGraspleId] = useState<number>(-1);
     const [loading, setLoading] = useState(false)
     const [checked, setChecked] = useState(false)
 
@@ -19,25 +20,33 @@ function ExerciseURLInput(props: Props) {
         const newValue = e.target.value
         setUrlValue(newValue)
         await new Promise(resolve => setTimeout(resolve, 2000))
-
         setLoading(false)
-        setChecked(true)
     };
+
+    const checkIdValue = () => {
+        const idMatch = urlValue.match(/id=(\d+)$/)
+        if (!idMatch) {
+            setChecked(false)
+        } else {
+            setGraspleId(parseInt(idMatch[1]))
+            setChecked(true)
+        }
+    }
 
     const getIdValue = () => {
         const idMatch = urlValue.match(/id=(\d+)$/)
-        if (!idMatch) {
-            setLoading(false)
-            setChecked(false)
-        }
         return idMatch ? `#${idMatch[1]}` : ""
     }
 
     useEffect(() => {
-        if (checked) {
-            props.onURLValueChange(urlValue);
+        if (checked && graspleId != -1) {
+            props.onURLValueChange(urlValue, graspleId);
         }
-    }, [checked])
+    }, [checked, graspleId])
+
+    useEffect(() => {
+        checkIdValue()
+    }, [urlValue])
 
     return (
         <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
