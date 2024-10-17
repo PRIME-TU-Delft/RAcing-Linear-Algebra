@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField } from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -36,6 +36,16 @@ function ExerciseElement(props: Props) {
         numOfAttempts: props.numOfAttempts
     })
 
+    useEffect(() => {
+        if (props.beingEdited) {
+            setManuallyExpanded(true);
+        }
+
+        if (!props.beingEdited && props.closeNotEditing) {
+            setManuallyExpanded(false);
+        }
+    }, [props.beingEdited, props.closeNotEditing])
+
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} style={{marginBottom: "0.5rem"}}>
             <Accordion 
@@ -48,17 +58,25 @@ function ExerciseElement(props: Props) {
                     id={`panel-header-${props.id}`}
                     sx={{ height: '2rem', marginTop: '0.5rem'}}
                 >
-                    <div className="exercise-header d-flex row">
-                        <div className="d-flex col col-11">
-                            {props.name} 
-                            <span className="exercise-header-id">(#{props.grasple_id})</span>
-                        </div>
-                        {!props.beingEdited && (
-                            <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
-                                {props.difficuly}
+                    {!props.beingEdited ? (
+                        <div className="exercise-header d-flex row">
+                            <div className="d-flex col col-11">
+                                {props.name} 
+                                <span className="exercise-header-id">(#{props.grasple_id})</span>
                             </div>
-                        )}
-                    </div>
+                            {!props.beingEdited && (
+                                <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
+                                    {props.difficuly}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="exercise-header d-flex row">
+                            <div className="d-flex col col-11">
+                                {props.name}
+                            </div>
+                        </div>
+                    )}
                 </AccordionSummary>
                 <Divider></Divider>
                 <AccordionDetails>
@@ -87,7 +105,7 @@ function ExerciseElement(props: Props) {
                                     <TextField
                                         variant="outlined"
                                         size="small"
-                                        value={props.name}
+                                        defaultValue={props.name}
                                         onChange={(e) => console.log(e.target.value)}
                                         sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
                                         className="d-flex justify-content-center"
@@ -101,14 +119,52 @@ function ExerciseElement(props: Props) {
                             )  : (
                                 <ExerciseURLInput url={props.url}></ExerciseURLInput>
                             )}
-                            {!props.beingEdited && (
+                            {!props.beingEdited ? (
                                 <div>
                                     {props.difficuly}
                                 </div>
+                            ) : (
+                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                    <TextField
+                                        select
+                                        variant="outlined"
+                                        size="small"
+                                        defaultValue={newExerciseData.difficuly}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, difficuly: e.target.value })}
+                                        sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
+                                        className="d-flex justify-content-center"
+                                        SelectProps={{
+                                            native: true,
+                                        }}
+                                    >
+                                        <option value="Mandatory">Mandatory</option>
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                    </TextField>
+                                </div>
                             )}
-                            {!props.beingEdited && (
+                            {!props.beingEdited ? (
                                 <div>
                                     {props.numOfAttempts}
+                                </div>
+                            ) : (
+                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                    <TextField
+                                        select
+                                        variant="outlined"
+                                        size="small"
+                                        defaultValue={newExerciseData.difficuly}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, numOfAttempts: parseInt(e.target.value)})}
+                                        sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
+                                        className="d-flex justify-content-center"
+                                        SelectProps={{
+                                            native: true,
+                                        }}
+                                    >
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </TextField>
                                 </div>
                             )}
                         </div>
