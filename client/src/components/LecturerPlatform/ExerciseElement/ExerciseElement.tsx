@@ -83,13 +83,14 @@ function ExerciseElement(props: Props) {
                                     {props.name}
                                 </div>
                             ) : (
-                                <div className="d-flex row justify-content-start" style={{marginLeft: "0.5rem"}}>
+                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
                                     <TextField
                                         variant="outlined"
                                         size="small"
                                         value={props.name}
                                         onChange={(e) => console.log(e.target.value)}
                                         sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
+                                        className="d-flex justify-content-center"
                                     />
                                 </div>
                             )}
