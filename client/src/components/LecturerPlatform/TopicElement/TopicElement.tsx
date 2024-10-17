@@ -22,51 +22,24 @@ interface ExerciseListElement {
     incompleteExercise: boolean
 }
 
-function TopicElement() {
+interface Props {
+    id: number,
+    name: string,
+    studies: string[],
+    exercises: Exercise[]
+}
+
+function TopicElement(props: Props) {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
     const [exercisesMode, setExercisesMode] = useState<string>("");
     const [saveChanges, setSaveChanges] = useState<boolean>(false);
-    const [exercises, setExercises] = useState<ExerciseListElement[]>([
-        {
-            exercise: {
-                id: 1,
-                name: "Exercise 1",
-                grasple_id: 7896,
-                difficuly: "Easy",
-                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-                numOfAttempts: 1,
-            },
-            incompleteExercise: false
-        },
-        {
-            exercise: {
-                id: 1,
-                name: "Exercise 1",
-                grasple_id: 7896,
-                difficuly: "Easy",
-                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-                numOfAttempts: 1,
-            },
-            incompleteExercise: false
-        },
-        {
-            exercise: {
-                id: 1,
-                name: "Exercise 1",
-                grasple_id: 7896,
-                difficuly: "Easy",
-                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-                numOfAttempts: 1,
-            },
-            incompleteExercise: false
-        },
-    ]);
+    const [exercises, setExercises] = useState<ExerciseListElement[]>(props.exercises.map(exercise => ({exercise, incompleteExercise: false})));
     
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
 
-    const [studies, setStudies] = useState<string[]>(["Study 1", "Study 2", "Study 3"]);
+    const [studies, setStudies] = useState<string[]>(props.studies);
 
     const studiesChangedHandler = (newStudies: string[]) => {
         setStudies(curr => [...newStudies])
@@ -156,8 +129,8 @@ function TopicElement() {
                 sx={{ height: '5remis' }}
                 >
                     <div>
-                        <div className="topic-title">Eigenvalues title</div>
-                        <div className="number-of-exercises">Exercises: 25</div>
+                        <div className="topic-title">{props.name}</div>
+                        <div className="number-of-exercises">Exercises: {props.exercises.length}</div>
                     </div>
                 </AccordionSummary>
                 <Divider/>

@@ -10,13 +10,117 @@ import IconButton from '@mui/material/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import TopicElement from "./TopicElement/TopicElement";
+import { Button } from "@mui/material";
 
 interface Props {
     loggedIn: boolean;
 }
 
+interface Exercise {
+    id: number,
+    name: string,
+    grasple_id: number,
+    difficuly: string,
+    url: string,
+    numOfAttempts: number   
+}
+
+interface Topic {
+    id: number,
+    name: string,
+    studies: string[],
+    exercises: Exercise[]
+}
+
 function LecturerPlatform(props: Props) {
     const [activeTab, setActiveTab] = useState<string>("topics")
+    const [topics, setTopics] = useState<Topic[]>([
+        {
+            id: 1,
+            name: "Topic 1",
+            studies: ["Study 1", "Study 2"],
+            exercises: [
+                {
+                    id: 1,
+                    name: "Exercise 1",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                },
+                {
+                    id: 2,
+                    name: "Exercise 2",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                }
+            ]
+        },
+        {
+            id: 1,
+            name: "Topic 2",
+            studies: ["Study 2", "Study 4"],
+            exercises: [
+                {
+                    id: 1,
+                    name: "Exercise 2",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                },
+                {
+                    id: 2,
+                    name: "Exercise 4",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                },
+                {
+                    id: 2,
+                    name: "Exercise 4",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                }
+            ]
+        },
+        {
+            id: 1,
+            name: "Topic 4",
+            studies: ["Study 2", "Study 4"],
+            exercises: [
+                {
+                    id: 1,
+                    name: "Exercise 2",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                },
+                {
+                    id: 2,
+                    name: "Exercise 4",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                },
+                {
+                    id: 2,
+                    name: "Exercise 4",
+                    grasple_id: 7896,
+                    difficuly: "Easy",
+                    url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                    numOfAttempts: 1,
+                }
+            ]
+        }
+    ])
 
     const navigate = useNavigate();
 
@@ -43,7 +147,18 @@ function LecturerPlatform(props: Props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <TopicElement></TopicElement>
+            <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}}>Create New Topic</Button>
+            <div style={{marginBottom: "1rem"}}>
+                {topics.map((topic) => (
+                    <TopicElement 
+                        key={topic.id} 
+                        id={topic.id} 
+                        name={topic.name} 
+                        studies={topic.studies} 
+                        exercises={topic.exercises} 
+                    />
+                ))}
+            </div>
         </div>
     );
 }
