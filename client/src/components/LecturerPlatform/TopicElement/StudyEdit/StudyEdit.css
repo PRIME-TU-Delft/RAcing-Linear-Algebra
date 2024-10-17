@@ -1,0 +1,30 @@
+.study-dropbox-title {
+    font-size: 14px;
+    color: #acacac;
+}
+
+.study-header-element {
+    margin-left: 1rem;
+}
+
+.study-header-save-btn {
+    margin-left: 2rem;
+}
+
+.study-element {
+    position: relative;
+}
+
+.study-element-delete {
+    opacity: 0;
+    transition-duration: 0.1s;
+}
+
+.selected-study-element:hover {
+    background-color: #e5e4e4;
+}
+
+.selected-study-element:hover > .study-element-delete {
+    opacity: 1;
+    transition-duration: 0.2s;
+}

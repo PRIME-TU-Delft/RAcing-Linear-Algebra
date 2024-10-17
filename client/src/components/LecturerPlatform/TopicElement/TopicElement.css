@@ -11,22 +11,28 @@
     margin-bottom: 0.5rem;
 }
 
-.edit-icon {
+.edit-studies-icon {
     margin-left: 0.5rem;
 }
 
+.edit-studies-icon:hover {
+    cursor: pointer;
+}
+
 .number-of-exercises {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
 }
 
 .studies-header {
-    margin-bottom: 0.5rem;
+    font-size: 18px;
 }
 
 .studies-list {
+    width: 100%;
     display: flex;
-    gap: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .study-element {
@@ -34,4 +40,6 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
+    margin: 0.5rem 0.2rem;  
+    transition-duration: 0.3s;
 }

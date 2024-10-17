@@ -1,11 +1,18 @@
 import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/material";
 import "./TopicElement.css";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import StudyEdit from "./StudyEdit/StudyEdit";
 
 function TopicElement() {
-    const studies = ["Study 1", "Study 2", "Study 3"];
+    const [changingStudies, setChangingStudies] = useState<boolean>(false);
+    const [studies, setStudies] = useState<string[]>(["Study 1", "Study 2", "Study 3"]);
+
+    const studiesChangedHandler = (newStudies: string[]) => {
+        setStudies(curr => [...newStudies])
+        setChangingStudies(curr => false)
+    }
 
     return (
         <div className="topic-element">
@@ -20,19 +27,25 @@ function TopicElement() {
                         <div className="number-of-exercises">Exercises: 25</div>
                     </div>
                 </AccordionSummary>
-                <Divider/>
+                <Divider sx={{borderBottomWidth: 3}}/>
                 <AccordionDetails>
-                    <div className="studies-section">
-                        <div className="studies-header">
-                            Studies <FontAwesomeIcon icon={faPen} size="xs" className="edit-icon"/>
-                        </div>
-                        <div className="studies-list">
-                            {studies.map((study, index) => (
-                                <div key={index} className="study-element">
-                                    {study}
+                    <div className="studies-section d-flex align-items-center">
+                        {!changingStudies ? (
+                            <div>
+                                <div className="studies-header">
+                                Studies <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingStudies(curr => true)}/>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="studies-list">
+                                    {studies.map((study, index) => (
+                                        <div key={index} className="study-element">
+                                            {study}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler}></StudyEdit>
+                        )}
                     </div>
                 </AccordionDetails>
                 <AccordionDetails>
