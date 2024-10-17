@@ -3,6 +3,7 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Acc
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import "./ExerciseElement.css";
+import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
 
 interface Exercise {
     id: number,
@@ -82,18 +83,22 @@ function ExerciseElement(props: Props) {
                                     {props.name}
                                 </div>
                             ) : (
-                            <TextField
-                                variant="outlined"
-                                size="small"
-                                value={props.name}
-                                onChange={(e) => console.log(e.target.value)}
-                                sx={{height: "1rem", fontSize: "13px"}}
-                            />
-                        )}
-                            {!props.beingEdited && (
+                                <div className="d-flex row justify-content-start" style={{marginLeft: "0.5rem"}}>
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        value={props.name}
+                                        onChange={(e) => console.log(e.target.value)}
+                                        sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
+                                    />
+                                </div>
+                            )}
+                            {!props.beingEdited ? (
                                 <div>
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
+                            )  : (
+                                <ExerciseURLInput url={props.url}></ExerciseURLInput>
                             )}
                             {!props.beingEdited && (
                                 <div>
