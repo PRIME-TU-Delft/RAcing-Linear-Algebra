@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./StudyEdit.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Checkbox, Button, Divider } from "@mui/material";
@@ -10,6 +10,7 @@ interface Props {
     studies: string[],
     allStudies: string[]
     onStudiesSelected: (studies: string[]) => void
+    saveChanges: boolean
 }
 
 function StudyEdit(props: Props) {
@@ -66,6 +67,11 @@ function StudyEdit(props: Props) {
         }
     }
 
+    useEffect(() => {
+        if (props.saveChanges)
+            props.onStudiesSelected(selectedStudies)
+    }, [props.saveChanges])
+
     return (
         <div>
             <div className="studies-header d-flex align-items-center">
@@ -82,7 +88,6 @@ function StudyEdit(props: Props) {
                 
                 <Checkbox sx={{paddingRight: "2px", marginLeft: "1rem"}} onChange={handleSelectAllCheckboxChange}/>
                 <span style={{fontSize: "15px"}}>Select All</span>
-                <Button variant="contained" sx={{marginLeft: "1rem"}} onClick={() => props.onStudiesSelected(selectedStudies)}>Save</Button>
             </div>
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <div className="study-dropbox-title">Selected studies</div>

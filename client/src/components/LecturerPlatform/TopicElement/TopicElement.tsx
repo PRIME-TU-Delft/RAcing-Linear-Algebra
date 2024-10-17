@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions} from "@mui/material";
 import "./TopicElement.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +26,7 @@ function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
     const [exercisesMode, setExercisesMode] = useState<string>("");
+    const [saveChanges, setSaveChanges] = useState<boolean>(false);
     const [exercises, setExercises] = useState<ExerciseListElement[]>([
         {
             exercise: {
@@ -70,6 +71,7 @@ function TopicElement() {
     const studiesChangedHandler = (newStudies: string[]) => {
         setStudies(curr => [...newStudies])
         setChangingStudies(curr => false)
+        setSaveChanges(curr => false)
     }
 
     const editingExerciseHandler = (index: number) => {
@@ -175,10 +177,14 @@ function TopicElement() {
                                 </div>
                             </div>
                         ) : (
-                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler}></StudyEdit>
+                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges}></StudyEdit>
                         )}
                     </div>
                 </AccordionDetails>
+                {changingStudies && (<AccordionActions>
+                    <Button size="small" onClick={() => setChangingStudies(false)}>Discard</Button>
+                    <Button size="small" onClick={() => setSaveChanges(curr => true)} variant="contained">Save</Button>
+                </AccordionActions>)}
                 <Divider/>
                 <AccordionDetails>
                     <div className="exercises-section">
@@ -234,6 +240,10 @@ function TopicElement() {
                         </div>
                     </div>
                 </AccordionDetails>
+                {exercisesMode != "" && (<AccordionActions>
+                    <Button size="small" onClick={() => setExercisesMode("")}>Discard</Button>
+                    <Button size="small" onClick={() => setSaveChanges(curr => true)} variant="contained">Save</Button>
+                </AccordionActions>)}
             </Accordion>
             <Dialog open={openDialog} onClose={cancelDeleteExercise}>
                     <DialogTitle>Confirm Delete</DialogTitle>
