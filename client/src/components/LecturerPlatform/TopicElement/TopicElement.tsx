@@ -1,11 +1,12 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton} from "@mui/material";
 import "./TopicElement.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
 import ExerciseElement from "../ExerciseElement/ExerciseElement";
 import { Store } from 'react-notifications-component';
+import { Tooltip } from "react-tooltip";
 
 interface Exercise {
     id: number,
@@ -24,7 +25,7 @@ interface ExerciseListElement {
 function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
-    const [exercisesMode, setExercisesMode] = useState<string>("edit");
+    const [exercisesMode, setExercisesMode] = useState<string>("");
     const [exercises, setExercises] = useState<ExerciseListElement[]>([
         {
             exercise: {
@@ -183,11 +184,29 @@ function TopicElement() {
                     <div className="exercises-section">
                         <div className="exercises-header" style={{marginBottom: "0.5rem"}}>
                             Exercises 
-                            <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                            {exercisesMode == "edit" ? (
-                                <FontAwesomeIcon icon={faTrash} className="remove-exercises-icon" onClick={() => removingExercisesHandler()}/>
+                            {exercisesMode != "" ? (
+                                <>
+                                <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
+                                <FontAwesomeIcon
+                                    icon={faCircleInfo}
+                                    style={{ color: "#1976D2", marginLeft: "0.5rem" }}
+                                    data-tooltip-id="info-tooltip"
+                                    data-tooltip-place="right"
+                                    data-tooltip-html="Add new exercises by pressing the + button.<br />Toggle between remove and edit modes by pressing the trashcan toggle.<br />Edit/remove individual exercises based on the selected mode."
+                                />
+                                <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
+                                <ToggleButton
+                                    value="check"
+                                    selected={exercisesMode == "remove"}
+                                    onChange={() => setExercisesMode(exercisesMode === "edit" ? "remove" : "edit")}
+                                    sx={{marginLeft: "1rem"}}
+                                >
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </ToggleButton>
+                                </>
                             ) : (
-                                <FontAwesomeIcon icon={faPen} className="edit-exercises-icon" onClick={() => editingExercisesHandler()}/>
+                                <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
                             )}
                         </div>
                         <div className="exercises-list">
@@ -207,9 +226,9 @@ function TopicElement() {
                                     ></ExerciseElement>
                                     {exercisesMode == "edit" ? (
                                         <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
-                                    ) : (
+                                    ) : exercisesMode == "remove" ? (
                                         <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
-                                    )}
+                                    ) : null}	
                                 </div>
                             ))}
                         </div>

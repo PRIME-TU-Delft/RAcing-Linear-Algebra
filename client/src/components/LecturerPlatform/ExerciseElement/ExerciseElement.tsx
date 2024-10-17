@@ -40,7 +40,6 @@ function ExerciseElement(props: Props) {
     })
 
     useEffect(() => {
-        console.log("Setting new exercise data");
         setNewExerciseData({
             id: props.id,
             name: props.name,
