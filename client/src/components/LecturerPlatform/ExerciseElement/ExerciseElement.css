@@ -20,3 +20,14 @@
 .exercise-details > .col > div {
     margin-bottom: 0.5rem;
 }
+
+.editing-exercise > .col > div {
+    margin-bottom: 0;
+    height: 3rem;
+    justify-content: center;
+    line-height: 3rem;
+}
+
+.disabled-exercise {
+    opacity: 0.3;
+}

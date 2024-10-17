@@ -6,7 +6,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
 import ExerciseElement from "../ExerciseElement/ExerciseElement";
 
-interface ExerciseElement {
+interface Exercise {
     id: number,
     name: string,
     grasple_id: number,
@@ -18,7 +18,7 @@ interface ExerciseElement {
 function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
-    const [exercises, setExercises] = useState<ExerciseElement[]>([
+    const [exercises, setExercises] = useState<Exercise[]>([
         {
             id: 1,
             name: "Exercise 1",
@@ -53,6 +53,11 @@ function TopicElement() {
 
     const editingExerciseHandler = (index: number) => {
         setEditingExerciseIndex(curr => index)
+    }
+
+    const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
+        setExercises(curr => [...curr.map((exercise, idx) => idx === editingExerciseIndex ? exerciseData : exercise)]);
+        setEditingExerciseIndex(-1);
     }
 
     return (
@@ -107,6 +112,7 @@ function TopicElement() {
                                         numOfAttempts={exercise.numOfAttempts}
                                         beingEdited={editingExerciseIndex == index}
                                         closeNotEditing={editingExerciseIndex > -1}
+                                        onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                     ></ExerciseElement>
                                     <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
                                 </div>
@@ -114,14 +120,6 @@ function TopicElement() {
                         </div>
                     </div>
                 </AccordionDetails>
-                <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </AccordionDetails>
-                <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </AccordionDetails> 
             </Accordion>
         </div>
     );
