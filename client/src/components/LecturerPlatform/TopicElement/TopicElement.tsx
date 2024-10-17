@@ -4,14 +4,55 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
+import ExerciseElement from "../ExerciseElement/ExerciseElement";
+
+interface ExerciseElement {
+    id: number,
+    name: string,
+    grasple_id: number,
+    difficuly: string,
+    url: string,
+    numOfAttempts: number   
+}
 
 function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
+    const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
+    const [exercises, setExercises] = useState<ExerciseElement[]>([
+        {
+            id: 1,
+            name: "Exercise 1",
+            grasple_id: 7896,
+            difficuly: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1
+        },
+        {
+            id: 1,
+            name: "Exercise 1",
+            grasple_id: 7896,
+            difficuly: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1
+        },
+        {
+            id: 1,
+            name: "Exercise 1",
+            grasple_id: 7896,
+            difficuly: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1
+        }
+    ]);
     const [studies, setStudies] = useState<string[]>(["Study 1", "Study 2", "Study 3"]);
 
     const studiesChangedHandler = (newStudies: string[]) => {
         setStudies(curr => [...newStudies])
         setChangingStudies(curr => false)
+    }
+
+    const editingExerciseHandler = (index: number) => {
+        setEditingExerciseIndex(curr => index)
     }
 
     return (
@@ -27,7 +68,7 @@ function TopicElement() {
                         <div className="number-of-exercises">Exercises: 25</div>
                     </div>
                 </AccordionSummary>
-                <Divider sx={{borderBottomWidth: 3}}/>
+                <Divider/>
                 <AccordionDetails>
                     <div className="studies-section d-flex align-items-center">
                         {!changingStudies ? (
@@ -48,9 +89,30 @@ function TopicElement() {
                         )}
                     </div>
                 </AccordionDetails>
+                <Divider/>
                 <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                    <div className="exercises-section">
+                        <div className="exercises-header">
+                            Exercises
+                        </div>
+                        <div className="exercises-list">
+                            {exercises.map((exercise, index) => (
+                                <div className="d-flex row" key={index}>
+                                    <ExerciseElement 
+                                        id={exercise.id} 
+                                        name={exercise.name} 
+                                        grasple_id={exercise.grasple_id} 
+                                        difficuly={exercise.difficuly} 
+                                        url={exercise.url} 
+                                        numOfAttempts={exercise.numOfAttempts}
+                                        beingEdited={editingExerciseIndex == index}
+                                        closeNotEditing={editingExerciseIndex > -1}
+                                    ></ExerciseElement>
+                                    <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </AccordionDetails>
                 <AccordionDetails>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse

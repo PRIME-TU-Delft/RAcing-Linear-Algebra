@@ -25,7 +25,7 @@
 }
 
 .studies-header {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .studies-list {
@@ -42,4 +42,12 @@
     background-color: #fff;
     margin: 0.5rem 0.2rem;  
     transition-duration: 0.3s;
+}
+
+.exercises-header {
+    font-size: 16px;
+}
+
+.exercise-edit-icon:hover {
+    cursor: pointer;
 }
