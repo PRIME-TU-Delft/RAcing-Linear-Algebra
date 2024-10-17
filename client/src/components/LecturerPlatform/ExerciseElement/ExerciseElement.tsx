@@ -23,6 +23,7 @@ interface Props {
     beingEdited: boolean
     closeNotEditing: boolean
     onFinishEditingExercise: (exerciseData: Exercise) => void
+    onDiscardEditingExercise: () => void
 }
 
 function ExerciseElement(props: Props) {
@@ -73,7 +74,7 @@ function ExerciseElement(props: Props) {
                     ) : (
                         <div className="exercise-header d-flex row">
                             <div className="d-flex col col-11">
-                                {props.name}
+                                New Exercise
                             </div>
                         </div>
                     )}
@@ -172,7 +173,8 @@ function ExerciseElement(props: Props) {
                 </AccordionDetails>
                 {props.beingEdited && (
                     <AccordionActions>
-                        <Button onClick={() => props.onFinishEditingExercise(newExerciseData)}>Save</Button>
+                        <Button onClick={() => props.onDiscardEditingExercise()}>Discard</Button>
+                        <Button onClick={() => props.onFinishEditingExercise(newExerciseData)} variant="contained">Save</Button>
                     </AccordionActions>
                 )}
             </Accordion>

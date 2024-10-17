@@ -48,6 +48,14 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon:hover {
+.exercise-edit-icon,.add-exercise-icon,.remove-exercises-icon:hover {
     cursor: pointer;
+}
+
+.add-exercise-icon {
+    margin-left: 0.5rem;
+}
+
+.remove-exercises-icon {
+    margin-left: 1rem;
 }

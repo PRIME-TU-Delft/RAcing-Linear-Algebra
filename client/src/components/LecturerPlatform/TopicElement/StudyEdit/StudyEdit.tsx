@@ -82,7 +82,7 @@ function StudyEdit(props: Props) {
                 
                 <Checkbox sx={{paddingRight: "2px", marginLeft: "1rem"}} onChange={handleSelectAllCheckboxChange}/>
                 <span style={{fontSize: "15px"}}>Select All</span>
-                <Button variant="contained" color="primary" sx={{marginLeft: "1rem"}} onClick={() => props.onStudiesSelected(selectedStudies)}>Save</Button>
+                <Button variant="contained" sx={{marginLeft: "1rem"}} onClick={() => props.onStudiesSelected(selectedStudies)}>Save</Button>
             </div>
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <div className="study-dropbox-title">Selected studies</div>

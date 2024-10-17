@@ -2,9 +2,10 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/mat
 import "./TopicElement.css";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
 import ExerciseElement from "../ExerciseElement/ExerciseElement";
+import { Store } from 'react-notifications-component';
 
 interface Exercise {
     id: number,
@@ -15,35 +16,50 @@ interface Exercise {
     numOfAttempts: number   
 }
 
+interface ExerciseListElement {
+    exercise: Exercise,
+    incompleteExercise: boolean
+}
+
 function TopicElement() {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
-    const [exercises, setExercises] = useState<Exercise[]>([
+    const [exercises, setExercises] = useState<ExerciseListElement[]>([
         {
-            id: 1,
-            name: "Exercise 1",
-            grasple_id: 7896,
-            difficuly: "Easy",
-            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-            numOfAttempts: 1
+            exercise: {
+                id: 1,
+                name: "Exercise 1",
+                grasple_id: 7896,
+                difficuly: "Easy",
+                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                numOfAttempts: 1,
+            },
+            incompleteExercise: false
         },
         {
-            id: 1,
-            name: "Exercise 1",
-            grasple_id: 7896,
-            difficuly: "Easy",
-            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-            numOfAttempts: 1
+            exercise: {
+                id: 1,
+                name: "Exercise 1",
+                grasple_id: 7896,
+                difficuly: "Easy",
+                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                numOfAttempts: 1,
+            },
+            incompleteExercise: false
         },
         {
-            id: 1,
-            name: "Exercise 1",
-            grasple_id: 7896,
-            difficuly: "Easy",
-            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
-            numOfAttempts: 1
-        }
+            exercise: {
+                id: 1,
+                name: "Exercise 1",
+                grasple_id: 7896,
+                difficuly: "Easy",
+                url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+                numOfAttempts: 1,
+            },
+            incompleteExercise: false
+        },
     ]);
+
     const [studies, setStudies] = useState<string[]>(["Study 1", "Study 2", "Study 3"]);
 
     const studiesChangedHandler = (newStudies: string[]) => {
@@ -52,12 +68,48 @@ function TopicElement() {
     }
 
     const editingExerciseHandler = (index: number) => {
-        setEditingExerciseIndex(curr => index)
+        if (editingExerciseIndex > -1) {
+            Store.addNotification({
+                title: "Warning",
+                message: "You must save changes before editing a different exercise",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else {
+            setEditingExerciseIndex(curr => index)
+        }
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        setExercises(curr => [...curr.map((exercise, idx) => idx === editingExerciseIndex ? exerciseData : exercise)]);
+        console.log(exerciseData)
+        setExercises(curr => [...curr.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)])
+        setEditingExerciseIndex(-1)
+    }
+
+    const addNewExerciseHandler = () => {
+        const newExercise: ExerciseListElement = {
+            exercise:{
+                id: Date.now(),
+                name: "",
+                grasple_id: 0,
+                difficuly: "",
+                url: "",
+                numOfAttempts: 0,
+            },
+            incompleteExercise: true
+        }
+        setExercises(curr => [newExercise, ...curr]);
+        setEditingExerciseIndex(0);
+    }
+
+    const discardEditingExerciseHandler = () => {
         setEditingExerciseIndex(-1);
+        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)]);
     }
 
     return (
@@ -97,22 +149,25 @@ function TopicElement() {
                 <Divider/>
                 <AccordionDetails>
                     <div className="exercises-section">
-                        <div className="exercises-header">
-                            Exercises
+                        <div className="exercises-header" style={{marginBottom: "0.5rem"}}>
+                            Exercises 
+                            <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
+                            <FontAwesomeIcon icon={faTrash} className="remove-exercises-icon" onClick={() => setChangingStudies(curr => true)}/>
                         </div>
                         <div className="exercises-list">
-                            {exercises.map((exercise, index) => (
+                            {exercises.map((exerciseElement, index) => (
                                 <div className="d-flex row" key={index}>
                                     <ExerciseElement 
-                                        id={exercise.id} 
-                                        name={exercise.name} 
-                                        grasple_id={exercise.grasple_id} 
-                                        difficuly={exercise.difficuly} 
-                                        url={exercise.url} 
-                                        numOfAttempts={exercise.numOfAttempts}
+                                        id={exerciseElement.exercise.id} 
+                                        name={exerciseElement.exercise.name} 
+                                        grasple_id={exerciseElement.exercise.grasple_id} 
+                                        difficuly={exerciseElement.exercise.difficuly} 
+                                        url={exerciseElement.exercise.url} 
+                                        numOfAttempts={exerciseElement.exercise.numOfAttempts}
                                         beingEdited={editingExerciseIndex == index}
                                         closeNotEditing={editingExerciseIndex > -1}
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
+                                        onDiscardEditingExercise={() => discardEditingExerciseHandler()}
                                     ></ExerciseElement>
                                     <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
                                 </div>
