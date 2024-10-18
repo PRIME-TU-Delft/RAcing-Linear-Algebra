@@ -28,6 +28,7 @@ interface Props {
     studies: string[],
     exercises: Exercise[]
     onUpdateTopic: (topicData: Topic) => void
+    discardNewTopic: () => void
 }
 
 interface Topic {
@@ -141,10 +142,10 @@ function TopicElement(props: Props) {
 
     useEffect(() => {
         if (saveChanges === "name" && editName) {
-            if (newName == "") {
+            if (newName == "" || newName == "New Name") {
                 Store.addNotification({
                     title: "Warning",
-                    message: "The topic name cannot be empty",
+                    message: "You should set an appropriate name for the topic",
                     type: "warning",
                     insert: "top",
                     container: "bottom-right",
@@ -174,7 +175,45 @@ function TopicElement(props: Props) {
     }, [saveChanges, newName, exercisesMode])
 
     useEffect(() => {
-        props.onUpdateTopic(newTopicData);
+        if (newTopicData.name === "") {
+            Store.addNotification({
+                title: "Warning",
+                message: "The topic name cannot be empty",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else if (newTopicData.studies.length === 0) {
+            Store.addNotification({
+                title: "Warning",
+                message: "The topic must have at least one study",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else if (newTopicData.exercises.length === 0) {
+            Store.addNotification({
+                title: "Warning",
+                message: "The topic must have at least one exercise",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            });
+        } else {
+            props.onUpdateTopic(newTopicData);
+        }
     }, [newTopicData])
 
     function discardExerciseChangesHandler(): void {

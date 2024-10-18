@@ -134,6 +134,25 @@ function LecturerPlatform(props: Props) {
         const newTopics = [...topics];
         newTopics[index] = topicData;
         setTopics(curr => [...newTopics]);
+        console.log(topicData)
+    }
+
+    function discardNewTopicHandler(index: number): void {
+        const newTopics = [...topics];
+        newTopics.splice(index, 1);
+        setTopics(curr => [...newTopics]);
+    }
+
+    const createNewTopic = () => {
+        const newTopic = {
+            id: -1,
+            name: "New Topic",
+            studies: [],
+            exercises: []
+        };
+        const newTopics = [newTopic, ...topics];
+        console.log(newTopics)
+        setTopics(curr => [...newTopics]);
     }
 
     return (
@@ -152,7 +171,7 @@ function LecturerPlatform(props: Props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}}>Create New Topic</Button>
+            <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
             <div style={{marginBottom: "1rem"}}>
                 {topics.map((topic, index) => (
                     <TopicElement 
@@ -162,6 +181,7 @@ function LecturerPlatform(props: Props) {
                         studies={topic.studies} 
                         exercises={topic.exercises} 
                         onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
+                        discardNewTopic={() => discardNewTopicHandler(index)}
                     />
                 ))}
             </div>

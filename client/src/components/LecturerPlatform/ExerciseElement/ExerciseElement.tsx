@@ -92,7 +92,7 @@ function ExerciseElement(props: Props) {
                 <AccordionSummary
                     aria-controls={`panel-content-${props.id}`}
                     id={`panel-header-${props.id}`}
-                    sx={{ height: '2rem', marginTop: '0.5rem'}}
+                    sx={{ height: '2rem'}}
                 >
                     {!props.beingEdited ? (
                         <div className="exercise-header d-flex row">
