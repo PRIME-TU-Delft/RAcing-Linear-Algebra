@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField} from "@mui/material";
 import "./TopicElement.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,6 +27,14 @@ interface Props {
     name: string,
     studies: string[],
     exercises: Exercise[]
+    onUpdateTopic: (topicData: Topic) => void
+}
+
+interface Topic {
+    id: number,
+    name: string,
+    studies: string[],
+    exercises: Exercise[]
 }
 
 function TopicElement(props: Props) {
@@ -35,9 +43,16 @@ function TopicElement(props: Props) {
     const [exercisesMode, setExercisesMode] = useState<string>("");
     const [saveChanges, setSaveChanges] = useState<boolean>(false);
     const [exercises, setExercises] = useState<ExerciseListElement[]>(props.exercises.map(exercise => ({exercise, incompleteExercise: false})));
-    
+    const [editName, setEditName] = useState<boolean>(false);
+    const [newName, setNewName] = useState<string>("");
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
+    const [newTopicData, setNewTopicData] = useState<Topic>({
+        id: props.id,
+        name: props.name,
+        studies: props.studies,
+        exercises: props.exercises
+    });
 
     const [studies, setStudies] = useState<string[]>(props.studies);
 
@@ -120,6 +135,36 @@ function TopicElement(props: Props) {
         setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)]);
     }
 
+    function saveNameHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+        setSaveChanges(curr => true);
+    }
+
+    useEffect(() => {
+        if (saveChanges && editName) {
+            if (newName == "") {
+                Store.addNotification({
+                    title: "Warning",
+                    message: "The topic name cannot be empty",
+                    type: "warning",
+                    insert: "top",
+                    container: "bottom-right",
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                })
+            } else {
+                setNewTopicData(curr => ({...curr, name: newName}));
+                setEditName(curr => false);
+                setSaveChanges(curr => false);
+            }
+        }
+    }, [saveChanges, newName])
+
+    useEffect(() => {
+        props.onUpdateTopic(newTopicData);
+    }, [newTopicData])
+
     return (
         <div className="topic-element">
             <Accordion sx={{ backgroundColor: '#f5f5f5' }}>
@@ -129,16 +174,54 @@ function TopicElement(props: Props) {
                 sx={{ height: '5remis' }}
                 >
                     <div>
-                        <div className="topic-title">{props.name}</div>
+                        <div className="topic-title">
+                            {props.name}
+                        </div>
                         <div className="number-of-exercises">Exercises: {props.exercises.length}</div>
                     </div>
                 </AccordionSummary>
                 <Divider/>
                 <AccordionDetails>
+                    <div className="name-section">
+                        {!editName ? (
+                            <>
+                                <div className="name-header topic-header">
+                                    Name
+                                    <FontAwesomeIcon icon={faPen} size="xs" className="edit-name-icon" style={{marginLeft: "0.5rem"}} onClick={() => setEditName(true)} />
+                                </div>
+                                <div>
+                                    {props.name} 
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="name-header topic-header">
+                                    Name
+                                </div>
+                                <div>
+                                    <TextField 
+                                        defaultValue={props.name} 
+                                        onChange={(e) => setNewName(e.target.value)} 
+                                        variant="outlined" 
+                                        size="small" 
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </AccordionDetails>
+                {editName && (
+                    <AccordionActions>
+                        <Button size="small" onClick={() => setEditName(false)}>Discard</Button>
+                        <Button size="small" onClick={saveNameHandler} variant="contained">Save</Button>
+                    </AccordionActions>
+                )}
+                <Divider/>
+                <AccordionDetails>
                     <div className="studies-section d-flex align-items-center">
                         {!changingStudies ? (
                             <div>
-                                <div className="studies-header">
+                                <div className="studies-header topic-header">
                                 Studies <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingStudies(curr => true)}/>
                                 </div>
                                 <div className="studies-list">
@@ -161,7 +244,7 @@ function TopicElement(props: Props) {
                 <Divider/>
                 <AccordionDetails>
                     <div className="exercises-section">
-                        <div className="exercises-header" style={{marginBottom: "0.5rem"}}>
+                        <div className="exercises-header topic-header" style={{marginBottom: "0.5rem"}}>
                             Exercises 
                             {exercisesMode != "" ? (
                                 <>
@@ -172,7 +255,7 @@ function TopicElement(props: Props) {
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
                                     data-tooltip-id="info-tooltip"
                                     data-tooltip-place="right"
-                                    data-tooltip-html="Add new exercises by pressing the + button.<br />Toggle between remove and edit modes by pressing the trashcan toggle.<br />Edit/remove individual exercises based on the selected mode."
+                                    data-tooltip-html="Add new exercises by pressing the + button.<br />Toggle between remove and edit modes by pressing the trash can toggle.<br />Edit/remove individual exercises based on the selected mode."
                                 />
                                 <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
                                 <ToggleButton

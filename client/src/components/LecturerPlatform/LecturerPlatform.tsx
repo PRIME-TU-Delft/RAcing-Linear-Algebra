@@ -130,6 +130,11 @@ function LecturerPlatform(props: Props) {
         }
     }, [props.loggedIn, navigate]);
 
+    const updateTopicHandler = (topicData: Topic, index: number) => {
+        const newTopics = [...topics];
+        newTopics[index] = topicData;
+        setTopics(curr => [...newTopics]);
+    }
 
     return (
         <div>
@@ -149,13 +154,14 @@ function LecturerPlatform(props: Props) {
             </AppBar>
             <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}}>Create New Topic</Button>
             <div style={{marginBottom: "1rem"}}>
-                {topics.map((topic) => (
+                {topics.map((topic, index) => (
                     <TopicElement 
                         key={topic.id} 
                         id={topic.id} 
                         name={topic.name} 
                         studies={topic.studies} 
                         exercises={topic.exercises} 
+                        onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
                     />
                 ))}
             </div>

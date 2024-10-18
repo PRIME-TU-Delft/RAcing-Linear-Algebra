@@ -59,3 +59,11 @@
 .remove-exercises-icon, .edit-exercises-icon {
     margin-left: 1rem;
 }
+
+.topic-header {
+    font-weight: 500;
+}
+
+.name-header {
+    margin-bottom: 0.5rem;
+}
