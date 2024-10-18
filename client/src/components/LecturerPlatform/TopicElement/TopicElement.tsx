@@ -41,7 +41,7 @@ function TopicElement(props: Props) {
     const [changingStudies, setChangingStudies] = useState<boolean>(false);
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
     const [exercisesMode, setExercisesMode] = useState<string>("");
-    const [saveChanges, setSaveChanges] = useState<boolean>(false);
+    const [saveChanges, setSaveChanges] = useState<string>("");
     const [exercises, setExercises] = useState<ExerciseListElement[]>(props.exercises.map(exercise => ({exercise, incompleteExercise: false})));
     const [editName, setEditName] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>("");
@@ -59,7 +59,7 @@ function TopicElement(props: Props) {
     const studiesChangedHandler = (newStudies: string[]) => {
         setStudies(curr => [...newStudies])
         setChangingStudies(curr => false)
-        setSaveChanges(curr => false)
+        setSaveChanges(curr => "studies")
     }
 
     const editingExerciseHandler = (index: number) => {
@@ -136,11 +136,11 @@ function TopicElement(props: Props) {
     }
 
     function saveNameHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-        setSaveChanges(curr => true);
+        setSaveChanges(curr => "name");
     }
 
     useEffect(() => {
-        if (saveChanges && editName) {
+        if (saveChanges === "name" && editName) {
             if (newName == "") {
                 Store.addNotification({
                     title: "Warning",
@@ -156,20 +156,20 @@ function TopicElement(props: Props) {
             } else {
                 setNewTopicData(curr => ({...curr, name: newName}));
                 setEditName(curr => false);
-                setSaveChanges(curr => false);
+                setSaveChanges(curr => "");
             }
         } 
         
-        else if (saveChanges && changingStudies) {
+        else if (saveChanges === "studies" && changingStudies) {
             setNewTopicData(curr => ({...curr, studies: studies}));
             setChangingStudies(curr => false);
-            setSaveChanges(curr => false);
+            setSaveChanges(curr => "");
         } 
         
-        else if (saveChanges && exercisesMode != "") {
+        else if (saveChanges === "exercises" && exercisesMode != "") {
             setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}));
             setExercisesMode(curr => "");
-            setSaveChanges(curr => false);
+            setSaveChanges(curr => "");
         }
     }, [saveChanges, newName, exercisesMode])
 
@@ -179,12 +179,12 @@ function TopicElement(props: Props) {
 
     function discardExerciseChangesHandler(): void {
         setExercisesMode("");
-        setSaveChanges(false);
+        setSaveChanges("");
         setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false}))]);
     }
 
     function saveExercisesHandler(): void {
-        setSaveChanges(true);
+        setSaveChanges(curr => "exercises");
     }
 
     return (
@@ -255,13 +255,13 @@ function TopicElement(props: Props) {
                                 </div>
                             </div>
                         ) : (
-                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges}></StudyEdit>
+                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
                         )}
                     </div>
                 </AccordionDetails>
                 {changingStudies && (<AccordionActions>
                     <Button size="small" onClick={() => setChangingStudies(false)}>Discard</Button>
-                    <Button size="small" onClick={() => setSaveChanges(curr => true)} variant="contained">Save</Button>
+                    <Button size="small" onClick={() => setSaveChanges(curr => "studies")} variant="contained">Save</Button>
                 </AccordionActions>)}
                 <Divider/>
                 <AccordionDetails>
