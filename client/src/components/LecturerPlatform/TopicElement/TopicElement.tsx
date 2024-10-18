@@ -46,7 +46,7 @@ function TopicElement(props: Props) {
     const [editName, setEditName] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>("");
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
+    const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1);
     const [newTopicData, setNewTopicData] = useState<Topic>({
         id: props.id,
         name: props.name,
@@ -92,7 +92,7 @@ function TopicElement(props: Props) {
                 id: -1,
                 name: "",
                 grasple_id: 0,
-                difficuly: "",
+                difficuly: "Easy",
                 url: "",
                 numOfAttempts: 0,
             },
@@ -109,16 +109,16 @@ function TopicElement(props: Props) {
     };
 
     const confirmDeleteExercise = () => {
-        if (exerciseToDelete !== null) {
+        if (exerciseToDelete > -1) {
             const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete);
             setExercises(newExercises);
-            setExerciseToDelete(null);
+            setExerciseToDelete(-1);
         }
         setOpenDialog(false);
     };
 
     const cancelDeleteExercise = () => {
-        setExerciseToDelete(null);
+        setExerciseToDelete(-1);
         setOpenDialog(false);
     };
 
@@ -158,12 +158,34 @@ function TopicElement(props: Props) {
                 setEditName(curr => false);
                 setSaveChanges(curr => false);
             }
+        } 
+        
+        else if (saveChanges && changingStudies) {
+            setNewTopicData(curr => ({...curr, studies: studies}));
+            setChangingStudies(curr => false);
+            setSaveChanges(curr => false);
+        } 
+        
+        else if (saveChanges && exercisesMode != "") {
+            setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}));
+            setExercisesMode(curr => "");
+            setSaveChanges(curr => false);
         }
-    }, [saveChanges, newName])
+    }, [saveChanges, newName, exercisesMode])
 
     useEffect(() => {
         props.onUpdateTopic(newTopicData);
     }, [newTopicData])
+
+    function discardExerciseChangesHandler(): void {
+        setExercisesMode("");
+        setSaveChanges(false);
+        setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false}))]);
+    }
+
+    function saveExercisesHandler(): void {
+        setSaveChanges(true);
+    }
 
     return (
         <div className="topic-element">
@@ -297,15 +319,15 @@ function TopicElement(props: Props) {
                     </div>
                 </AccordionDetails>
                 {exercisesMode != "" && (<AccordionActions>
-                    <Button size="small" onClick={() => setExercisesMode("")}>Discard</Button>
-                    <Button size="small" onClick={() => setSaveChanges(curr => true)} variant="contained">Save</Button>
+                    <Button size="small" onClick={() => discardExerciseChangesHandler()}>Discard</Button>
+                    <Button size="small" onClick={() => saveExercisesHandler()} variant="contained">Save</Button>
                 </AccordionActions>)}
             </Accordion>
             <Dialog open={openDialog} onClose={cancelDeleteExercise}>
                     <DialogTitle>Confirm Delete</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to delete the exercise {exercises[exerciseToDelete!]?.exercise.name} (#{exercises[exerciseToDelete!]?.exercise.grasple_id})?
+                            Are you sure you want to delete the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.grasple_id})?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

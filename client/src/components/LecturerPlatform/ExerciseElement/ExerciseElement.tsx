@@ -166,7 +166,7 @@ function ExerciseElement(props: Props) {
                                         variant="outlined"
                                         size="small"
                                         defaultValue={newExerciseData.difficuly == "" ? "Easy" : newExerciseData.difficuly}
-                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, difficuly: e.target.value })}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, difficuly: e.target.value === "" ? "Easy" : e.target.value })}
                                         sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
                                         className="d-flex justify-content-center"
                                         SelectProps={{
