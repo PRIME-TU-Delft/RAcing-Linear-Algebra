@@ -413,14 +413,6 @@ function TopicElement(props: Props) {
                                     data-tooltip-html="Add new exercises by pressing the + button.<br />Toggle between remove and edit modes by pressing the trash can toggle.<br />Edit/remove individual exercises based on the selected mode."
                                 />
                                 <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                                <ToggleButton
-                                    value="check"
-                                    selected={exercisesMode == "remove"}
-                                    onChange={() => setExercisesMode(exercisesMode === "edit" ? "remove" : "edit")}
-                                    sx={{marginLeft: "1rem"}}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </ToggleButton>
                                 </>
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
@@ -441,11 +433,14 @@ function TopicElement(props: Props) {
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
                                     ></ExerciseElement>
-                                    {exercisesMode == "edit" ? (
-                                        <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
-                                    ) : exercisesMode == "remove" ? (
-                                        <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
-                                    ) : null}	
+                                    {exercisesMode === "edit" && (
+                                        <div className="d-flex col m-auto">
+                                            <div className="d-flex row">
+                                                <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
+                                                <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
