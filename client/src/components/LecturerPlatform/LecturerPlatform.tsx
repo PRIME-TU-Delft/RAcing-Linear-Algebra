@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import TopicElement from "./TopicElement/TopicElement";
 import { Button } from "@mui/material";
+import ExerciseElement from "./ExerciseElement/ExerciseElement";
 
 interface Props {
     loggedIn: boolean;
@@ -20,7 +21,7 @@ interface Exercise {
     id: number,
     name: string,
     grasple_id: number,
-    difficuly: string,
+    difficulty: string,
     url: string,
     numOfAttempts: number   
 }
@@ -34,6 +35,32 @@ interface Topic {
 
 function LecturerPlatform(props: Props) {
     const [activeTab, setActiveTab] = useState<string>("topics")
+    const [exercises, setExercises] = useState<Exercise[]>([
+        {
+            id: 1,
+            name: "Exercise 2",
+            grasple_id: 7896,
+            difficulty: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1,
+        },
+        {
+            id: 2,
+            name: "Exercise 4",
+            grasple_id: 7896,
+            difficulty: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1,
+        },
+        {
+            id: 2,
+            name: "Exercise 4",
+            grasple_id: 7896,
+            difficulty: "Easy",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            numOfAttempts: 1,
+        }
+    ])
     const [topics, setTopics] = useState<Topic[]>([
         {
             id: 1,
@@ -44,7 +71,7 @@ function LecturerPlatform(props: Props) {
                     id: 1,
                     name: "Exercise 1",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 },
@@ -52,7 +79,7 @@ function LecturerPlatform(props: Props) {
                     id: 2,
                     name: "Exercise 2",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 }
@@ -67,7 +94,7 @@ function LecturerPlatform(props: Props) {
                     id: 1,
                     name: "Exercise 2",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 },
@@ -75,7 +102,7 @@ function LecturerPlatform(props: Props) {
                     id: 2,
                     name: "Exercise 4",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 },
@@ -83,7 +110,7 @@ function LecturerPlatform(props: Props) {
                     id: 2,
                     name: "Exercise 4",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 }
@@ -98,7 +125,7 @@ function LecturerPlatform(props: Props) {
                     id: 1,
                     name: "Exercise 2",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 },
@@ -106,7 +133,7 @@ function LecturerPlatform(props: Props) {
                     id: 2,
                     name: "Exercise 4",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 },
@@ -114,7 +141,7 @@ function LecturerPlatform(props: Props) {
                     id: 2,
                     name: "Exercise 4",
                     grasple_id: 7896,
-                    difficuly: "Easy",
+                    difficulty: "Easy",
                     url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
                     numOfAttempts: 1,
                 }
@@ -154,6 +181,23 @@ function LecturerPlatform(props: Props) {
         setTopics(curr => [...newTopics]);
     }
 
+    const createNewExercise = () => {
+        const newExercise: Exercise = { id: -1, name: "New Exercise", grasple_id: -1, difficulty: "", url: "", numOfAttempts: 0 };
+        const newExercises = [newExercise, ...exercises];
+        setExercises(newExercises);
+    };
+
+    const updateExerciseHandler = (exerciseData: Exercise, index: number) => {
+        const updatedExercises = [...exercises];
+        updatedExercises[index] = exerciseData;
+        setExercises(updatedExercises);
+    };
+
+    const discardNewExerciseHandler = (index: number) => {
+        const updatedExercises = exercises.filter((_, i) => i !== index);
+        setExercises(updatedExercises);
+    };
+
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setActiveTab(newValue);
     };
@@ -180,20 +224,47 @@ function LecturerPlatform(props: Props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
-            <div style={{marginBottom: "1rem"}}>
-                {topics.map((topic, index) => (
-                    <TopicElement 
-                        key={index} 
-                        id={topic.id} 
-                        name={topic.name} 
-                        studies={topic.studies} 
-                        exercises={topic.exercises} 
-                        onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
-                        discardNewTopic={() => discardNewTopicHandler(index)}
-                    />
-                ))}
-            </div>
+            {activeTab === "topics" && (
+                <>
+                    <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
+                    <div style={{marginBottom: "1rem"}}>
+                        {topics.map((topic, index) => (
+                            <TopicElement 
+                                key={index} 
+                                id={topic.id} 
+                                name={topic.name} 
+                                studies={topic.studies} 
+                                exercises={topic.exercises} 
+                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
+                                discardNewTopic={() => discardNewTopicHandler(index)}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
+            {activeTab === "exercises" && (
+                <>
+                    <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
+                    <div style={{marginBottom: "1rem"}}>
+                        {exercises.map((exercise, index) => (
+                            <ExerciseElement 
+                                key={index} 
+                                id={exercise.id} 
+                                name={exercise.name} 
+                                grasple_id={exercise.grasple_id} 
+                                difficulty={exercise.difficulty} 
+                                url={exercise.url} 
+                                numOfAttempts={exercise.numOfAttempts} 
+                                beingEdited={false} 
+                                closeNotEditing={false} 
+                                onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData, index)}
+                                onDiscardEditingExercise={() => discardNewExerciseHandler(index)}
+                                isIndependentElement={true}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

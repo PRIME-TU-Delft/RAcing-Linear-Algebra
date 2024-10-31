@@ -12,7 +12,7 @@ interface Exercise {
     id: number,
     name: string,
     grasple_id: number,
-    difficuly: string,
+    difficulty: string,
     url: string,
     numOfAttempts: number   
 }
@@ -95,7 +95,7 @@ function TopicElement(props: Props) {
                 id: -1,
                 name: "",
                 grasple_id: 0,
-                difficuly: "Easy",
+                difficulty: "Easy",
                 url: "",
                 numOfAttempts: 0,
             },
@@ -425,16 +425,17 @@ function TopicElement(props: Props) {
                                         id={exerciseElement.exercise.id} 
                                         name={exerciseElement.exercise.name} 
                                         grasple_id={exerciseElement.exercise.grasple_id} 
-                                        difficuly={exerciseElement.exercise.difficuly} 
+                                        difficulty={exerciseElement.exercise.difficulty} 
                                         url={exerciseElement.exercise.url} 
                                         numOfAttempts={exerciseElement.exercise.numOfAttempts}
                                         beingEdited={editingExerciseIndex == index}
                                         closeNotEditing={editingExerciseIndex > -1}
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                        isIndependentElement={false}
                                     ></ExerciseElement>
                                     {exercisesMode === "edit" && (
-                                        <div className="d-flex col m-auto">
+                                        <div className="d-flex col  m-auto">
                                             <div className="d-flex row">
                                                 <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
                                                 <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
