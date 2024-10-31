@@ -154,6 +154,10 @@ function LecturerPlatform(props: Props) {
         setTopics(curr => [...newTopics]);
     }
 
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setActiveTab(newValue);
+    };
+
     return (
         <div>
             <AppBar position="static">
@@ -161,11 +165,17 @@ function LecturerPlatform(props: Props) {
                     <Typography variant="h6" component="div">
                         RAcing Linear Algebra
                     </Typography>
-                    <Tabs sx={{ flexGrow: 1 }} className="lecturer-platform-tabs">
-                        <Tab label="Topics" onClick={() => setActiveTab("topics")}/>
-                        <Tab label="Exercises" onClick={() => setActiveTab("exercises")}/>
+                    <Tabs 
+                        value={activeTab} 
+                        onChange={handleChange}
+                        textColor="inherit"
+                        indicatorColor="secondary"
+                        className="lecturer-platform-tabs"
+                    >
+                        <Tab value="topics" label="Topics"/>
+                        <Tab value="exercises" label="Exercises"/>
                     </Tabs>
-                    <IconButton color="inherit" onClick={() => navigate("/")}>
+                    <IconButton color="inherit" onClick={() => navigate("/")} style={{marginLeft: "auto"}}>
                         <FontAwesomeIcon icon={faHome} />
                     </IconButton>
                 </Toolbar>
