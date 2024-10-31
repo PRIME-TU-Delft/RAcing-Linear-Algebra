@@ -3,6 +3,7 @@
     margin-top: 2rem;
     width: 80%;
     text-align: left;
+    position: relative;
 }
 
 .topic-title {
@@ -48,7 +49,7 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.remove-exercises-icon,.edit-exercises-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.edit-name-icon:hover {
     cursor: pointer;
 }
 
@@ -66,4 +67,15 @@
 
 .name-header {
     margin-bottom: 0.5rem;
+}
+
+.topic-save-icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(500%, -50%);
+}
+
+.topic-save-icon:hover {
+    cursor: pointer;
 }

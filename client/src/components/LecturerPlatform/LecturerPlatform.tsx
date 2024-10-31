@@ -134,7 +134,6 @@ function LecturerPlatform(props: Props) {
         const newTopics = [...topics];
         newTopics[index] = topicData;
         setTopics(curr => [...newTopics]);
-        console.log(topicData)
     }
 
     function discardNewTopicHandler(index: number): void {
@@ -151,7 +150,7 @@ function LecturerPlatform(props: Props) {
             exercises: []
         };
         const newTopics = [newTopic, ...topics];
-        console.log(newTopics)
+        console.log(newTopics);
         setTopics(curr => [...newTopics]);
     }
 
@@ -175,7 +174,7 @@ function LecturerPlatform(props: Props) {
             <div style={{marginBottom: "1rem"}}>
                 {topics.map((topic, index) => (
                     <TopicElement 
-                        key={topic.id} 
+                        key={index} 
                         id={topic.id} 
                         name={topic.name} 
                         studies={topic.studies} 
