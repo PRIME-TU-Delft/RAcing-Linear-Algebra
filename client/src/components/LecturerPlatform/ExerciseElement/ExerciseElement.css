@@ -33,5 +33,12 @@
 }
 
 .edit-icon {
-    margin-left: 0.5rem;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(500%, -50%);
+}
+
+.edit-icon:hover {
+    cursor: pointer;
 }

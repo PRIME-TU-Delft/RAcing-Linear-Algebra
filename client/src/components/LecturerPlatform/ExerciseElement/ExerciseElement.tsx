@@ -92,7 +92,8 @@ function ExerciseElement(props: Props) {
     }, [props.beingEdited, props.closeNotEditing])
 
     return (
-        <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} style={{margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
+        <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} 
+            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
                 expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == -1 || (props.isIndependentElement && beingEdited)}
@@ -108,14 +109,6 @@ function ExerciseElement(props: Props) {
                             <div className="d-flex col col-11 align-items-center">
                                 {props.name} 
                                 <span className="exercise-header-id">(#{props.grasple_id})</span>
-                                {props.isIndependentElement && (
-                                    <FontAwesomeIcon 
-                                        icon={faPen} 
-                                        className="edit-icon" 
-                                        size="sm"
-                                        onClick={() => setBeingEdited(true)} 
-                                    />
-                                )}
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
@@ -230,6 +223,14 @@ function ExerciseElement(props: Props) {
                     </AccordionActions>
                 )}
             </Accordion>
+            {props.isIndependentElement && (
+                <FontAwesomeIcon 
+                    icon={faPen} 
+                    className="edit-icon" 
+                    size="sm"
+                    onClick={() => setBeingEdited(true)} 
+                />
+            )}
         </div>
     );
 }
