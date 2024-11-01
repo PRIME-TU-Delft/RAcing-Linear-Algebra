@@ -86,18 +86,34 @@ export async function addStudiesToTopic(topicId: string, studyIds: string[]): Pr
     }
 }
 
-export async function getAllExercisesFromTopic(topicId: string): Promise<{mandatoryExercises: IExercise[], difficultyExercises: IExercise[]}> {
+export async function getAllExercisesFromTopic(topicId: string): Promise<IExercise[]> {
     try {
-        const topic = await Topic.findById(topicId)
+        const topic = await Topic.findById(topicId);
 
         if (!topic) {
             throw new Error('Topic not found');
         }
 
-        return {
-            mandatoryExercises: topic.mandatoryExercises,
-            difficultyExercises: topic.difficultyExercises,
-        };
+        const exercises: IExercise[] = [];
+
+        for (let i = 0; i < topic.mandatoryExercises.length; i++) {
+            const exercise = await Exercise.findById(topic.mandatoryExercises[i]);
+            if (!exercise) {
+                throw new Error('Exercise not found');
+            }
+            exercise.difficulty = 'Mandatory';
+            exercises.push(exercise);
+        }
+
+        for (let i = 0; i < topic.difficultyExercises.length; i++) {
+            const exercise = await Exercise.findById(topic.difficultyExercises[i]);
+            if (!exercise) {
+                throw new Error('Exercise not found');
+            }
+            exercises.push(exercise);
+        }
+
+        return exercises;
     } catch (error) {
         console.error("Error retrieving exercises from topic:", error);
         throw error;
@@ -106,15 +122,25 @@ export async function getAllExercisesFromTopic(topicId: string): Promise<{mandat
 
 export async function getAllStudiesFromTopic(topicId: string): Promise<IStudy[]> {
     try {
-        const topic = await Topic.findById(topicId)
+        const topic = await Topic.findById(topicId);
 
         if (!topic) {
             throw new Error('Topic not found');
         }
 
-        return topic.studies;
+        const studies: IStudy[] = [];
+
+        for (let i = 0; i < topic.studies.length; i++) {
+            const study = await Study.findById(topic.studies[i]);
+            if (!study) {
+                throw new Error('Study not found');
+            }
+            studies.push(study);
+        }
+
+        return studies;
     } catch (error) {
-        console.error("Error retrieving exercises from topic:", error);
+        console.error("Error retrieving studies from topic:", error);
         throw error;
     }
 }

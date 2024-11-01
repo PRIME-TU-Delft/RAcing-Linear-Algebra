@@ -23,15 +23,23 @@ interface Props {
 
 function LecturerPlatform(props: Props) {
     const [activeTab, setActiveTab] = useState<string>("topics")
-    const [exercises, setExercises] = useState<Exercise[]>([...props.allExercises])
-    const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([...exercises.map(exercise => exercise.grasple_id)])
-    const [topics, setTopics] = useState<Topic[]>([...props.allTopics])
+    const [exercises, setExercises] = useState<Exercise[]>([])
+    const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([])
+    const [topics, setTopics] = useState<Topic[]>([])
 
     useEffect(() => {
-        setExerciseGraspleIds([...exercises.map(exercise => exercise.grasple_id)])
+        setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
     }, [exercises])
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setTopics([...props.allTopics]);
+    }, [props.allTopics]);
+
+    useEffect(() => {
+        setExercises([...props.allExercises]);
+    }, [props.allExercises]);
 
     useEffect(() => {
         if (!props.loggedIn) {
@@ -53,7 +61,7 @@ function LecturerPlatform(props: Props) {
 
     const createNewTopic = () => {
         const newTopic = {
-            id: "",
+            _id: "",
             name: "New Topic",
             studies: [],
             exercises: []
@@ -64,7 +72,7 @@ function LecturerPlatform(props: Props) {
     }
 
     const createNewExercise = () => {
-        const newExercise: Exercise = { id: "", name: "New Exercise", grasple_id: -1, difficulty: "", url: "", numOfAttempts: 0 };
+        const newExercise: Exercise = { _id: "", name: "New Exercise", exerciseId: -1, difficulty: "", url: "", numOfAttempts: 0 };
         const newExercises = [newExercise, ...exercises];
         setExercises(newExercises);
     };
@@ -89,7 +97,7 @@ function LecturerPlatform(props: Props) {
     const addExerciseToTopic = (topicIndex: number, exercise: Exercise) => {
         const newTopics = topics.map((topic, index) => {
             if (index === topicIndex) {
-                const exerciseExists = topic.exercises.some(ex => ex.grasple_id === exercise.grasple_id);
+                const exerciseExists = topic.exercises.some(ex => ex.exerciseId === exercise.exerciseId);
                 if (!exerciseExists) {
                     return { ...topic, exercises: [exercise, ...topic.exercises] };
                 }
@@ -100,7 +108,7 @@ function LecturerPlatform(props: Props) {
     }
 
     const linkExerciseHandler = (topicIndex: number, exerciseGraspleId: number) => {
-        const exercise = exercises.find(exercise => exercise.grasple_id === exerciseGraspleId)
+        const exercise = exercises.find(exercise => exercise.exerciseId === exerciseGraspleId)
         if (exercise) {
             addExerciseToTopic(topicIndex, exercise)
         }
@@ -135,7 +143,7 @@ function LecturerPlatform(props: Props) {
                         {topics.map((topic, index) => (
                             <TopicElement 
                                 key={index} 
-                                id={topic.id} 
+                                _id={topic._id} 
                                 name={topic.name} 
                                 studies={topic.studies} 
                                 exercises={topic.exercises} 
@@ -156,9 +164,9 @@ function LecturerPlatform(props: Props) {
                         {exercises.map((exercise, index) => (
                             <ExerciseElement 
                                 key={index} 
-                                id={exercise.id} 
+                                _id={exercise._id} 
                                 name={exercise.name} 
-                                grasple_id={exercise.grasple_id} 
+                                exerciseId={exercise.exerciseId} 
                                 difficulty={exercise.difficulty} 
                                 url={exercise.url} 
                                 numOfAttempts={exercise.numOfAttempts} 

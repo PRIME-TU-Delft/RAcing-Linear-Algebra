@@ -8,6 +8,7 @@ import ExerciseElement from "../ExerciseElement/ExerciseElement";
 import { Store } from 'react-notifications-component';
 import { Tooltip } from "react-tooltip";
 import { Exercise, Study, Topic } from "../SharedUtils";
+import socket from "../../../socket";
 
 
 interface ExerciseListElement {
@@ -16,7 +17,7 @@ interface ExerciseListElement {
 }
 
 interface Props {
-    id: string,
+    _id: string,
     name: string,
     studies: Study[],
     exercises: Exercise[],
@@ -33,20 +34,20 @@ function TopicElement(props: Props) {
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
     const [exercisesMode, setExercisesMode] = useState<string>("");
     const [saveChanges, setSaveChanges] = useState<string>("");
-    const [exercises, setExercises] = useState<ExerciseListElement[]>(props.exercises.map(exercise => ({exercise, incompleteExercise: false})));
+    const [exercises, setExercises] = useState<ExerciseListElement[]>([]);
     const [editName, setEditName] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>("");
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1);
     const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false);
     const [newTopicData, setNewTopicData] = useState<Topic>({
-        id: props.id,
-        name: props.name,
-        studies: props.studies,
-        exercises: props.exercises
+        _id: "",
+        name: "",
+        studies: [],
+        exercises: []
     });
 
-    const [studies, setStudies] = useState<Study[]>(props.studies);
+    const [studies, setStudies] = useState<Study[]>([]);
 
     const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
     const [searchInput, setSearchInput] = useState("");
@@ -57,6 +58,12 @@ function TopicElement(props: Props) {
         setChangingStudies(curr => false)
         setSaveChanges(curr => "studies")
     }
+
+    useEffect(() => {
+        if (props.studies) {
+            setStudies(curr => [...props.studies])
+        }
+    }, [props.studies])
 
     const editingExerciseHandler = (index: number) => {
         if (editingExerciseIndex > -1) {
@@ -85,9 +92,9 @@ function TopicElement(props: Props) {
     const addNewExerciseHandler = () => {
         const newExercise: ExerciseListElement = {
             exercise:{
-                id: "",
+                _id: "",
                 name: "",
-                grasple_id: 0,
+                exerciseId: 0,
                 difficulty: "Easy",
                 url: "",
                 numOfAttempts: 0,
@@ -144,9 +151,9 @@ function TopicElement(props: Props) {
     useEffect(() => {
         setNewTopicData(prevData => ({
             ...prevData,
-            id: props.id
+            id: props._id
         }));
-    }, [props.id]);
+    }, [props._id]);
     
     useEffect(() => {
         setNewTopicData(prevData => ({
@@ -164,11 +171,13 @@ function TopicElement(props: Props) {
     }, [props.studies]);
     
     useEffect(() => {
-        setNewTopicData(prevData => ({
-            ...prevData,
-            exercises: props.exercises
-        }));
-        setExercises(props.exercises.map(exercise => ({ exercise, incompleteExercise: false })));
+        if (props.exercises) {
+            setNewTopicData(prevData => ({
+                ...prevData,
+                exercises: props.exercises
+            }));
+            setExercises(props.exercises.map(exercise => ({ exercise, incompleteExercise: false })));
+        }
     }, [props.exercises]);
 
     useEffect(() => {
@@ -206,7 +215,7 @@ function TopicElement(props: Props) {
     }, [saveChanges, newName, exercisesMode])
 
     useEffect(() => {
-        if (newTopicData.name !== props.name || newTopicData.studies !== props.studies || newTopicData.exercises !== props.exercises || newTopicData.id == "") {
+        if (newTopicData.name !== props.name || newTopicData.studies !== props.studies || newTopicData.exercises !== props.exercises || newTopicData._id == "") {
             setUnsavedTopicChanges(true);
         } 
         else if (newTopicData.name === "") {
@@ -331,7 +340,7 @@ function TopicElement(props: Props) {
                         <div className="topic-title">
                             {newTopicData.name}
                         </div>
-                        <div className="number-of-exercises">Exercises: {props.exercises.length}</div>
+                        <div className="number-of-exercises">Exercises: {exercises.length}</div>
                     </div>
                 </AccordionSummary>
                 <Divider/>
@@ -422,9 +431,9 @@ function TopicElement(props: Props) {
                             {exercises.map((exerciseElement, index) => (
                                 <div className="d-flex row" key={index}>
                                     <ExerciseElement 
-                                        id={exerciseElement.exercise.id} 
+                                        _id={exerciseElement.exercise._id} 
                                         name={exerciseElement.exercise.name} 
-                                        grasple_id={exerciseElement.exercise.grasple_id} 
+                                        exerciseId={exerciseElement.exercise.exerciseId} 
                                         difficulty={exerciseElement.exercise.difficulty} 
                                         url={exerciseElement.exercise.url} 
                                         numOfAttempts={exerciseElement.exercise.numOfAttempts}
@@ -456,7 +465,7 @@ function TopicElement(props: Props) {
                     <DialogTitle>Confirm Remove</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to remove the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.grasple_id}) from this topic?
+                            Are you sure you want to remove the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.exerciseId}) from this topic?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

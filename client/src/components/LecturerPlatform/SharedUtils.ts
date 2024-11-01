@@ -1,21 +1,21 @@
 interface Exercise {
-    id: string,
+    _id: string,
     name: string,
-    grasple_id: number,
+    exerciseId: number,
     difficulty: string,
     url: string,
     numOfAttempts: number   
 }
 
 interface Topic {
-    id: string,
+    _id: string,
     name: string,
     studies: Study[],
     exercises: Exercise[]
 }
 
 interface Study {
-    id: string,
+    _id: string,
     name: string,
     abbreviation: string,
 }

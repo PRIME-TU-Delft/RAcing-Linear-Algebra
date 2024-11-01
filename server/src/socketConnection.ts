@@ -634,7 +634,7 @@ module.exports = {
             socket.on("getExercisesForTopic", async(topicId: string) => {
                 try {
                     const exercises = await getAllExercisesFromTopic(topicId);
-                    socket.emit("exercises-for-topic", exercises);
+                    socket.emit("exercises-for-topic", {exercises: exercises, topicId: topicId});
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
@@ -643,7 +643,7 @@ module.exports = {
             socket.on("getStudiesForTopic", async(topicId: string) => {
                 try {
                     const studies = await getAllStudiesFromTopic(topicId);
-                    socket.emit("studies-for-topic", studies);
+                    socket.emit("studies-for-topic", {studies: studies, topicId: topicId});
                 } catch (error) {
                     socket.emit("error", error.message);
                 }

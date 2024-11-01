@@ -102,7 +102,7 @@ function StudyEdit(props: Props) {
                         >
                             {selectedStudies.length == 0 ? (<div className="empty-container-message">Drag study programmes here to select them!</div>) : null}
                             {selectedStudies.map((study, index) => (
-                                <Draggable key={index} draggableId={study.id} index={index}>
+                                <Draggable key={index} draggableId={study._id} index={index}>
                                     {(provided) => (
                                         <div
                                             className="study-element selected-study-element"
@@ -137,7 +137,7 @@ function StudyEdit(props: Props) {
                             {...provided.droppableProps}
                         >
                             {unselectedStudies.map((study, index) => (
-                                <Draggable key={study.id} draggableId={study.id} index={index}>
+                                <Draggable key={study._id} draggableId={study._id} index={index}>
                                     {(provided) => (
                                         <div
                                             className="study-element"

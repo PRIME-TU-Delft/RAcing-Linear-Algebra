@@ -9,9 +9,9 @@ import { Store } from 'react-notifications-component';
 import { Exercise } from "../SharedUtils";
 
 interface Props {
-    id: string,
+    _id: string,
     name: string,
-    grasple_id: number,
+    exerciseId: number,
     difficulty: string,
     url: string,
     numOfAttempts: number   
@@ -25,9 +25,9 @@ interface Props {
 function ExerciseElement(props: Props) {
     const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false);
     const [newExerciseData, setNewExerciseData] = useState<Exercise>({
-        id: props.id,
+        _id: props._id,
         name: props.name,
-        grasple_id: props.grasple_id,
+        exerciseId: props.exerciseId,
         difficulty: props.difficulty,
         url: props.url,
         numOfAttempts: props.numOfAttempts
@@ -36,14 +36,14 @@ function ExerciseElement(props: Props) {
 
     useEffect(() => {
         setNewExerciseData({
-            id: props.id,
+            _id: props._id,
             name: props.name,
-            grasple_id: props.grasple_id,
+            exerciseId: props.exerciseId,
             difficulty: props.difficulty,
             url: props.url,
             numOfAttempts: props.numOfAttempts
         });
-    }, [props.id, props.name, props.grasple_id, props.difficulty, props.url, props.numOfAttempts])
+    }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
 
     useEffect(() => {
         setBeingEdited(props.beingEdited);
@@ -71,7 +71,7 @@ function ExerciseElement(props: Props) {
     }
 
     const discardExerciseChangesHandler = () => {
-        if (newExerciseData.id == "" && newExerciseData.grasple_id == -1) {
+        if (newExerciseData._id == "" && newExerciseData.exerciseId == -1) {
             props.onDiscardEditingExercise(true)
         } else {
             props.onDiscardEditingExercise(false)
@@ -81,14 +81,14 @@ function ExerciseElement(props: Props) {
     }
 
     const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
-        setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId })
+        setNewExerciseData({ ...newExerciseData, url: newUrl, exerciseId: newGraspleId })
     }
 
     useEffect(() => {
-        if (props.id == "" && props.grasple_id == -1) {
+        if (props._id == "" && props.exerciseId == -1) {
             setBeingEdited(true)
         }
-    }, [props.id, props.grasple_id])
+    }, [props._id, props.exerciseId])
 
     useEffect(() => {
         if (props.beingEdited) {
@@ -105,19 +105,19 @@ function ExerciseElement(props: Props) {
             style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
-                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == "" || (props.isIndependentElement && beingEdited)}
+                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props._id == "" || (props.isIndependentElement && beingEdited)}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
             >
                 <AccordionSummary
-                    aria-controls={`panel-content-${props.id}`}
-                    id={`panel-header-${props.id}`}
+                    aria-controls={`panel-content-${props._id}`}
+                    id={`panel-header-${props._id}`}
                     sx={{ height: '2rem'}}
                 >
                     {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
                             <div className="d-flex col col-11 align-items-center">
                                 {props.name} 
-                                <span className="exercise-header-id">(#{props.grasple_id})</span>
+                                <span className="exercise-header-id">(#{props.exerciseId})</span>
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-1 exercise-difficulty-label justify-content-end">

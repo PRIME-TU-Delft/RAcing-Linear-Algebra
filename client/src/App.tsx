@@ -255,13 +255,44 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
-            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
+
+            for (let i = 0; i < allTopics.length; i++) {
+                console.log(allTopics[i]._id)
+                socket.emit("getExercisesForTopic", allTopics[i]._id)
+                socket.emit("getStudiesForTopic", allTopics[i]._id)
+            }
         }
 
         function onGetAllExercises(allExercises: Exercise[]) {
-            console.log(allExercises)
             setAllExercises(curr => [...allExercises])
+        }
+
+        function onGetExercisesForTopic(data: {
+            exercises: Exercise[],
+            topicId: string
+        }) {
+            console.log(data.exercises)
+            const updatedTopics = allTopics.map(topic => {
+                if (topic._id === data.topicId) {
+                    return { ...topic, exercises: data.exercises };
+                }
+                return topic;
+            });
+            setAllTopics([...updatedTopics]);
+        }
+
+        function onGetStudiesForTopic(data: {
+            studies: Study[],
+            topicId: string
+        }) {
+            const updatedTopics = allTopics.map(topic => {
+                if (topic._id === data.topicId) {
+                    return { ...topic, studies: data.studies };
+                }
+                return topic;
+            });
+            setAllTopics([...updatedTopics]);
         }
 
         socket.on("round-duration", onRoundDuration)
@@ -281,7 +312,9 @@ function App() {
         socket.on("access-granted", onAccessGranted)
         socket.on("all-studies", onGetAllStudies);
         socket.on("all-topics", onGetAllTopics);
-        socket.on("all-exercises", onGetAllTopics);
+        socket.on("all-exercises", onGetAllExercises);
+        socket.on("exercises-for-topic", onGetExercisesForTopic)
+        socket.on("studies-for-topic", onGetStudiesForTopic)
     }, [])
 
     // useEffect(() => {
