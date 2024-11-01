@@ -5,17 +5,18 @@ import { Checkbox, Button, Divider } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
+import { Study } from "../../SharedUtils";
 
 interface Props {
-    studies: string[],
-    allStudies: string[]
-    onStudiesSelected: (studies: string[]) => void
+    studies: Study[],
+    allStudies: Study[]
+    onStudiesSelected: (studies: Study[]) => void
     saveChanges: boolean
 }
 
 function StudyEdit(props: Props) {
     const [selectedStudies, setSelectedStudies] = useState(props.studies)
-    const [unselectedStudies, setUnselectedStudies] = useState<string[]>(
+    const [unselectedStudies, setUnselectedStudies] = useState<Study[]>(
         props.allStudies.filter(study => !props.studies.includes(study))
     )
 
@@ -101,7 +102,7 @@ function StudyEdit(props: Props) {
                         >
                             {selectedStudies.length == 0 ? (<div className="empty-container-message">Drag study programmes here to select them!</div>) : null}
                             {selectedStudies.map((study, index) => (
-                                <Draggable key={study} draggableId={study} index={index}>
+                                <Draggable key={index} draggableId={study.id} index={index}>
                                     {(provided) => (
                                         <div
                                             className="study-element selected-study-element"
@@ -110,7 +111,7 @@ function StudyEdit(props: Props) {
                                             {...provided.dragHandleProps}
                                             onClick={() => handleDeselectStudy(index, unselectedStudies.length)}
                                         >
-                                            {study}
+                                            {study.abbreviation}
                                             <FontAwesomeIcon 
                                                 icon={faXmark}
                                                 size="2xs"
@@ -136,7 +137,7 @@ function StudyEdit(props: Props) {
                             {...provided.droppableProps}
                         >
                             {unselectedStudies.map((study, index) => (
-                                <Draggable key={study} draggableId={study} index={index}>
+                                <Draggable key={study.id} draggableId={study.id} index={index}>
                                     {(provided) => (
                                         <div
                                             className="study-element"
@@ -145,7 +146,7 @@ function StudyEdit(props: Props) {
                                             {...provided.dragHandleProps}
                                             onClick={() => handleSelectStudy(index, selectedStudies.length)}
                                         >
-                                            {study}
+                                            {study.abbreviation}
                                         </div>
                                     )}
                                 </Draggable>

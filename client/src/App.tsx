@@ -31,6 +31,7 @@ import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
+import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -52,6 +53,9 @@ function App() {
     const [streaks, setStreaks] = useState<Streak[]>([])
     const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [allExercises, setAllExercises] = useState<Exercise[]>([])
+    const [allTopics, setAllTopics] = useState<Topic[]>([])
+    const [allStudies, setAllStudies] = useState<Study[]>([])
 
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -245,16 +249,19 @@ function App() {
             }
         }
 
-        function onGetAllStudies(allStudies: string[]) {
+        function onGetAllStudies(allStudies: Study[]) {
             console.log(allStudies)
+            setAllStudies(curr => [...allStudies])
         }
 
-        function onGetAllTopics(allTopics: string[]) {
+        function onGetAllTopics(allTopics: Topic[]) {
             console.log(allTopics)
+            setAllTopics(curr => [...allTopics])
         }
 
-        function onGetAllExercises(allExercises: string[]) {
+        function onGetAllExercises(allExercises: Exercise[]) {
             console.log(allExercises)
+            setAllExercises(curr => [...allExercises])
         }
 
         socket.on("round-duration", onRoundDuration)
@@ -304,7 +311,11 @@ function App() {
 
     useEffect(() => {
         if (loggedIn) {
+            socket.emit("getAllTopics")
+            socket.emit("getAllStudies")	
+            socket.emit("getAllExercises")
             navigate("/LecturerPlatform")
+            setLoggedIn(false)
         }
     }, [loggedIn])
 
@@ -445,7 +456,7 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <LecturerPlatform loggedIn={loggedIn}/>
+                        <LecturerPlatform loggedIn={loggedIn} allExercises={allExercises} allStudies={allStudies} allTopics={allTopics}/>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>

@@ -7,15 +7,8 @@ import StudyEdit from "./StudyEdit/StudyEdit";
 import ExerciseElement from "../ExerciseElement/ExerciseElement";
 import { Store } from 'react-notifications-component';
 import { Tooltip } from "react-tooltip";
+import { Exercise, Study, Topic } from "../SharedUtils";
 
-interface Exercise {
-    id: number,
-    name: string,
-    grasple_id: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
-}
 
 interface ExerciseListElement {
     exercise: Exercise,
@@ -23,21 +16,15 @@ interface ExerciseListElement {
 }
 
 interface Props {
-    id: number,
+    id: string,
     name: string,
-    studies: string[],
+    studies: Study[],
     exercises: Exercise[],
     onUpdateTopic: (topicData: Topic) => void,
     discardNewTopic: () => void,
     availableGraspleIds: number[]
-    onLinkExercise: (graspleId: number) => void
-}
-
-interface Topic {
-    id: number,
-    name: string,
-    studies: string[],
-    exercises: Exercise[]
+    onLinkExercise: (graspleId: number) => void,
+    allStudies: Study[]
 }
 
 function TopicElement(props: Props) {
@@ -59,13 +46,13 @@ function TopicElement(props: Props) {
         exercises: props.exercises
     });
 
-    const [studies, setStudies] = useState<string[]>(props.studies);
+    const [studies, setStudies] = useState<Study[]>(props.studies);
 
     const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const [matchingExercises, setMatchingExercises] = useState<number[]>([]);
 
-    const studiesChangedHandler = (newStudies: string[]) => {
+    const studiesChangedHandler = (newStudies: Study[]) => {
         setStudies(curr => [...newStudies])
         setChangingStudies(curr => false)
         setSaveChanges(curr => "studies")
@@ -98,7 +85,7 @@ function TopicElement(props: Props) {
     const addNewExerciseHandler = () => {
         const newExercise: ExerciseListElement = {
             exercise:{
-                id: -1,
+                id: "",
                 name: "",
                 grasple_id: 0,
                 difficulty: "Easy",
@@ -219,7 +206,7 @@ function TopicElement(props: Props) {
     }, [saveChanges, newName, exercisesMode])
 
     useEffect(() => {
-        if (newTopicData.name !== props.name || newTopicData.studies !== props.studies || newTopicData.exercises !== props.exercises || newTopicData.id == -1) {
+        if (newTopicData.name !== props.name || newTopicData.studies !== props.studies || newTopicData.exercises !== props.exercises || newTopicData.id == "") {
             setUnsavedTopicChanges(true);
         } 
         else if (newTopicData.name === "") {
@@ -394,13 +381,13 @@ function TopicElement(props: Props) {
                                 <div className="studies-list">
                                     {studies.map((study, index) => (
                                         <div key={index} className="study-element">
-                                            {study}
+                                            {study.abbreviation}
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         ) : (
-                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
+                            <StudyEdit studies={studies} allStudies={props.allStudies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
                         )}
                     </div>
                 </AccordionDetails>

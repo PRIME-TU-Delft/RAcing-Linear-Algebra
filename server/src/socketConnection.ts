@@ -556,11 +556,7 @@ module.exports = {
             socket.on('getAllStudies', async () => {
                 try {
                     const allStudies = await getAllStudies();
-                    const formattedStudies = allStudies.map(x => ({
-                        name: x.name,
-                        abbreviation: x.abbreviation
-                    }));
-                    socket.emit("all-studies", formattedStudies);
+                    socket.emit("all-studies", allStudies);
                 } catch (error) {
                     socket.emit('error', {message: error.message} )
                 }

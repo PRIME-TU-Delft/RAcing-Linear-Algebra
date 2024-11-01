@@ -6,17 +6,10 @@ import "./ExerciseElement.css";
 import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
 import { url } from "inspector";
 import { Store } from 'react-notifications-component';
+import { Exercise } from "../SharedUtils";
 
-interface Exercise {
-    id: number,
-    name: string,
-    grasple_id: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
-}
 interface Props {
-    id: number,
+    id: string,
     name: string,
     grasple_id: number,
     difficulty: string,
@@ -78,7 +71,7 @@ function ExerciseElement(props: Props) {
     }
 
     const discardExerciseChangesHandler = () => {
-        if (newExerciseData.id == -1 && newExerciseData.grasple_id == -1) {
+        if (newExerciseData.id == "" && newExerciseData.grasple_id == -1) {
             props.onDiscardEditingExercise(true)
         } else {
             props.onDiscardEditingExercise(false)
@@ -92,7 +85,7 @@ function ExerciseElement(props: Props) {
     }
 
     useEffect(() => {
-        if (props.id == -1 && props.grasple_id == -1) {
+        if (props.id == "" && props.grasple_id == -1) {
             setBeingEdited(true)
         }
     }, [props.id, props.grasple_id])
@@ -112,7 +105,7 @@ function ExerciseElement(props: Props) {
             style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
-                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == -1 || (props.isIndependentElement && beingEdited)}
+                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == "" || (props.isIndependentElement && beingEdited)}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
             >
                 <AccordionSummary
