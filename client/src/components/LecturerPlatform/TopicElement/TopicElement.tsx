@@ -466,10 +466,10 @@ function TopicElement(props: Props) {
                 </AccordionActions>)}
             </Accordion>
             <Dialog open={openDialog} onClose={cancelDeleteExercise}>
-                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogTitle>Confirm Remove</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to delete the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.grasple_id})?
+                            Are you sure you want to remove the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.grasple_id}) from this topic?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

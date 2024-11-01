@@ -136,6 +136,40 @@ export async function updateTopicName(
     }
 }
 
+export async function updateTopicExercises(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]): Promise<ITopic> {
+    try {
+        const topic = await Topic.findById(topicId);
+        if (!topic) {
+            throw new Error('Topic not found');
+        }
+
+        const mandatoryExercises: IExercise[] = [];
+        const difficultyExercises: IExercise[] = [];
+
+        for (let i = 0; i < exercises.length; i++) {
+            const exercise = await Exercise.findById(exercises[i].exerciseId);
+            if (!exercise) {
+                throw new Error('Exercise not found');
+            }
+
+            if (exercises[i].isMandatory) {
+                mandatoryExercises.push(exercise);
+            } else {
+                difficultyExercises.push(exercise);
+            }
+        }
+
+        topic.mandatoryExercises = mandatoryExercises;
+        topic.difficultyExercises = difficultyExercises;
+
+        const updatedTopic = await topic.save();
+        return updatedTopic;
+    } catch (error) {
+        console.error("Error updating exercises of topic:", error);
+        throw error;
+    }
+}
+
 export async function getAllTopics(): Promise<ITopic[]> {
     try {
         const result: ITopic[] = await Topic.find();

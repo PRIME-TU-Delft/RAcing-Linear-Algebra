@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
 import { IStudy } from "./models/studyModel"
 import { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -604,9 +604,17 @@ module.exports = {
             
             socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
                 try {
-                    
                     const updatedTopic = await addExercisesToTopic(topicId, exercises);
                     socket.emit("added-exercises-to-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("updateTopicExercises", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
+                try {
+                    const updatedTopic = await updateTopicExercises(topicId, exercises);
+                    socket.emit("updated-topic-exercises", updatedTopic);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
