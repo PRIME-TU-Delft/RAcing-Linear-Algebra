@@ -74,10 +74,10 @@ function StudyEdit(props: Props) {
 
     return (
         <div>
-            <div className="studies-header d-flex align-items-center">
-                Studies
+            <div className="studies-header topic-header d-flex align-items-center">
+                Study Programmes
                 <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}>
-                    You can select/deselect studies by dragging and dropping them, or by clicking on them. 
+                    You can select/deselect study programmes by dragging and dropping them, or by clicking on them. 
                 </Tooltip>
                 <FontAwesomeIcon
                     icon={faCircleInfo}
@@ -90,7 +90,7 @@ function StudyEdit(props: Props) {
                 <span style={{fontSize: "15px"}}>Select All</span>
             </div>
             <DragDropContext onDragEnd={handleOnDragEnd}>
-                <div className="study-dropbox-title">Selected studies</div>
+                <div className="study-dropbox-title">Selected study programmes</div>
                 <Droppable droppableId="selected" direction="horizontal">
                     {(provided) => (
                         
@@ -99,7 +99,7 @@ function StudyEdit(props: Props) {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            {selectedStudies.length == 0 ? (<div className="empty-container-message">Drag studies here to select them!</div>) : null}
+                            {selectedStudies.length == 0 ? (<div className="empty-container-message">Drag study programmes here to select them!</div>) : null}
                             {selectedStudies.map((study, index) => (
                                 <Draggable key={study} draggableId={study} index={index}>
                                     {(provided) => (
@@ -127,7 +127,7 @@ function StudyEdit(props: Props) {
                     )}
                 </Droppable>
                 <Divider></Divider>
-                <div className="study-dropbox-title">Available studies</div>
+                <div className="study-dropbox-title">Available study programmes</div>
                 <Droppable droppableId="available" direction="horizontal">
                     {(provided) => (
                         <div
