@@ -25,7 +25,7 @@ interface Props {
     beingEdited: boolean
     closeNotEditing: boolean
     onFinishEditingExercise: (exerciseData: Exercise) => void
-    onDiscardEditingExercise: () => void
+    onDiscardEditingExercise: (deleteExercise: boolean) => void
     isIndependentElement: boolean
 }
 
@@ -78,13 +78,24 @@ function ExerciseElement(props: Props) {
     }
 
     const discardExerciseChangesHandler = () => {
-        props.onDiscardEditingExercise()
+        if (newExerciseData.id == -1 && newExerciseData.grasple_id == -1) {
+            props.onDiscardEditingExercise(true)
+        } else {
+            props.onDiscardEditingExercise(false)
+        }
+
         if (props.isIndependentElement) setBeingEdited(false)
     }
 
     const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
         setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId })
     }
+
+    useEffect(() => {
+        if (props.id == -1 && props.grasple_id == -1) {
+            setBeingEdited(true)
+        }
+    }, [props.id, props.grasple_id])
 
     useEffect(() => {
         if (props.beingEdited) {

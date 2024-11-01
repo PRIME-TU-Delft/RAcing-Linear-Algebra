@@ -197,8 +197,12 @@ function LecturerPlatform(props: Props) {
         setExercises(curr => [...newExercises])
     };
 
-    const discardNewExerciseHandler = (index: number) => {
-        console.log("Discarding new exercise changes");
+    const discardNewExerciseHandler = (index: number, deleteExercise: boolean) => {
+        if (deleteExercise) {
+            const newExercises = exercises.filter((exercise, idx) => idx !== index)
+            setExercises(curr => [...newExercises])
+            return;
+        }
     };
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -283,7 +287,7 @@ function LecturerPlatform(props: Props) {
                                 beingEdited={false} 
                                 closeNotEditing={false} 
                                 onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData, index)}
-                                onDiscardEditingExercise={() => discardNewExerciseHandler(index)}
+                                onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(index, deleteExercise)}
                                 isIndependentElement={true}
                             />
                         ))}
