@@ -13,9 +13,9 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
-import { IStudy } from "./models/studyModel"
-import { IExercise } from "./models/exerciseModel"
+import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
+import type { IStudy } from "./models/studyModel"
+import type { IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
@@ -568,8 +568,14 @@ module.exports = {
 
             socket.on('addNewExercise', async (exerciseId: number, url: string, difficulty: string, numOfAttempts: number, name: string) => {
                 try {
-                    const newExercise = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
-                    socket.emit('new-exercise-added', newExercise);
+                    const exerciseAlreadyExists = await exerciseExists(exerciseId);
+                    if (exerciseAlreadyExists) {
+                        const existingExercise = await findExercise(exerciseId, null);
+                        socket.emit('exercise-already-exists', existingExercise);
+                    } else {
+                        const newExerciseCreated = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
+                        socket.emit('new-exercise-added', newExerciseCreated);
+                    }
                 } catch (error) {
                     socket.emit('error', { message: error.message });
                 }
@@ -651,6 +657,15 @@ module.exports = {
                 try {
                     const topics = await getAllTopics();
                     socket.emit("all-topics", topics);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("getAllExercises", async() => {
+                try {
+                    const exercises = await getAllExercises();
+                    socket.emit("all-exercises", exercises);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }

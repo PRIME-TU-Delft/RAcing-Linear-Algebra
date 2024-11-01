@@ -7,16 +7,26 @@ export async function addNewExercise(
     difficulty: string,
     numOfAttempts: number,
     name: string
-) {
+): Promise<IExercise> {
     const newExercise: IExercise = new Exercise({
         exerciseId,
         url,
         difficulty,
         numOfAttempts,
         name
-    })
+    });
 
-    await Exercise.create(newExercise)
+    const createdExercise = await Exercise.create(newExercise);
+    return createdExercise;
+}
+
+export async function exerciseExists(exerciseId: number): Promise<boolean> {
+    try {
+        const existingExercise = await Exercise.findOne({ exerciseId: exerciseId });
+        return existingExercise !== null;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function findExercise(exerciseId: number | null, name: string | null): Promise<IExercise[]> {
@@ -75,6 +85,15 @@ export async function updateExercise(
             return exercise;
         }
 
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getAllExercises(): Promise<IExercise[]> {
+    try {
+        const exercises = await Exercise.find({});
+        return exercises;
     } catch (error) {
         throw error;
     }

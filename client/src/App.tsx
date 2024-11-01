@@ -245,6 +245,18 @@ function App() {
             }
         }
 
+        function onGetAllStudies(allStudies: string[]) {
+            console.log(allStudies)
+        }
+
+        function onGetAllTopics(allTopics: string[]) {
+            console.log(allTopics)
+        }
+
+        function onGetAllExercises(allExercises: string[]) {
+            console.log(allExercises)
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -260,6 +272,9 @@ function App() {
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
         socket.on("access-granted", onAccessGranted)
+        socket.on("all-studies", onGetAllStudies);
+        socket.on("all-topics", onGetAllTopics);
+        socket.on("all-exercises", onGetAllTopics);
     }, [])
 
     // useEffect(() => {
