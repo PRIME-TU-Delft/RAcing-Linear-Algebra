@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material";
 import "./TopicElement.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo, faFloppyDisk, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
 import ExerciseElement from "../ExerciseElement/ExerciseElement";
 import { Store } from 'react-notifications-component';
@@ -26,9 +26,11 @@ interface Props {
     id: number,
     name: string,
     studies: string[],
-    exercises: Exercise[]
-    onUpdateTopic: (topicData: Topic) => void
-    discardNewTopic: () => void
+    exercises: Exercise[],
+    onUpdateTopic: (topicData: Topic) => void,
+    discardNewTopic: () => void,
+    availableGraspleIds: number[]
+    onLinkExercise: (graspleId: number) => void
 }
 
 interface Topic {
@@ -58,6 +60,10 @@ function TopicElement(props: Props) {
     });
 
     const [studies, setStudies] = useState<string[]>(props.studies);
+
+    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
+    const [matchingExercises, setMatchingExercises] = useState<number[]>([]);
 
     const studiesChangedHandler = (newStudies: string[]) => {
         setStudies(curr => [...newStudies])
@@ -125,14 +131,6 @@ function TopicElement(props: Props) {
         setOpenDialog(false);
     };
 
-    const removingExercisesHandler = () => {
-        setExercisesMode("remove");
-    }
-
-    const editingExercisesHandler = () => {
-        setExercisesMode("edit");
-    }
-
     const discardEditingExerciseHandler = () => {
         setEditingExerciseIndex(-1);
         setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)]);
@@ -141,6 +139,20 @@ function TopicElement(props: Props) {
     function saveNameHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
         setSaveChanges(curr => "name");
     }
+
+    const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchInput(value);
+        const matches = props.availableGraspleIds.filter(graspleId => 
+            graspleId.toString().includes(value)
+        );
+        setMatchingExercises(matches);
+    };
+
+    const handleExerciseSelect = (selectedExerciseGraspleId: number) => {
+        props.onLinkExercise(selectedExerciseGraspleId);
+        setIsLinkDialogOpen(false);
+    };
 
     useEffect(() => {
         setNewTopicData(prevData => ({
@@ -410,9 +422,10 @@ function TopicElement(props: Props) {
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
                                     data-tooltip-id="info-tooltip"
                                     data-tooltip-place="right"
-                                    data-tooltip-html="Add new exercises by pressing the + button.<br />Toggle between remove and edit modes by pressing the trash can toggle.<br />Edit/remove individual exercises based on the selected mode."
+                                    data-tooltip-html="Add new exercises by pressing the + button.<br /> Add an existing exercise by pressing the link icon.<br />Edit/remove individual exercises using the icons on the right."
                                 />
                                 <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
+                                <FontAwesomeIcon icon={faLink} className="link-exercise-icon" onClick={() => setIsLinkDialogOpen(true)}/>
                                 </>
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
@@ -468,6 +481,32 @@ function TopicElement(props: Props) {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={isLinkDialogOpen} onClose={() => setIsLinkDialogOpen(false)}>
+                <DialogTitle>Link Existing Exercise</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Search by Grasple ID"
+                        type="text"
+                        fullWidth
+                        value={searchInput}
+                        onChange={handleSearchInputChange}
+                    />
+                    <List>
+                        {matchingExercises.map((graspleId, index) => (
+                            <ListItem className="grasple-id-list-item" key={index} onClick={() => handleExerciseSelect(graspleId)}>
+                                <ListItemText primary={`#${graspleId}`} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsLinkDialogOpen(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
                 {unsavedTopicChanges && (
                     <div className="topic-save-icon">
                         <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>

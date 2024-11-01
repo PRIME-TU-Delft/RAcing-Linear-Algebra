@@ -49,11 +49,11 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.edit-name-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.edit-name-icon:hover {
     cursor: pointer;
 }
 
-.add-exercise-icon {
+.add-exercise-icon, .link-exercise-icon {
     margin-left: 1rem;
 }
 
@@ -78,4 +78,15 @@
 
 .topic-save-icon:hover {
     cursor: pointer;
+}
+
+.grasple-id-list-item:hover {
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border-radius: 0.5rem;
+    transition-duration: 0.3s;
+}
+
+.grasple-id-list-item {
+    transition-duration: 0.3s;
 }

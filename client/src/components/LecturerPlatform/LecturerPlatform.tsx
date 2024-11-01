@@ -39,7 +39,7 @@ function LecturerPlatform(props: Props) {
         {
             id: 1,
             name: "Exercise 2",
-            grasple_id: 7896,
+            grasple_id: 77896,
             difficulty: "Easy",
             url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
             numOfAttempts: 1,
@@ -47,20 +47,21 @@ function LecturerPlatform(props: Props) {
         {
             id: 2,
             name: "Exercise 4",
-            grasple_id: 7896,
+            grasple_id: 77825,
             difficulty: "Easy",
-            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77825",
             numOfAttempts: 1,
         },
         {
             id: 2,
-            name: "Exercise 4",
-            grasple_id: 7896,
+            name: "Exercise 5",
+            grasple_id: 77124,
             difficulty: "Easy",
-            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896",
+            url: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77124",
             numOfAttempts: 1,
         }
     ])
+    const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([...exercises.map(exercise => exercise.grasple_id)])
     const [topics, setTopics] = useState<Topic[]>([
         {
             id: 1,
@@ -149,6 +150,10 @@ function LecturerPlatform(props: Props) {
         }
     ])
 
+    useEffect(() => {
+        setExerciseGraspleIds([...exercises.map(exercise => exercise.grasple_id)])
+    }, [exercises])
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -200,6 +205,26 @@ function LecturerPlatform(props: Props) {
         setActiveTab(newValue);
     };
 
+    const addExerciseToTopic = (topicIndex: number, exercise: Exercise) => {
+        const newTopics = topics.map((topic, index) => {
+            if (index === topicIndex) {
+                const exerciseExists = topic.exercises.some(ex => ex.grasple_id === exercise.grasple_id);
+                if (!exerciseExists) {
+                    return { ...topic, exercises: [exercise, ...topic.exercises] };
+                }
+            }
+            return topic;
+        });
+        setTopics(curr => [...newTopics]);
+    }
+
+    const linkExerciseHandler = (topicIndex: number, exerciseGraspleId: number) => {
+        const exercise = exercises.find(exercise => exercise.grasple_id === exerciseGraspleId)
+        if (exercise) {
+            addExerciseToTopic(topicIndex, exercise)
+        }
+    }
+
     return (
         <div>
             <AppBar position="static">
@@ -235,6 +260,8 @@ function LecturerPlatform(props: Props) {
                                 exercises={topic.exercises} 
                                 onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
                                 discardNewTopic={() => discardNewTopicHandler(index)}
+                                availableGraspleIds={exerciseGraspleIds}
+                                onLinkExercise={(graspleId: number) => linkExerciseHandler(index, graspleId)}
                             />
                         ))}
                     </div>
