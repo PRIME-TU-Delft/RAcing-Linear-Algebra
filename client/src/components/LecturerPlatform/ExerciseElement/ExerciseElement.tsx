@@ -72,22 +72,27 @@ function ExerciseElement(props: Props) {
         } else {
             props.onFinishEditingExercise(newExerciseData);
             if (props.isIndependentElement) {
-                setBeingEdited(false);
+                setBeingEdited(false)
             }
         }
     }
 
+    const discardExerciseChangesHandler = () => {
+        props.onDiscardEditingExercise()
+        if (props.isIndependentElement) setBeingEdited(false)
+    }
+
     const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
-        setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId });
+        setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId })
     }
 
     useEffect(() => {
         if (props.beingEdited) {
-            setManuallyExpanded(true);
+            setManuallyExpanded(true)
         }
 
         if (!props.beingEdited && props.closeNotEditing) {
-            setManuallyExpanded(false);
+            setManuallyExpanded(false)
         }
     }, [props.beingEdited, props.closeNotEditing])
 
@@ -218,7 +223,7 @@ function ExerciseElement(props: Props) {
                 </AccordionDetails>
                 {(props.beingEdited || (props.isIndependentElement && beingEdited)) && (
                     <AccordionActions>
-                        <Button onClick={() => props.onDiscardEditingExercise()}>Discard</Button>
+                        <Button onClick={() => discardExerciseChangesHandler()}>Discard</Button>
                         <Button onClick={saveExerciseHandler} variant="contained">Save</Button>
                     </AccordionActions>
                 )}

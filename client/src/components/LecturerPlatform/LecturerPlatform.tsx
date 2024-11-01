@@ -193,8 +193,7 @@ function LecturerPlatform(props: Props) {
     };
 
     const discardNewExerciseHandler = (index: number) => {
-        const updatedExercises = exercises.filter((_, i) => i !== index);
-        setExercises(updatedExercises);
+        console.log("Discarding new exercise changes");
     };
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
