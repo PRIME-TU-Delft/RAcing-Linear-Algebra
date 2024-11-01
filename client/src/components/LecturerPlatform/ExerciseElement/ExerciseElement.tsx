@@ -39,6 +39,7 @@ function ExerciseElement(props: Props) {
         url: props.url,
         numOfAttempts: props.numOfAttempts
     })
+    const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
 
     useEffect(() => {
         setNewExerciseData({
@@ -50,6 +51,10 @@ function ExerciseElement(props: Props) {
             numOfAttempts: props.numOfAttempts
         });
     }, [props.id, props.name, props.grasple_id, props.difficulty, props.url, props.numOfAttempts])
+
+    useEffect(() => {
+        setBeingEdited(props.beingEdited);
+    }, [props.beingEdited])
 
     const saveExerciseHandler = () => {
         if (newExerciseData.name == "" || newExerciseData.url == "") {
@@ -66,6 +71,9 @@ function ExerciseElement(props: Props) {
             });
         } else {
             props.onFinishEditingExercise(newExerciseData);
+            if (props.isIndependentElement) {
+                setBeingEdited(false);
+            }
         }
     }
 
@@ -86,8 +94,8 @@ function ExerciseElement(props: Props) {
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} style={{margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
-                sx={{width: "100%", backgroundColor: "#f5f5f5"}} 
-                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == -1}
+                sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
+                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == -1 || (props.isIndependentElement && beingEdited)}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
             >
                 <AccordionSummary
@@ -95,13 +103,21 @@ function ExerciseElement(props: Props) {
                     id={`panel-header-${props.id}`}
                     sx={{ height: '2rem'}}
                 >
-                    {!props.beingEdited ? (
+                    {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
-                            <div className="d-flex col col-11">
+                            <div className="d-flex col col-11 align-items-center">
                                 {props.name} 
                                 <span className="exercise-header-id">(#{props.grasple_id})</span>
+                                {props.isIndependentElement && (
+                                    <FontAwesomeIcon 
+                                        icon={faPen} 
+                                        className="edit-icon" 
+                                        size="sm"
+                                        onClick={() => setBeingEdited(true)} 
+                                    />
+                                )}
                             </div>
-                            {!props.beingEdited && (
+                            {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
                                     {props.difficulty}
                                 </div>
@@ -117,7 +133,7 @@ function ExerciseElement(props: Props) {
                 </AccordionSummary>
                 <Divider></Divider>
                 <AccordionDetails>
-                    <div className={"exercise-details d-flex row " + (props.beingEdited ? "editing-exercise " : "")}>
+                    <div className={"exercise-details d-flex row " + (props.beingEdited || (props.isIndependentElement && beingEdited) ? "editing-exercise " : "")}>
                         <div className="d-flex col col-1" style={{flexDirection: "column"}}>
                             <div>
                                 Name:
@@ -133,7 +149,7 @@ function ExerciseElement(props: Props) {
                             </div>
                         </div>
                         <div className="d-flex col" style={{flexDirection: "column", textAlign: props.isIndependentElement ? "left" : "inherit"}}>
-                            {!props.beingEdited ? (
+                            {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     {props.name}
                                 </div>
@@ -149,14 +165,14 @@ function ExerciseElement(props: Props) {
                                     />
                                 </div>
                             )}
-                            {!props.beingEdited ? (
+                            {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
                             )  : (
                                 <ExerciseURLInput url={props.url} onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}></ExerciseURLInput>
                             )}
-                            {!props.beingEdited ? (
+                            {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     {props.difficulty}
                                 </div>
@@ -181,7 +197,7 @@ function ExerciseElement(props: Props) {
                                     </TextField>
                                 </div>
                             )}
-                            {!props.beingEdited ? (
+                            {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     {props.numOfAttempts}
                                 </div>
@@ -207,7 +223,7 @@ function ExerciseElement(props: Props) {
                         </div>
                     </div>
                 </AccordionDetails>
-                {props.beingEdited && (
+                {(props.beingEdited || (props.isIndependentElement && beingEdited)) && (
                     <AccordionActions>
                         <Button onClick={() => props.onDiscardEditingExercise()}>Discard</Button>
                         <Button onClick={saveExerciseHandler} variant="contained">Save</Button>

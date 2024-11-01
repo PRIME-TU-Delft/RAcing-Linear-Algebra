@@ -188,9 +188,8 @@ function LecturerPlatform(props: Props) {
     };
 
     const updateExerciseHandler = (exerciseData: Exercise, index: number) => {
-        const updatedExercises = [...exercises];
-        updatedExercises[index] = exerciseData;
-        setExercises(updatedExercises);
+        const newExercises = exercises.map((exercise, idx) => idx === index ? exerciseData : exercise)
+        setExercises(curr => [...newExercises])
     };
 
     const discardNewExerciseHandler = (index: number) => {

@@ -31,3 +31,7 @@
 .disabled-exercise {
     opacity: 0.3;
 }
+
+.edit-icon {
+    margin-left: 0.5rem;
+}
