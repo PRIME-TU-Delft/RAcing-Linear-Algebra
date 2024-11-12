@@ -175,14 +175,13 @@ function TopicElement(props: Props) {
                     exerciseId: 0,
                     difficulty: "Easy",
                     url: "",
-                    numOfAttempts: 0,
+                    numOfAttempts: 1,
                     isMandatory: false
                 },
                 incompleteExercise: true,
             }
             const newExercises = [newExercise, ...exercises]
             setExercises(curr => [...newExercises])
-            setEditingExerciseIndex(0)
         }
     }
 
@@ -203,6 +202,19 @@ function TopicElement(props: Props) {
         else {
             setIsLinkDialogOpen(true)
         }
+    }
+
+    const sortExercises = () => {
+        const sorted = [...exercises].sort((a, b) => {
+            if (a.incompleteExercise && !b.incompleteExercise) return -1;
+            if (!a.incompleteExercise && b.incompleteExercise) return 1;
+            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1;
+            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1;
+            const difficultyOrder = ["Easy", "Medium", "Hard"];
+            return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty);
+        })
+
+        return sorted
     }
 
     const handleDeleteExercise = (index: number) => {
@@ -248,15 +260,16 @@ function TopicElement(props: Props) {
     };
 
     useEffect(() => {
-        const sorted = [...exercises].sort((a, b) => {
-            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
-            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
-            const difficultyOrder = ["Easy", "Medium", "Hard"]
-            return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
-        })
-
+        const sorted = sortExercises()
         setSortedExercises(curr => [...sorted])
     }, [exercises]);
+
+    useEffect(() => {
+        const firstIncompleteIndex = sortedExercises.findIndex(exercise => exercise.incompleteExercise);
+        if (firstIncompleteIndex !== -1) {
+            setEditingExerciseIndex(firstIncompleteIndex);
+        }
+    }, [sortedExercises])
 
     useEffect(() => {
         setNewTopicData(prevData => ({
@@ -270,6 +283,8 @@ function TopicElement(props: Props) {
             ...prevData,
             name: props.name
         }));
+
+        setNewName(curr => props.name)
 
         if (props.name == "") {
             setEditName(curr => true)
@@ -371,7 +386,9 @@ function TopicElement(props: Props) {
 
     useEffect(() => {
         if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises) {
-            props.onUpdateTopic(newTopicData);
+            props.onUpdateTopic(newTopicData)
+            const sorted = sortExercises()
+            setSortedExercises(curr => [...sorted])
         }
     }, [unsavedChanges])
 
