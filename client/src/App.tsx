@@ -32,6 +32,7 @@ import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { TopicDataContext } from "./contexts/TopicDataContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -485,7 +486,9 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <LecturerPlatform loggedIn={loggedIn} allExercises={allExercises} allStudies={allStudies} allTopics={allTopics}/>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
+                            <LecturerPlatform loggedIn={loggedIn}/>
+                        </TopicDataContext.Provider>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>

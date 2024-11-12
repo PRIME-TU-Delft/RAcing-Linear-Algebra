@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material";
 import "./TopicElement.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StudyEdit from "./StudyEdit/StudyEdit";
@@ -9,6 +9,7 @@ import { Store } from 'react-notifications-component';
 import { Tooltip } from "react-tooltip";
 import { Exercise, Study, Topic } from "../SharedUtils";
 import socket from "../../../socket";
+import { TopicDataContext } from "../../../contexts/TopicDataContext";
 
 
 interface ExerciseListElement {
@@ -25,7 +26,6 @@ interface Props {
     discardNewTopic: () => void,
     availableGraspleIds: number[]
     onLinkExercise: (graspleId: number) => void,
-    allStudies: Study[]
 }
 
 function TopicElement(props: Props) {
@@ -396,7 +396,7 @@ function TopicElement(props: Props) {
                                 </div>
                             </div>
                         ) : (
-                            <StudyEdit studies={studies} allStudies={props.allStudies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
+                            <StudyEdit studies={studies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
                         )}
                     </div>
                 </AccordionDetails>

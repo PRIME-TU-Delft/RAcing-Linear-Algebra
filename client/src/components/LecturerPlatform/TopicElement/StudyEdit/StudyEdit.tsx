@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./StudyEdit.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Checkbox, Button, Divider } from "@mui/material";
@@ -6,23 +6,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import { Study } from "../../SharedUtils";
+import { TopicDataContext } from "../../../../contexts/TopicDataContext";
 
 interface Props {
     studies: Study[],
-    allStudies: Study[]
     onStudiesSelected: (studies: Study[]) => void
     saveChanges: boolean
 }
 
 function StudyEdit(props: Props) {
-    const [selectedStudies, setSelectedStudies] = useState(props.studies)
-    const [unselectedStudies, setUnselectedStudies] = useState<Study[]>(
-        props.allStudies.filter(study => !props.studies.includes(study))
-    )
+    const topicData = useContext(TopicDataContext);
+    const [selectedStudies, setSelectedStudies] = useState<Study[]>([])
+    const [unselectedStudies, setUnselectedStudies] = useState<Study[]>([])
+
+    useEffect(() => {
+        setUnselectedStudies([...topicData.allStudies.filter(study => !selectedStudies.includes(study))])
+    }, [topicData.allStudies, selectedStudies])
+
+    useEffect(() => {
+        setSelectedStudies([...props.studies])
+    }, [props.studies])
 
     const handleSelectAllCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            setSelectedStudies(curr => [...props.allStudies])
+            setSelectedStudies(curr => [...topicData.allStudies])
             setUnselectedStudies(curr => [])
         }
       };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./LecturerPlatform.css";
 import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
@@ -13,16 +13,16 @@ import TopicElement from "./TopicElement/TopicElement";
 import { Button } from "@mui/material";
 import ExerciseElement from "./ExerciseElement/ExerciseElement";
 import { Exercise, Study, Topic } from "./SharedUtils";
+import { TopicDataContext } from "../../contexts/TopicDataContext";
 
 interface Props {
-    loggedIn: boolean;
-    allStudies: Study[],
-    allTopics: Topic[],
-    allExercises: Exercise[]
+    loggedIn: boolean
 }
 
 function LecturerPlatform(props: Props) {
     const [activeTab, setActiveTab] = useState<string>("topics")
+
+    const topicData = useContext(TopicDataContext);
     const [exercises, setExercises] = useState<Exercise[]>([])
     const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([])
     const [topics, setTopics] = useState<Topic[]>([])
@@ -34,12 +34,12 @@ function LecturerPlatform(props: Props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setTopics([...props.allTopics]);
-    }, [props.allTopics]);
+        setTopics([...topicData.allTopics])
+    }, [topicData.allTopics])
 
     useEffect(() => {
-        setExercises([...props.allExercises]);
-    }, [props.allExercises]);
+        setExercises([...topicData.allExercises])
+    }, [topicData.allExercises]);
 
     useEffect(() => {
         if (!props.loggedIn) {
@@ -151,7 +151,6 @@ function LecturerPlatform(props: Props) {
                                 discardNewTopic={() => discardNewTopicHandler(index)}
                                 availableGraspleIds={exerciseGraspleIds}
                                 onLinkExercise={(graspleId: number) => linkExerciseHandler(index, graspleId)}
-                                allStudies={props.allStudies}
                             />
                         ))}
                     </div>
