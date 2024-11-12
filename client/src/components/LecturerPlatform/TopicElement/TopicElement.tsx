@@ -15,7 +15,6 @@ import { TopicDataContext } from "../../../contexts/TopicDataContext";
 interface ExerciseListElement {
     exercise: Exercise,
     incompleteExercise: boolean
-    isMandatory: boolean
 }
 
 interface TopicChangesState {
@@ -177,9 +176,9 @@ function TopicElement(props: Props) {
                     difficulty: "Easy",
                     url: "",
                     numOfAttempts: 0,
+                    isMandatory: false
                 },
                 incompleteExercise: true,
-                isMandatory: false
             }
             const newExercises = [newExercise, ...exercises]
             setExercises(curr => [...newExercises])
@@ -250,8 +249,8 @@ function TopicElement(props: Props) {
 
     useEffect(() => {
         const sorted = [...exercises].sort((a, b) => {
-            if (a.isMandatory && !b.isMandatory) return -1
-            if (!a.isMandatory && b.isMandatory) return 1
+            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
+            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
             const difficultyOrder = ["Easy", "Medium", "Hard"]
             return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
         })
@@ -510,6 +509,7 @@ function TopicElement(props: Props) {
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
                                         isIndependentElement={false}
+                                        isMandatory={exerciseElement.exercise.isMandatory}
                                     ></ExerciseElement>
                                     {exercisesMode === "edit" && (
                                         <div className="d-flex col  m-auto">

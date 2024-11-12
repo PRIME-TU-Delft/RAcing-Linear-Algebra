@@ -5,6 +5,7 @@ interface Exercise {
     difficulty: string,
     url: string,
     numOfAttempts: number   
+    isMandatory: boolean
 }
 
 interface Topic {

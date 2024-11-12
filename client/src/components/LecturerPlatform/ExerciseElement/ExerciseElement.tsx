@@ -20,6 +20,7 @@ interface Props {
     onFinishEditingExercise: (exerciseData: Exercise) => void
     onDiscardEditingExercise: (deleteExercise: boolean) => void
     isIndependentElement: boolean
+    isMandatory: boolean
 }
 
 function ExerciseElement(props: Props) {
@@ -30,7 +31,8 @@ function ExerciseElement(props: Props) {
         exerciseId: props.exerciseId,
         difficulty: props.difficulty,
         url: props.url,
-        numOfAttempts: props.numOfAttempts
+        numOfAttempts: props.numOfAttempts,
+        isMandatory: props.isMandatory
     })
     const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
 
@@ -41,8 +43,9 @@ function ExerciseElement(props: Props) {
             exerciseId: props.exerciseId,
             difficulty: props.difficulty,
             url: props.url,
-            numOfAttempts: props.numOfAttempts
-        });
+            numOfAttempts: props.numOfAttempts,
+            isMandatory: props.isMandatory
+        })
     }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
 
     useEffect(() => {
@@ -61,7 +64,7 @@ function ExerciseElement(props: Props) {
                     duration: 5000,
                     onScreen: true
                 }
-            });
+            })
         } else {
             props.onFinishEditingExercise(newExerciseData);
             if (props.isIndependentElement) {
