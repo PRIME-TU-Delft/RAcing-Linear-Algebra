@@ -250,18 +250,12 @@ function App() {
         }
 
         function onGetAllStudies(allStudies: Study[]) {
-            console.log(allStudies)
             setAllStudies(curr => [...allStudies])
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
+            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
-
-            for (let i = 0; i < allTopics.length; i++) {
-                console.log(allTopics[i]._id)
-                socket.emit("getExercisesForTopic", allTopics[i]._id)
-                socket.emit("getStudiesForTopic", allTopics[i]._id)
-            }
         }
 
         function onGetAllExercises(allExercises: Exercise[]) {
@@ -272,7 +266,6 @@ function App() {
             exercises: Exercise[],
             topicId: string
         }) {
-            console.log(data.exercises)
             const updatedTopics = allTopics.map(topic => {
                 if (topic._id === data.topicId) {
                     return { ...topic, exercises: data.exercises };
@@ -293,6 +286,9 @@ function App() {
                 return topic;
             });
             setAllTopics([...updatedTopics]);
+
+            console.log(updatedTopics)
+            console.log(allTopics)
         }
 
         socket.on("round-duration", onRoundDuration)

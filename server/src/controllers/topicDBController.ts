@@ -3,6 +3,14 @@ import { Study, type IStudy } from "../models/studyModel"
 import type { ITopic} from "../models/topicModel";
 import { Topic } from "../models/topicModel"
 
+
+export interface ITopicData {
+    _id: string,
+    name: string,
+    studies: IStudy[],
+    exercises: IExercise[]
+}
+
 export async function addNewTopic(
     name: string,
     studies: IStudy[],
@@ -196,11 +204,25 @@ export async function updateTopicExercises(topicId: string, exercises: {exercise
     }
 }
 
-export async function getAllTopics(): Promise<ITopic[]> {
+export async function getAllTopics(): Promise<ITopicData[]> {
     try {
-        const result: ITopic[] = await Topic.find();
-        return result;
+        const topics = await Topic.find();
+
+        const completeTopics = await Promise.all(topics.map(async (topic) => {
+            const exercises = await getAllExercisesFromTopic(topic._id);
+            const studies = await getAllStudiesFromTopic(topic._id);
+
+            return {
+                _id: topic._id,
+                name: topic.name,
+                exercises,
+                studies
+            };
+        }));
+
+        return completeTopics;
     } catch (error) {
+        console.error("Error retrieving all topics:", error);
         throw error;
     }
 }
