@@ -62,8 +62,8 @@ function LecturerPlatform(props: Props) {
     const createNewTopic = () => {
         const newTopic = {
             _id: "",
-            name: "New Topic",
-            studies: [],
+            name: "",
+            studies: topicData.allStudies,
             exercises: []
         };
         const newTopics = [newTopic, ...topics];
