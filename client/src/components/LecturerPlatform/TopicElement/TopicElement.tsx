@@ -149,7 +149,11 @@ function TopicElement(props: Props) {
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        const newExercises = exercises.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false, isMandatory: false} : exercise)
+        const firstIncompleteIndex = exercises.findIndex(exercise => exercise.exercise._id === sortedExercises[editingExerciseIndex].exercise._id);
+        if (firstIncompleteIndex == -1) {
+            return
+        }
+        const newExercises = exercises.map((exercise, idx) => idx === firstIncompleteIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
         setExercises(curr => [...newExercises])
         setEditingExerciseIndex(-1)
     }
@@ -309,7 +313,7 @@ function TopicElement(props: Props) {
                 ...prevData,
                 exercises: props.exercises
             }))
-            setExercises(curr => [...props.exercises.map(exercise => ({ exercise, incompleteExercise: false, isMandatory: false }))])
+            setExercises(curr => [...props.exercises.map(exercise => ({ exercise, incompleteExercise: false}))])
 
             if (props.exercises.length == 0) {
                 setExercisesMode(curr => "edit")
@@ -396,7 +400,7 @@ function TopicElement(props: Props) {
         if (exercises.length != 0) {
             setExercisesMode("")
             setSaveChanges(curr => ({...curr, exercises: false}))
-            setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false, isMandatory: false}))])
+            setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false}))])
         }
     }
 
