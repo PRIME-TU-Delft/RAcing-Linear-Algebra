@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField, Switch } from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import "./ExerciseElement.css";
@@ -118,13 +118,13 @@ function ExerciseElement(props: Props) {
                 >
                     {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
-                            <div className="d-flex col col-11 align-items-center">
+                            <div className="d-flex col col-10 align-items-center">
                                 {props.name} 
                                 <span className="exercise-header-id">(#{props.exerciseId})</span>
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
-                                <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
-                                    {props.difficulty}
+                                <div className="d-flex col-2 exercise-difficulty-label justify-content-end">
+                                    {(props.isMandatory ? "Mandatory  |  " + props.difficulty : props.difficulty)}
                                 </div>
                             )}
                         </div>
@@ -143,6 +143,11 @@ function ExerciseElement(props: Props) {
                             <div>
                                 Name:
                             </div>
+                            {!props.isIndependentElement && (
+                                <div>
+                                    Mandatory:
+                                </div>
+                            )}
                             <div>
                                 URL:
                             </div>
@@ -170,6 +175,19 @@ function ExerciseElement(props: Props) {
                                     />
                                 </div>
                             )}
+                            {!props.beingEdited && !beingEdited && !props.isIndependentElement ? (
+                                <div>
+                                    {(props.isMandatory ? "Yes" : "No")}
+                                </div>
+                            ) : !props.isIndependentElement ? (
+                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                    <Switch
+                                        checked={newExerciseData.isMandatory}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, isMandatory: e.target.checked })}
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                </div>
+                            ) : null}
                             {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
@@ -195,7 +213,6 @@ function ExerciseElement(props: Props) {
                                             native: true,
                                         }}
                                     >
-                                        <option value="Mandatory">Mandatory</option>
                                         <option value="Easy">Easy</option>
                                         <option value="Medium">Medium</option>
                                         <option value="Hard">Hard</option>
