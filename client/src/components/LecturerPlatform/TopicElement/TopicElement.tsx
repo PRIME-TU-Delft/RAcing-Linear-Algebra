@@ -75,8 +75,6 @@ function TopicElement(props: Props) {
 
     const studiesChangedHandler = (newStudies: Study[]) => {
         setStudies(curr => [...newStudies])
-        setChangingStudies(curr => false)
-        setSaveChanges(curr => ({...curr, studies: true}))
     }
 
     const unsavedTopicChanges = () => {
@@ -341,15 +339,16 @@ function TopicElement(props: Props) {
     }, [props.name])
     
     useEffect(() => {
-        setNewTopicData(prevData => ({
+        if (studies.length == 0) {
+            setNewTopicData(prevData => ({
             ...prevData,
             studies: props.studies
-        }))
-        setStudies(curr => [...props.studies])
+            }))
+            setStudies(curr => [...props.studies])
 
-        if (props.studies.length == 0) {
-            setChangingStudies(curr => true)
-        }
+            if (props.studies.length == 0) {
+                setChangingStudies(curr => true)
+            }}
     }, [props.studies])
     
     useEffect(() => {
@@ -400,6 +399,10 @@ function TopicElement(props: Props) {
             }
         }
     }, [saveChanges])
+
+    useEffect(() => {
+        setChangingStudies(curr => false)
+    }, [studies])
 
     useEffect(() => {
         setUnsavedChanges(curr => ({...curr, name: false}))
