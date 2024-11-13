@@ -73,7 +73,7 @@ function LecturerPlatform(props: Props) {
     }
 
     const createNewExercise = () => {
-        const newExercise: Exercise = { _id: "", name: "New Exercise", exerciseId: -1, difficulty: "", url: "", numOfAttempts: 0, isMandatory: false }
+        const newExercise: Exercise = { _id: "", name: "New Exercise", exerciseId: -1, difficulty: "Easy", url: "", numOfAttempts: 1, isMandatory: false }
         const newExercises = [newExercise, ...exercises];
         setExercises(newExercises);
     };
