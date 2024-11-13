@@ -1,15 +1,15 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material";
-import "./TopicElement.css";
-import React, { useContext, useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import StudyEdit from "./StudyEdit/StudyEdit";
-import ExerciseElement from "../ExerciseElement/ExerciseElement";
-import { Store } from 'react-notifications-component';
-import { Tooltip } from "react-tooltip";
-import { Exercise, Study, Topic } from "../SharedUtils";
-import socket from "../../../socket";
-import { TopicDataContext } from "../../../contexts/TopicDataContext";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material"
+import "./TopicElement.css"
+import React, { useContext, useEffect, useState } from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import StudyEdit from "./StudyEdit/StudyEdit"
+import ExerciseElement from "../ExerciseElement/ExerciseElement"
+import { Store } from 'react-notifications-component'
+import { Tooltip } from "react-tooltip"
+import { Exercise, Study, Topic } from "../SharedUtils"
+import socket from "../../../socket"
+import { TopicDataContext } from "../../../contexts/TopicDataContext"
 
 
 interface ExerciseListElement {
@@ -35,22 +35,22 @@ interface Props {
 }
 
 function TopicElement(props: Props) {
-    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false);
-    const [changingStudies, setChangingStudies] = useState<boolean>(false);
-    const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
-    const [exercisesMode, setExercisesMode] = useState<string>("");
-    const [exercises, setExercises] = useState<ExerciseListElement[]>([]);
-    const [sortedExercises, setSortedExercises] = useState<ExerciseListElement[]>([]);
-    const [editName, setEditName] = useState<boolean>(false);
-    const [newName, setNewName] = useState<string>("");
-    const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1);
+    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false)
+    const [changingStudies, setChangingStudies] = useState<boolean>(false)
+    const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1)
+    const [exercisesMode, setExercisesMode] = useState<string>("")
+    const [exercises, setExercises] = useState<ExerciseListElement[]>([])
+    const [sortedExercises, setSortedExercises] = useState<ExerciseListElement[]>([])
+    const [editName, setEditName] = useState<boolean>(false)
+    const [newName, setNewName] = useState<string>("")
+    const [openDialog, setOpenDialog] = useState<boolean>(false)
+    const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1)
 
     const [saveChanges, setSaveChanges] = useState<TopicChangesState>({
         name: false,
         studies: false,
         exercises: false
-    });
+    })
 
     const [unsavedChanges, setUnsavedChanges] = useState<TopicChangesState>({
         name: true,
@@ -63,13 +63,15 @@ function TopicElement(props: Props) {
         name: "",
         studies: [],
         exercises: []
-    });
+    })
 
-    const [studies, setStudies] = useState<Study[]>([]);
+    const [studies, setStudies] = useState<Study[]>([])
 
-    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
-    const [searchInput, setSearchInput] = useState("");
-    const [matchingExercises, setMatchingExercises] = useState<number[]>([]);
+    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
+    const [isExistingExerciseDialogOpen, setIsExistingExerciseDialogOpen] = useState(false)
+    const [existingExerciseGraspleId, setExistingExerciseGraspleId] = useState<number>(-1)
+    const [searchInput, setSearchInput] = useState("")
+    const [matchingExercises, setMatchingExercises] = useState<number[]>([])
 
     const studiesChangedHandler = (newStudies: Study[]) => {
         setStudies(curr => [...newStudies])
@@ -79,6 +81,20 @@ function TopicElement(props: Props) {
 
     const unsavedTopicChanges = () => {
         return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
+    }
+
+    const showSuccessNotification = (message: string) => {
+        Store.addNotification({
+            title: "Success",
+            message: message,
+            type: "success",
+            insert: "top",
+            container: "bottom-right",
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        })
     }
 
     const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
@@ -142,20 +158,40 @@ function TopicElement(props: Props) {
                     duration: 5000,
                     onScreen: true
                 }
-            });
+            })
         } else {
             setEditingExerciseIndex(curr => index)
         }
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        const firstIncompleteIndex = exercises.findIndex(exercise => exercise.exercise._id === sortedExercises[editingExerciseIndex].exercise._id);
+        const firstIncompleteIndex = exercises.findIndex(exercise => exercise.exercise._id === sortedExercises[editingExerciseIndex].exercise._id)
         if (firstIncompleteIndex == -1) {
             return
         }
         const newExercises = exercises.map((exercise, idx) => idx === firstIncompleteIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
         setExercises(curr => [...newExercises])
         setEditingExerciseIndex(-1)
+        showSuccessNotification("Updated the exercise")
+    }
+
+    const exerciseAlreadyExistsHandler = (exerciseId: number) => {
+        if (exercises.some(exercise => exercise.exercise.exerciseId === exerciseId)) {
+            Store.addNotification({
+                title: "Warning",
+                message: "This exercise already exists in the topic",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            })
+        } else {
+            setExistingExerciseGraspleId(exerciseId)
+            setIsExistingExerciseDialogOpen(true)
+        }
     }
 
     const addNewExerciseHandler = () => {
@@ -210,68 +246,77 @@ function TopicElement(props: Props) {
 
     const sortExercises = () => {
         const sorted = [...exercises].sort((a, b) => {
-            if (a.incompleteExercise && !b.incompleteExercise) return -1;
-            if (!a.incompleteExercise && b.incompleteExercise) return 1;
-            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1;
-            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1;
-            const difficultyOrder = ["Easy", "Medium", "Hard"];
-            return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty);
+            if (a.incompleteExercise && !b.incompleteExercise) return -1
+            if (!a.incompleteExercise && b.incompleteExercise) return 1
+            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
+            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
+            const difficultyOrder = ["Easy", "Medium", "Hard"]
+            return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
         })
 
         return sorted
     }
 
     const handleDeleteExercise = (index: number) => {
-        setExerciseToDelete(index);
-        setOpenDialog(true);
-    };
+        setExerciseToDelete(index)
+        setOpenDialog(true)
+    }
 
     const confirmDeleteExercise = () => {
         if (exerciseToDelete > -1) {
-            const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete);
-            setExercises(newExercises);
-            setExerciseToDelete(-1);
+            const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete)
+            setExercises(newExercises)
+            setExerciseToDelete(-1)
         }
-        setOpenDialog(false);
-    };
+        setOpenDialog(false)
+    }
 
     const cancelDeleteExercise = () => {
-        setExerciseToDelete(-1);
-        setOpenDialog(false);
-    };
+        setExerciseToDelete(-1)
+        setOpenDialog(false)
+    }
 
     const discardEditingExerciseHandler = () => {
-        setEditingExerciseIndex(-1);
-        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)]);
+        setEditingExerciseIndex(-1)
+        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
     }
 
     function saveNameHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-        setSaveChanges(curr => ({...curr, name: true}));
+        setSaveChanges(curr => ({...curr, name: true}))
     }
 
     const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearchInput(value);
+        const value = e.target.value
+        setSearchInput(value)
         const matches = props.availableGraspleIds.filter(graspleId => 
             graspleId.toString().includes(value)
-        );
-        setMatchingExercises(matches);
-    };
+        )
+        setMatchingExercises(matches)
+    }
 
     const handleExerciseSelect = (selectedExerciseGraspleId: number) => {
-        props.onLinkExercise(selectedExerciseGraspleId);
-        setIsLinkDialogOpen(false);
-    };
+        props.onLinkExercise(selectedExerciseGraspleId)
+        setIsLinkDialogOpen(false)
+        showSuccessNotification("Linked the exercise")
+    }
+
+    const addExistingExerciseHandler = () => {
+        setEditingExerciseIndex(-1)
+        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
+        props.onLinkExercise(existingExerciseGraspleId)
+        setIsExistingExerciseDialogOpen(false)
+        showSuccessNotification("Added the exercise")
+    }
 
     useEffect(() => {
         const sorted = sortExercises()
         setSortedExercises(curr => [...sorted])
-    }, [exercises]);
+    }, [exercises])
 
     useEffect(() => {
-        const firstIncompleteIndex = sortedExercises.findIndex(exercise => exercise.incompleteExercise);
+        const firstIncompleteIndex = sortedExercises.findIndex(exercise => exercise.incompleteExercise)
         if (firstIncompleteIndex !== -1) {
-            setEditingExerciseIndex(firstIncompleteIndex);
+            setEditingExerciseIndex(firstIncompleteIndex)
         }
     }, [sortedExercises])
 
@@ -279,21 +324,21 @@ function TopicElement(props: Props) {
         setNewTopicData(prevData => ({
             ...prevData,
             id: props._id
-        }));
-    }, [props._id]);
+        }))
+    }, [props._id])
     
     useEffect(() => {
         setNewTopicData(prevData => ({
             ...prevData,
             name: props.name
-        }));
+        }))
 
         setNewName(curr => props.name)
 
         if (props.name == "") {
             setEditName(curr => true)
         }
-    }, [props.name]);
+    }, [props.name])
     
     useEffect(() => {
         setNewTopicData(prevData => ({
@@ -305,7 +350,7 @@ function TopicElement(props: Props) {
         if (props.studies.length == 0) {
             setChangingStudies(curr => true)
         }
-    }, [props.studies]);
+    }, [props.studies])
     
     useEffect(() => {
         if (props.exercises) {
@@ -319,14 +364,14 @@ function TopicElement(props: Props) {
                 setExercisesMode(curr => "edit")
             }
         }
-    }, [props.exercises]);
+    }, [props.exercises])
 
     useEffect(() => {
         if (saveChanges.name) {
             setSaveChanges(curr => ({...curr, name: false}))
 
             if (newName == "") {
-                showUnsavedChangesWarningNotification("name");
+                showUnsavedChangesWarningNotification("name")
             } else {
                 setNewTopicData(curr => ({...curr, name: newName}))
                 setEditName(curr => false)
@@ -357,15 +402,15 @@ function TopicElement(props: Props) {
     }, [saveChanges])
 
     useEffect(() => {
-        setUnsavedChanges(curr => ({...curr, name: false}));
+        setUnsavedChanges(curr => ({...curr, name: false}))
     }, [newTopicData.name])
 
     useEffect(() => {
-        setUnsavedChanges(curr => ({...curr, studies: false}));
+        setUnsavedChanges(curr => ({...curr, studies: false}))
     }, [newTopicData.studies])
 
     useEffect(() => {
-        setUnsavedChanges(curr => ({...curr, exercises: false}));
+        setUnsavedChanges(curr => ({...curr, exercises: false}))
     }, [newTopicData.exercises])
 
     useEffect(() => {
@@ -385,7 +430,7 @@ function TopicElement(props: Props) {
             unsavedChangesState.exercises = true
         }
 
-        setUnsavedChanges(unsavedChangesState);
+        setUnsavedChanges(unsavedChangesState)
     }, [editName, changingStudies, exercisesMode])
 
     useEffect(() => {
@@ -529,6 +574,7 @@ function TopicElement(props: Props) {
                                         closeNotEditing={editingExerciseIndex > -1}
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                        onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
                                         isIndependentElement={false}
                                         isMandatory={exerciseElement.exercise.isMandatory}
                                     ></ExerciseElement>
@@ -592,13 +638,24 @@ function TopicElement(props: Props) {
                 </DialogActions>
             </Dialog>
 
+            <Dialog open={isExistingExerciseDialogOpen} onClose={() => setIsExistingExerciseDialogOpen(false)}>
+                <DialogTitle>Link Existing Exercise</DialogTitle>
+                <DialogContent>
+                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to add it to this topic directly?`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsExistingExerciseDialogOpen(false)} color="primary">Cancel</Button>
+                    <Button onClick={() => addExistingExerciseHandler()} color="primary">Yes</Button>
+                </DialogActions>
+            </Dialog>
+
                 {unsavedTopicChanges() && (
                     <div className="topic-save-icon">
                         <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>
                     </div>
                 )}
         </div>
-    );
+    )
 }
 
 export default TopicElement

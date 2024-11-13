@@ -14,6 +14,7 @@ import { Button } from "@mui/material";
 import ExerciseElement from "./ExerciseElement/ExerciseElement";
 import { Exercise, Study, Topic } from "./SharedUtils";
 import { TopicDataContext } from "../../contexts/TopicDataContext";
+import { ExistingExercisesContext } from "./ExistingExercisesContext";
 
 interface Props {
     loggedIn: boolean
@@ -136,50 +137,53 @@ function LecturerPlatform(props: Props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            {activeTab === "topics" && (
-                <>
-                    <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
-                    <div style={{marginBottom: "1rem"}}>
-                        {topics.map((topic, index) => (
-                            <TopicElement 
-                                key={index} 
-                                _id={topic._id} 
-                                name={topic.name} 
-                                studies={topic.studies} 
-                                exercises={topic.exercises} 
-                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
-                                discardNewTopic={() => discardNewTopicHandler(index)}
-                                availableGraspleIds={exerciseGraspleIds}
-                                onLinkExercise={(graspleId: number) => linkExerciseHandler(index, graspleId)}
-                            />
-                        ))}
-                    </div>
-                </>
-            )}
-            {activeTab === "exercises" && (
-                <>
-                    <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
-                    <div style={{marginBottom: "1rem"}}>
-                        {exercises.map((exercise, index) => (
-                            <ExerciseElement 
-                                key={index} 
-                                _id={exercise._id} 
-                                name={exercise.name} 
-                                exerciseId={exercise.exerciseId} 
-                                difficulty={exercise.difficulty} 
-                                url={exercise.url} 
-                                numOfAttempts={exercise.numOfAttempts} 
-                                beingEdited={false} 
-                                closeNotEditing={false} 
-                                onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData, index)}
-                                onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(index, deleteExercise)}
-                                isIndependentElement={true}
-                                isMandatory={false}
-                            />
-                        ))}
-                    </div>
-                </>
-            )}
+            <ExistingExercisesContext.Provider value={exerciseGraspleIds}>
+                {activeTab === "topics" && (
+                    <>
+                        <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
+                        <div style={{marginBottom: "1rem"}}>
+                            {topics.map((topic, index) => (
+                                <TopicElement 
+                                    key={index} 
+                                    _id={topic._id} 
+                                    name={topic.name} 
+                                    studies={topic.studies} 
+                                    exercises={topic.exercises} 
+                                    onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
+                                    discardNewTopic={() => discardNewTopicHandler(index)}
+                                    availableGraspleIds={exerciseGraspleIds}
+                                    onLinkExercise={(graspleId: number) => linkExerciseHandler(index, graspleId)}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+                {activeTab === "exercises" && (
+                    <>
+                        <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
+                        <div style={{marginBottom: "1rem"}}>
+                            {exercises.map((exercise, index) => (
+                                <ExerciseElement 
+                                    key={index} 
+                                    _id={exercise._id} 
+                                    name={exercise.name} 
+                                    exerciseId={exercise.exerciseId} 
+                                    difficulty={exercise.difficulty} 
+                                    url={exercise.url} 
+                                    numOfAttempts={exercise.numOfAttempts} 
+                                    beingEdited={false} 
+                                    closeNotEditing={false} 
+                                    onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData, index)}
+                                    onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(index, deleteExercise)}
+                                    onExerciseAlreadyExists={() => {}}
+                                    isIndependentElement={true}
+                                    isMandatory={false}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+            </ExistingExercisesContext.Provider>
         </div>
     );
 }

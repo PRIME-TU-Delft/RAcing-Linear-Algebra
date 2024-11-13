@@ -19,6 +19,7 @@ interface Props {
     closeNotEditing: boolean
     onFinishEditingExercise: (exerciseData: Exercise) => void
     onDiscardEditingExercise: (deleteExercise: boolean) => void
+    onExerciseAlreadyExists: (exerciseId: number) => void
     isIndependentElement: boolean
     isMandatory: boolean
 }
@@ -193,7 +194,11 @@ function ExerciseElement(props: Props) {
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
                             )  : (
-                                <ExerciseURLInput url={props.url} onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}></ExerciseURLInput>
+                                <ExerciseURLInput 
+                                    url={props.url} 
+                                    onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}
+                                    onExerciseAlreadyExists={(exerciseId: number) => props.onExerciseAlreadyExists(exerciseId)} 
+                                ></ExerciseURLInput>
                             )}
                             {!props.beingEdited && !beingEdited ? (
                                 <div>
