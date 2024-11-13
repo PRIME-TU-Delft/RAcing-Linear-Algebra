@@ -42,7 +42,7 @@ function ExerciseURLInput(props: Props) {
 
     const exerciseDoesntAlreadyExist = () => {
         console.log(existingExerciseIds)
-        return !existingExerciseIds.includes(graspleId)
+        return !existingExerciseIds.includes(graspleId) || props.url === urlValue
     }
 
     const getIdValue = () => {
@@ -55,6 +55,10 @@ function ExerciseURLInput(props: Props) {
             props.onURLValueChange(urlValue, graspleId);
         }
     }, [checked, graspleId])
+
+    useEffect(() => {
+        setUrlValue(props.url)
+    }, [props.url])
 
     useEffect(() => {
         const correctDomain = hasCorrectUrlDomain()
