@@ -19,6 +19,7 @@ import socket from "../../socket";
 
 interface Props {
     loggedIn: boolean
+    onUpdateExercise: (exerciseData: Exercise) => void
 }
 
 function LecturerPlatform(props: Props) {
@@ -81,14 +82,7 @@ function LecturerPlatform(props: Props) {
     };
 
     const updateExerciseHandler = (exerciseData: Exercise) => {
-        const updateData = {
-            url: exerciseData.url,
-            name: exerciseData.name,
-            difficulty: exerciseData.difficulty,
-            numOfAttempts: exerciseData.numOfAttempts
-        }
-
-        socket.emit("updateExercise", exerciseData.exerciseId, updateData)
+        props.onUpdateExercise(exerciseData);
     };
 
     const discardNewExerciseHandler = (index: number, deleteExercise: boolean) => {

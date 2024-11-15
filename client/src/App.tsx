@@ -173,6 +173,18 @@ function App() {
             navigate("/Leaderboard")
     }, [stopShowingRace])
 
+    const updateExerciseHandler = (exerciseData: Exercise) => {
+        const updateData = {
+            url: exerciseData.url,
+            name: exerciseData.name,
+            difficulty: exerciseData.difficulty,
+            numOfAttempts: exerciseData.numOfAttempts
+        }
+
+        socket.emit("updateExercise", exerciseData.exerciseId, updateData)
+    }
+    
+
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
             const intializedGhosts: Ghost[] = initializeFrontendGhostObjects(data)
@@ -270,6 +282,21 @@ function App() {
                 return exercise
             })
             setAllExercises([...updatedExercises])
+
+            const updatedTopicsWithExercise = allTopics.map(topic => {
+                if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+                    const updatedExercises = topic.exercises.map(exercise => {
+                        if (exercise.exerciseId === updatedExercise.exerciseId) {
+                            return updatedExercise
+                        }
+                        return exercise
+                    })
+                    return { ...topic, exercises: updatedExercises }
+                }
+                return topic
+            })
+
+            setAllTopics([...updatedTopicsWithExercise])
         }
 
         socket.on("round-duration", onRoundDuration)
@@ -466,7 +493,7 @@ function App() {
                     path="/LecturerPlatform"
                     element={
                         <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
-                            <LecturerPlatform loggedIn={loggedIn}/>
+                            <LecturerPlatform loggedIn={loggedIn} onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}/>
                         </TopicDataContext.Provider>
                     }
                 ></Route>
