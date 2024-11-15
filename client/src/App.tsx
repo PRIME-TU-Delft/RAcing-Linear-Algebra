@@ -98,7 +98,7 @@ function App() {
         pause,
         resume,
         restart,
-      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler });
+      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler })
 
 
     const lobbyIdHandler = (id: number) => {
@@ -255,7 +255,6 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
-            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
         }
 
@@ -263,33 +262,14 @@ function App() {
             setAllExercises(curr => [...allExercises])
         }
 
-        function onGetExercisesForTopic(data: {
-            exercises: Exercise[],
-            topicId: string
-        }) {
-            const updatedTopics = allTopics.map(topic => {
-                if (topic._id === data.topicId) {
-                    return { ...topic, exercises: data.exercises };
+        function onGetUpdatedExercise(updatedExercise: Exercise) {
+            const updatedExercises = allExercises.map(exercise => {
+                if (exercise.exerciseId === updatedExercise.exerciseId) {
+                    return updatedExercise
                 }
-                return topic;
-            });
-            setAllTopics([...updatedTopics]);
-        }
-
-        function onGetStudiesForTopic(data: {
-            studies: Study[],
-            topicId: string
-        }) {
-            const updatedTopics = allTopics.map(topic => {
-                if (topic._id === data.topicId) {
-                    return { ...topic, studies: data.studies };
-                }
-                return topic;
-            });
-            setAllTopics([...updatedTopics]);
-
-            console.log(updatedTopics)
-            console.log(allTopics)
+                return exercise
+            })
+            setAllExercises([...updatedExercises])
         }
 
         socket.on("round-duration", onRoundDuration)
@@ -307,11 +287,10 @@ function App() {
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
         socket.on("access-granted", onAccessGranted)
-        socket.on("all-studies", onGetAllStudies);
-        socket.on("all-topics", onGetAllTopics);
-        socket.on("all-exercises", onGetAllExercises);
-        socket.on("exercises-for-topic", onGetExercisesForTopic)
-        socket.on("studies-for-topic", onGetStudiesForTopic)
+        socket.on("all-studies", onGetAllStudies)
+        socket.on("all-topics", onGetAllTopics)
+        socket.on("all-exercises", onGetAllExercises)
+        socket.on("updated-exercise", onGetUpdatedExercise)
     }, [])
 
     // useEffect(() => {

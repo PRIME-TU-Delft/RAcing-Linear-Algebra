@@ -17,6 +17,7 @@ interface Props {
     numOfAttempts: number   
     beingEdited: boolean
     closeNotEditing: boolean
+    parentSaveChanges: boolean
     onFinishEditingExercise: (exerciseData: Exercise) => void
     onDiscardEditingExercise: (deleteExercise: boolean) => void
     onExerciseAlreadyExists: (exerciseId: number) => void
@@ -48,6 +49,12 @@ function ExerciseElement(props: Props) {
             isMandatory: props.isMandatory
         })
     }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
+
+    useEffect(() => {
+        if (props.parentSaveChanges && beingEdited) {
+            saveExerciseHandler()
+        }
+    }, [props.parentSaveChanges])
 
     useEffect(() => {
         setBeingEdited(props.beingEdited);

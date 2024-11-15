@@ -29,6 +29,7 @@ interface Props {
     studies: Study[],
     exercises: Exercise[],
     onUpdateTopic: (topicData: Topic) => void,
+    editExercise: (exerciseData: Exercise) => void,
     discardNewTopic: () => void,
     availableGraspleIds: number[]
     onLinkExercise: (graspleId: number) => void,
@@ -163,14 +164,7 @@ function TopicElement(props: Props) {
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        const firstIncompleteIndex = exercises.findIndex(exercise => exercise.exercise._id === sortedExercises[editingExerciseIndex].exercise._id)
-        if (firstIncompleteIndex == -1) {
-            return
-        }
-        const newExercises = exercises.map((exercise, idx) => idx === firstIncompleteIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
-        setExercises(curr => [...newExercises])
-        setEditingExerciseIndex(-1)
-        showSuccessNotification("Updated the exercise")
+        props.editExercise(exerciseData)
     }
 
     const exerciseAlreadyExistsHandler = (exerciseId: number) => {
@@ -396,6 +390,7 @@ function TopicElement(props: Props) {
             } else {
                 setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}))
                 setExercisesMode(curr => "")
+                setEditingExerciseIndex(curr => -1)
             }
         }
     }, [saveChanges])
@@ -575,6 +570,7 @@ function TopicElement(props: Props) {
                                         numOfAttempts={exerciseElement.exercise.numOfAttempts}
                                         beingEdited={editingExerciseIndex == index}
                                         closeNotEditing={editingExerciseIndex > -1}
+                                        parentSaveChanges={saveChanges.exercises}
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
                                         onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}

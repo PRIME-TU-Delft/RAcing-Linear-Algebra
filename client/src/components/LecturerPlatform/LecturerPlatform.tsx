@@ -15,6 +15,7 @@ import ExerciseElement from "./ExerciseElement/ExerciseElement";
 import { Exercise, Study, Topic } from "./SharedUtils";
 import { TopicDataContext } from "../../contexts/TopicDataContext";
 import { ExistingExercisesContext } from "./ExistingExercisesContext";
+import socket from "../../socket";
 
 interface Props {
     loggedIn: boolean
@@ -35,6 +36,7 @@ function LecturerPlatform(props: Props) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(topicData.allTopics)
         setTopics([...topicData.allTopics])
     }, [topicData.allTopics])
 
@@ -78,9 +80,15 @@ function LecturerPlatform(props: Props) {
         setExercises(newExercises);
     };
 
-    const updateExerciseHandler = (exerciseData: Exercise, index: number) => {
-        const newExercises = exercises.map((exercise, idx) => idx === index ? exerciseData : exercise)
-        setExercises(curr => [...newExercises])
+    const updateExerciseHandler = (exerciseData: Exercise) => {
+        const updateData = {
+            url: exerciseData.url,
+            name: exerciseData.name,
+            difficulty: exerciseData.difficulty,
+            numOfAttempts: exerciseData.numOfAttempts
+        }
+
+        socket.emit("updateExercise", exerciseData.exerciseId, updateData)
     };
 
     const discardNewExerciseHandler = (index: number, deleteExercise: boolean) => {
@@ -149,6 +157,7 @@ function LecturerPlatform(props: Props) {
                                     name={topic.name} 
                                     studies={topic.studies} 
                                     exercises={topic.exercises} 
+                                    editExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                     onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
                                     discardNewTopic={() => discardNewTopicHandler(index)}
                                     availableGraspleIds={exerciseGraspleIds}
@@ -173,7 +182,8 @@ function LecturerPlatform(props: Props) {
                                     numOfAttempts={exercise.numOfAttempts} 
                                     beingEdited={false} 
                                     closeNotEditing={false} 
-                                    onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData, index)}
+                                    parentSaveChanges={false}
+                                    onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                     onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(index, deleteExercise)}
                                     onExerciseAlreadyExists={() => {}}
                                     isIndependentElement={true}
