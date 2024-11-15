@@ -1,31 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
-import "./LecturerPlatform.css";
-import { useNavigate } from "react-router-dom";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import IconButton from '@mui/material/IconButton';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
-import TopicElement from "./TopicElement/TopicElement";
-import { Button } from "@mui/material";
-import ExerciseElement from "./ExerciseElement/ExerciseElement";
-import { Exercise, Study, Topic } from "./SharedUtils";
-import { TopicDataContext } from "../../contexts/TopicDataContext";
-import { ExistingExercisesContext } from "./ExistingExercisesContext";
-import socket from "../../socket";
+import React, { useContext, useEffect, useState } from "react"
+import "./LecturerPlatform.css"
+import { useNavigate } from "react-router-dom"
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import IconButton from '@mui/material/IconButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+import TopicElement from "./TopicElement/TopicElement"
+import { Button } from "@mui/material"
+import ExerciseElement from "./ExerciseElement/ExerciseElement"
+import { Exercise, Study, Topic } from "./SharedUtils"
+import { TopicDataContext } from "../../contexts/TopicDataContext"
+import { ExistingExercisesContext } from "./ExistingExercisesContext"
+import socket from "../../socket"
 
 interface Props {
-    loggedIn: boolean
+    loggedIn: boolean,
     onUpdateExercise: (exerciseData: Exercise) => void
+    onUpdateTopic: (topicData: Topic) => void
 }
 
 function LecturerPlatform(props: Props) {
     const [activeTab, setActiveTab] = useState<string>("topics")
 
-    const topicData = useContext(TopicDataContext);
+    const topicData = useContext(TopicDataContext)
     const [exercises, setExercises] = useState<Exercise[]>([])
     const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([])
     const [topics, setTopics] = useState<Topic[]>([])
@@ -34,33 +35,30 @@ function LecturerPlatform(props: Props) {
         setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
     }, [exercises])
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     useEffect(() => {
-        console.log(topicData.allTopics)
         setTopics([...topicData.allTopics])
     }, [topicData.allTopics])
 
     useEffect(() => {
         setExercises([...topicData.allExercises])
-    }, [topicData.allExercises]);
+    }, [topicData.allExercises])
 
     useEffect(() => {
         if (!props.loggedIn) {
-            // navigate("/");
+            // navigate("/")
         }
-    }, [props.loggedIn, navigate]);
+    }, [props.loggedIn, navigate])
 
     const updateTopicHandler = (topicData: Topic, index: number) => {
-        const newTopics = [...topics];
-        newTopics[index] = topicData;
-        setTopics(curr => [...newTopics]);
+        props.onUpdateTopic(topicData)
     }
 
     function discardNewTopicHandler(index: number): void {
-        const newTopics = [...topics];
-        newTopics.splice(index, 1);
-        setTopics(curr => [...newTopics]);
+        const newTopics = [...topics]
+        newTopics.splice(index, 1)
+        setTopics(curr => [...newTopics])
     }
 
     const createNewTopic = () => {
@@ -69,45 +67,45 @@ function LecturerPlatform(props: Props) {
             name: "",
             studies: topicData.allStudies,
             exercises: []
-        };
-        const newTopics = [newTopic, ...topics];
-        console.log(newTopics);
-        setTopics(curr => [...newTopics]);
+        }
+        const newTopics = [newTopic, ...topics]
+        console.log(newTopics)
+        setTopics(curr => [...newTopics])
     }
 
     const createNewExercise = () => {
         const newExercise: Exercise = { _id: "", name: "New Exercise", exerciseId: -1, difficulty: "Easy", url: "", numOfAttempts: 1, isMandatory: false }
-        const newExercises = [newExercise, ...exercises];
-        setExercises(newExercises);
-    };
+        const newExercises = [newExercise, ...exercises]
+        setExercises(newExercises)
+    }
 
     const updateExerciseHandler = (exerciseData: Exercise) => {
-        props.onUpdateExercise(exerciseData);
-    };
+        props.onUpdateExercise(exerciseData)
+    }
 
     const discardNewExerciseHandler = (index: number, deleteExercise: boolean) => {
         if (deleteExercise) {
             const newExercises = exercises.filter((exercise, idx) => idx !== index)
             setExercises(curr => [...newExercises])
-            return;
+            return
         }
-    };
+    }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setActiveTab(newValue);
-    };
+        setActiveTab(newValue)
+    }
 
     const addExerciseToTopic = (topicIndex: number, exercise: Exercise) => {
         const newTopics = topics.map((topic, index) => {
             if (index === topicIndex) {
-                const exerciseExists = topic.exercises.some(ex => ex.exerciseId === exercise.exerciseId);
+                const exerciseExists = topic.exercises.some(ex => ex.exerciseId === exercise.exerciseId)
                 if (!exerciseExists) {
-                    return { ...topic, exercises: [exercise, ...topic.exercises] };
+                    return { ...topic, exercises: [exercise, ...topic.exercises] }
                 }
             }
-            return topic;
-        });
-        setTopics(curr => [...newTopics]);
+            return topic
+        })
+        setTopics(curr => [...newTopics])
     }
 
     const linkExerciseHandler = (topicIndex: number, exerciseGraspleId: number) => {
@@ -189,7 +187,7 @@ function LecturerPlatform(props: Props) {
                 )}
             </ExistingExercisesContext.Provider>
         </div>
-    );
+    )
 }
 
-export default LecturerPlatform;
+export default LecturerPlatform

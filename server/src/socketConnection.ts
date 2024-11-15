@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import type { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -613,7 +613,7 @@ module.exports = {
                 }
             })
 
-            socket.on("updateTopicExercises", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
+            socket.on("updateTopicExercises", async(topicId: string, exercises: {_id: string, isMandatory: boolean}[]) => {
                 try {
                     const updatedTopic = await updateTopicExercises(topicId, exercises);
                     socket.emit("updated-topic-exercises", updatedTopic);
@@ -673,6 +673,15 @@ module.exports = {
                     socket.emit("updated-topic", updatedTopic);
                 } catch (error) {
                     socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("updateTopic", async (topicId: string,  name?: string, exercises?: { _id: string, isMandatory: boolean }[], studyIds?: string[]) => {
+                try {
+                    const updatedTopic = await updateTopic(topicId, name, exercises, studyIds);
+                    socket.emit("updated-topic", updatedTopic);
+                } catch (error) {
+                    socket.emit("error", { message: error.message });
                 }
             })
 

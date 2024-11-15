@@ -315,7 +315,7 @@ function TopicElement(props: Props) {
     useEffect(() => {
         setNewTopicData(prevData => ({
             ...prevData,
-            id: props._id
+            _id: props._id
         }))
     }, [props._id])
     

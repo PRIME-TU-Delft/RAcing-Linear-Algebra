@@ -3,12 +3,21 @@ import { Study, type IStudy } from "../models/studyModel"
 import type { ITopic} from "../models/topicModel";
 import { Topic } from "../models/topicModel"
 
+export interface IExerciseData {
+    _id: string,
+    exerciseId: number,
+    url: string,
+    difficulty: string,
+    numOfAttempts: number,
+    name: string,
+    isMandatory: boolean
+}
 
 export interface ITopicData {
     _id: string,
     name: string,
     studies: IStudy[],
-    exercises: IExercise[]
+    exercises: IExerciseData[]
 }
 
 export async function addNewTopic(
@@ -94,7 +103,7 @@ export async function addStudiesToTopic(topicId: string, studyIds: string[]): Pr
     }
 }
 
-export async function getAllExercisesFromTopic(topicId: string): Promise<IExercise[]> {
+export async function getAllExercisesFromTopic(topicId: string): Promise<IExerciseData[]> {
     try {
         const topic = await Topic.findById(topicId);
 
@@ -102,23 +111,22 @@ export async function getAllExercisesFromTopic(topicId: string): Promise<IExerci
             throw new Error('Topic not found');
         }
 
-        const exercises: IExercise[] = [];
+        const exercises: IExerciseData[] = [];
 
         for (let i = 0; i < topic.mandatoryExercises.length; i++) {
             const exercise = await Exercise.findById(topic.mandatoryExercises[i]);
             if (!exercise) {
-                throw new Error('Exercise not found');
+            throw new Error('Exercise not found');
             }
-            exercise.difficulty = 'Mandatory';
-            exercises.push(exercise);
+            exercises.push({ ...exercise.toObject(), isMandatory: true });
         }
 
         for (let i = 0; i < topic.difficultyExercises.length; i++) {
             const exercise = await Exercise.findById(topic.difficultyExercises[i]);
             if (!exercise) {
-                throw new Error('Exercise not found');
+            throw new Error('Exercise not found');
             }
-            exercises.push(exercise);
+            exercises.push({ ...exercise.toObject(), isMandatory: false });
         }
 
         return exercises;
@@ -170,7 +178,7 @@ export async function updateTopicName(
     }
 }
 
-export async function updateTopicExercises(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]): Promise<ITopic> {
+export async function updateTopicExercises(topicId: string, exercises: {_id: string, isMandatory: boolean}[]): Promise<ITopic> {
     try {
         const topic = await Topic.findById(topicId);
         if (!topic) {
@@ -181,7 +189,7 @@ export async function updateTopicExercises(topicId: string, exercises: {exercise
         const difficultyExercises: IExercise[] = [];
 
         for (let i = 0; i < exercises.length; i++) {
-            const exercise = await Exercise.findById(exercises[i].exerciseId);
+            const exercise = await Exercise.findById(exercises[i]._id);
             if (!exercise) {
                 throw new Error('Exercise not found');
             }
@@ -226,3 +234,54 @@ export async function getAllTopics(): Promise<ITopicData[]> {
         throw error;
     }
 }
+
+export async function updateTopic(
+    topicId: string,
+    name?: string,
+    exercises?: { _id: string, isMandatory: boolean }[],
+    studyIds?: string[]
+): Promise<ITopicData> {
+    try {
+        const updateData: any = {};
+
+        if (name != null) {
+            updateData.name = name;
+        }
+
+        if (exercises) {
+            const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
+            const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);
+            updateData.mandatoryExercises = mandatoryExercises;
+            updateData.difficultyExercises = difficultyExercises;
+        }
+
+        if (studyIds) {
+            updateData.studies = studyIds;
+        }
+
+        const updatedTopic = await Topic.findByIdAndUpdate(
+            topicId,
+            { $set: updateData },
+            { new: true }
+        );
+
+        if (!updatedTopic) {
+            throw new Error('Topic not found after update');
+        }
+
+        const newExercises = await getAllExercisesFromTopic(updatedTopic._id);
+        const studies = await getAllStudiesFromTopic(updatedTopic._id);
+
+        return {
+            _id: updatedTopic._id,
+            name: updatedTopic.name,
+            exercises: newExercises,
+            studies
+        };
+    } catch (error) {
+        console.error("Error updating topic:", error);
+        throw error;
+    }
+}
+
+

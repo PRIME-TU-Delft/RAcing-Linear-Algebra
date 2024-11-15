@@ -171,7 +171,7 @@ function App() {
     useEffect(() => {
         if (stopShowingRace)
             navigate("/Leaderboard")
-    }, [stopShowingRace])
+    }, [stopShowingRace])    
 
     const updateExerciseHandler = (exerciseData: Exercise) => {
         const updateData = {
@@ -180,10 +180,20 @@ function App() {
             difficulty: exerciseData.difficulty,
             numOfAttempts: exerciseData.numOfAttempts
         }
-
         socket.emit("updateExercise", exerciseData.exerciseId, updateData)
     }
-    
+
+    const updateTopicHandler = (topicData: Topic) => {
+        console.log("UPDATE TOPIC")
+        console.log(topicData)
+        const exerciseData = topicData.exercises.map(exercise => ({
+            _id: exercise._id,
+            isMandatory: exercise.isMandatory
+        }))
+        const studyIds = topicData.studies.map(study => study._id)
+
+        // socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+    }
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -234,7 +244,6 @@ function App() {
         }
 
         function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
-            console.log(newGraspleQuestion)
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }
@@ -299,6 +308,18 @@ function App() {
             setAllTopics([...updatedTopicsWithExercise])
         }
 
+        function onGetUpdatedTopic(updatedTopic: Topic) {
+            console.log(updatedTopic)
+            console.log(allTopics)
+            const updatedTopics = allTopics.map(topic => {
+                if (topic._id === updatedTopic._id) {
+                    return updatedTopic
+                }
+                return topic
+            })
+            setAllTopics([...updatedTopics])
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -318,6 +339,7 @@ function App() {
         socket.on("all-topics", onGetAllTopics)
         socket.on("all-exercises", onGetAllExercises)
         socket.on("updated-exercise", onGetUpdatedExercise)
+        socket.on("updated-topic", onGetUpdatedTopic)
     }, [])
 
     // useEffect(() => {
@@ -493,7 +515,10 @@ function App() {
                     path="/LecturerPlatform"
                     element={
                         <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
-                            <LecturerPlatform loggedIn={loggedIn} onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}/>
+                            <LecturerPlatform 
+                                loggedIn={loggedIn} 
+                                onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
+                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}/>
                         </TopicDataContext.Provider>
                     }
                 ></Route>
