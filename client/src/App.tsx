@@ -209,7 +209,7 @@ function App() {
             if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
                 const updatedExercises = topic.exercises.map(exercise => {
                     if (exercise.exerciseId === updatedExercise.exerciseId) {
-                        return updatedExercise
+                        return {...updatedExercise, isMandatory: exercise.isMandatory}
                     }
                     return exercise
                 })
