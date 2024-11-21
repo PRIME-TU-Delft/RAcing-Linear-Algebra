@@ -235,11 +235,8 @@ function App() {
 
     useEffect(() => {
         socket.on("updated-exercise", onGetUpdatedExercise)
-    }, [allExercises, allTopics])
-
-    useEffect(() => {
         socket.on("updated-topic", onGetUpdatedTopic)
-    }, [allTopics])
+    }, [allExercises, allTopics])
 
     useEffect(() => {
         console.log(allExercises)
