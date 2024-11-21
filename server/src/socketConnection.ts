@@ -544,16 +544,10 @@ module.exports = {
                 }
             })
 
-            socket.on('addNewStudy', async (name: string, abbreviation: string) => {
-                try {
-                    const newStudy = await addNewStudy(name, abbreviation);
-                    socket.emit('new-study-added', newStudy);
-                } catch (error) {
-                    socket.emit('error', { message: error.message });
-                }
-            });
-
-            socket.on('getAllStudies', async () => {
+            /**
+             * Returns a list of all the studies (study programmes) stored in the database
+             */
+            socket.on("getAllStudies", async () => {
                 try {
                     const allStudies = await getAllStudies();
                     socket.emit("all-studies", allStudies);
@@ -562,30 +556,9 @@ module.exports = {
                 }
             })
 
-            socket.on('addNewExercise', async (exerciseId: number, url: string, difficulty: string, numOfAttempts: number, name: string) => {
-                try {
-                    const exerciseAlreadyExists = await exerciseExists(exerciseId);
-                    if (exerciseAlreadyExists) {
-                        const existingExercise = await findExercise(exerciseId, null);
-                        socket.emit('exercise-already-exists', existingExercise);
-                    } else {
-                        const newExerciseCreated = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
-                        socket.emit('new-exercise-added', newExerciseCreated);
-                    }
-                } catch (error) {
-                    socket.emit('error', { message: error.message });
-                }
-            });
-
-            socket.on("getExercise", async(exerciseId: number | null, name: string | null) => {
-                try {
-                    const matchingExercises = await findExercise(exerciseId, name);
-                    socket.emit("matching-exercises", matchingExercises)
-                } catch (error) {
-                    socket.emit('error', { message: error.message });
-                }
-            })
-
+            /**
+             * Updates the exercise with the given exerciseId (grasple question ID), or if it does not exist, creates a new one
+             */
             socket.on("updateExercise", async(exerciseId: number, updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }) => {
                 try {
                     const updatedExercise = await updateExercise(exerciseId, updateData);
@@ -595,51 +568,9 @@ module.exports = {
                 }
             })
 
-            socket.on("addNewTopic", async(name: string, studies: IStudy[], difficultyExercises: IExercise[], mandatoryExercises: IExercise[]) => {
-                try {
-                    const newTopic = await addNewTopic(name, studies, difficultyExercises, mandatoryExercises);
-                    socket.emit("new-topic", newTopic);
-                } catch (error) {
-                    socket.emit("error", {message: error.message})
-                }
-            })
-
-            socket.on("updateTopicExercises", async(topicId: string, exercises: {_id: string, isMandatory: boolean}[]) => {
-                try {
-                    const updatedTopic = await updateTopicExercises(topicId, exercises);
-                    socket.emit("updated-topic-exercises", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
-
-            socket.on("addStudiesToTopic", async(topicId: string, studyIds: string[]) => {
-                try {
-                    const updatedTopic = await addStudiesToTopic(topicId, studyIds);
-                    socket.emit("added-study-to-topic", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
-
-            socket.on("getExercisesForTopic", async(topicId: string) => {
-                try {
-                    const exercises = await getAllExercisesFromTopic(topicId);
-                    socket.emit("exercises-for-topic", {exercises: exercises, topicId: topicId});
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
-
-            socket.on("getStudiesForTopic", async(topicId: string) => {
-                try {
-                    const studies = await getAllStudiesFromTopic(topicId);
-                    socket.emit("studies-for-topic", {studies: studies, topicId: topicId});
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
-
+            /**
+             * Returns a list of all topics (rounds) stored in the database
+             */
             socket.on("getAllTopics", async() => {
                 try {
                     const topics = await getAllTopics();
@@ -649,6 +580,9 @@ module.exports = {
                 }
             })
 
+            /**
+             * Returns a list of all exercises stored in the database
+             */
             socket.on("getAllExercises", async() => {
                 try {
                     const exercises = await getAllExercises();
@@ -658,15 +592,10 @@ module.exports = {
                 }
             })
 
-            socket.on("updateTopicName", async(topicId: string, newName: string) => {
-                try {
-                    const updatedTopic = await updateTopicName(topicId, newName);
-                    socket.emit("updated-topic", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", error.message);
-                }
-            })
-
+            /**
+             * Updates the topic with the given topic id, or if it does not exist, creates a new one
+             * Notably, this function updates the mandatory status of each exercise associated with the topic
+             */
             socket.on("updateTopic", async (
                 topicId: string,  
                 name: string, 
