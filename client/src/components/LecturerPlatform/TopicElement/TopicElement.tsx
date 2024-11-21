@@ -573,6 +573,12 @@ function TopicElement(props: Props) {
                                 <>
                                 <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}>
                                 </Tooltip>
+                                <Tooltip id="add-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
+                                <Tooltip id="link-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
+                                <Tooltip id="reorder-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
                                 <FontAwesomeIcon
                                     icon={faCircleInfo}
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
@@ -580,9 +586,28 @@ function TopicElement(props: Props) {
                                     data-tooltip-place="right"
                                     data-tooltip-html="Add new exercises by pressing the + button.<br /> Add an existing exercise by pressing the link icon.<br />Adjust order of mandatory exercises using the reorder icon.<br />Edit/remove individual exercises using the icons on the right."
                                 />
-                                <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                                <FontAwesomeIcon icon={faLink} className="link-exercise-icon" onClick={() => linkExerciseHandler()}/>
-                                <FontAwesomeIcon icon={faBarsStaggered} className="reorder-exercises-icon" onClick={() => reorderMandatoryExercisesHandler()}/>
+                                <FontAwesomeIcon 
+                                    icon={faPlus} 
+                                    className="add-exercise-icon" 
+                                    onClick={() => addNewExerciseHandler()}
+                                    data-tooltip-id="add-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Add new exercise"
+                               />
+                                <FontAwesomeIcon 
+                                    icon={faLink} 
+                                    className="link-exercise-icon" 
+                                    onClick={() => linkExerciseHandler()}
+                                    data-tooltip-id="link-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Add (link) existing exercise"/>
+                                <FontAwesomeIcon 
+                                    icon={faBarsStaggered} 
+                                    className="reorder-exercises-icon" 
+                                    onClick={() => reorderMandatoryExercisesHandler()}
+                                    data-tooltip-id="reorder-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Reorder mandatory exercises"/>
                                 </>
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
