@@ -13,10 +13,10 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, findExercise, updateExercise } from "./controllers/exerciseDBController"
-import { IStudy } from "./models/studyModel"
-import { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopicName } from "./controllers/topicDBController"
+import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
+import type { IStudy } from "./models/studyModel"
+import type { IExercise } from "./models/exerciseModel"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -556,11 +556,7 @@ module.exports = {
             socket.on('getAllStudies', async () => {
                 try {
                     const allStudies = await getAllStudies();
-                    const formattedStudies = allStudies.map(x => ({
-                        name: x.name,
-                        abbreviation: x.abbreviation
-                    }));
-                    socket.emit("all-studies", formattedStudies);
+                    socket.emit("all-studies", allStudies);
                 } catch (error) {
                     socket.emit('error', {message: error.message} )
                 }
@@ -568,8 +564,14 @@ module.exports = {
 
             socket.on('addNewExercise', async (exerciseId: number, url: string, difficulty: string, numOfAttempts: number, name: string) => {
                 try {
-                    const newExercise = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
-                    socket.emit('new-exercise-added', newExercise);
+                    const exerciseAlreadyExists = await exerciseExists(exerciseId);
+                    if (exerciseAlreadyExists) {
+                        const existingExercise = await findExercise(exerciseId, null);
+                        socket.emit('exercise-already-exists', existingExercise);
+                    } else {
+                        const newExerciseCreated = await addNewExercise(exerciseId, url, difficulty, numOfAttempts, name);
+                        socket.emit('new-exercise-added', newExerciseCreated);
+                    }
                 } catch (error) {
                     socket.emit('error', { message: error.message });
                 }
@@ -584,7 +586,7 @@ module.exports = {
                 }
             })
 
-            socket.on("updateExercise", async(exerciseId: number, updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }) => {
+            socket.on("updateExercise", async(exerciseId: number, updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }) => {
                 try {
                     const updatedExercise = await updateExercise(exerciseId, updateData);
                     socket.emit("updated-exercise", updatedExercise);
@@ -601,12 +603,11 @@ module.exports = {
                     socket.emit("error", {message: error.message})
                 }
             })
-            
-            socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
+
+            socket.on("updateTopicExercises", async(topicId: string, exercises: {_id: string, isMandatory: boolean}[]) => {
                 try {
-                    
-                    const updatedTopic = await addExercisesToTopic(topicId, exercises);
-                    socket.emit("added-exercises-to-topic", updatedTopic);
+                    const updatedTopic = await updateTopicExercises(topicId, exercises);
+                    socket.emit("updated-topic-exercises", updatedTopic);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
@@ -624,7 +625,7 @@ module.exports = {
             socket.on("getExercisesForTopic", async(topicId: string) => {
                 try {
                     const exercises = await getAllExercisesFromTopic(topicId);
-                    socket.emit("exercises-for-topic", exercises);
+                    socket.emit("exercises-for-topic", {exercises: exercises, topicId: topicId});
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
@@ -633,7 +634,7 @@ module.exports = {
             socket.on("getStudiesForTopic", async(topicId: string) => {
                 try {
                     const studies = await getAllStudiesFromTopic(topicId);
-                    socket.emit("studies-for-topic", studies);
+                    socket.emit("studies-for-topic", {studies: studies, topicId: topicId});
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
@@ -648,6 +649,15 @@ module.exports = {
                 }
             })
 
+            socket.on("getAllExercises", async() => {
+                try {
+                    const exercises = await getAllExercises();
+                    socket.emit("all-exercises", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
             socket.on("updateTopicName", async(topicId: string, newName: string) => {
                 try {
                     const updatedTopic = await updateTopicName(topicId, newName);
@@ -655,6 +665,32 @@ module.exports = {
                 } catch (error) {
                     socket.emit("error", error.message);
                 }
+            })
+
+            socket.on("updateTopic", async (
+                topicId: string,  
+                name: string, 
+                exercises: {
+                    exerciseId: number, 
+                    updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
+                    isMandatory: boolean
+                }[], 
+                studyIds: string[]) => {
+                    try {
+                        const updatedExercises = await Promise.all(exercises.map(async exercise => {
+                            const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
+                            return {
+                                _id: updatedExercise?._id,
+                                isMandatory: exercise.isMandatory
+                            }
+                        }))
+
+                        
+                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds);
+                        socket.emit("updated-topic", updatedTopic);
+                    } catch (error) {
+                        socket.emit("error", { message: error.message });
+                    }
             })
 
             /**

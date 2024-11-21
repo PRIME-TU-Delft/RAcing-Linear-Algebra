@@ -1,74 +1,149 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material";
-import "./TopicElement.css";
-import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import StudyEdit from "./StudyEdit/StudyEdit";
-import ExerciseElement from "../ExerciseElement/ExerciseElement";
-import { Store } from 'react-notifications-component';
-import { Tooltip } from "react-tooltip";
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material"
+import "./TopicElement.css"
+import React, { useContext, useEffect, useState } from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import StudyEdit from "./StudyEdit/StudyEdit"
+import ExerciseElement from "../ExerciseElement/ExerciseElement"
+import { Store } from 'react-notifications-component'
+import { Tooltip } from "react-tooltip"
+import { Exercise, Study, Topic } from "../SharedUtils"
+import socket from "../../../socket"
+import { TopicDataContext } from "../../../contexts/TopicDataContext"
 
-interface Exercise {
-    id: number,
-    name: string,
-    grasple_id: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
-}
 
 interface ExerciseListElement {
     exercise: Exercise,
     incompleteExercise: boolean
 }
 
+interface TopicChangesState {
+    name: boolean,
+    studies: boolean,
+    exercises: boolean
+}
+
 interface Props {
-    id: number,
+    _id: string,
     name: string,
-    studies: string[],
+    studies: Study[],
     exercises: Exercise[],
     onUpdateTopic: (topicData: Topic) => void,
     discardNewTopic: () => void,
     availableGraspleIds: number[]
-    onLinkExercise: (graspleId: number) => void
-}
-
-interface Topic {
-    id: number,
-    name: string,
-    studies: string[],
-    exercises: Exercise[]
+    onLinkExercise: (graspleId: number) => void,
 }
 
 function TopicElement(props: Props) {
-    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false);
-    const [changingStudies, setChangingStudies] = useState<boolean>(false);
-    const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1);
-    const [exercisesMode, setExercisesMode] = useState<string>("");
-    const [saveChanges, setSaveChanges] = useState<string>("");
-    const [exercises, setExercises] = useState<ExerciseListElement[]>(props.exercises.map(exercise => ({exercise, incompleteExercise: false})));
-    const [editName, setEditName] = useState<boolean>(false);
-    const [newName, setNewName] = useState<string>("");
-    const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1);
-    const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false);
+    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false)
+    const [changingStudies, setChangingStudies] = useState<boolean>(false)
+    const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1)
+    const [exercisesMode, setExercisesMode] = useState<string>("")
+    const [exercises, setExercises] = useState<ExerciseListElement[]>([])
+    const [sortedExercises, setSortedExercises] = useState<ExerciseListElement[]>([])
+    const [editName, setEditName] = useState<boolean>(false)
+    const [newName, setNewName] = useState<string>("")
+    const [openDialog, setOpenDialog] = useState<boolean>(false)
+    const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1)
+
+    const [saveChanges, setSaveChanges] = useState<TopicChangesState>({
+        name: false,
+        studies: false,
+        exercises: false
+    })
+
+    const [unsavedChanges, setUnsavedChanges] = useState<TopicChangesState>({
+        name: true,
+        studies: true,
+        exercises: true
+    })
+
     const [newTopicData, setNewTopicData] = useState<Topic>({
-        id: props.id,
-        name: props.name,
-        studies: props.studies,
-        exercises: props.exercises
-    });
+        _id: "",
+        name: "",
+        studies: [],
+        exercises: []
+    })
 
-    const [studies, setStudies] = useState<string[]>(props.studies);
+    const [studies, setStudies] = useState<Study[]>([])
 
-    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
-    const [searchInput, setSearchInput] = useState("");
-    const [matchingExercises, setMatchingExercises] = useState<number[]>([]);
+    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
+    const [isExistingExerciseDialogOpen, setIsExistingExerciseDialogOpen] = useState(false)
+    const [existingExerciseGraspleId, setExistingExerciseGraspleId] = useState<number>(-1)
+    const [searchInput, setSearchInput] = useState("")
+    const [matchingExercises, setMatchingExercises] = useState<number[]>([])
+    const [saveTopicChanges, setSaveTopicChanges] = useState<boolean>(false)
+    const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false)
 
-    const studiesChangedHandler = (newStudies: string[]) => {
+    const anyUnsavedChanges = () => {
+        return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
+    }
+
+    const studiesChangedHandler = (newStudies: Study[]) => {
         setStudies(curr => [...newStudies])
-        setChangingStudies(curr => false)
-        setSaveChanges(curr => "studies")
+    }
+
+    const showSuccessNotification = (message: string) => {
+        Store.addNotification({
+            title: "Success",
+            message: message,
+            type: "success",
+            insert: "top",
+            container: "bottom-right",
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        })
+    }
+
+    const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
+        switch (incorrectTopicField) {
+            case "name":
+                Store.addNotification({
+                    title: "Warning",
+                    message: "The topic must have a name set",
+                    type: "warning",
+                    insert: "top",
+                    container: "bottom-right",
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                })
+                break
+            
+            case "studies":
+                Store.addNotification({
+                    title: "Warning",
+                    message: "The topic must have at least one study programme selected",
+                    type: "warning",
+                    insert: "top",
+                    container: "bottom-right",
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                })
+                break
+
+            case "exercises":
+                Store.addNotification({
+                    title: "Warning",
+                    message: "The topic must have at least one exercise",
+                    type: "warning",
+                    insert: "top",
+                    container: "bottom-right",
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                })
+                break
+            
+            default:
+                break
+        }
     }
 
     const editingExerciseHandler = (index: number) => {
@@ -83,256 +158,322 @@ function TopicElement(props: Props) {
                     duration: 5000,
                     onScreen: true
                 }
-            });
+            })
         } else {
             setEditingExerciseIndex(curr => index)
         }
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        const newExercises = exercises.map((exercise, idx) => idx === editingExerciseIndex ? {exercise: exerciseData, incompleteExercise: false} : exercise)
+        const newExercises = [...exercises]
+        newExercises[editingExerciseIndex] = { exercise: exerciseData, incompleteExercise: false }
         setExercises(curr => [...newExercises])
         setEditingExerciseIndex(-1)
     }
 
-    const addNewExerciseHandler = () => {
-        const newExercise: ExerciseListElement = {
-            exercise:{
-                id: -1,
-                name: "",
-                grasple_id: 0,
-                difficulty: "Easy",
-                url: "",
-                numOfAttempts: 0,
-            },
-            incompleteExercise: true
+    const exerciseAlreadyExistsHandler = (exerciseId: number) => {
+        if (exercises.some(exercise => exercise.exercise.exerciseId === exerciseId)) {
+            Store.addNotification({
+                title: "Warning",
+                message: "This exercise already exists in the topic",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            })
+        } else {
+            setExistingExerciseGraspleId(exerciseId)
+            setIsExistingExerciseDialogOpen(true)
         }
-        const newExercises = [newExercise, ...exercises];
-        setExercises(curr => [...newExercises]);
-        setEditingExerciseIndex(0);
+    }
+
+    const addNewExerciseHandler = () => {
+        if (exercises.some(exercise => exercise.incompleteExercise)) {
+            Store.addNotification({
+            title: "Warning",
+            message: "You must complete the current exercise before adding a new one",
+            type: "warning",
+            insert: "top",
+            container: "bottom-right",
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+            })
+        } else {
+            const newExercise: ExerciseListElement = {
+                exercise:{
+                    _id: "",
+                    name: "",
+                    exerciseId: 0,
+                    difficulty: "Easy",
+                    url: "",
+                    numOfAttempts: 1,
+                    isMandatory: false
+                },
+                incompleteExercise: true,
+            }
+            const newExercises = [newExercise, ...exercises]
+            setExercises(curr => [...newExercises])
+        }
+    }
+
+    const linkExerciseHandler = () => {
+        if (exercises.some(exercise => exercise.incompleteExercise)) {
+            Store.addNotification({
+                title: "Warning",
+                message: "You must complete the current exercise before adding a new one",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            })
+        } 
+        else {
+            setIsLinkDialogOpen(true)
+        }
+    }
+
+    const sortExercises = () => {
+        const sorted = [...exercises].sort((a, b) => {
+            if (a.incompleteExercise && !b.incompleteExercise) return -1
+            if (!a.incompleteExercise && b.incompleteExercise) return 1
+            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
+            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
+            const difficultyOrder = ["Easy", "Medium", "Hard"]
+            return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
+        })
+
+        return sorted
     }
 
     const handleDeleteExercise = (index: number) => {
-        setExerciseToDelete(index);
-        setOpenDialog(true);
-    };
+        setExerciseToDelete(index)
+        setOpenDialog(true)
+    }
 
     const confirmDeleteExercise = () => {
         if (exerciseToDelete > -1) {
-            const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete);
-            setExercises(newExercises);
-            setExerciseToDelete(-1);
+            const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete)
+            setExercises([...newExercises])
+            setExerciseToDelete(-1)
         }
-        setOpenDialog(false);
-    };
+        setOpenDialog(false)
+    }
 
     const cancelDeleteExercise = () => {
-        setExerciseToDelete(-1);
-        setOpenDialog(false);
-    };
+        setExerciseToDelete(-1)
+        setOpenDialog(false)
+    }
 
     const discardEditingExerciseHandler = () => {
-        setEditingExerciseIndex(-1);
-        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)]);
+        setEditingExerciseIndex(-1)
+        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
     }
 
     function saveNameHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-        setSaveChanges(curr => "name");
+        setSaveChanges(curr => ({...curr, name: true}))
     }
 
     const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearchInput(value);
+        const value = e.target.value
+        setSearchInput(value)
         const matches = props.availableGraspleIds.filter(graspleId => 
             graspleId.toString().includes(value)
-        );
-        setMatchingExercises(matches);
-    };
+        )
+        setMatchingExercises(matches)
+    }
 
     const handleExerciseSelect = (selectedExerciseGraspleId: number) => {
-        props.onLinkExercise(selectedExerciseGraspleId);
-        setIsLinkDialogOpen(false);
-    };
+        props.onLinkExercise(selectedExerciseGraspleId)
+        setIsLinkDialogOpen(false)
+        showSuccessNotification("Linked the exercise")
+    }
+
+    const addExistingExerciseHandler = () => {
+        setEditingExerciseIndex(-1)
+        setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
+        props.onLinkExercise(existingExerciseGraspleId)
+        setIsExistingExerciseDialogOpen(false)
+        showSuccessNotification("Added the exercise")
+    }
+
+    useEffect(() => {
+        const sorted = sortExercises()
+        setSortedExercises(curr => [...sorted])
+    }, [exercises])
+
+    useEffect(() => {
+        const firstIncompleteIndex = sortedExercises.findIndex(exercise => exercise.incompleteExercise)
+        if (firstIncompleteIndex !== -1) {
+            setEditingExerciseIndex(firstIncompleteIndex)
+        }
+    }, [sortedExercises])
 
     useEffect(() => {
         setNewTopicData(prevData => ({
             ...prevData,
-            id: props.id
-        }));
-    }, [props.id]);
+            _id: props._id
+        }))
+    }, [props._id])
     
     useEffect(() => {
         setNewTopicData(prevData => ({
             ...prevData,
             name: props.name
-        }));
-    }, [props.name]);
+        }))
+
+        setNewName(curr => props.name)
+
+        if (props.name == "") {
+            setEditName(curr => true)
+        }
+    }, [props.name])
     
     useEffect(() => {
-        setNewTopicData(prevData => ({
+        if (studies.length == 0) {
+            setNewTopicData(prevData => ({
             ...prevData,
             studies: props.studies
-        }));
-        setStudies(props.studies);
-    }, [props.studies]);
+            }))
+            setStudies(curr => [...props.studies])
+
+            if (props.studies.length == 0) {
+                setChangingStudies(curr => true)
+            }}
+    }, [props.studies])
     
     useEffect(() => {
-        setNewTopicData(prevData => ({
-            ...prevData,
-            exercises: props.exercises
-        }));
-        setExercises(props.exercises.map(exercise => ({ exercise, incompleteExercise: false })));
-    }, [props.exercises]);
+        if (props.exercises) {
+            setNewTopicData(prevData => ({
+                ...prevData,
+                exercises: props.exercises
+            }))
+            setExercises(curr => [...props.exercises.map(exercise => ({ exercise, incompleteExercise: false}))])
 
-    useEffect(() => {
-        if (saveChanges === "name" && editName) {
-            if ((newName == "" || newName == "New Name") && newName != props.name) {
-                Store.addNotification({
-                    title: "Warning",
-                    message: "You should set an appropriate name for the topic",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-            } else {
-                setNewTopicData(curr => ({...curr, name: newName}));
-                setEditName(curr => false);
-                setSaveChanges(curr => "");
-            }
-        } 
-        
-        else if (saveChanges === "studies" && changingStudies) {
-            setNewTopicData(curr => ({...curr, studies: studies}));
-            setChangingStudies(curr => false);
-            setSaveChanges(curr => "");
-        } 
-        
-        else if (saveChanges === "exercises" && exercisesMode != "") {
-            setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}));
-            setExercisesMode(curr => "");
-            setSaveChanges(curr => "");
-        }
-    }, [saveChanges, newName, exercisesMode])
-
-    useEffect(() => {
-        if (newTopicData.name !== props.name || newTopicData.studies !== props.studies || newTopicData.exercises !== props.exercises || newTopicData.id == -1) {
-            setUnsavedTopicChanges(true);
-        } 
-        else if (newTopicData.name === "") {
-            setUnsavedTopicChanges(true);
-            Store.addNotification({
-                title: "Warning",
-                message: "The topic name cannot be empty",
-                type: "warning",
-                insert: "top",
-                container: "bottom-right",
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
-            });
-        } else if (newTopicData.studies.length === 0) {
-            setUnsavedTopicChanges(true);
-            Store.addNotification({
-                title: "Warning",
-                message: "The topic must have at least one study",
-                type: "warning",
-                insert: "top",
-                container: "bottom-right",
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
-            });
-        } else if (newTopicData.exercises.length === 0) {
-            setUnsavedTopicChanges(true);
-            Store.addNotification({
-                title: "Warning",
-                message: "The topic must have at least one exercise",
-                type: "warning",
-                insert: "top",
-                container: "bottom-right",
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
-            });
-        } else {
-            setUnsavedTopicChanges(false);
-        }
-    }, [newTopicData])
-
-    useEffect(() => {
-        if (unsavedTopicChanges && saveChanges === "topic") {
-            if (newTopicData.name === "") {
-                setUnsavedTopicChanges(true);
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic name cannot be empty",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                });
-            } else if (newTopicData.studies.length === 0) {
-                setUnsavedTopicChanges(true);
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one study",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                });
-            } else if (newTopicData.exercises.length === 0) {
-                setUnsavedTopicChanges(true);
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one exercise",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-            } else {
-                props.onUpdateTopic(newTopicData);
-                setUnsavedTopicChanges(curr => false)
+            if (props.exercises.length == 0) {
+                setExercisesMode(curr => "edit")
             }
         }
-    }, [unsavedTopicChanges, saveChanges])
+    }, [props.exercises])
+
+    useEffect(() => {
+        let somethingChanged = false
+
+        if (saveChanges.name) {
+            if (newName == "") {
+                showUnsavedChangesWarningNotification("name")
+            } else {
+                setNewTopicData(curr => ({...curr, name: newName}))
+                setEditName(curr => false)
+                setSaveChanges(curr => ({...curr, name: false}))
+            }
+            somethingChanged = true
+        } 
+        
+        if (saveChanges.studies) {
+            if (studies.length == 0) {
+                showUnsavedChangesWarningNotification("studies")
+            } else {
+                setNewTopicData(curr => ({...curr, studies: studies}))
+                setChangingStudies(curr => false)
+            }
+            somethingChanged = true
+        } 
+        
+        if (saveChanges.exercises) {
+            if (exercises.length == 0) {
+                showUnsavedChangesWarningNotification("exercises")
+            } else {
+                setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}))
+                setExercisesMode(curr => "")
+                setEditingExerciseIndex(curr => -1)
+            }
+            somethingChanged = true
+        }
+
+        if (somethingChanged) {
+            setUnsavedTopicChanges(curr => true)
+        }
+
+        if (unsavedTopicChanges && !saveChanges.name && !saveChanges.studies && !saveChanges.exercises) {
+            setSaveTopicChanges(curr => true)
+        }
+    }, [saveChanges, unsavedTopicChanges])
+
+    useEffect(() => {
+        setChangingStudies(curr => false)
+    }, [studies])
+
+    useEffect(() => {
+        setUnsavedChanges(curr => ({...curr, name: false}))
+    }, [newTopicData.name])
+
+    useEffect(() => {
+        setUnsavedChanges(curr => ({...curr, studies: false}))
+        setSaveChanges(curr => ({...curr, studies: false}))
+    }, [newTopicData.studies])
+
+    useEffect(() => {
+        setUnsavedChanges(curr => ({...curr, exercises: false}))
+        setSaveChanges(curr => ({...curr, exercises: false}))
+    }, [newTopicData.exercises])
+
+    useEffect(() => {
+        const unsavedChangesState: TopicChangesState = {
+            name: false,
+            studies: false,
+            exercises: false
+        }
+
+        if (editName) {
+            unsavedChangesState.name = true
+        }
+        if (changingStudies) {
+            unsavedChangesState.studies = true
+        }
+        if (exercisesMode != "") {
+            unsavedChangesState.exercises = true
+        }
+
+        setUnsavedChanges(unsavedChangesState)
+    }, [editName, changingStudies, exercisesMode])
+
+    useEffect(() => {
+        if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises && saveTopicChanges) {
+            props.onUpdateTopic(newTopicData)
+            setSaveTopicChanges(curr => false)
+            setUnsavedTopicChanges(curr => false)
+        }
+    }, [unsavedChanges, saveTopicChanges])
 
     function discardExerciseChangesHandler(): void {
-        setExercisesMode("")
-        setSaveChanges("")
-        setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false}))])
+        if (exercises.length != 0) {
+            setExercisesMode("")
+            setSaveChanges(curr => ({...curr, exercises: false}))
+            setExercises(curr => [...newTopicData.exercises.map(exercise => ({exercise, incompleteExercise: false}))])
+        }
     }
 
     function saveExercisesHandler(): void {
-        setSaveChanges(curr => "exercises")
+        setSaveChanges(curr => ({...curr, exercises: true}))
     }
 
     function saveTopicChangesHandler(): void {
-        setSaveChanges(curr => "topic")
+        setSaveChanges(curr => ({name: true, studies: true, exercises: true}))
     }
 
     return (
         <div className="topic-element">
             <Accordion 
                 sx={{ backgroundColor: '#f5f5f5' }}
-                expanded={unsavedTopicChanges || manuallyExpanded}
+                expanded={anyUnsavedChanges() || manuallyExpanded}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
                 >
                 <AccordionSummary
@@ -342,9 +483,9 @@ function TopicElement(props: Props) {
                 >
                     <div>
                         <div className="topic-title">
-                            {newTopicData.name}
+                            {(newTopicData.name == "" ? "New Exercise" : newTopicData.name)}
                         </div>
-                        <div className="number-of-exercises">Exercises: {props.exercises.length}</div>
+                        <div className="number-of-exercises">Exercises: {exercises.length}</div>
                     </div>
                 </AccordionSummary>
                 <Divider/>
@@ -379,7 +520,7 @@ function TopicElement(props: Props) {
                 </AccordionDetails>
                 {editName && (
                     <AccordionActions>
-                        <Button size="small" onClick={() => setEditName(false)}>Discard</Button>
+                        <Button size="small" onClick={() => {if (newName != "") setEditName(false)}}>Discard</Button>
                         <Button size="small" onClick={saveNameHandler} variant="contained">Save</Button>
                     </AccordionActions>
                 )}
@@ -394,19 +535,19 @@ function TopicElement(props: Props) {
                                 <div className="studies-list">
                                     {studies.map((study, index) => (
                                         <div key={index} className="study-element">
-                                            {study}
+                                            {study.abbreviation}
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         ) : (
-                            <StudyEdit studies={studies} allStudies={["Study 1", "Study 2", "Study 3", "Study 4"]} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges === "studies"}></StudyEdit>
+                            <StudyEdit studies={studies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges.studies}></StudyEdit>
                         )}
                     </div>
                 </AccordionDetails>
                 {changingStudies && (<AccordionActions>
-                    <Button size="small" onClick={() => setChangingStudies(false)}>Discard</Button>
-                    <Button size="small" onClick={() => setSaveChanges(curr => "studies")} variant="contained">Save</Button>
+                    <Button size="small" onClick={() => {if (studies.length != 0) setChangingStudies(false)}}>Discard</Button>
+                    <Button size="small" onClick={() => setSaveChanges(curr => ({...curr, studies: true}))} variant="contained">Save</Button>
                 </AccordionActions>)}
                 <Divider/>
                 <AccordionDetails>
@@ -425,27 +566,30 @@ function TopicElement(props: Props) {
                                     data-tooltip-html="Add new exercises by pressing the + button.<br /> Add an existing exercise by pressing the link icon.<br />Edit/remove individual exercises using the icons on the right."
                                 />
                                 <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                                <FontAwesomeIcon icon={faLink} className="link-exercise-icon" onClick={() => setIsLinkDialogOpen(true)}/>
+                                <FontAwesomeIcon icon={faLink} className="link-exercise-icon" onClick={() => linkExerciseHandler()}/>
                                 </>
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
                             )}
                         </div>
                         <div className="exercises-list">
-                            {exercises.map((exerciseElement, index) => (
+                            {sortedExercises.map((exerciseElement, index) => (
                                 <div className="d-flex row" key={index}>
                                     <ExerciseElement 
-                                        id={exerciseElement.exercise.id} 
+                                        _id={exerciseElement.exercise._id} 
                                         name={exerciseElement.exercise.name} 
-                                        grasple_id={exerciseElement.exercise.grasple_id} 
+                                        exerciseId={exerciseElement.exercise.exerciseId} 
                                         difficulty={exerciseElement.exercise.difficulty} 
                                         url={exerciseElement.exercise.url} 
                                         numOfAttempts={exerciseElement.exercise.numOfAttempts}
                                         beingEdited={editingExerciseIndex == index}
                                         closeNotEditing={editingExerciseIndex > -1}
+                                        parentSaveChanges={saveChanges.exercises}
                                         onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
                                         onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                        onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
                                         isIndependentElement={false}
+                                        isMandatory={exerciseElement.exercise.isMandatory}
                                     ></ExerciseElement>
                                     {exercisesMode === "edit" && (
                                         <div className="d-flex col  m-auto">
@@ -466,10 +610,10 @@ function TopicElement(props: Props) {
                 </AccordionActions>)}
             </Accordion>
             <Dialog open={openDialog} onClose={cancelDeleteExercise}>
-                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogTitle>Confirm Remove</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to delete the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.grasple_id})?
+                            Are you sure you want to remove the exercise {exercises[exerciseToDelete]?.exercise.name} (#{exercises[exerciseToDelete]?.exercise.exerciseId}) from this topic?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -507,13 +651,24 @@ function TopicElement(props: Props) {
                 </DialogActions>
             </Dialog>
 
-                {unsavedTopicChanges && (
+            <Dialog open={isExistingExerciseDialogOpen} onClose={() => setIsExistingExerciseDialogOpen(false)}>
+                <DialogTitle>Link Existing Exercise</DialogTitle>
+                <DialogContent>
+                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to add it to this topic directly?`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsExistingExerciseDialogOpen(false)} color="primary">Cancel</Button>
+                    <Button onClick={() => addExistingExerciseHandler()} color="primary">Yes</Button>
+                </DialogActions>
+            </Dialog>
+
+                {anyUnsavedChanges() && (
                     <div className="topic-save-icon">
                         <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>
                     </div>
                 )}
         </div>
-    );
+    )
 }
 
 export default TopicElement

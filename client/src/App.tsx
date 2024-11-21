@@ -31,6 +31,8 @@ import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
+import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { TopicDataContext } from "./contexts/TopicDataContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -52,6 +54,9 @@ function App() {
     const [streaks, setStreaks] = useState<Streak[]>([])
     const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [allExercises, setAllExercises] = useState<Exercise[]>([])
+    const [allTopics, setAllTopics] = useState<Topic[]>([])
+    const [allStudies, setAllStudies] = useState<Study[]>([])
 
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -93,7 +98,7 @@ function App() {
         pause,
         resume,
         restart,
-      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler });
+      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler })
 
 
     const lobbyIdHandler = (id: number) => {
@@ -166,7 +171,77 @@ function App() {
     useEffect(() => {
         if (stopShowingRace)
             navigate("/Leaderboard")
-    }, [stopShowingRace])
+    }, [stopShowingRace])    
+
+    const updateExerciseHandler = (exerciseData: Exercise) => {
+        const updateData = {
+            url: exerciseData.url,
+            name: exerciseData.name,
+            difficulty: exerciseData.difficulty,
+            numOfAttempts: exerciseData.numOfAttempts
+        }
+        socket.emit("updateExercise", exerciseData.exerciseId, updateData)
+    }
+
+    const updateTopicHandler = (topicData: Topic) => {
+        const exerciseData = topicData.exercises.map(exercise => ({
+            exerciseId: exercise.exerciseId,
+            updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
+            isMandatory: exercise.isMandatory
+        }))
+        const studyIds = topicData.studies.map(study => study._id)
+
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+    }
+
+    function onGetUpdatedExercise(updatedExercise: Exercise) {
+        const updatedExercises = allExercises.map(exercise => {
+            if (exercise.exerciseId === updatedExercise.exerciseId) {
+                return updatedExercise
+            }
+            return exercise
+        })
+
+        if (allExercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+            setAllExercises([...updatedExercises])
+        } else {
+            setAllExercises([...allExercises, updatedExercise])
+        }
+
+        const updatedTopicsWithExercise = allTopics.map(topic => {
+            if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+                const updatedExercises = topic.exercises.map(exercise => {
+                    if (exercise.exerciseId === updatedExercise.exerciseId) {
+                        return {...updatedExercise, isMandatory: exercise.isMandatory}
+                    }
+                    return exercise
+                })
+                return { ...topic, exercises: updatedExercises }
+            }
+            return topic
+        })
+
+        setAllTopics([...updatedTopicsWithExercise])
+    }
+
+    function onGetUpdatedTopic(updatedTopic: Topic) {
+        const updatedTopics = allTopics.map(topic => {
+            if (topic._id === updatedTopic._id) {
+                return updatedTopic
+            }
+            return topic
+        })
+        if (allTopics.some(topic => topic._id === updatedTopic._id)) {
+            setAllTopics([...updatedTopics])
+        } else {
+            setAllTopics([...allTopics, updatedTopic])
+        }
+    }
+
+    useEffect(() => {
+        socket.on("updated-exercise", onGetUpdatedExercise)
+        socket.on("updated-topic", onGetUpdatedTopic)
+    }, [allExercises, allTopics])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -217,7 +292,6 @@ function App() {
         }
 
         function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
-            console.log(newGraspleQuestion)
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }
@@ -245,6 +319,18 @@ function App() {
             }
         }
 
+        function onGetAllStudies(allStudies: Study[]) {
+            setAllStudies(curr => [...allStudies])
+        }
+
+        function onGetAllTopics(allTopics: Topic[]) {
+            setAllTopics(curr => [...allTopics])
+        }
+
+        function onGetAllExercises(allExercises: Exercise[]) {
+            setAllExercises(curr => [...allExercises])
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -260,6 +346,11 @@ function App() {
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
         socket.on("access-granted", onAccessGranted)
+        socket.on("all-studies", onGetAllStudies)
+        socket.on("all-topics", onGetAllTopics)
+        socket.on("all-exercises", onGetAllExercises)
+        socket.on("updated-exercise", onGetUpdatedExercise)
+        socket.on("updated-topic", onGetUpdatedTopic)
     }, [])
 
     // useEffect(() => {
@@ -289,7 +380,11 @@ function App() {
 
     useEffect(() => {
         if (loggedIn) {
+            socket.emit("getAllTopics")
+            socket.emit("getAllStudies")	
+            socket.emit("getAllExercises")
             navigate("/LecturerPlatform")
+            setLoggedIn(false)
         }
     }, [loggedIn])
 
@@ -430,7 +525,13 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <LecturerPlatform loggedIn={loggedIn}/>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
+                            <LecturerPlatform 
+                                loggedIn={loggedIn} 
+                                onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
+                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
+                                />
+                        </TopicDataContext.Provider>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>

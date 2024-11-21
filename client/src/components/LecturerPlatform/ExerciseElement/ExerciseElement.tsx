@@ -1,56 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField, Switch } from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import "./ExerciseElement.css";
 import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
 import { url } from "inspector";
 import { Store } from 'react-notifications-component';
+import { Exercise } from "../SharedUtils";
 
-interface Exercise {
-    id: number,
-    name: string,
-    grasple_id: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
-}
 interface Props {
-    id: number,
+    _id: string,
     name: string,
-    grasple_id: number,
+    exerciseId: number,
     difficulty: string,
     url: string,
     numOfAttempts: number   
     beingEdited: boolean
     closeNotEditing: boolean
+    parentSaveChanges: boolean
     onFinishEditingExercise: (exerciseData: Exercise) => void
     onDiscardEditingExercise: (deleteExercise: boolean) => void
+    onExerciseAlreadyExists: (exerciseId: number) => void
     isIndependentElement: boolean
+    isMandatory: boolean
 }
 
 function ExerciseElement(props: Props) {
     const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false);
     const [newExerciseData, setNewExerciseData] = useState<Exercise>({
-        id: props.id,
+        _id: props._id,
         name: props.name,
-        grasple_id: props.grasple_id,
+        exerciseId: props.exerciseId,
         difficulty: props.difficulty,
         url: props.url,
-        numOfAttempts: props.numOfAttempts
+        numOfAttempts: props.numOfAttempts,
+        isMandatory: props.isMandatory
     })
     const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
 
     useEffect(() => {
         setNewExerciseData({
-            id: props.id,
+            _id: props._id,
             name: props.name,
-            grasple_id: props.grasple_id,
+            exerciseId: props.exerciseId,
             difficulty: props.difficulty,
             url: props.url,
-            numOfAttempts: props.numOfAttempts
-        });
-    }, [props.id, props.name, props.grasple_id, props.difficulty, props.url, props.numOfAttempts])
+            numOfAttempts: props.numOfAttempts,
+            isMandatory: props.isMandatory
+        })
+    }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
+
+    useEffect(() => {
+        if (props.parentSaveChanges && beingEdited) {
+            saveExerciseHandler()
+        }
+    }, [props.parentSaveChanges])
 
     useEffect(() => {
         setBeingEdited(props.beingEdited);
@@ -68,7 +72,7 @@ function ExerciseElement(props: Props) {
                     duration: 5000,
                     onScreen: true
                 }
-            });
+            })
         } else {
             props.onFinishEditingExercise(newExerciseData);
             if (props.isIndependentElement) {
@@ -78,7 +82,7 @@ function ExerciseElement(props: Props) {
     }
 
     const discardExerciseChangesHandler = () => {
-        if (newExerciseData.id == -1 && newExerciseData.grasple_id == -1) {
+        if (newExerciseData._id == "" && newExerciseData.exerciseId == -1) {
             props.onDiscardEditingExercise(true)
         } else {
             props.onDiscardEditingExercise(false)
@@ -88,14 +92,14 @@ function ExerciseElement(props: Props) {
     }
 
     const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
-        setNewExerciseData({ ...newExerciseData, url: newUrl, grasple_id: newGraspleId })
+        setNewExerciseData({ ...newExerciseData, url: newUrl, exerciseId: newGraspleId })
     }
 
     useEffect(() => {
-        if (props.id == -1 && props.grasple_id == -1) {
+        if (props._id == "" && props.exerciseId == -1) {
             setBeingEdited(true)
         }
-    }, [props.id, props.grasple_id])
+    }, [props._id, props.exerciseId])
 
     useEffect(() => {
         if (props.beingEdited) {
@@ -112,23 +116,23 @@ function ExerciseElement(props: Props) {
             style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
-                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props.id == -1 || (props.isIndependentElement && beingEdited)}
+                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props._id == "" || (props.isIndependentElement && beingEdited)}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
             >
                 <AccordionSummary
-                    aria-controls={`panel-content-${props.id}`}
-                    id={`panel-header-${props.id}`}
+                    aria-controls={`panel-content-${props._id}`}
+                    id={`panel-header-${props._id}`}
                     sx={{ height: '2rem'}}
                 >
                     {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
-                            <div className="d-flex col col-11 align-items-center">
+                            <div className="d-flex col col-10 align-items-center">
                                 {props.name} 
-                                <span className="exercise-header-id">(#{props.grasple_id})</span>
+                                <span className="exercise-header-id">(#{props.exerciseId})</span>
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
-                                <div className="d-flex col-1 exercise-difficulty-label justify-content-end">
-                                    {props.difficulty}
+                                <div className="d-flex col-2 exercise-difficulty-label justify-content-end">
+                                    {(props.isMandatory ? "Mandatory  |  " + props.difficulty : props.difficulty)}
                                 </div>
                             )}
                         </div>
@@ -147,6 +151,11 @@ function ExerciseElement(props: Props) {
                             <div>
                                 Name:
                             </div>
+                            {!props.isIndependentElement && (
+                                <div>
+                                    Mandatory:
+                                </div>
+                            )}
                             <div>
                                 URL:
                             </div>
@@ -174,12 +183,29 @@ function ExerciseElement(props: Props) {
                                     />
                                 </div>
                             )}
+                            {!props.beingEdited && !beingEdited && !props.isIndependentElement ? (
+                                <div>
+                                    {(props.isMandatory ? "Yes" : "No")}
+                                </div>
+                            ) : !props.isIndependentElement ? (
+                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                    <Switch
+                                        checked={newExerciseData.isMandatory}
+                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, isMandatory: e.target.checked })}
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                </div>
+                            ) : null}
                             {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
                                 </div>
                             )  : (
-                                <ExerciseURLInput url={props.url} onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}></ExerciseURLInput>
+                                <ExerciseURLInput 
+                                    url={props.url} 
+                                    onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}
+                                    onExerciseAlreadyExists={(exerciseId: number) => props.onExerciseAlreadyExists(exerciseId)} 
+                                ></ExerciseURLInput>
                             )}
                             {!props.beingEdited && !beingEdited ? (
                                 <div>
@@ -199,7 +225,6 @@ function ExerciseElement(props: Props) {
                                             native: true,
                                         }}
                                     >
-                                        <option value="Mandatory">Mandatory</option>
                                         <option value="Easy">Easy</option>
                                         <option value="Medium">Medium</option>
                                         <option value="Hard">Hard</option>

@@ -1,36 +1,47 @@
 import { TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { ExistingExercisesContext } from "../../ExistingExercisesContext";
 
 interface Props {
     url: string
     onURLValueChange: (url: string, grasple_id: number) => void
+    onExerciseAlreadyExists: (exerciseId: number) => void
 }
 
 function ExerciseURLInput(props: Props) {
     const [urlValue, setUrlValue] = useState<string>(props.url)
     const [graspleId, setGraspleId] = useState<number>(-1);
+    const [urlErrorMessage, setUrlErrorMessage] = useState<string>("Empty URL")
     const [loading, setLoading] = useState(false)
     const [checked, setChecked] = useState(false)
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const existingExerciseIds = useContext(ExistingExercisesContext)
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLoading(true)
         setChecked(false)
         const newValue = e.target.value
         setUrlValue(newValue)
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        setLoading(false)
     };
 
     const checkIdValue = () => {
         const idMatch = urlValue.match(/id=(\d+)$/)
         if (!idMatch) {
-            setChecked(false)
+            return false
         } else {
             setGraspleId(parseInt(idMatch[1]))
-            setChecked(true)
+            return true
         }
+    }
+
+    const hasCorrectUrlDomain = () => {
+        return urlValue.includes("embed.grasple.com/exercises")
+    }
+
+    const exerciseDoesntAlreadyExist = () => {
+        return !existingExerciseIds.includes(graspleId) || props.url === urlValue
     }
 
     const getIdValue = () => {
@@ -45,8 +56,35 @@ function ExerciseURLInput(props: Props) {
     }, [checked, graspleId])
 
     useEffect(() => {
-        checkIdValue()
-    }, [urlValue])
+        setUrlValue(props.url)
+    }, [props.url])
+
+    useEffect(() => {
+        const correctDomain = hasCorrectUrlDomain()
+        const correctId = checkIdValue()
+        const isNewExercise = exerciseDoesntAlreadyExist()
+
+        if (!correctDomain || !correctId) {
+            setUrlErrorMessage("Invalid URL")
+        } 
+
+        else if (!isNewExercise) {
+            setUrlErrorMessage("Exercise already exists")
+        }
+
+        if (correctDomain && correctId && isNewExercise) {
+            setChecked(true)
+        } else if (correctDomain && correctId) {
+            setChecked(false)
+            props.onExerciseAlreadyExists(graspleId)
+        } else {
+            setChecked(false)
+        }
+
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+    }, [urlValue, graspleId])
 
     return (
         <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
@@ -69,7 +107,7 @@ function ExerciseURLInput(props: Props) {
                 ) : (
                     <div>
                         <FaTimesCircle size={20} color={"#F44336"} />
-                        <span style={{marginLeft: "0.5rem"}}>Error</span>
+                        <span style={{marginLeft: "0.5rem"}}>{urlErrorMessage}</span>
                     </div>
                 )}
             </div>
