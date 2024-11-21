@@ -42,16 +42,18 @@ function LecturerPlatform(props: Props) {
     const [currentTopicPage, setCurrentTopicPage] = useState<number>(1)
     const topicsPerPage = 10
 
-    const [topicSearchQuery, setTopicSearchQuery] = useState<string>("");
-    const [exerciseSearchQuery, setExerciseSearchQuery] = useState<string>("");
+    const [topicSearchQuery, setTopicSearchQuery] = useState<string>("")
+    const [exerciseSearchQuery, setExerciseSearchQuery] = useState<string>("")
 
     const handleTopicSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setTopicSearchQuery(event.target.value);
+        setTopicSearchQuery(event.target.value)
+        setCurrentTopicPage(1)
     }
 
     const handleExerciseSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setExerciseSearchQuery(event.target.value);
-    };
+        setExerciseSearchQuery(event.target.value)
+        setCurrentExercisePage(1)
+    }
 
     useEffect(() => {
         setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
@@ -79,7 +81,7 @@ function LecturerPlatform(props: Props) {
 
     function discardNewTopicHandler(topicId: string): void {
         const newTopics = [...topics]
-        const index = newTopics.findIndex(topic => topic._id === topicId);
+        const index = newTopics.findIndex(topic => topic._id === topicId)
         newTopics.splice(index, 1)
         setTopics(curr => [...newTopics])
     }
@@ -187,20 +189,20 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "topics" && (
                     <>
                         <div className="topics-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="secondary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '3rem', width: '15rem' }}>Create New Topic</Button>
+                            <Button variant="outlined" color="secondary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Topic</Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search topics"
                                 value={topicSearchQuery}
                                 onChange={handleTopicSearchChange}
-                                sx={{ marginLeft: 2, height: '3rem', width: ' 100%' }}
+                                sx={{ marginLeft: 2, height: '2.5rem', width: ' 100%' }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <FontAwesomeIcon icon={faSearch} />
                                         </InputAdornment>
                                     ),
-                                    style: { height: '3rem' }
+                                    style: { height: '2.5rem' }
                                 }}
                             />
                         </div>
@@ -232,20 +234,20 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "exercises" && (
                     <>
                         <div className="exercises-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="secondary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '3rem', width: '15rem' }}>Create New Exercise</Button>
+                            <Button variant="outlined" color="secondary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Exercise</Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search exercises"
                                 value={exerciseSearchQuery}
                                 onChange={handleExerciseSearchChange}
-                                sx={{ marginLeft: 2, height: '3rem', width: ' 100%' }}
+                                sx={{ marginLeft: 2, height: '2.5rem', width: ' 100%' }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <FontAwesomeIcon icon={faSearch} />
                                         </InputAdornment>
                                     ),
-                                    style: { height: '3rem' }
+                                    style: { height: '2.5rem' }
                                 }}
                             /> 
                         </div>
