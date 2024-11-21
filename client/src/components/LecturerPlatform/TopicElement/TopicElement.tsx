@@ -293,7 +293,6 @@ function TopicElement(props: Props) {
     const handleExerciseSelect = (selectedExerciseGraspleId: number) => {
         props.onLinkExercise(selectedExerciseGraspleId)
         setIsLinkDialogOpen(false)
-        showSuccessNotification("Linked the exercise")
     }
 
     const addExistingExerciseHandler = () => {
