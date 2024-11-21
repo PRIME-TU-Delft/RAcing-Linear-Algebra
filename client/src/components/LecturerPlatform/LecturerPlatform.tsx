@@ -206,7 +206,7 @@ function LecturerPlatform(props: Props) {
                                 }}
                             />
                         </div>
-                        <div>
+                        <div style={{marginTop: "1.5rem"}}>
                             {paginatedTopics.map((topic, index) => (
                                 <TopicElement 
                                     key={index} 
