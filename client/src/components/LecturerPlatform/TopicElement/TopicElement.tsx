@@ -241,16 +241,16 @@ function TopicElement(props: Props) {
     }
 
     const sortExercises = () => {
-        const sorted = [...exercises].sort((a, b) => {
-            if (a.incompleteExercise && !b.incompleteExercise) return -1
-            if (!a.incompleteExercise && b.incompleteExercise) return 1
-            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
-            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
+        const incompleteExercises = exercises.filter(ex => ex.incompleteExercise)
+        const mandatoryExercises = exercises.filter(ex => !ex.incompleteExercise && ex.exercise.isMandatory)
+        const otherExercises = exercises.filter(ex => !ex.incompleteExercise && !ex.exercise.isMandatory)
+
+        const sortedOtherExercises = [...otherExercises].sort((a, b) => {
             const difficultyOrder = ["Easy", "Medium", "Hard"]
             return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
         })
 
-        return sorted
+        return [...incompleteExercises, ...mandatoryExercises, ...sortedOtherExercises]
     }
 
     const handleDeleteExercise = (index: number) => {
@@ -390,7 +390,7 @@ function TopicElement(props: Props) {
             if (exercises.length == 0) {
                 showUnsavedChangesWarningNotification("exercises")
             } else {
-                setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}))
+                setNewTopicData(curr => ({...curr, exercises: sortedExercises.map(exercise => exercise.exercise)}))
                 setExercisesMode(curr => "")
                 setEditingExerciseIndex(curr => -1)
             }
