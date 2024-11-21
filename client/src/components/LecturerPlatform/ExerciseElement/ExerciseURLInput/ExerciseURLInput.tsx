@@ -41,7 +41,6 @@ function ExerciseURLInput(props: Props) {
     }
 
     const exerciseDoesntAlreadyExist = () => {
-        console.log(existingExerciseIds)
         return !existingExerciseIds.includes(graspleId) || props.url === urlValue
     }
 

@@ -29,7 +29,6 @@ interface Props {
     studies: Study[],
     exercises: Exercise[],
     onUpdateTopic: (topicData: Topic) => void,
-    editExercise: (exerciseData: Exercise) => void,
     discardNewTopic: () => void,
     availableGraspleIds: number[]
     onLinkExercise: (graspleId: number) => void,
@@ -73,13 +72,15 @@ function TopicElement(props: Props) {
     const [existingExerciseGraspleId, setExistingExerciseGraspleId] = useState<number>(-1)
     const [searchInput, setSearchInput] = useState("")
     const [matchingExercises, setMatchingExercises] = useState<number[]>([])
+    const [saveTopicChanges, setSaveTopicChanges] = useState<boolean>(false)
+    const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false)
+
+    const anyUnsavedChanges = () => {
+        return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
+    }
 
     const studiesChangedHandler = (newStudies: Study[]) => {
         setStudies(curr => [...newStudies])
-    }
-
-    const unsavedTopicChanges = () => {
-        return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
     }
 
     const showSuccessNotification = (message: string) => {
@@ -164,7 +165,10 @@ function TopicElement(props: Props) {
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
-        props.editExercise(exerciseData)
+        const newExercises = [...exercises]
+        newExercises[editingExerciseIndex] = { exercise: exerciseData, incompleteExercise: false }
+        setExercises(curr => [...newExercises])
+        setEditingExerciseIndex(-1)
     }
 
     const exerciseAlreadyExistsHandler = (exerciseId: number) => {
@@ -257,7 +261,7 @@ function TopicElement(props: Props) {
     const confirmDeleteExercise = () => {
         if (exerciseToDelete > -1) {
             const newExercises = exercises.filter((_, idx) => idx !== exerciseToDelete)
-            setExercises(newExercises)
+            setExercises([...newExercises])
             setExerciseToDelete(-1)
         }
         setOpenDialog(false)
@@ -360,31 +364,30 @@ function TopicElement(props: Props) {
     }, [props.exercises])
 
     useEffect(() => {
-        if (saveChanges.name) {
-            setSaveChanges(curr => ({...curr, name: false}))
+        let somethingChanged = false
 
+        if (saveChanges.name) {
             if (newName == "") {
                 showUnsavedChangesWarningNotification("name")
             } else {
                 setNewTopicData(curr => ({...curr, name: newName}))
                 setEditName(curr => false)
+                setSaveChanges(curr => ({...curr, name: false}))
             }
+            somethingChanged = true
         } 
         
         if (saveChanges.studies) {
-            setSaveChanges(curr => ({...curr, studies: false}))
-
             if (studies.length == 0) {
                 showUnsavedChangesWarningNotification("studies")
             } else {
                 setNewTopicData(curr => ({...curr, studies: studies}))
                 setChangingStudies(curr => false)
             }
+            somethingChanged = true
         } 
         
         if (saveChanges.exercises) {
-            setSaveChanges(curr => ({...curr, exercises: false}))
-
             if (exercises.length == 0) {
                 showUnsavedChangesWarningNotification("exercises")
             } else {
@@ -392,8 +395,17 @@ function TopicElement(props: Props) {
                 setExercisesMode(curr => "")
                 setEditingExerciseIndex(curr => -1)
             }
+            somethingChanged = true
         }
-    }, [saveChanges])
+
+        if (somethingChanged) {
+            setUnsavedTopicChanges(curr => true)
+        }
+
+        if (unsavedTopicChanges && !saveChanges.name && !saveChanges.studies && !saveChanges.exercises) {
+            setSaveTopicChanges(curr => true)
+        }
+    }, [saveChanges, unsavedTopicChanges])
 
     useEffect(() => {
         setChangingStudies(curr => false)
@@ -405,10 +417,12 @@ function TopicElement(props: Props) {
 
     useEffect(() => {
         setUnsavedChanges(curr => ({...curr, studies: false}))
+        setSaveChanges(curr => ({...curr, studies: false}))
     }, [newTopicData.studies])
 
     useEffect(() => {
         setUnsavedChanges(curr => ({...curr, exercises: false}))
+        setSaveChanges(curr => ({...curr, exercises: false}))
     }, [newTopicData.exercises])
 
     useEffect(() => {
@@ -432,12 +446,12 @@ function TopicElement(props: Props) {
     }, [editName, changingStudies, exercisesMode])
 
     useEffect(() => {
-        if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises) {
+        if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises && saveTopicChanges) {
             props.onUpdateTopic(newTopicData)
-            const sorted = sortExercises()
-            setSortedExercises(curr => [...sorted])
+            setSaveTopicChanges(curr => false)
+            setUnsavedTopicChanges(curr => false)
         }
-    }, [unsavedChanges])
+    }, [unsavedChanges, saveTopicChanges])
 
     function discardExerciseChangesHandler(): void {
         if (exercises.length != 0) {
@@ -459,7 +473,7 @@ function TopicElement(props: Props) {
         <div className="topic-element">
             <Accordion 
                 sx={{ backgroundColor: '#f5f5f5' }}
-                expanded={unsavedTopicChanges() || manuallyExpanded}
+                expanded={anyUnsavedChanges() || manuallyExpanded}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
                 >
                 <AccordionSummary
@@ -648,7 +662,7 @@ function TopicElement(props: Props) {
                 </DialogActions>
             </Dialog>
 
-                {unsavedTopicChanges() && (
+                {anyUnsavedChanges() && (
                     <div className="topic-save-icon">
                         <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>
                     </div>

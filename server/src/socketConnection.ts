@@ -586,7 +586,7 @@ module.exports = {
                 }
             })
 
-            socket.on("updateExercise", async(exerciseId: number, updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }) => {
+            socket.on("updateExercise", async(exerciseId: number, updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }) => {
                 try {
                     const updatedExercise = await updateExercise(exerciseId, updateData);
                     socket.emit("updated-exercise", updatedExercise);
@@ -601,15 +601,6 @@ module.exports = {
                     socket.emit("new-topic", newTopic);
                 } catch (error) {
                     socket.emit("error", {message: error.message})
-                }
-            })
-            
-            socket.on("addExercisesToTopic", async(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]) => {
-                try {
-                    const updatedTopic = await addExercisesToTopic(topicId, exercises);
-                    socket.emit("added-exercises-to-topic", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", error.message);
                 }
             })
 
@@ -676,13 +667,30 @@ module.exports = {
                 }
             })
 
-            socket.on("updateTopic", async (topicId: string,  name?: string, exercises?: { _id: string, isMandatory: boolean }[], studyIds?: string[]) => {
-                try {
-                    const updatedTopic = await updateTopic(topicId, name, exercises, studyIds);
-                    socket.emit("updated-topic", updatedTopic);
-                } catch (error) {
-                    socket.emit("error", { message: error.message });
-                }
+            socket.on("updateTopic", async (
+                topicId: string,  
+                name: string, 
+                exercises: {
+                    exerciseId: number, 
+                    updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
+                    isMandatory: boolean
+                }[], 
+                studyIds: string[]) => {
+                    try {
+                        const updatedExercises = await Promise.all(exercises.map(async exercise => {
+                            const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
+                            return {
+                                _id: updatedExercise?._id,
+                                isMandatory: exercise.isMandatory
+                            }
+                        }))
+
+                        
+                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds);
+                        socket.emit("updated-topic", updatedTopic);
+                    } catch (error) {
+                        socket.emit("error", { message: error.message });
+                    }
             })
 
             /**

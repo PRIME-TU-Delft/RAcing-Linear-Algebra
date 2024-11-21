@@ -69,7 +69,6 @@ function LecturerPlatform(props: Props) {
             exercises: []
         }
         const newTopics = [newTopic, ...topics]
-        console.log(newTopics)
         setTopics(curr => [...newTopics])
     }
 
@@ -149,7 +148,6 @@ function LecturerPlatform(props: Props) {
                                     name={topic.name} 
                                     studies={topic.studies} 
                                     exercises={topic.exercises} 
-                                    editExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                     onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
                                     discardNewTopic={() => discardNewTopicHandler(index)}
                                     availableGraspleIds={exerciseGraspleIds}

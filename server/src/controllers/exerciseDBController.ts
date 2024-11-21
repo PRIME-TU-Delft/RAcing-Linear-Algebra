@@ -50,39 +50,29 @@ export async function findExercise(exerciseId: number | null, name: string | nul
 
 export async function updateExercise(
     exerciseId: number, 
-    updateData: { url?: string, difficulty?: string, numOfAttempts?: number, name?: string }
+    updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }
 ): Promise<IExercise | null> {
     try {
-        const updateFields: any = {};
-
-        if (updateData.url != null) {
-            updateFields.url = updateData.url;
-        }
-
-        if (updateData.difficulty != null) {
-            updateFields.difficulty = updateData.difficulty;
-        }
-
-        if (updateData.numOfAttempts != null) {
-            updateFields.numOfAttempts = updateData.numOfAttempts;
-        }
-
-        if (updateData.name != null) {
-            updateFields.name = updateData.name;
-        }
-        console.log(updateFields)
         const exercise = await Exercise.findOne({exerciseId: exerciseId})
         
         if (exercise) {
             const updatedExercise = await Exercise.findByIdAndUpdate(
                 exercise._id,
-                { $set: updateFields },
+                { $set: updateData },
                 { new: true }
             );
 
             return updatedExercise;
         } else {
-            return exercise;
+            // Create a new exercise if it doesn't exist
+            const newExercise = await addNewExercise(
+                exerciseId,
+                updateData.url,
+                updateData.difficulty,
+                updateData.numOfAttempts,
+                updateData.name
+            );
+            return newExercise;
         }
 
     } catch (error) {

@@ -187,13 +187,63 @@ function App() {
         console.log("UPDATE TOPIC")
         console.log(topicData)
         const exerciseData = topicData.exercises.map(exercise => ({
-            _id: exercise._id,
+            exerciseId: exercise.exerciseId,
+            updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
             isMandatory: exercise.isMandatory
         }))
         const studyIds = topicData.studies.map(study => study._id)
 
-        // socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
     }
+
+    function onGetUpdatedExercise(updatedExercise: Exercise) {
+        const updatedExercises = allExercises.map(exercise => {
+            if (exercise.exerciseId === updatedExercise.exerciseId) {
+                return updatedExercise
+            }
+            return exercise
+        })
+        setAllExercises([...updatedExercises])
+
+        const updatedTopicsWithExercise = allTopics.map(topic => {
+            if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+                const updatedExercises = topic.exercises.map(exercise => {
+                    if (exercise.exerciseId === updatedExercise.exerciseId) {
+                        return updatedExercise
+                    }
+                    return exercise
+                })
+                return { ...topic, exercises: updatedExercises }
+            }
+            return topic
+        })
+
+        setAllTopics([...updatedTopicsWithExercise])
+    }
+
+    function onGetUpdatedTopic(updatedTopic: Topic) {
+        console.log(updatedTopic)
+        console.log(allTopics)
+        const updatedTopics = allTopics.map(topic => {
+            if (topic._id === updatedTopic._id) {
+                return updatedTopic
+            }
+            return topic
+        })
+        setAllTopics([...updatedTopics])
+    }
+
+    useEffect(() => {
+        socket.on("updated-exercise", onGetUpdatedExercise)
+    }, [allExercises, allTopics])
+
+    useEffect(() => {
+        socket.on("updated-topic", onGetUpdatedTopic)
+    }, [allTopics])
+
+    useEffect(() => {
+        console.log(allExercises)
+    },[allExercises])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -281,43 +331,6 @@ function App() {
 
         function onGetAllExercises(allExercises: Exercise[]) {
             setAllExercises(curr => [...allExercises])
-        }
-
-        function onGetUpdatedExercise(updatedExercise: Exercise) {
-            const updatedExercises = allExercises.map(exercise => {
-                if (exercise.exerciseId === updatedExercise.exerciseId) {
-                    return updatedExercise
-                }
-                return exercise
-            })
-            setAllExercises([...updatedExercises])
-
-            const updatedTopicsWithExercise = allTopics.map(topic => {
-                if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
-                    const updatedExercises = topic.exercises.map(exercise => {
-                        if (exercise.exerciseId === updatedExercise.exerciseId) {
-                            return updatedExercise
-                        }
-                        return exercise
-                    })
-                    return { ...topic, exercises: updatedExercises }
-                }
-                return topic
-            })
-
-            setAllTopics([...updatedTopicsWithExercise])
-        }
-
-        function onGetUpdatedTopic(updatedTopic: Topic) {
-            console.log(updatedTopic)
-            console.log(allTopics)
-            const updatedTopics = allTopics.map(topic => {
-                if (topic._id === updatedTopic._id) {
-                    return updatedTopic
-                }
-                return topic
-            })
-            setAllTopics([...updatedTopics])
         }
 
         socket.on("round-duration", onRoundDuration)
@@ -518,7 +531,8 @@ function App() {
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
-                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}/>
+                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
+                                />
                         </TopicDataContext.Provider>
                     }
                 ></Route>
