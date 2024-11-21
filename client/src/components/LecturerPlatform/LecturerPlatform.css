@@ -9,3 +9,17 @@
 .lecturer-platform-tabs {
     margin-left: 2rem;
 }
+
+.topics-controls-container {
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.exercises-controls-container {
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}

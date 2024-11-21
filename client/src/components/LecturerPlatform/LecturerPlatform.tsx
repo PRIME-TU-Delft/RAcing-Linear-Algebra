@@ -8,9 +8,9 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import IconButton from '@mui/material/IconButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons'
 import TopicElement from "./TopicElement/TopicElement"
-import { Button } from "@mui/material"
+import { Button, InputAdornment, TextField } from "@mui/material"
 import ExerciseElement from "./ExerciseElement/ExerciseElement"
 import { Exercise, Study, Topic } from "./SharedUtils"
 import { TopicDataContext } from "../../contexts/TopicDataContext"
@@ -29,12 +29,29 @@ function LecturerPlatform(props: Props) {
 
     const topicData = useContext(TopicDataContext)
     const [exercises, setExercises] = useState<Exercise[]>([])
+    const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([])
+    const [paginatedExercises, setPaginatedExercises] = useState<Exercise[]>([])
+
     const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([])
     const [topics, setTopics] = useState<Topic[]>([])
-    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [filteredTopics, setFilteredTopics] = useState<Topic[]>([])
+    const [paginatedTopics, setPaginatedTopics] = useState<Topic[]>([])
+
+    const [currentExercisePage, setCurrentExercisePage] = useState<number>(1)
     const exercisesPerPage = 15
     const [currentTopicPage, setCurrentTopicPage] = useState<number>(1)
     const topicsPerPage = 10
+
+    const [topicSearchQuery, setTopicSearchQuery] = useState<string>("");
+    const [exerciseSearchQuery, setExerciseSearchQuery] = useState<string>("");
+
+    const handleTopicSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setTopicSearchQuery(event.target.value);
+    }
+
+    const handleExerciseSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setExerciseSearchQuery(event.target.value);
+    };
 
     useEffect(() => {
         setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
@@ -119,16 +136,29 @@ function LecturerPlatform(props: Props) {
         }
     }
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setCurrentPage(value)
+    const handleExercisePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentExercisePage(value)
     }
 
     const handleTopicPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setCurrentTopicPage(value)
     }
 
-    const paginatedExercises = exercises.slice((currentPage - 1) * exercisesPerPage, currentPage * exercisesPerPage)
-    const paginatedTopics = topics.slice((currentTopicPage - 1) * topicsPerPage, currentTopicPage * topicsPerPage)
+    useEffect(() => {
+        setFilteredExercises(exercises.filter(exercise => exercise.name.toLowerCase().includes(exerciseSearchQuery.toLowerCase())))
+    }, [exercises, exerciseSearchQuery])
+
+    useEffect(() => {
+        setFilteredTopics(topics.filter(topic => topic.name.toLowerCase().includes(topicSearchQuery.toLowerCase())))
+    }, [topics, topicSearchQuery])
+
+    useEffect(() => {
+        setPaginatedExercises(curr => [...filteredExercises.slice((currentExercisePage - 1) * exercisesPerPage, currentExercisePage * exercisesPerPage)])
+    }, [filteredExercises, currentExercisePage, exercisesPerPage])
+
+    useEffect(() => {
+        setPaginatedTopics(curr => [...filteredTopics.slice((currentTopicPage - 1) * topicsPerPage, currentTopicPage * topicsPerPage)])
+    }, [filteredTopics, currentTopicPage, topicsPerPage])
 
     return (
         <div>
@@ -155,7 +185,24 @@ function LecturerPlatform(props: Props) {
             <ExistingExercisesContext.Provider value={exerciseGraspleIds}>
                 {activeTab === "topics" && (
                     <>
-                        <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
+                        <div className="topics-controls-container d-flex align-content-center">
+                            <Button variant="outlined" color="secondary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '3rem', width: '15rem' }}>Create New Topic</Button>
+                            <TextField
+                                variant="outlined"
+                                placeholder="Search topics"
+                                value={topicSearchQuery}
+                                onChange={handleTopicSearchChange}
+                                sx={{ marginLeft: 2, height: '3rem', width: ' 100%' }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <FontAwesomeIcon icon={faSearch} />
+                                        </InputAdornment>
+                                    ),
+                                    style: { height: '3rem' }
+                                }}
+                            />
+                        </div>
                         <div>
                             {paginatedTopics.map((topic, index) => (
                                 <TopicElement 
@@ -183,7 +230,24 @@ function LecturerPlatform(props: Props) {
                 )}
                 {activeTab === "exercises" && (
                     <>
-                        <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
+                        <div className="exercises-controls-container d-flex align-content-center">
+                            <Button variant="outlined" color="secondary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '3rem', width: '15rem' }}>Create New Exercise</Button>
+                            <TextField
+                                variant="outlined"
+                                placeholder="Search exercises"
+                                value={exerciseSearchQuery}
+                                onChange={handleExerciseSearchChange}
+                                sx={{ marginLeft: 2, height: '3rem', width: ' 100%' }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <FontAwesomeIcon icon={faSearch} />
+                                        </InputAdornment>
+                                    ),
+                                    style: { height: '3rem' }
+                                }}
+                            /> 
+                        </div>
                         <div style={{marginBottom: "2rem"}}>
                             {paginatedExercises.map((exercise, index) => (
                                 <ExerciseElement 
@@ -208,8 +272,8 @@ function LecturerPlatform(props: Props) {
                         {exercises.length > exercisesPerPage && (
                             <Pagination 
                                 count={Math.ceil(exercises.length / exercisesPerPage)} 
-                                page={currentPage} 
-                                onChange={handlePageChange} 
+                                page={currentExercisePage} 
+                                onChange={handleExercisePageChange} 
                                 style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}
                             />
                         )}
