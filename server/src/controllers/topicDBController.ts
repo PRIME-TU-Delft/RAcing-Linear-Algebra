@@ -237,36 +237,40 @@ export async function getAllTopics(): Promise<ITopicData[]> {
 
 export async function updateTopic(
     topicId: string,
-    name?: string,
-    exercises?: { _id: string, isMandatory: boolean }[],
-    studyIds?: string[]
+    name: string,
+    exercises: { _id: string, isMandatory: boolean }[],
+    studyIds: string[]
 ): Promise<ITopicData> {
     try {
         const updateData: any = {};
 
-        if (name != null) {
-            updateData.name = name;
-        }
+        updateData.name = name;
 
-        if (exercises) {
-            const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
-            const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);
-            updateData.mandatoryExercises = mandatoryExercises;
-            updateData.difficultyExercises = difficultyExercises;
-        }
+        const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
+        const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);
+        updateData.mandatoryExercises = mandatoryExercises;
+        updateData.difficultyExercises = difficultyExercises;
 
-        if (studyIds) {
-            updateData.studies = studyIds;
-        }
+        updateData.studies = studyIds;
 
-        const updatedTopic = await Topic.findByIdAndUpdate(
-            topicId,
+        let updatedTopic = topicId != "" ? 
+            await Topic.findByIdAndUpdate(
+                topicId,
+                { $set: updateData },
+                { new: true }
+            ) : null
+
+        if (updatedTopic == null) {
+            const newTopic = await addNewTopic(name, [], [], [])
+           updatedTopic = await Topic.findByIdAndUpdate(
+            newTopic._id,
             { $set: updateData },
             { new: true }
-        );
+            ) 
+        }
 
         if (!updatedTopic) {
-            throw new Error('Topic not found after update');
+            throw new Error('Error creating new topic');
         }
 
         const newExercises = await getAllExercisesFromTopic(updatedTopic._id);

@@ -201,7 +201,7 @@ function App() {
             }
             return exercise
         })
-        
+
         if (allExercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
             setAllExercises([...updatedExercises])
         } else {
@@ -231,7 +231,11 @@ function App() {
             }
             return topic
         })
-        setAllTopics([...updatedTopics])
+        if (allTopics.some(topic => topic._id === updatedTopic._id)) {
+            setAllTopics([...updatedTopics])
+        } else {
+            setAllTopics([...allTopics, updatedTopic])
+        }
     }
 
     useEffect(() => {
