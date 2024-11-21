@@ -50,11 +50,11 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.edit-name-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover {
     cursor: pointer;
 }
 
-.add-exercise-icon, .link-exercise-icon {
+.add-exercise-icon, .link-exercise-icon, .reorder-exercises-icon {
     margin-left: 1rem;
 }
 
