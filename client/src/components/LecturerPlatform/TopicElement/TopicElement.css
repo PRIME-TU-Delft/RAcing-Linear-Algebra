@@ -91,3 +91,10 @@
 .grasple-id-list-item {
     transition-duration: 0.3s;
 }
+
+.reorder-exercises-instructions {
+    margin-left: 0.5rem;
+    color: #acacac;
+    font-size: 16px;
+    font-style: italic;
+}

@@ -616,7 +616,10 @@ function TopicElement(props: Props) {
                                         </div>
                                     )}
                                 </div>
-                            )) : (
+                            )) : (<>
+                                <div className="reorder-exercises-instructions">
+                                    Drag and drop the mandatory exercises in the preferred order you want them to appear in during the game.
+                                </div>
                                 <DragDropContext onDragEnd={onDragEnd}>
                                     <Droppable droppableId="exercises-list">
                                         {(provided) => (
@@ -661,6 +664,7 @@ function TopicElement(props: Props) {
                                         )}
                                     </Droppable>
                                 </DragDropContext>
+                                </>
                             )}
                         </div>
                     </div>
