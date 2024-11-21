@@ -145,7 +145,7 @@ function ExerciseElement(props: Props) {
                         <div className="exercise-header d-flex row">
                             <div className="d-flex col col-10 align-items-center">
                                 {props.name} 
-                                <span className="exercise-header-id">(#{props.exerciseId})</span>
+                                <span className="exercise-header-id">(#{newExerciseData.exerciseId})</span>
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-2 exercise-difficulty-label justify-content-end">

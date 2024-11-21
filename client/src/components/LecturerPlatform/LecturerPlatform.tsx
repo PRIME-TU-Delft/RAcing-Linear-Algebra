@@ -73,12 +73,13 @@ function LecturerPlatform(props: Props) {
         }
     }, [props.loggedIn, navigate])
 
-    const updateTopicHandler = (topicData: Topic, index: number) => {
+    const updateTopicHandler = (topicData: Topic, topicId: string) => {
         props.onUpdateTopic(topicData)
     }
 
-    function discardNewTopicHandler(index: number): void {
+    function discardNewTopicHandler(topicId: string): void {
         const newTopics = [...topics]
+        const index = newTopics.findIndex(topic => topic._id === topicId);
         newTopics.splice(index, 1)
         setTopics(curr => [...newTopics])
     }
@@ -104,9 +105,9 @@ function LecturerPlatform(props: Props) {
         props.onUpdateExercise(exerciseData)
     }
 
-    const discardNewExerciseHandler = (index: number, deleteExercise: boolean) => {
+    const discardNewExerciseHandler = (exerciseId: number, deleteExercise: boolean) => {
         if (deleteExercise) {
-            const newExercises = exercises.filter((exercise, idx) => idx !== index)
+            const newExercises = exercises.filter((exercise) => exercise.exerciseId !== exerciseId)
             setExercises(curr => [...newExercises])
             return
         }
@@ -116,9 +117,9 @@ function LecturerPlatform(props: Props) {
         setActiveTab(newValue)
     }
 
-    const addExerciseToTopic = (topicIndex: number, exercise: Exercise) => {
-        const newTopics = topics.map((topic, index) => {
-            if (index === topicIndex) {
+    const addExerciseToTopic = (topicId: string, exercise: Exercise) => {
+        const newTopics = topics.map((topic) => {
+            if (topic._id === topicId) {
                 const exerciseExists = topic.exercises.some(ex => ex.exerciseId === exercise.exerciseId)
                 if (!exerciseExists) {
                     return { ...topic, exercises: [exercise, ...topic.exercises] }
@@ -129,10 +130,10 @@ function LecturerPlatform(props: Props) {
         setTopics(curr => [...newTopics])
     }
 
-    const linkExerciseHandler = (topicIndex: number, exerciseGraspleId: number) => {
+    const linkExerciseHandler = (topicId: string, exerciseGraspleId: number) => {
         const exercise = exercises.find(exercise => exercise.exerciseId === exerciseGraspleId)
         if (exercise) {
-            addExerciseToTopic(topicIndex, exercise)
+            addExerciseToTopic(topicId, exercise)
         }
     }
 
@@ -211,10 +212,10 @@ function LecturerPlatform(props: Props) {
                                     name={topic.name} 
                                     studies={topic.studies} 
                                     exercises={topic.exercises} 
-                                    onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, index)}
-                                    discardNewTopic={() => discardNewTopicHandler(index)}
+                                    onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, topic._id)}
+                                    discardNewTopic={() => discardNewTopicHandler(topic._id)}
                                     availableGraspleIds={exerciseGraspleIds}
-                                    onLinkExercise={(graspleId: number) => linkExerciseHandler(index, graspleId)}
+                                    onLinkExercise={(graspleId: number) => linkExerciseHandler(topic._id, graspleId)}
                                 />
                             ))}
                         </div>
@@ -262,7 +263,7 @@ function LecturerPlatform(props: Props) {
                                     closeNotEditing={false} 
                                     parentSaveChanges={false}
                                     onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
-                                    onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(index, deleteExercise)}
+                                    onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(exercise.exerciseId, deleteExercise)}
                                     onExerciseAlreadyExists={() => {}}
                                     isIndependentElement={true}
                                     isMandatory={false}
