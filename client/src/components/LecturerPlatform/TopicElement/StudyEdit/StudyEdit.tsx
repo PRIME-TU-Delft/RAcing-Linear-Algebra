@@ -20,7 +20,7 @@ function StudyEdit(props: Props) {
     const [unselectedStudies, setUnselectedStudies] = useState<Study[]>([])
 
     useEffect(() => {
-        setUnselectedStudies([...topicData.allStudies.filter(study => !selectedStudies.includes(study))])
+        setUnselectedStudies([...topicData.allStudies.filter(study => !selectedStudies.some((selectedStudy) => selectedStudy._id == study._id))])
     }, [topicData.allStudies, selectedStudies])
 
     useEffect(() => {

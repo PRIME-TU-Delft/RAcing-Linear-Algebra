@@ -184,8 +184,6 @@ function App() {
     }
 
     const updateTopicHandler = (topicData: Topic) => {
-        console.log("UPDATE TOPIC")
-        console.log(topicData)
         const exerciseData = topicData.exercises.map(exercise => ({
             exerciseId: exercise.exerciseId,
             updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
@@ -222,8 +220,6 @@ function App() {
     }
 
     function onGetUpdatedTopic(updatedTopic: Topic) {
-        console.log(updatedTopic)
-        console.log(allTopics)
         const updatedTopics = allTopics.map(topic => {
             if (topic._id === updatedTopic._id) {
                 return updatedTopic
@@ -237,10 +233,6 @@ function App() {
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
     }, [allExercises, allTopics])
-
-    useEffect(() => {
-        console.log(allExercises)
-    },[allExercises])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -323,6 +315,7 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
+            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
         }
 
