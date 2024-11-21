@@ -16,6 +16,7 @@ import { Exercise, Study, Topic } from "./SharedUtils"
 import { TopicDataContext } from "../../contexts/TopicDataContext"
 import { ExistingExercisesContext } from "./ExistingExercisesContext"
 import socket from "../../socket"
+import Pagination from '@mui/material/Pagination'
 
 interface Props {
     loggedIn: boolean,
@@ -30,6 +31,10 @@ function LecturerPlatform(props: Props) {
     const [exercises, setExercises] = useState<Exercise[]>([])
     const [exerciseGraspleIds, setExerciseGraspleIds] = useState<number[]>([])
     const [topics, setTopics] = useState<Topic[]>([])
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const exercisesPerPage = 15
+    const [currentTopicPage, setCurrentTopicPage] = useState<number>(1)
+    const topicsPerPage = 10
 
     useEffect(() => {
         setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
@@ -114,9 +119,20 @@ function LecturerPlatform(props: Props) {
         }
     }
 
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentPage(value)
+    }
+
+    const handleTopicPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentTopicPage(value)
+    }
+
+    const paginatedExercises = exercises.slice((currentPage - 1) * exercisesPerPage, currentPage * exercisesPerPage)
+    const paginatedTopics = topics.slice((currentTopicPage - 1) * topicsPerPage, currentTopicPage * topicsPerPage)
+
     return (
         <div>
-            <AppBar position="static">
+            <AppBar position="sticky">
                 <Toolbar>
                     <Typography variant="h6" component="div">
                         RAcing Linear Algebra
@@ -140,8 +156,8 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "topics" && (
                     <>
                         <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewTopic}>Create New Topic</Button>
-                        <div style={{marginBottom: "1rem"}}>
-                            {topics.map((topic, index) => (
+                        <div>
+                            {paginatedTopics.map((topic, index) => (
                                 <TopicElement 
                                     key={index} 
                                     _id={topic._id} 
@@ -155,13 +171,21 @@ function LecturerPlatform(props: Props) {
                                 />
                             ))}
                         </div>
+                        {topics.length > topicsPerPage && (
+                            <Pagination 
+                                count={Math.ceil(topics.length / topicsPerPage)} 
+                                page={currentTopicPage} 
+                                onChange={handleTopicPageChange} 
+                                style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}
+                            />
+                        )}
                     </>
                 )}
                 {activeTab === "exercises" && (
                     <>
                         <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
                         <div style={{marginBottom: "2rem"}}>
-                            {exercises.map((exercise, index) => (
+                            {paginatedExercises.map((exercise, index) => (
                                 <ExerciseElement 
                                     key={index} 
                                     _id={exercise._id} 
@@ -181,6 +205,14 @@ function LecturerPlatform(props: Props) {
                                 />
                             ))}
                         </div>
+                        {exercises.length > exercisesPerPage && (
+                            <Pagination 
+                                count={Math.ceil(exercises.length / exercisesPerPage)} 
+                                page={currentPage} 
+                                onChange={handlePageChange} 
+                                style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}
+                            />
+                        )}
                     </>
                 )}
             </ExistingExercisesContext.Provider>

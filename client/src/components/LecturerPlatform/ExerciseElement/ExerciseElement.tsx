@@ -50,6 +50,10 @@ function ExerciseElement(props: Props) {
             numOfAttempts: props.numOfAttempts,
             isMandatory: props.isMandatory
         })
+
+        if (props.name != "") {
+            setNameChanged(true)
+        }
     }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
 
     useEffect(() => {
@@ -126,7 +130,7 @@ function ExerciseElement(props: Props) {
 
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} 
-            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
+            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "1rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
                 expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props._id == "" || (props.isIndependentElement && beingEdited)}
