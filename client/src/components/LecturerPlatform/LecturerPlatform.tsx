@@ -146,7 +146,7 @@ function LecturerPlatform(props: Props) {
     }
 
     useEffect(() => {
-        setFilteredExercises(exercises.filter(exercise => exercise.name.toLowerCase().includes(exerciseSearchQuery.toLowerCase())))
+        setFilteredExercises(exercises.filter(exercise => exercise.name.toLowerCase().includes(exerciseSearchQuery.toLowerCase()) || exercise.exerciseId.toString().includes(exerciseSearchQuery)))
     }, [exercises, exerciseSearchQuery])
 
     useEffect(() => {
