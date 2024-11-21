@@ -201,7 +201,12 @@ function App() {
             }
             return exercise
         })
-        setAllExercises([...updatedExercises])
+        
+        if (allExercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+            setAllExercises([...updatedExercises])
+        } else {
+            setAllExercises([...allExercises, updatedExercise])
+        }
 
         const updatedTopicsWithExercise = allTopics.map(topic => {
             if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
@@ -315,7 +320,6 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
-            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
         }
 
