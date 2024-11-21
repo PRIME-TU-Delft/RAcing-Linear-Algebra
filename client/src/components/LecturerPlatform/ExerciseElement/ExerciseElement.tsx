@@ -130,14 +130,14 @@ function ExerciseElement(props: Props) {
 
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} 
-            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: "1rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
+            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: props.isIndependentElement ? "1rem" : "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
                 expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props._id == "" || (props.isIndependentElement && beingEdited)}
                 onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
             >
                 <AccordionSummary
-                    aria-controls={`panel-content-${props._id}`}
+                    aria-controls={`panel-content-${props._id}`}    
                     id={`panel-header-${props._id}`}
                     sx={{ height: '2rem'}}
                 >
@@ -145,7 +145,7 @@ function ExerciseElement(props: Props) {
                         <div className="exercise-header d-flex row">
                             <div className="d-flex col col-10 align-items-center">
                                 {props.name} 
-                                <span className="exercise-header-id">(#{props.exerciseId})</span>
+                                <span className="exercise-header-id">(#{newExerciseData.exerciseId})</span>
                             </div>
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-2 exercise-difficulty-label justify-content-end">
