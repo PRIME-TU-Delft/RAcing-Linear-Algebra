@@ -483,7 +483,7 @@ function TopicElement(props: Props) {
                 >
                     <div>
                         <div className="topic-title">
-                            {(newTopicData.name == "" ? "New Exercise" : newTopicData.name)}
+                            {(newTopicData.name == "" ? "" : newTopicData.name)}
                         </div>
                         <div className="number-of-exercises">Exercises: {exercises.length}</div>
                     </div>

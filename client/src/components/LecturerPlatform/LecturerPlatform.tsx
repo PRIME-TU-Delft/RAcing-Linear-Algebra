@@ -73,7 +73,7 @@ function LecturerPlatform(props: Props) {
     }
 
     const createNewExercise = () => {
-        const newExercise: Exercise = { _id: "", name: "New Exercise", exerciseId: -1, difficulty: "Easy", url: "", numOfAttempts: 1, isMandatory: false }
+        const newExercise: Exercise = { _id: "", name: "", exerciseId: -1, difficulty: "Easy", url: "", numOfAttempts: 1, isMandatory: false }
         const newExercises = [newExercise, ...exercises]
         setExercises(newExercises)
     }
@@ -160,7 +160,7 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "exercises" && (
                     <>
                         <Button variant="outlined" style={{marginTop: "2rem", width: "80%"}} onClick={createNewExercise}>Create New Exercise</Button>
-                        <div style={{marginBottom: "1rem"}}>
+                        <div style={{marginBottom: "2rem"}}>
                             {exercises.map((exercise, index) => (
                                 <ExerciseElement 
                                     key={index} 

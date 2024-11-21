@@ -7,6 +7,7 @@ import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
 import { url } from "inspector";
 import { Store } from 'react-notifications-component';
 import { Exercise } from "../SharedUtils";
+import { set } from "react-hook-form";
 
 interface Props {
     _id: string,
@@ -37,6 +38,7 @@ function ExerciseElement(props: Props) {
         isMandatory: props.isMandatory
     })
     const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
+    const [nameChanged, setNameChanged] = useState<boolean>(false)
 
     useEffect(() => {
         setNewExerciseData({
@@ -59,6 +61,12 @@ function ExerciseElement(props: Props) {
     useEffect(() => {
         setBeingEdited(props.beingEdited);
     }, [props.beingEdited])
+
+    useEffect(() => {
+        if (!nameChanged) {
+            setNewExerciseData({ ...newExerciseData, name: "Exercise " + newExerciseData.exerciseId.toString()})
+        }
+    }, [newExerciseData.exerciseId])
 
     const saveExerciseHandler = () => {
         if (newExerciseData.name == "" || newExerciseData.url == "") {
@@ -110,6 +118,11 @@ function ExerciseElement(props: Props) {
             setManuallyExpanded(false)
         }
     }, [props.beingEdited, props.closeNotEditing])
+
+    const nameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setNewExerciseData({ ...newExerciseData, name: e.target.value })
+        setNameChanged(true)
+    }
 
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} 
@@ -176,8 +189,9 @@ function ExerciseElement(props: Props) {
                                     <TextField
                                         variant="outlined"
                                         size="small"
-                                        defaultValue={props.name}
-                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, name: e.target.value })}
+                                        placeholder="New Exercise"
+                                        defaultValue={newExerciseData.name}
+                                        onChange={(e) => nameInputChangeHandler(e)}
                                         sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
                                         className="d-flex justify-content-center"
                                     />
