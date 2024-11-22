@@ -38,7 +38,6 @@ function ExerciseElement(props: Props) {
         isMandatory: props.isMandatory
     })
     const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
-    const [nameChanged, setNameChanged] = useState<boolean>(false)
 
     useEffect(() => {
         setNewExerciseData({
@@ -50,10 +49,6 @@ function ExerciseElement(props: Props) {
             numOfAttempts: props.numOfAttempts,
             isMandatory: props.isMandatory
         })
-
-        if (props.name != "") {
-            setNameChanged(true)
-        }
     }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
 
     useEffect(() => {
@@ -66,14 +61,8 @@ function ExerciseElement(props: Props) {
         setBeingEdited(props.beingEdited);
     }, [props.beingEdited])
 
-    useEffect(() => {
-        if (!nameChanged) {
-            setNewExerciseData({ ...newExerciseData, name: "Exercise " + newExerciseData.exerciseId.toString()})
-        }
-    }, [newExerciseData.exerciseId])
-
     const saveExerciseHandler = () => {
-        if (newExerciseData.name == "" || newExerciseData.url == "") {
+        if (newExerciseData.url == "") {
             Store.addNotification({
                 title: "Warning",
                 message: "The exercise data is incomplete and cannot be saved",
@@ -86,7 +75,11 @@ function ExerciseElement(props: Props) {
                 }
             })
         } else {
-            props.onFinishEditingExercise(newExerciseData);
+            const exerciseData = newExerciseData
+            if (exerciseData.name == "") {
+                exerciseData.name = "Exercise " + exerciseData.exerciseId.toString()
+            }
+            props.onFinishEditingExercise(exerciseData);
             if (props.isIndependentElement) {
                 setBeingEdited(false)
             }
@@ -125,7 +118,6 @@ function ExerciseElement(props: Props) {
 
     const nameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewExerciseData({ ...newExerciseData, name: e.target.value })
-        setNameChanged(true)
     }
 
     return (
@@ -193,7 +185,7 @@ function ExerciseElement(props: Props) {
                                     <TextField
                                         variant="outlined"
                                         size="small"
-                                        placeholder="New Exercise"
+                                        placeholder={"Exercise " + newExerciseData.exerciseId.toString()}
                                         defaultValue={newExerciseData.name}
                                         onChange={(e) => nameInputChangeHandler(e)}
                                         sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
