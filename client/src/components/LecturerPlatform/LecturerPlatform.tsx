@@ -199,7 +199,6 @@ function LecturerPlatform(props: Props) {
                         value={activeTab} 
                         onChange={handleChange}
                         textColor="inherit"
-                        indicatorColor="secondary"
                         className="lecturer-platform-tabs"
                     >
                         <Tab value="topics" label="Topics"/>
@@ -214,7 +213,7 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "topics" && (
                     <>
                         <div className="topics-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="secondary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Topic</Button>
+                            <Button variant="outlined" color="primary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Topic</Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search topics"
@@ -259,7 +258,7 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "exercises" && (
                     <>
                         <div className="exercises-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="secondary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Exercise</Button>
+                            <Button variant="outlined" color="primary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Exercise</Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search exercises"
