@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogA
 import "./TopicElement.css"
 import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBarsStaggered, faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
@@ -10,6 +10,7 @@ import { Tooltip } from "react-tooltip"
 import { Exercise, Study, Topic } from "../SharedUtils"
 import socket from "../../../socket"
 import { TopicDataContext } from "../../../contexts/TopicDataContext"
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
 
 
 interface ExerciseListElement {
@@ -190,6 +191,10 @@ function TopicElement(props: Props) {
         }
     }
 
+    const reorderMandatoryExercisesHandler = () => {
+        setExercisesMode(curr => "reorder")
+    }
+
     const addNewExerciseHandler = () => {
         if (exercises.some(exercise => exercise.incompleteExercise)) {
             Store.addNotification({
@@ -241,16 +246,16 @@ function TopicElement(props: Props) {
     }
 
     const sortExercises = () => {
-        const sorted = [...exercises].sort((a, b) => {
-            if (a.incompleteExercise && !b.incompleteExercise) return -1
-            if (!a.incompleteExercise && b.incompleteExercise) return 1
-            if (a.exercise.isMandatory && !b.exercise.isMandatory) return -1
-            if (!a.exercise.isMandatory && b.exercise.isMandatory) return 1
+        const incompleteExercises = exercises.filter(ex => ex.incompleteExercise)
+        const mandatoryExercises = exercises.filter(ex => !ex.incompleteExercise && ex.exercise.isMandatory)
+        const otherExercises = exercises.filter(ex => !ex.incompleteExercise && !ex.exercise.isMandatory)
+
+        const sortedOtherExercises = [...otherExercises].sort((a, b) => {
             const difficultyOrder = ["Easy", "Medium", "Hard"]
             return difficultyOrder.indexOf(a.exercise.difficulty) - difficultyOrder.indexOf(b.exercise.difficulty)
         })
 
-        return sorted
+        return [...incompleteExercises, ...mandatoryExercises, ...sortedOtherExercises]
     }
 
     const handleDeleteExercise = (index: number) => {
@@ -293,7 +298,6 @@ function TopicElement(props: Props) {
     const handleExerciseSelect = (selectedExerciseGraspleId: number) => {
         props.onLinkExercise(selectedExerciseGraspleId)
         setIsLinkDialogOpen(false)
-        showSuccessNotification("Linked the exercise")
     }
 
     const addExistingExerciseHandler = () => {
@@ -302,6 +306,16 @@ function TopicElement(props: Props) {
         props.onLinkExercise(existingExerciseGraspleId)
         setIsExistingExerciseDialogOpen(false)
         showSuccessNotification("Added the exercise")
+    }
+
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) return
+
+        const items = [...exercises]
+        const [reorderedItem] = items.splice(result.source.index, 1)
+        items.splice(result.destination.index, 0, reorderedItem)
+
+        setExercises(curr => [...items])
     }
 
     useEffect(() => {
@@ -391,7 +405,8 @@ function TopicElement(props: Props) {
             if (exercises.length == 0) {
                 showUnsavedChangesWarningNotification("exercises")
             } else {
-                setNewTopicData(curr => ({...curr, exercises: exercises.map(exercise => exercise.exercise)}))
+                const finalSortedExercises = sortExercises()
+                setNewTopicData(curr => ({...curr, exercises: finalSortedExercises.map(exercise => exercise.exercise)}))
                 setExercisesMode(curr => "")
                 setEditingExerciseIndex(curr => -1)
             }
@@ -558,22 +573,48 @@ function TopicElement(props: Props) {
                                 <>
                                 <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}>
                                 </Tooltip>
+                                <Tooltip id="add-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
+                                <Tooltip id="link-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
+                                <Tooltip id="reorder-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
                                 <FontAwesomeIcon
                                     icon={faCircleInfo}
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
                                     data-tooltip-id="info-tooltip"
                                     data-tooltip-place="right"
-                                    data-tooltip-html="Add new exercises by pressing the + button.<br /> Add an existing exercise by pressing the link icon.<br />Edit/remove individual exercises using the icons on the right."
+                                    data-tooltip-html="Add new exercises by pressing the + button.<br /> Add an existing exercise by pressing the link icon.<br />Adjust order of mandatory exercises using the reorder icon.<br />Edit/remove individual exercises using the icons on the right."
                                 />
-                                <FontAwesomeIcon icon={faPlus} className="add-exercise-icon" onClick={() => addNewExerciseHandler()}/>
-                                <FontAwesomeIcon icon={faLink} className="link-exercise-icon" onClick={() => linkExerciseHandler()}/>
+                                <FontAwesomeIcon 
+                                    icon={faPlus} 
+                                    className="add-exercise-icon" 
+                                    onClick={() => addNewExerciseHandler()}
+                                    data-tooltip-id="add-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Add new exercise"
+                               />
+                                <FontAwesomeIcon 
+                                    icon={faLink} 
+                                    className="link-exercise-icon" 
+                                    onClick={() => linkExerciseHandler()}
+                                    data-tooltip-id="link-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Add (link) existing exercise"/>
+                                <FontAwesomeIcon 
+                                    icon={faBarsStaggered} 
+                                    className="reorder-exercises-icon" 
+                                    onClick={() => reorderMandatoryExercisesHandler()}
+                                    data-tooltip-id="reorder-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Reorder mandatory exercises"/>
                                 </>
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
                             )}
                         </div>
                         <div className="exercises-list">
-                            {sortedExercises.map((exerciseElement, index) => (
+                            {exercisesMode !== "reorder" ? sortedExercises.map((exerciseElement, index) => (
                                 <div className="d-flex row" key={index}>
                                     <ExerciseElement 
                                         _id={exerciseElement.exercise._id} 
@@ -600,7 +641,56 @@ function TopicElement(props: Props) {
                                         </div>
                                     )}
                                 </div>
-                            ))}
+                            )) : (<>
+                                <div className="reorder-exercises-instructions">
+                                    Drag and drop the mandatory exercises in the preferred order you want them to appear in during the game.
+                                </div>
+                                <DragDropContext onDragEnd={onDragEnd}>
+                                    <Droppable droppableId="exercises-list">
+                                        {(provided) => (
+                                            <div
+                                                className="exercises-list"
+                                                {...provided.droppableProps}
+                                                ref={provided.innerRef}
+                                            >
+                                                {exercises
+                                                    .filter(exerciseElement => exerciseElement.exercise.isMandatory)
+                                                    .map((exerciseElement, index) => (
+                                                        <Draggable key={exerciseElement.exercise.exerciseId} draggableId={exerciseElement.exercise._id} index={index}>
+                                                            {(provided) => (
+                                                                <div
+                                                                    ref={provided.innerRef}
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    className="d-flex row"
+                                                                >
+                                                                    <ExerciseElement
+                                                                        _id={exerciseElement.exercise._id} 
+                                                                        name={exerciseElement.exercise.name} 
+                                                                        exerciseId={exerciseElement.exercise.exerciseId} 
+                                                                        difficulty={exerciseElement.exercise.difficulty} 
+                                                                        url={exerciseElement.exercise.url} 
+                                                                        numOfAttempts={exerciseElement.exercise.numOfAttempts}
+                                                                        beingEdited={editingExerciseIndex == index}
+                                                                        closeNotEditing={editingExerciseIndex > -1}
+                                                                        parentSaveChanges={saveChanges.exercises}
+                                                                        onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
+                                                                        onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                                                        onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
+                                                                        isIndependentElement={false}
+                                                                        isMandatory={exerciseElement.exercise.isMandatory}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </Draggable>
+                                                    ))}
+                                                {provided.placeholder}
+                                            </div>
+                                        )}
+                                    </Droppable>
+                                </DragDropContext>
+                                </>
+                            )}
                         </div>
                     </div>
                 </AccordionDetails>

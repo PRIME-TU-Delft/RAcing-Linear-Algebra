@@ -17,6 +17,7 @@ import { TopicDataContext } from "../../contexts/TopicDataContext"
 import { ExistingExercisesContext } from "./ExistingExercisesContext"
 import socket from "../../socket"
 import Pagination from '@mui/material/Pagination'
+import { Store } from "react-notifications-component"
 
 interface Props {
     loggedIn: boolean,
@@ -134,8 +135,32 @@ function LecturerPlatform(props: Props) {
 
     const linkExerciseHandler = (topicId: string, exerciseGraspleId: number) => {
         const exercise = exercises.find(exercise => exercise.exerciseId === exerciseGraspleId)
-        if (exercise) {
+        const alreadyContainsExercise = topics.find(topic => topic._id === topicId)?.exercises.some(ex => ex.exerciseId === exerciseGraspleId)
+        if (exercise && !alreadyContainsExercise) {
             addExerciseToTopic(topicId, exercise)
+            Store.addNotification({
+                title: "Success",
+                message: `Linked exercise #${exercise.exerciseId} to the topic`,
+                type: "success",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            })
+        } else if (alreadyContainsExercise) {
+            Store.addNotification({
+                title: "Warning",
+                message: "The topic already contains this exercise",
+                type: "warning",
+                insert: "top",
+                container: "bottom-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+            })                
         }
     }
 
