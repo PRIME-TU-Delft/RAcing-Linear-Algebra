@@ -348,7 +348,10 @@ export class Game {
             return
         }
         switch (difficulty) {
-            case "mandatory" || "hard":
+            case "mandatory":
+                user.attempts = 3
+                break
+            case "hard":
                 user.attempts = 3
                 break
             case "medium":

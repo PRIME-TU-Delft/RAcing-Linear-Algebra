@@ -12,9 +12,41 @@ import {
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
+import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
+import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
+import type { IStudy } from "./models/studyModel"
+import type { IExercise } from "./models/exerciseModel"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
+const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
+
+const graspleQuestionExamples = [{
+    difficulty: "mandatory",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/8cea917e-4c9b-4e18-90ce-3c0ada0294cf?id=77975"
+},
+{
+    difficulty: "mandatory",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/13091e5e-f7bd-4e7b-b915-a525c1a28773?id=77983"
+},
+{
+    difficulty: "medium",
+    subject: "Eigenvalues",
+    questionUrl: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"
+},
+]
+
+let current_index = 0
+
+function hashString(input: string): string {
+    const hash = createHash('sha256')
+    hash.update(input)
+    return hash.digest('hex')
+}
 
 module.exports = {
     getIo: (server) => {
@@ -199,7 +231,15 @@ module.exports = {
                 try {
                     const game = getGame(lobbyId)
                     const question = await game.getNewQuestion(socket.id, difficulty)
-                    socket.emit("get-next-question", question)
+
+                    const graspleQuestion = graspleQuestionExamples[current_index]
+                    if (current_index >= graspleQuestionExamples.length)
+                        current_index = 0
+                    else
+                        current_index += 1
+                    
+                    // socket.emit("get-next-question", question)
+                    socket.emit("get-next-grasple-question", graspleQuestion)
                     console.log(question?.answer)
                 } catch (error) {
                     console.error(error)
@@ -505,14 +545,100 @@ module.exports = {
             })
 
             /**
+             * Returns a list of all the studies (study programmes) stored in the database
+             */
+            socket.on("getAllStudies", async () => {
+                try {
+                    const allStudies = await getAllStudies();
+                    socket.emit("all-studies", allStudies);
+                } catch (error) {
+                    socket.emit('error', {message: error.message} )
+                }
+            })
+
+            /**
+             * Updates the exercise with the given exerciseId (grasple question ID), or if it does not exist, creates a new one
+             */
+            socket.on("updateExercise", async(exerciseId: number, updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }) => {
+                try {
+                    const updatedExercise = await updateExercise(exerciseId, updateData);
+                    socket.emit("updated-exercise", updatedExercise);
+                } catch (error) {
+                    socket.emit("error", { message: error.message })
+                }
+            })
+
+            /**
+             * Returns a list of all topics (rounds) stored in the database
+             */
+            socket.on("getAllTopics", async() => {
+                try {
+                    const topics = await getAllTopics();
+                    socket.emit("all-topics", topics);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**
+             * Returns a list of all exercises stored in the database
+             */
+            socket.on("getAllExercises", async() => {
+                try {
+                    const exercises = await getAllExercises();
+                    socket.emit("all-exercises", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**
+             * Updates the topic with the given topic id, or if it does not exist, creates a new one
+             * Notably, this function updates the mandatory status of each exercise associated with the topic
+             */
+            socket.on("updateTopic", async (
+                topicId: string,  
+                name: string, 
+                exercises: {
+                    exerciseId: number, 
+                    updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
+                    isMandatory: boolean
+                }[], 
+                studyIds: string[]) => {
+                    try {
+                        const updatedExercises = await Promise.all(exercises.map(async exercise => {
+                            const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
+                            return {
+                                _id: updatedExercise?._id,
+                                isMandatory: exercise.isMandatory
+                            }
+                        }))
+
+                        
+                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds);
+                        socket.emit("updated-topic", updatedTopic);
+                    } catch (error) {
+                        socket.emit("error", { message: error.message });
+                    }
+            })
+
+            /**
              * Authentication function that has a hardcoded password
              * This function is used when trying to create a game so only people who know the password can create them
              */
             socket.on("authenticate", (password: string) => {
-                if (password === "matematica123") {
+                if (hashString(password) === password_hash) {
                     socket.emit("authenticated", true)
                 } else {
                     socket.emit("authenticated", false)
+                }
+            })
+
+            socket.on("lecturerPlatformLogin", (password: string) => {
+                if (hashString(password) === password_hash) {
+                    socket.emit("access-granted", true)
+                } else {
+                    socket.emit("access-granted", false)
                 }
             })
 
