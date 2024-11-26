@@ -33,6 +33,7 @@ import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
 import { TopicDataContext } from "./contexts/TopicDataContext"
+import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -57,6 +58,7 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
 
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -103,6 +105,7 @@ function App() {
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
+        socket.emit("getLobbyData")
     }
 
     const isPlayerHandler = (isPlayer: boolean) => {
@@ -331,6 +334,10 @@ function App() {
             setAllExercises(curr => [...allExercises])
         }
 
+        function onGetLobbyData(lobbyData: LobbyData) {
+            setLobbyData({...lobbyData})
+        }
+
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -351,6 +358,7 @@ function App() {
         socket.on("all-exercises", onGetAllExercises)
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
+        socket.on("lobby-data", onGetLobbyData)
     }, [])
 
     // useEffect(() => {
@@ -417,18 +425,20 @@ function App() {
                 <Route
                     path="/Lobby"
                     element={
-                        <Lobby
-                            lobbyId={lobbyId}
-                            onTeamNameCreated={(name: string) =>
-                                teamNameHandler(name)
-                            }
-                            onThemeSelected={(theme: string) =>
-                                themeHandler(theme)
-                            }
-                            onStudySelected={(study: string) => 
-                                setStudy(curr => study)
-                            }
-                        />
+                        <LobbyDataContext.Provider value={lobbyData}>
+                            <Lobby
+                                lobbyId={lobbyId}
+                                onTeamNameCreated={(name: string) =>
+                                    teamNameHandler(name)
+                                }
+                                onThemeSelected={(theme: string) =>
+                                    themeHandler(theme)
+                                }
+                                onStudySelected={(study: string) => 
+                                    setStudy(curr => study)
+                                }
+                            />
+                        </LobbyDataContext.Provider>
                     }
                 ></Route>
                 <Route

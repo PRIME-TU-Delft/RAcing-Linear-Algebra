@@ -622,6 +622,20 @@ module.exports = {
                     }
             })
 
+            socket.on("getLobbyData", async () => {
+                try {
+                    const allTopics = await getAllTopics()
+                    const allStudies = await getAllStudies()
+                    const lobbyData = {
+                        topics: allTopics.map(topic => topic.name),
+                        studies: allStudies.map(study => study.name)
+                    }
+                    socket.emit("lobby-data", lobbyData)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+
             /**
              * Authentication function that has a hardcoded password
              * This function is used when trying to create a game so only people who know the password can create them
