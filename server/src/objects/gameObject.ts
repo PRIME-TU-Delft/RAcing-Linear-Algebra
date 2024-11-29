@@ -1,18 +1,18 @@
 import { getVariantById, parseVariantToQuestion } from "../controllers/questionDBController"
 import type { IQuestion } from "../models/questionModel"
-import type { IRound } from "../models/roundModel"
 import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
+import { ITopic } from "../models/topicModel"
 
 export class Game {
     avgScore: number //The average score of the team's users
     totalScore: number //The total (sum) score of the team's users
     timeScores: number[]
     teamName: string //The name of the team
-    round: number //Number of the current round that is being played
-    rounds: IRound[] //The selected rounds
+    currentTopicIndex: number //Number of the current round that is being played
+    topics: ITopic[] //The selected rounds
     roundDurations: number[] // The durations of the rounds
     users: Map<string, User> //The map of users in the game
     checkpoints: number[] //The amount of seconds taken to reach each checkpoint
@@ -23,13 +23,13 @@ export class Game {
     /**
      * Constructor for a game object,
      * This object can be used to easily represent a game and all values that need to be stored with it
-     * @param rounds the selected rounds for this game
+     * @param topics the selected rounds for this game
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(rounds: IRound[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
-        this.round = 0
-        this.rounds = rounds
+    constructor(topics: ITopic[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
+        this.currentTopicIndex = 0
+        this.topics = topics
         this.roundDurations = roundDurations
         this.teamName = teamName
         this.avgScore = 0
@@ -59,7 +59,7 @@ export class Game {
      * @returns the new question
      */
     async getNewQuestion(socketId: string, difficulty?: string): Promise<IQuestion | undefined> {
-        const round = this.rounds[this.round]
+        const round = this.topics[this.currentTopicIndex]
         const user = this.users.get(socketId)
         if (user === undefined) throw Error("This user is not in this game")
         if (user.isOnMandatory) return await this.getMandatoryQuestion(round, user)
@@ -70,17 +70,17 @@ export class Game {
 
     /**
      * Gets a new mandatory question
-     * @param round the current round the user is in
+     * @param topic the current round the user is in
      * @param user the user object that needs a question
      * @returns a new question
      */
-    async getMandatoryQuestion(round: IRound, user: User): Promise<IQuestion | undefined> {
+    async getMandatoryQuestion(topic: ITopic, user: User): Promise<IQuestion | undefined> {
         const numberOfAnswered = user.questionIds.length
-        const question = round.mandatory_questions[numberOfAnswered]
+        const question = topic.mandatoryExercises[numberOfAnswered]
         if (question === undefined) throw Error("Could not generate new question")
-        this.attemptSetter(user, "mandatory", question.type)
+        user.attempts = question.numOfAttempts
         //Check if after adding this question all the mandatories are done
-        if (numberOfAnswered + 1 >= round.mandatory_questions.length) user.isOnMandatory = false
+        if (numberOfAnswered + 1 >= topic.mandatoryExercises.length) user.isOnMandatory = false
         try {
             return await this.variantToQuestion(question, user)
         } catch (error) {
@@ -330,39 +330,6 @@ export class Game {
         }
 
         return Array.from(res.values())
-    }
-
-    /**
-     * Sets the number of attempts for a user depending on the difficulty of the question. The system is as follows:
-     * Hard or mandatory questions: 3 attempts
-     * Medium questions: 2 attempt
-     * Easy questions: 1 attempt
-     * @param user the user object that needs a question
-     * @param type the type of the question
-     * @param options the number of options for the multiple choice question
-     */
-    attemptSetter(user: User, difficulty: string, type: string): void {
-        if (user === undefined) throw Error("This user is not in this game")
-        if (type === "true/false") {
-            user.attempts = 1
-            return
-        }
-        switch (difficulty) {
-            case "mandatory":
-                user.attempts = 3
-                break
-            case "hard":
-                user.attempts = 3
-                break
-            case "medium":
-                user.attempts = 2
-                break
-            case "easy":
-                user.attempts = 1
-                break
-            default:
-                user.attempts = 3
-        }
     }
 
     /**
