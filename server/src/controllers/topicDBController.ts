@@ -245,6 +245,23 @@ export async function getAllTopicNames(): Promise<string[]> {
     }
 }
 
+export async function getTopicNamesByStudy(study: string | undefined): Promise<string[]> {
+    try {
+        if (study == undefined) {
+            return getAllTopicNames()
+        }
+        const topics = await Topic.find({ 'studies.name': study })
+        if (topics.length == 0) {
+            throw new Error(`No topics found for ${study}`)
+        }
+
+        return topics.map(topic => topic.name)
+    } catch (error) {
+        console.error("Error retrieving topics by study:", error);
+        throw error;
+    }
+}
+
 export async function getSelectedITopics(topicNames: string[]): Promise<ITopic[]> {
     try {
         const topics = await Topic.find()

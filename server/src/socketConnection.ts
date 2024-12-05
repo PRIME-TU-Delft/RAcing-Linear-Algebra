@@ -1,6 +1,6 @@
 import type { Socket } from "socket.io"
 import { addGame, getGame, endRound, getRoundDuration } from "./controllers/gameController"
-import { getIRounds } from "./controllers/roundDBController"
+import { getIRounds, getTopicsByStudy } from "./controllers/roundDBController"
 import { startLobby } from "./controllers/lobbyController"
 import {
     saveNewScore,
@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import type { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -596,9 +596,9 @@ module.exports = {
                     }
             })
 
-            socket.on("getLobbyData", async () => {
+            socket.on("getLobbyData", async (study?: string) => {
                 try {
-                    const topicNames = await getAllTopicNames()
+                    const topicNames = getTopicNamesByStudy(study)
                     const allStudies = await getAllStudies()
                     const lobbyData = {
                         topics: topicNames,
