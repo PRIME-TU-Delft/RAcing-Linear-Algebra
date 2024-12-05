@@ -159,7 +159,7 @@ function Steps(props: Props) {
             <Step
                 stepNumber={4}
                 onStepSelected={stepSelectedHandler}
-                stepTitle="Select rounds"
+                stepTitle="Select topics"
                 stepCaption="Each topic will be a seperate round in the race."
                 stepContent={
                     <Rounds

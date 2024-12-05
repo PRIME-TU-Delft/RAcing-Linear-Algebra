@@ -7,6 +7,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs';
 import { SECONDS } from "react-time-sync";
+import { Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface SelectedRound {
     topicName: string,
@@ -122,7 +125,7 @@ function Rounds(props: Props) {
 
     return (
         <DragDropContext onDragStart={() => setHideDurations(curr => true)} onDragEnd={(result) => handleOnDragEnd(result)}>
-            <div className="dropbox-title">Rounds selected</div>
+            <div className="dropbox-title">Selected topics</div>
             <Droppable droppableId="selected-rounds" direction="vertical">
                 {(provided) => (
                     <div className={ (selectedRounds.length == 0 ? "empty-container " : "") + "selected-rounds-container"} {...provided.droppableProps} ref={provided.innerRef}>
@@ -167,7 +170,30 @@ function Rounds(props: Props) {
                 )}
             </Droppable>
             <div className="horizontal-line"></div>
-            <div className="dropbox-title">Available rounds</div>
+            <div className="dropbox-title">
+                Available topics
+            </div>
+            <div className="dropbox-helper-functionality">
+            <TextField
+                    placeholder="Search Available Topics"
+                    variant="outlined"
+                    size="small"
+                    style={{width: '40%' }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <FontAwesomeIcon icon={faSearch} />
+                            </InputAdornment>
+                        ),
+                        style: { height: '2.5rem' }
+                    }}
+                />
+                <FormControlLabel
+                    control={<Checkbox name="filterByStudyProgramme" />}
+                    label="Filter by Study Programme"
+                    style={{ marginLeft: '1rem' }}
+                />
+            </div>
             <Droppable droppableId="available-rounds" direction="horizontal">
                 {(provided) => (
                     <div className="available-rounds-container" {...provided.droppableProps} ref={provided.innerRef}>
