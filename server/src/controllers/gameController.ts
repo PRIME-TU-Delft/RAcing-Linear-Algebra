@@ -1,4 +1,5 @@
 import type { IRound } from "../models/roundModel"
+import { ITopic } from "../models/topicModel"
 import { Game } from "../objects/gameObject"
 import { User } from "../objects/userObject"
 
@@ -12,13 +13,13 @@ export const gameRouter = Router()
 
 /**
  * Creates a game object and adds it to the map of games
- * @param rounds the selected rounds
+ * @param topics the selected topics
  * @param teamName the name of the team
  * @param socketIds the socketIds of the players that are in the game
  * @param lobbyId the id of the lobby
  */
 export function addGame(
-    rounds: IRound[],
+    topics: ITopic[],
     roundDurations: number[],
     teamName: string,
     socketIds: string[],
@@ -27,7 +28,7 @@ export function addGame(
 ) {
     const map: Map<string, User> = new Map()
     for (const socketId of socketIds) map.set(socketId, new User())
-    const game: Game = new Game(rounds, roundDurations, teamName, map, study)
+    const game: Game = new Game(topics, roundDurations, teamName, map, study)
     games.set(`${lobbyId}`, game)
 }
 
@@ -61,7 +62,7 @@ export function endRound(lobbyId: number): boolean {
 
     game.avgScore = 0
     game.totalScore = 0
-    game.round += 1
+    game.currentTopicIndex += 1
     const users = Array.from(game.users.values())
     for (const user of users) {
         user.resetUser()
@@ -70,7 +71,7 @@ export function endRound(lobbyId: number): boolean {
     game.timeScores = []
     game.correct = 0
     game.incorrect = 0
-    return game.round < game.rounds.length
+    return game.currentTopicIndex < game.topics.length
 }
 
 /**
@@ -82,7 +83,7 @@ export function getRoundDuration(lobbyId: number): number {
     const game = games.get(`${lobbyId}`)
     if (game === undefined) throw Error("No such game")
 
-    return game.roundDurations[game.round]
+    return game.roundDurations[game.currentTopicIndex]
 }
 
 export function clearGames(): void {
