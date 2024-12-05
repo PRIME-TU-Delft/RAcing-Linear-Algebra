@@ -26,16 +26,6 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 
-export interface IQuestion {
-    question: string
-    answer: string
-    difficulty: string
-    subject: string
-    type: string
-    options?: string[]
-    variants?: any[]
-}
-
 interface Props {
     theme: string
     roundDuration: number

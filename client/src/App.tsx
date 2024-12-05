@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, GraspleQuestion, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleExercise, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -69,10 +69,14 @@ function App() {
         options: [],
         variants: []
     })
-    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleQuestion>({
-        questionUrl: "",
+    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleExercise>({
+        _id: "",
+        name: "",
+        exerciseId: 0,
         difficulty: "",
-        subject: ""
+        url: "",
+        numOfAttempts: 0,
+        isMandatory: false
     })
 
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
@@ -294,7 +298,7 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
-        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise) {
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }

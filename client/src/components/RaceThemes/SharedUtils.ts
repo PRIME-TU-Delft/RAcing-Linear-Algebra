@@ -121,11 +121,14 @@ interface RoundInformation {
     study: string
 }
 
-
-interface GraspleQuestion {
-    difficulty: string, 
-    subject: string,
-    questionUrl: string
+interface GraspleExercise {
+    _id: string,
+    name: string,
+    exerciseId: number,
+    difficulty: string,
+    url: string,
+    numOfAttempts: number   
+    isMandatory: boolean
 }
 
 export {
@@ -142,5 +145,5 @@ export {
     type IQuestion,
     type RoundInformation,
     type Streak,
-    type GraspleQuestion
+    type GraspleExercise
 }

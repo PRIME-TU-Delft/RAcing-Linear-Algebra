@@ -160,7 +160,7 @@ function Question(props: Props) {
 
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div>
-                        <iframe height="560" src={graspleQuestionData.questionData.questionUrl} title="Grasple Exercise 77975" width="100%" allow="clipboard-read; clipboard-write"></iframe>
+                        <iframe height="560" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="100%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (
