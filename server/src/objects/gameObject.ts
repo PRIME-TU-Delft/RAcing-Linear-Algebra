@@ -4,7 +4,8 @@ import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
-import { ITopic } from "../models/topicModel"
+import type { ITopic } from "../models/topicModel"
+import type { IExercise } from "../models/exerciseModel"
 
 export class Game {
     avgScore: number //The average score of the team's users
@@ -58,13 +59,13 @@ export class Game {
      * @param lobbyId the lobby that the player is in
      * @returns the new question
      */
-    async getNewQuestion(socketId: string, difficulty?: string): Promise<IQuestion | undefined> {
-        const round = this.topics[this.currentTopicIndex]
+    getNewExercise(socketId: string, difficulty?: string): IExercise | undefined {
+        const topic = this.topics[this.currentTopicIndex]
         const user = this.users.get(socketId)
         if (user === undefined) throw Error("This user is not in this game")
-        if (user.isOnMandatory) return await this.getMandatoryQuestion(round, user)
+        if (user.isOnMandatory) return this.getMandatoryQuestion(topic, user)
         else if (difficulty !== undefined)
-            return await this.getBonusQuestion(round, user, difficulty)
+            return this.getDifficultyExercise(topic, user, difficulty)
         else throw Error("No difficulty was given")
     }
 
@@ -74,70 +75,37 @@ export class Game {
      * @param user the user object that needs a question
      * @returns a new question
      */
-    async getMandatoryQuestion(topic: ITopic, user: User): Promise<IQuestion | undefined> {
+    getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
         const numberOfAnswered = user.questionIds.length
         const question = topic.mandatoryExercises[numberOfAnswered]
         if (question === undefined) throw Error("Could not generate new question")
         user.attempts = question.numOfAttempts
         //Check if after adding this question all the mandatories are done
         if (numberOfAnswered + 1 >= topic.mandatoryExercises.length) user.isOnMandatory = false
-        try {
-            return await this.variantToQuestion(question, user)
-        } catch (error) {
-            throw error
-        }
+        return question
     }
 
     /**
-     * Gets a new bonus question
+     * Gets a new exercise based on the seleced difficulty
      * @param round the current round the user is in
      * @param user the user object that needs a question
      * @param difficulty the difficulty of the new question
-     * @returns a new question
+     * @returns a new exercise
      */
-    async getBonusQuestion(
-        round: IRound,
+    getDifficultyExercise(
+        topic: ITopic,
         user: User,
         difficulty: string
-    ): Promise<IQuestion | undefined> {
+    ): IExercise | undefined {
         try {
-            const questionIds = round.bonus_questions
+            const exerciseIds = topic.difficultyExercises
                 .filter((x) => x.difficulty === difficulty)
                 .map((x) => x.id)
-            const questionId = user.getRandomQuestionId(questionIds)
-            const question = round.bonus_questions.find((x) => x.id === questionId)
-            if (question === undefined) throw Error("A question with this id could not be found")
-            this.attemptSetter(user, difficulty, question.type)
-            const res = await this.variantToQuestion(question, user)
-            return res
-        } catch (error) {
-            throw error
-        }
-    }
-
-    /**
-     * Function that takes a question, gets a random variant of it and parses it to the correct question and answer string
-     * @param question the question to get a variant from
-     * @param user the user that needs a variant
-     * @returns the variant of the question
-     */
-    async variantToQuestion(question: IQuestion, user: User): Promise<IQuestion | undefined> {
-        try {
-            if (question.variants !== undefined && question.variants.length !== 0) {
-                const variant = user.getRandomQuestionId(question.variants)
-                const variantDocument = await getVariantById(variant, question.subject)
-                if (variantDocument === undefined) throw Error("Variant was not found")
-                const result = parseVariantToQuestion(variantDocument, question)
-                user.currentQuestion = result
-                user.questions = user.questions.set(result, { attempts: 0, correct: 0 })
-                user.questionIds.push(variant)
-                return result
-            } else {
-                user.currentQuestion = question
-                user.questions = user.questions.set(question, { attempts: 0, correct: 0 })
-                user.questionIds.push(question.id)
-                return question
-            }
+            const exerciseId = user.getRandomQuestionId(exerciseIds)
+            const exercise = topic.difficultyExercises.find((x) => x.id === exerciseId)
+            if (exercise === undefined) throw Error("An exercise with this id could not be found")
+            user.attempts = exercise.numOfAttempts
+            return exercise
         } catch (error) {
             throw error
         }
@@ -216,7 +184,7 @@ export class Game {
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
         const numberOfPlayers = this.users.size
-        const roundDuration = this.roundDurations[this.round]
+        const roundDuration = this.roundDurations[this.currentTopicIndex]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
         this.timeScores.push(newTimeScore)
@@ -230,19 +198,19 @@ export class Game {
      * @returns a list of interpolated points for the given round to be used for this ghost team
      */
     getGhostTeamTimePointScores(ghostTeamScores: number[]) {
-        const numberOfTimePoints = Math.floor(this.roundDurations[this.round] / 20)
+        const numberOfTimePoints = Math.floor(this.roundDurations[this.currentTopicIndex] / 20)
         const points = ghostTeamScores.map((x, index) => [index * 30, x])
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
 
         const result = timePoints.map(x => ({
             timePoint: x,
-            score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
+            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.users.size
         }))
 
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
-        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.round] * this.users.size
+        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.users.size
         result[result.length - 1] = lastElement
 
         console.log(result)
@@ -257,7 +225,7 @@ export class Game {
      */
     getTimePointsForTeam(numberOfTimePoints: number) {
         const timePoints: number[] = [];
-        const maxDuration = this.roundDurations[this.round] * 1000; // Convert duration to milliseconds
+        const maxDuration = this.roundDurations[this.currentTopicIndex] * 1000; // Convert duration to milliseconds
         let currentTime = 0;
       
         for (let i = numberOfTimePoints + 1; i > 1; i--) {
@@ -282,7 +250,7 @@ export class Game {
      * @returns the scaled up values for the scores based on current number of players and round duration
      */
     transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
-        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.round])
+        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.currentTopicIndex])
     }
 
     /**
@@ -348,7 +316,7 @@ export class Game {
      * @returns the amount of mandatory questions
      */
     getMandatoryNum(): number {
-        const round = this.rounds[this.round]
-        return round.mandatory_questions.length
+        const topic = this.topics[this.currentTopicIndex]
+        return topic.mandatoryExercises.length
     }
 }
