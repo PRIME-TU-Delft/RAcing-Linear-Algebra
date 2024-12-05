@@ -91,6 +91,14 @@ function Steps(props: Props) {
         const rounds = await res.json()
     }
 
+    const topicsFilterHandler = (filter: boolean) => {
+        if (filter) {
+            socket.emit("getLobbyData", selectedStudy)
+        } else {
+            socket.emit("getLobbyData")
+        }
+    }
+
     return (
         <div className="stepper">
             {/* FIRST STEP; NAME CREATION */}
@@ -170,6 +178,7 @@ function Steps(props: Props) {
                             stepCompletionHandler(4, completed)
                         }
                         availableRounds={lobbyData.topics}
+                        onFilterByStudyProgramme={(filter: boolean) => topicsFilterHandler(filter)}
                     ></Rounds>
                 }
                 stepActive={activeStep == 4 ? true : false}
