@@ -235,6 +235,16 @@ export async function getAllTopicData(): Promise<ITopicData[]> {
     }
 }
 
+export async function getAllTopicNames(): Promise<string[]> {
+    try {
+        const topics = await Topic.find();
+        return topics.map(topic => topic.name);
+    } catch (error) {
+        console.error("Error retrieving all topic names:", error);
+        throw error;
+    }
+}
+
 export async function getSelectedITopics(topicNames: string[]): Promise<ITopic[]> {
     try {
         const topics = await Topic.find()

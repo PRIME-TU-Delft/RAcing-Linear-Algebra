@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import type { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getSelectedITopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -598,10 +598,10 @@ module.exports = {
 
             socket.on("getLobbyData", async () => {
                 try {
-                    const allTopics = await getAllTopicData()
+                    const topicNames = await getAllTopicNames()
                     const allStudies = await getAllStudies()
                     const lobbyData = {
-                        topics: allTopics.map(topic => topic.name),
+                        topics: topicNames,
                         studies: allStudies.map(study => study.name)
                     }
                     socket.emit("lobby-data", lobbyData)
