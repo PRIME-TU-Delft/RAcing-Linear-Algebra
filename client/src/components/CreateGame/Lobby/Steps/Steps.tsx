@@ -146,8 +146,8 @@ function Steps(props: Props) {
             <Step
                 stepNumber={3}
                 onStepSelected={stepSelectedHandler}
-                stepTitle="Select a study"
-                stepCaption="A study filters the available topics based on the study programme."
+                stepTitle="Select a study programme"
+                stepCaption="A study programme allows you to filter the available topics to only include those made with your program in mind."
                 stepContent={
                     <Studies
                         onSelectStudy={(study: string) => {
