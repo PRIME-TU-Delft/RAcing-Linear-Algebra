@@ -16,7 +16,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import type { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getSelectedITopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
@@ -193,12 +193,12 @@ module.exports = {
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     startLobby(lobbyId)
                     try {
-                        const rounds = await getIRounds(study, topics)
+                        const selectedTopics = await getSelectedITopics(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
                         )
-                        addGame(rounds, roundDurations, teamName, socketIds, lobbyId, study)
+                        addGame(selectedTopics, roundDurations, teamName, socketIds, lobbyId, study)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -210,7 +210,7 @@ module.exports = {
                         const lobbyId = socketToLobbyId.get(socket.id)!
     
                         const game = getGame(lobbyId)
-                        const round = game.rounds[game.round]
+                        const round = game.topics[game.currentTopicIndex]
                         const roundId: number = round.id
     
                         const ghostTrainScores = await getGhostTrainScores(roundId)
@@ -573,7 +573,7 @@ module.exports = {
              */
             socket.on("getAllTopics", async() => {
                 try {
-                    const topics = await getAllTopics();
+                    const topics = await getAllTopicData();
                     socket.emit("all-topics", topics);
                 } catch (error) {
                     socket.emit("error", error.message);
@@ -624,7 +624,7 @@ module.exports = {
 
             socket.on("getLobbyData", async () => {
                 try {
-                    const allTopics = await getAllTopics()
+                    const allTopics = await getAllTopicData()
                     const allStudies = await getAllStudies()
                     const lobbyData = {
                         topics: allTopics.map(topic => topic.name),

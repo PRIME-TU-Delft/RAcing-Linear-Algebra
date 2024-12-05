@@ -212,7 +212,7 @@ export async function updateTopicExercises(topicId: string, exercises: {_id: str
     }
 }
 
-export async function getAllTopics(): Promise<ITopicData[]> {
+export async function getAllTopicData(): Promise<ITopicData[]> {
     try {
         const topics = await Topic.find();
 
@@ -231,6 +231,27 @@ export async function getAllTopics(): Promise<ITopicData[]> {
         return completeTopics;
     } catch (error) {
         console.error("Error retrieving all topics:", error);
+        throw error;
+    }
+}
+
+export async function getSelectedITopics(topicNames: string[]): Promise<ITopic[]> {
+    try {
+        const topics = await Topic.find()
+            .populate("studies")
+            .populate("difficultyExercises")
+            .populate("mandatoryExercises")
+
+        if (topics.length == 0) throw new Error("The selected topics were not found.")
+
+        const selectedTopics: ITopic[] = []
+        for (const topic of topics) {
+            if (topicNames.includes(topic.name)) selectedTopics.push(topic)
+        }
+        return selectedTopics
+       
+    } catch (error) {
+        console.error("Error retrieving selected topics:", error);
         throw error;
     }
 }
