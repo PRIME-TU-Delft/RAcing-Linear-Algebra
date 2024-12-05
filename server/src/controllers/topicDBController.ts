@@ -245,17 +245,24 @@ export async function getAllTopicNames(): Promise<string[]> {
     }
 }
 
-export async function getTopicNamesByStudy(study: string | undefined): Promise<string[]> {
+export async function getTopicNamesByStudy(study?: string): Promise<string[]> {
     try {
-        if (study == undefined) {
-            return getAllTopicNames()
+        if (study == undefined || study == "") {
+            return await getAllTopicNames()
         }
-        const topics = await Topic.find({ 'studies.name': study })
-        if (topics.length == 0) {
-            throw new Error(`No topics found for ${study}`)
+        const topics = await Topic.find()
+            .populate({
+                path: 'studies',
+                match: { name: study }
+            });
+
+        const filteredTopics = topics.filter(topic => topic.studies.length > 0);
+
+        if (filteredTopics.length === 0) {
+            throw new Error(`No topics found for study: ${study}`);
         }
 
-        return topics.map(topic => topic.name)
+        return filteredTopics.map(topic => topic.name);
     } catch (error) {
         console.error("Error retrieving topics by study:", error);
         throw error;

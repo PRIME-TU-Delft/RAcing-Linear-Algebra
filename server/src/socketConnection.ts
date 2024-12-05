@@ -598,7 +598,7 @@ module.exports = {
 
             socket.on("getLobbyData", async (study?: string) => {
                 try {
-                    const topicNames = getTopicNamesByStudy(study)
+                    const topicNames = await getTopicNamesByStudy(study)
                     const allStudies = await getAllStudies()
                     const lobbyData = {
                         topics: topicNames,
