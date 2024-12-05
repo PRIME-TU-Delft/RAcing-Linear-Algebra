@@ -191,10 +191,10 @@ module.exports = {
                         const lobbyId = socketToLobbyId.get(socket.id)!
     
                         const game = getGame(lobbyId)
-                        const round = game.topics[game.currentTopicIndex]
-                        const roundId: number = round.id
+                        const topic = game.topics[game.currentTopicIndex]
+                        const topicId: number = topic.id
     
-                        const ghostTrainScores = await getGhostTrainScores(roundId)
+                        const ghostTrainScores = await getGhostTrainScores(topicId)
     
                         socket.emit("ghost-trains", ghostTrainScores)
                     } catch (error) {
@@ -275,8 +275,8 @@ module.exports = {
                     const game = getGame(lobbyId)
                     game.addCheckpoint(seconds)
 
-                    const round = game.topics[game.currentTopicIndex]
-                    const result = await getCheckpoints(round.id, game.checkpoints.length - 1)
+                    const topic = game.topics[game.currentTopicIndex]
+                    const result = await getCheckpoints(topic.id, game.checkpoints.length - 1)
                     socket.emit("get-checkpoints", result)
                 } catch (error) {
                     console.error(error)
@@ -304,14 +304,14 @@ module.exports = {
                         game.teamName,
                         game.timeScores,
                         game.checkpoints,
-                        game.rounds[game.round]._id,
-                        game.roundDurations[game.round],
+                        game.topics[game.currentTopicIndex]._id,
+                        game.roundDurations[game.currentTopicIndex],
                         game.study,
                         accuracy
                     )
-                    const currentRound = game.rounds[game.round]
+                    const currentTopic = game.topics[game.currentTopicIndex]
     
-                    const result = await getAllScores(currentRound.id)
+                    const result = await getAllScores(currentTopic.id)
                     socket.emit("get-all-scores", result)
                 }
             })
@@ -334,10 +334,10 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
 
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: number = topic.id
 
-                    const ghostTeams = await getGhostTeams(roundId)
+                    const ghostTeams = await getGhostTeams(topicId)
                     const interpolatedGhostTeams = ghostTeams.map(x => ({
                         teamName: x.teamname,
                         timeScores: game.getGhostTeamTimePointScores(x.scores),
@@ -360,13 +360,13 @@ module.exports = {
                 try {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: number = topic.id
 
-                    const normalizedHighestFinalScore = await getBestTeamFinalScore(roundId)
+                    const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId)
                     const halvedHighestFinalScore = Math.floor(
                         normalizedHighestFinalScore 
-                        * game.roundDurations[game.round] 
+                        * game.roundDurations[game.currentTopicIndex] 
                         * game.users.size 
                         / 3)
 
@@ -402,7 +402,7 @@ module.exports = {
 
                 //If this was the last round display end game button for lecturer
                 //And let the users go back to homescreen whenever they want
-                if (game.round + 1 >= game.rounds.length) {
+                if (game.currentTopicIndex + 1 >= game.topics.length) {
                     io.to(`players${lobbyId}`).emit("game-ended")
                     socket.emit("game-ended")
                 }
@@ -469,10 +469,10 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
 
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: number = topic.id
 
-                    const ghostTrainScores = await getGhostTrainScores(roundId)
+                    const ghostTrainScores = await getGhostTrainScores(topicId)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {
@@ -636,22 +636,21 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     
-                    const round = game.rounds[game.round]
-                    const topic = round.subject
+                    const topic = game.topics[game.currentTopicIndex]
                     const teamName = game.teamName
 
                     const lobbyIdString = lobbyId.toString()
                     const theme = themes.get(parseInt(lobbyIdString))
                     
                     io.to(`players${lobbyId}`).emit("round-information", ({
-                        topic: topic,
+                        topic: topic.name,
                         teamName: teamName,
                         theme: theme,
                         study: game.study
                     }))
                     
                     socket.emit("round-information", ({
-                        topic: topic,
+                        topic: topic.name,
                         teamName: teamName,
                         theme: theme,
                         study: game.study
