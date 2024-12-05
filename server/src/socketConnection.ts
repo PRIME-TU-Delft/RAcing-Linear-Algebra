@@ -23,25 +23,6 @@ const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
 const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
 
-const graspleQuestionExamples = [{
-    difficulty: "mandatory",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/8cea917e-4c9b-4e18-90ce-3c0ada0294cf?id=77975"
-},
-{
-    difficulty: "mandatory",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/13091e5e-f7bd-4e7b-b915-a525c1a28773?id=77983"
-},
-{
-    difficulty: "medium",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"
-},
-]
-
-let current_index = 0
-
 function hashString(input: string): string {
     const hash = createHash('sha256')
     hash.update(input)
@@ -230,17 +211,10 @@ module.exports = {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
-                    const question = await game.getNewQuestion(socket.id, difficulty)
-
-                    const graspleQuestion = graspleQuestionExamples[current_index]
-                    if (current_index >= graspleQuestionExamples.length)
-                        current_index = 0
-                    else
-                        current_index += 1
+                    const exercise = game.getNewExercise(socket.id, difficulty)
                     
                     // socket.emit("get-next-question", question)
-                    socket.emit("get-next-grasple-question", graspleQuestion)
-                    console.log(question?.answer)
+                    socket.emit("get-next-grasple-question", exercise)
                 } catch (error) {
                     console.error(error)
                 }
@@ -301,7 +275,7 @@ module.exports = {
                     const game = getGame(lobbyId)
                     game.addCheckpoint(seconds)
 
-                    const round = game.rounds[game.round]
+                    const round = game.topics[game.currentTopicIndex]
                     const result = await getCheckpoints(round.id, game.checkpoints.length - 1)
                     socket.emit("get-checkpoints", result)
                 } catch (error) {
