@@ -27,8 +27,9 @@ export const scoreSchema: mongoose.Schema = new mongoose.Schema({
         type: [Number],
         required: true,
     },
-    roundId: {
-        type: String,
+    topicId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Topics",
         required: true,
     },
     roundDuration: {
