@@ -192,7 +192,7 @@ module.exports = {
     
                         const game = getGame(lobbyId)
                         const topic = game.topics[game.currentTopicIndex]
-                        const topicId: number = topic.id
+                        const topicId: string = topic._id
     
                         const ghostTrainScores = await getGhostTrainScores(topicId)
     
@@ -276,7 +276,7 @@ module.exports = {
                     game.addCheckpoint(seconds)
 
                     const topic = game.topics[game.currentTopicIndex]
-                    const result = await getCheckpoints(topic.id, game.checkpoints.length - 1)
+                    const result = await getCheckpoints(topic._id, game.checkpoints.length - 1)
                     socket.emit("get-checkpoints", result)
                 } catch (error) {
                     console.error(error)
@@ -311,7 +311,7 @@ module.exports = {
                     )
                     const currentTopic = game.topics[game.currentTopicIndex]
     
-                    const result = await getAllScores(currentTopic.id)
+                    const result = await getAllScores(currentTopic._id)
                     socket.emit("get-all-scores", result)
                 }
             })
@@ -335,7 +335,7 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     const topic = game.topics[game.currentTopicIndex]
-                    const topicId: number = topic.id
+                    const topicId: string = topic._id
 
                     const ghostTeams = await getGhostTeams(topicId)
                     const interpolatedGhostTeams = ghostTeams.map(x => ({
@@ -361,7 +361,7 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
                     const topic = game.topics[game.currentTopicIndex]
-                    const topicId: number = topic.id
+                    const topicId: string = topic._id
 
                     const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId)
                     const halvedHighestFinalScore = Math.floor(
@@ -470,7 +470,7 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     const topic = game.topics[game.currentTopicIndex]
-                    const topicId: number = topic.id
+                    const topicId: string = topic._id
 
                     const ghostTrainScores = await getGhostTrainScores(topicId)
 

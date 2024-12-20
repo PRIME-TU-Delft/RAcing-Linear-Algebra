@@ -188,7 +188,6 @@ export class Game {
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
         this.timeScores.push(newTimeScore)
-        console.log(this.timeScores)
     }
 
     /**
@@ -212,8 +211,6 @@ export class Game {
         const lastElement = result[result.length - 1]
         lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.users.size
         result[result.length - 1] = lastElement
-
-        console.log(result)
 
         return result
     }
