@@ -157,10 +157,12 @@ function Question(props: Props) {
                     type={questionData.iQuestion.subject}
                     easyIsOnCooldown={props.easyQuestionsOnCooldown}
                 ></DifficultySelection>
+                <div className="question-overlay-button">
 
+                </div>
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
-                    <div>
-                        <iframe height="560" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="100%" allow="clipboard-read; clipboard-write"></iframe>
+                    <div style={{height: "100%"}}>
+                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (
