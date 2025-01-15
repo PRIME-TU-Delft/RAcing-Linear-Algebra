@@ -210,9 +210,10 @@ module.exports = {
             socket.on("getNewQuestion", async (difficulty?: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
+                    console.log("requested exercise.........")
                     const game = getGame(lobbyId)
                     const exercise = game.getNewExercise(socket.id, difficulty)
-                    
+                    console.log(exercise)
                     // socket.emit("get-next-question", question)
                     socket.emit("get-next-grasple-question", exercise)
                 } catch (error) {
@@ -220,24 +221,18 @@ module.exports = {
                 }
             })
 
-            /**
-             * Checks the answer a user gave
-             * If they answered incorrect while having attempts left, they can try again
-             * If they have no more mandatory questions left, they get the choose difficulty screen
-             * If they answered correctly the new score gets sent to the lecturer
-             */
-            socket.on("checkAnswer", (answer: string, difficulty: string) => {
+            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
-                    console.log(`Given answer: ${answer}`)
+                    console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
-                    const [correctAnswer, score] = game.checkAnswer(socket.id, answer, difficulty)
+                    const score = game.processUserAnswer(socket.id, answeredCorrectly, difficulty)
                     const attempts = game.attemptChecker(socket.id)
 
                     const user = game.users.get(socket.id)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
 
-                    if (correctAnswer) {
+                    if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
@@ -254,15 +249,57 @@ module.exports = {
                             averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
                     } else if (attempts === 0) {
-                        socket.emit("wrongAnswer", 0)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
-                    } else {
-                        socket.emit("wrongAnswer", attempts)
                     }
                 } catch (error) {
                     console.error(error)
                 }
             })
+
+            /**
+             * DEPRECATED
+             * Checks the answer a user gave
+             * If they answered incorrect while having attempts left, they can try again
+             * If they have no more mandatory questions left, they get the choose difficulty screen
+             * If they answered correctly the new score gets sent to the lecturer
+             */
+            // socket.on("checkAnswer", (answer: string, difficulty: string) => {
+            //     const lobbyId = socketToLobbyId.get(socket.id)!
+            //     try {
+            //         console.log(`Given answer: ${answer}`)
+            //         const game = getGame(lobbyId)
+            //         const [correctAnswer, score] = game.checkAnswer(socket.id, answer, difficulty)
+            //         const attempts = game.attemptChecker(socket.id)
+
+            //         const user = game.users.get(socket.id)
+            //         if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+
+            //         if (correctAnswer) {
+            //             socket.emit("rightAnswer", score)
+            //             if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
+            //             const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+            //             const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                        
+            //             io.to(`lecturer${lobbyId}`).emit("score", {
+            //                 score: Math.floor(game.totalScore),
+            //                 accuracy: Math.floor(accuracy),
+            //                 averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+            //             })
+            //             io.to(`players${lobbyId}`).emit("score", {
+            //                 score: Math.floor(game.totalScore),
+            //                 accuracy: Math.floor(accuracy),
+            //                 averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+            //             })
+            //         } else if (attempts === 0) {
+            //             socket.emit("wrongAnswer", 0)
+            //             if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
+            //         } else {
+            //             socket.emit("wrongAnswer", attempts)
+            //         }
+            //     } catch (error) {
+            //         console.error(error)
+            //     }
+            // })
 
             /**
              * Adds a checkpoint to the gameobject

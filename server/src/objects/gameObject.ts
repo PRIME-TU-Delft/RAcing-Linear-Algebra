@@ -76,12 +76,16 @@ export class Game {
      * @returns a new question
      */
     getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
+        console.log("Answered: " + user.questionIds.length.toString())
+        console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
+
         const numberOfAnswered = user.questionIds.length
         const question = topic.mandatoryExercises[numberOfAnswered]
         if (question === undefined) throw Error("Could not generate new question")
         user.attempts = question.numOfAttempts
         //Check if after adding this question all the mandatories are done
         if (numberOfAnswered + 1 >= topic.mandatoryExercises.length) user.isOnMandatory = false
+        this.initializeUserAttempts(question, user)
         return question
     }
 
@@ -102,13 +106,20 @@ export class Game {
                 .filter((x) => x.difficulty === difficulty)
                 .map((x) => x.id)
             const exerciseId = user.getRandomQuestionId(exerciseIds)
-            const exercise = topic.difficultyExercises.find((x) => x.id === exerciseId)
+            const exercise = topic.difficultyExercises.find((x) => x.exerciseId === exerciseId)
             if (exercise === undefined) throw Error("An exercise with this id could not be found")
             user.attempts = exercise.numOfAttempts
+        this.initializeUserAttempts(exercise, user)
             return exercise
         } catch (error) {
             throw error
         }
+    }
+
+    initializeUserAttempts(exericse: IExercise, user: User) {
+        user.currentQuestion = exericse
+        user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
+        user.questionIds.push(exericse.exerciseId)
     }
 
     /**
@@ -117,18 +128,16 @@ export class Game {
      * @param answer the answer from the user
      * @returns boolean depending on correctness of the answer
      */
-    checkAnswer(socketId: string, answer: any, questionDifficulty: string): (boolean | number)[] {
+    processUserAnswer(socketId: string, answeredCorrectly: boolean, questionDifficulty: string): number {
         const user = this.users.get(socketId)
         if (user === undefined) throw Error("This user is not in this game")
 
         const question = user.currentQuestion
-        const finalAnswer = question.answer
-        const result = checkAnswerEqual(question, finalAnswer, answer)
         const usedAttempts = user.questions.get(question)?.attempts ?? 0
         let score = 0
 
         //Case of incorrect answer
-        if (!result) {
+        if (!answeredCorrectly) {
             user.attempts--
             if (user.attempts === 0) this.incorrect++
             user.resetUserStreak(questionDifficulty)
@@ -150,7 +159,7 @@ export class Game {
             //Sets the correctlyAnswered value to 1
             user.questions = user.questions.set(question, { attempts: usedAttempts, correct: 1 })
         }
-        return [result, score]
+        return score
     }
 
     /* Calculates the score a player will receive for answering a question
@@ -158,8 +167,9 @@ export class Game {
      * @param user the user that answered the question
      * @returns the amount of score gained
      */
-    calculateScore(question: IQuestion, user: User) {
-        const difficulty = question.difficulty
+    
+    calculateScore(exercise: IExercise, user: User) {
+        const difficulty = exercise.difficulty.toLowerCase()
         const difficulties = ["easy", "medium", "hard", "mandatory"]
         const scores = [10, 50, 150, 50]
 
@@ -284,8 +294,7 @@ export class Game {
                 res.set(
                     question.id,
                     new Statistic(
-                        question.question,
-                        question.answer,
+                        question,
                         question.difficulty,
                         currentAnswered + correct,
                         currentAttempts + attempts
