@@ -10,6 +10,8 @@
     width: 70px;
     background-color: #F8B700;
 
+    /* background-color: #0063D3; */
+
     position: absolute;
     border-radius: 0 10px 10px 0;
     right: calc(10% - 70px);
@@ -61,13 +63,15 @@
 .overlay-open.clickable-overlay {
     /* background-color: #ea8602; */
     /* background-color: #F8B700; */
-    background-color: #f89900;
+    /* background-color: #f89900; */
+    background-color: #0063D3;
     transition-duration: 0.3s;
 }
 
 .clickable-overlay:hover {
     cursor: pointer;
-    background-color: #e76603;
+    /* background-color: #e76603; */
+    background-color: #004BA0;
 }
 
 .animated-border {
@@ -76,8 +80,8 @@
     left: 0;
     height: 100%;
     width: 100%;
-    /* stroke: #e75303; */
-    stroke: #e76603;
+    /* stroke: #e76603; */
+    stroke: #003082;
     /* stroke: #0063D3; */
     /* border: 5px solid transparent;
     border-top-color: blue;
