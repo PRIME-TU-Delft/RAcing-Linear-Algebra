@@ -9,16 +9,6 @@
     position: relative;
 }
 
-.question-overlay-button {
-    height: 80px;
-    width: 80px;
-    background-color: orange;
-
-    position: absolute;
-    right: calc(10% - 80px);
-    top: 80px;
-}
-
 .question-header {
     height: 80px;
     top: 0;

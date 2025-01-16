@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'ContrailOne';
+    src: url('../../fonts/ContrailOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.question-overlay-box {
+    height: 70px;
+    width: 70px;
+    background-color: #F8B700;
+
+    position: absolute;
+    border-radius: 0 10px 10px 0;
+    right: calc(10% - 70px);
+    transition-duration: 0.6s;
+}
+
+.question-overlay-box > .overlay-text {
+    font-size: 26px;
+    line-height: 74px;
+    height: 100%;
+    position: relative;
+    color: white;
+    font-family: 'ContrailOne', sans-serif;
+}
+
+.overlay-text > * {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.overlay-open > .overlay-text > .open-text {
+    opacity: 1;
+    transition-duration: 0.3s;
+    transition-delay: 0.3s;
+}
+
+.overlay-open > .overlay-text > .closed-text {
+    opacity: 0;
+    transition-duration: 0.3s;
+}
+
+.overlay-closed > .overlay-text > .open-text {
+    opacity: 0;
+    transition-duration: 0.3s;
+}
+
+.overlay-closed > .overlay-text > .closed-text {
+    opacity: 1;
+    transition-duration: 0.3s;
+}
+
+.overlay-open {
+    width: 200px;
+    border-radius: 10px 10px 10px 10px;
+    transition-duration: 0.3s;
+}
+
+.overlay-open.clickable-overlay {
+    /* background-color: #ea8602; */
+    /* background-color: #F8B700; */
+    background-color: #f89900;
+    transition-duration: 0.3s;
+}
+
+.clickable-overlay:hover {
+    cursor: pointer;
+    background-color: #e76603;
+}
+
+.animated-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* stroke: #e75303; */
+    stroke: #e76603;
+    /* stroke: #0063D3; */
+    /* border: 5px solid transparent;
+    border-top-color: blue;
+    border-right-color: violet;
+    box-sizing: border-box;
+    border-image: linear-gradient(90deg, blue, violet) 1;
+    border-image-slice: 1;
+    border-width: 5px;
+    border-style: solid;
+    border-radius: 0 10px 10px 0; */
+}

@@ -21,6 +21,9 @@ import QuestionTrainBackground from "./Themes/QuestionTrainBackground"
 import { useNavigate } from "react-router-dom"
 import { QuestionContext } from "../../contexts/QuestionContext"
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext"
+import QuestionOverlayBox from "./QuestionOverlayBox"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faQuestion } from "@fortawesome/free-solid-svg-icons"
 
 interface Props {
     hideQuestion: boolean,
@@ -51,6 +54,7 @@ function Question(props: Props) {
     const [disableButton, setDisableButton] = useState<boolean>(false)
     
     const [questionStartTime, setQuestionStartTime] = useState<number>(0)
+    const [questionStarted, setQuestionStarted] = useState<boolean>(false);
 
     // All the socket events for the questions are handled here
     useEffect(() => {
@@ -59,6 +63,23 @@ function Question(props: Props) {
             setDisableButton(true)
             setHasToSelectDifficulty(true)
         })
+    }, [])
+
+    useEffect(() => {
+        console.log("JHERE");
+
+        const startQuestion = (count: number) => {
+            if (count > 0) {
+                handleQuestionStart();
+                setTimeout(() => startQuestion(count - 1), 2000);
+            }
+        };
+
+        startQuestion(3); // Start the countdown with 3 iterations
+
+        return () => {
+            // Cleanup if needed
+        };
     }, [])
 
     useEffect(() => {
@@ -144,6 +165,23 @@ function Question(props: Props) {
         setQuestionStartTime(Date.now())
     }
 
+    const handleQuestionStart = () => {
+        setTimeout(() => {
+            setQuestionStarted(true);
+        }, 1000);
+    }
+
+    useEffect(() => {
+        if (questionStarted) {
+            setQuestionStarted(curr => false)
+        }
+    }, [questionStarted])
+
+    const overlayContent1 = (<div>HELLO</div>)
+    const overlayContent2 = (<div>
+        <FontAwesomeIcon icon={faQuestion} />
+    </div>)
+
     return (
            <animated.div
                 className="question-container"
@@ -157,12 +195,14 @@ function Question(props: Props) {
                     type={questionData.iQuestion.subject}
                     easyIsOnCooldown={props.easyQuestionsOnCooldown}
                 ></DifficultySelection>
-                <div className="question-overlay-button">
 
-                </div>
+                <QuestionOverlayBox margin={80} questionStarted={questionStarted} openOnStart={true} closedText="1" openText="Attempts: 1"/>
+                <QuestionOverlayBox isAction={true} margin={80}  questionStarted={questionStarted} openText="Next question" staysOpen={true} openOnStart={true}/>
+
+
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div style={{height: "100%"}}>
-                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
+                        <iframe height="100%" src={"https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (
