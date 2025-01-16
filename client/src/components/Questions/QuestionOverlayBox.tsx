@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./QuestionOverlayBox.css";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { motion } from "framer-motion";
+import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
+import { a, useSpring } from "react-spring";
 
 interface Props {
     margin: number
-    questionStarted: boolean
     show?: boolean
     openOnStart?: boolean
     staysOpen?:boolean
     openDuration?: number
+    startOpenDelay?: number
     openOnHover?: boolean
     isAction?: boolean
     onBoxClicked?: () => void
@@ -20,11 +22,11 @@ interface Props {
 
 const QuestionOverlayBox: React.FC<Props> = ({
     margin,
-    questionStarted,
     show = true,            // by default we want the overlay box to be shown, unless specified otherwise 
     openOnStart = false,    // don't want it to open on start by default
     staysOpen = false,
     openDuration = 3,
+    startOpenDelay = 0,
     openOnHover = false,     // don't want it to be hoverable by default
     isAction = false,
     onBoxClicked = () => {},
@@ -33,18 +35,21 @@ const QuestionOverlayBox: React.FC<Props> = ({
     boxContent
 }) => {
     const [overlayIsOpen, setOverlayIsOpen] = useState<boolean>(false)
-
+    const questionStatusContext = useContext(QuestionStatusContext)
+    
     const overlayWidth = 200
     const overlayHeight = 100
     const strokeWidth = 5
 
     useEffect(() => {
-        if (questionStarted) {
+        if (questionStatusContext.questionStarted) {
             if (openOnStart) {
-                openOverlayBoxOnStart()
+                setTimeout(() => {
+                    openOverlayBoxOnStart()
+                }, startOpenDelay)
             }
         }
-    }, [questionStarted])
+    }, [questionStatusContext.questionStarted])
 
     const openOverlayBoxOnStart = () => {
         setOverlayIsOpen(true);
@@ -125,6 +130,11 @@ const QuestionOverlayBox: React.FC<Props> = ({
         }
     }
 
+    const fade = useSpring({
+        opacity: show ? 1 : 0,
+        config: { duration: 500 },
+    });
+
     const getMarginStyle = () => {
         // Actions appear on the bottom, and information boxes on top
         if (isAction) {
@@ -138,42 +148,60 @@ const QuestionOverlayBox: React.FC<Props> = ({
         }
     }
 
+    const clickHandler = () => {
+        if (isAction) {
+            questionStatusContext.newQuestionEvent()
+        }
+    }
+
+    const getVisibiilityClass = () => {
+        if (show) {
+            return "overlay-visible "
+        } else {
+            return "overlay-hidden "
+        }
+    }
+
     return (
-        <div 
-            className={"question-overlay-box " + getOverlayOpenClassValue() + getClickableHoverClass()} 
-            style={getMarginStyle()}
-            onMouseEnter={handleOverlayBoxHover}
-            onMouseLeave={handleOverlayBoxMouseLeave}>
-                {overlayIsOpen && isAction && (<svg className="animated-border" viewBox="0 0 100 100">
-                    <motion.path
-                        d={getTopBorderPath()}
-                        fill="transparent"
-                        strokeWidth={strokeWidth}
-                        initial="hidden"
-                        animate="visible"
-                        variants={draw}
-                        custom={1}
-                    />
-                    <motion.path
-                        d={getBottomBorderPath()}
-                        fill="transparent"
-                        strokeWidth={strokeWidth}
-                        initial="hidden"
-                        animate="visible"
-                        variants={draw}
-                        custom={1}
-                    />
-                </svg>)}
-                <div className="overlay-text">
-                    <div className="open-text">
-                        {openText}
-                    </div>
-                    <div className="closed-text">
-                        {closedText}
-                    </div>
+        <a.div className={getVisibiilityClass()} style={fade}>  
+            <div 
+                className={"question-overlay-box " + getOverlayOpenClassValue() + getClickableHoverClass()} 
+                style={getMarginStyle()}
+                onMouseEnter={handleOverlayBoxHover}
+                onMouseLeave={handleOverlayBoxMouseLeave}
+                onClick={clickHandler}
+                >    
+                        {overlayIsOpen && isAction && (<svg className="animated-border" viewBox="0 0 100 100">
+                            <motion.path
+                                d={getTopBorderPath()}
+                                fill="transparent"
+                                strokeWidth={strokeWidth}
+                                initial="hidden"
+                                animate="visible"
+                                variants={draw}
+                                custom={1}
+                            />
+                            <motion.path
+                                d={getBottomBorderPath()}
+                                fill="transparent"
+                                strokeWidth={strokeWidth}
+                                initial="hidden"
+                                animate="visible"
+                                variants={draw}
+                                custom={1}
+                            />
+                        </svg>)}
+                        <div className="overlay-text">
+                            <div className="open-text">
+                                {openText}
+                            </div>
+                            <div className="closed-text">
+                                {closedText}
+                            </div>
+                        </div>
+                        {boxContent && <div className="box-content">{boxContent}</div>}
                 </div>
-                {boxContent && <div className="box-content">{boxContent}</div>}
-        </div>
+        </a.div>
     );
 };
 

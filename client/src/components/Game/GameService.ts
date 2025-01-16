@@ -55,6 +55,8 @@ export function getRacePathSizeAndOffsetMargins(viewportWidth: number, viewportH
 }
 
 export interface QuestionStatus {
-    questionStarted: boolean;
-    questionFinished: boolean;
+    questionStarted: boolean
+    questionFinished: boolean
+    remainingAttempts: number
+    newQuestionEvent: () => void
 }
