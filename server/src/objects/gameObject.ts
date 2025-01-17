@@ -103,8 +103,10 @@ export class Game {
     ): IExercise | undefined {
         try {
             const exerciseIds = topic.difficultyExercises
-                .filter((x) => x.difficulty === difficulty)
-                .map((x) => x.id)
+                .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
+                .map((x) => x.exerciseId)
+            console.log(topic.difficultyExercises)
+
             const exerciseId = user.getRandomQuestionId(exerciseIds)
             const exercise = topic.difficultyExercises.find((x) => x.exerciseId === exerciseId)
             if (exercise === undefined) throw Error("An exercise with this id could not be found")

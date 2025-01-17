@@ -83,7 +83,7 @@ function Game(props: Props) {
             }
             
             if (e.data.properties.correct) {
-                onQuestionAnsweredCorrectly()
+                socket.emit("questionAnswered", true)
             } else if (updatedNumberOfAttempts) {
                 onQuestionAnsweredIncorrectly(currentNumberOfAttempts - 1)
             } else {
@@ -139,8 +139,6 @@ function Game(props: Props) {
         setStreak((streak) => streak + 1)
         setShowInfoModal(true)
 
-        socket.emit("questionAnswered", true)
-
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(true)
 
@@ -157,9 +155,9 @@ function Game(props: Props) {
         if (triesLeft === 0) {
             // setModalType("incorrectAnswer")
             // setModalAnswer("")
-            // setStreak(0)
-            // setScoreToAdd(0)
-            // setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
+            setStreak(0)
+            setScoreToAdd(0)
+            setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
             // setShowInfoModal(true)
             setQuestionFinished(curr => true)
         } else {
@@ -173,7 +171,7 @@ function Game(props: Props) {
     // This gives them time to review their mistake if necessary
     const onPlayerReadyForNewQuestion = () => {
         setQuestionFinished(curr => false)
-        
+
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(false)
         socket.emit("questionAnswered", false)
@@ -232,6 +230,7 @@ function Game(props: Props) {
 
         socket.off("rightAnswer").on("rightAnswer", (score: number) => {
             // What happens if the answer is correct
+            setScoreToAdd(score)
             onQuestionAnsweredCorrectly()
         })
 
