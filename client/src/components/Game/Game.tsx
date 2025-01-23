@@ -130,7 +130,7 @@ function Game(props: Props) {
         }
     }
 
-    function onQuestionAnsweredCorrectly() {
+    function onQuestionAnsweredCorrectly(score: number) {
         // What happens if the answer is correct
         setModalText(["✔️ Your answer is correct!"])
         setModalType("correctAnswer")
@@ -231,7 +231,7 @@ function Game(props: Props) {
         socket.off("rightAnswer").on("rightAnswer", (score: number) => {
             // What happens if the answer is correct
             setScoreToAdd(score)
-            onQuestionAnsweredCorrectly()
+            onQuestionAnsweredCorrectly(score)
         })
 
         socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {

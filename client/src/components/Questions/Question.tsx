@@ -178,7 +178,7 @@ function Question(props: Props) {
 
                 <QuestionOverlayBox 
                     isAction={true} 
-                    margin={80} 
+                    margin={25} 
                     openText="Next question" 
                     staysOpen={true} 
                     openOnStart={true}

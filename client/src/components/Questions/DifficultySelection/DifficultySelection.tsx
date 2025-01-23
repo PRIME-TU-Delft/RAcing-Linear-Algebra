@@ -139,11 +139,6 @@ export default function DifficultySelection(props: Props) {
         setEasyCounter((prevCounter) => prevCounter + 1)
     }
 
-    useEffect(() => {
-        if (easyCounter === 7 && props.type === "Diagonalization")
-            setDisableButton(true)
-    }, [easyCounter])
-
     const getStreakForDifficulty = (difficulty: string) => {
         const streak: Streak | undefined = streaks.find(x => x.questionType == difficulty.toLowerCase())
 
