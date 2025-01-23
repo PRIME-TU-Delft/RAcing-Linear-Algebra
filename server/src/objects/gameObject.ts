@@ -118,6 +118,60 @@ export class Game {
         }
     }
 
+    /**
+     * Checks whether the user answered all questions from all difficulties
+     * @param socketId the id of the user socket
+     * @returns whether all questions have been answered
+     */
+    checkIfUserAnsweredAllQuestions(socketId: string) {
+
+        const user = this.users.get(socketId)
+        if (user === undefined) throw Error("This user is not in this game")
+        
+        const topic = this.topics[this.currentTopicIndex]
+
+        const difficulties = ["easy", "medium", "hard"]
+        let answeredAllQuestions = true
+
+        difficulties.forEach(difficulty => {
+            const answeredAllForDifficulty = this.checkIfUserAnsweredAllQuestionsOfDifficulty(socketId, difficulty)
+            answeredAllQuestions = answeredAllQuestions && answeredAllForDifficulty
+        })
+        
+        return answeredAllQuestions
+    }
+
+    /**
+     * Checks whether the user answered all questions of a particular difficulty
+     * @param socketId the user socket id
+     * @param difficulty the difficulty to check
+     * @returns whether the user answered all questions of a difficulty
+     */
+    checkIfUserAnsweredAllQuestionsOfDifficulty(socketId: string, difficulty?: string) {
+        if (difficulty == undefined) return false
+
+        const user = this.users.get(socketId)
+        if (user === undefined) throw Error("This user is not in this game")
+
+        const topic = this.topics[this.currentTopicIndex]
+        const exerciseIds = topic.difficultyExercises
+                .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
+                .map((x) => x.exerciseId)
+
+        return user.checkIfUsedUpAllVariantsForDifficulty(exerciseIds)
+    }
+
+    /**
+     * Event triggered when all of the questions have been answered by the user
+     * @param socketId user socket id
+     */
+    onUserAnsweredAllQuestions(socketId: string) {
+        const user = this.users.get(socketId)
+        if (user === undefined) throw Error("This user is not in this game")
+        
+        user.resetUserQuestionsAnswered()
+    }
+
     initializeUserAttempts(exericse: IExercise, user: User) {
         user.currentQuestion = exericse
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })

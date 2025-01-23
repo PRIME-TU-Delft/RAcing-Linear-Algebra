@@ -1,3 +1,4 @@
+import { number } from "mathjs";
 import { IExercise } from "../models/exerciseModel";
 import type { IQuestion } from "../models/questionModel"
 import { Streak } from "./streakObject";
@@ -37,12 +38,12 @@ export class User {
         this.streaks = initialized_streaks
     }
 
-    /**
-     * Gets a random questionId without getting a duplicate
-     * @param questions the list of questionIds to chose 1 from
-     * @returns 1 random chosen questionId
-     */
-    getRandomQuestionId(questions: number[]): number {
+   /**
+    * Gets a random question the user hasn't answered yet from the provided list of possible questions
+    * @param questions the possible questions from which to check
+    * @returns a random exerciseId or -1 if none are available
+    */
+    getRandomUnseenQuestionIfExists(questions: number[]): number {
         let size = questions.length
         let flag = false
         let question = -1
@@ -56,11 +57,30 @@ export class User {
                 flag = true
             }
         }
+
         if (!flag) {
-            throw Error("All variants have been used already")
+            return -1
         }
 
         return question
+    }
+
+    /**
+     * Gets a random questionId without getting a duplicate
+     * @param questions the list of questionIds to chose 1 from
+     * @returns 1 random chosen exercise
+     */
+    getRandomQuestionId(questions: number[]): number {
+        const question = this.getRandomUnseenQuestionIfExists(questions)
+        if (question == -1) {
+            throw Error("All variants have been used already")
+        } else {
+            return question
+        }
+    }
+
+    checkIfUsedUpAllVariantsForDifficulty(questions: number[]): boolean {
+        return questions.every(question => this.questionIds.includes(question))
     }
 
     /**
@@ -126,5 +146,9 @@ export class User {
         this.score = 0
         this.isOnMandatory = true
         this.streaks.map((streak: Streak) => streak.resetStreak())
+    }
+
+    resetUserQuestionsAnswered() {
+        this.questionIds = []
     }
 }

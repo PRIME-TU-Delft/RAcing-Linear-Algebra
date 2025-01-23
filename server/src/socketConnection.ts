@@ -213,9 +213,21 @@ module.exports = {
                     console.log("requested exercise.........")
                     const game = getGame(lobbyId)
                     const exercise = game.getNewExercise(socket.id, difficulty)
-                    console.log(exercise)
                     // socket.emit("get-next-question", question)
                     socket.emit("get-next-grasple-question", exercise)
+
+                    const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
+                    if (usedUpAllQuestionsForDifficulty) {
+                        const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.id)
+
+                        if (answeredAllQuestions) {
+                            socket.emit("answered-all-questions")
+                            game.onUserAnsweredAllQuestions(socket.id)
+                        } else {
+                            socket.emit("disable-difficulty")
+                        }
+                    }
+
                 } catch (error) {
                     console.error(error)
                 }
@@ -255,6 +267,7 @@ module.exports = {
                     console.error(error)
                 }
             })
+
 
             /**
              * DEPRECATED
