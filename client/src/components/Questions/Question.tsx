@@ -173,12 +173,13 @@ function Question(props: Props) {
                     openOnStart={true} 
                     closedText= {`${graspleQuestionData.questionNumber}`}
                     openText={`Question ${graspleQuestionData.questionNumber}`}
+                    show={!questionStatusContext.questionFinished}
                     openOnHover={true}
                     startOpenDelay={3}/>
 
                 <QuestionOverlayBox 
                     isAction={true} 
-                    margin={25} 
+                    margin={60} 
                     openText="Next question" 
                     staysOpen={true} 
                     openOnStart={true}

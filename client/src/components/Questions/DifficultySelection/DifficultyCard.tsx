@@ -35,6 +35,8 @@ export default function DifficultyCard(props: Props) {
     }, [props.streak])
 
     function sendDifficulty() {
+        if (props.disableButton) return
+
         props.onDifficultySelected()
         socket.emit("getNewQuestion", props.difficulty.toLowerCase())
         if (props.difficulty === "Easy") {
@@ -54,13 +56,7 @@ export default function DifficultyCard(props: Props) {
                 ): (
                     <Card className="difficulty-card">
                         <Card.Body
-                            style={{
-                                pointerEvents:
-                                    props.disableButton &&
-                                    props.difficulty === "Easy"
-                                        ? "none"
-                                        : "auto",
-                            }}
+                            className={props.disableButton ? "difficulty-card-disabled" : ""}
                             onClick={sendDifficulty}
                         >
                             <Card.Title className="card-title">
@@ -75,10 +71,17 @@ export default function DifficultyCard(props: Props) {
                      place="right"
                      style={{backgroundColor: "#F0C80F", fontSize: "17px", zIndex: 9999}}
                 />
-                {props.disableButton && props.difficulty === "Easy" && (
+                {props.disableButton && props.isOnCooldown && (
                     <p className="optional-text-diff">
-                        You have to select a different difficulty
+                        How about trying a different difficulty?
                     </p>
+                )}
+                {props.disableButton && !props.isOnCooldown && (
+                    <div className="optional-text-diff">
+                        Difficulty cleared. 
+                        <br></br>
+                        Try another one!
+                    </div>
                 )}
                 <p className="card-points">{props.points}</p>
                 <p className="card-attempts">{props.attempts}</p>
