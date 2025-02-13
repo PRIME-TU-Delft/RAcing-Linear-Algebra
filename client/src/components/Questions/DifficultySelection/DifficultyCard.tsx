@@ -64,6 +64,9 @@ export default function DifficultyCard(props: Props) {
                             </Card.Title>
                             <Card.Text className="emoji"> {props.emoji}</Card.Text>
                             <Card.Text>
+                                        <div className="row justify-content-center card-points-text">
+                                                    1000
+                                        </div>
                                         {true ? (
                                             <div className="container">
                                                 <div className="row justify-content-center card-streak">
@@ -74,9 +77,7 @@ export default function DifficultyCard(props: Props) {
                                                         <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
                                                     </div>
                                                 </div>
-                                                <div className="row">
-                                                    50 points
-                                                </div>
+                                                
 
                                             </div>
                                         

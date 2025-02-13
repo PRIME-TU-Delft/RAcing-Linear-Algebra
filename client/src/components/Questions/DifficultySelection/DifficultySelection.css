@@ -8,6 +8,11 @@
     src: url("../../../fonts/CenturyGothic.ttf");
 }
 
+@font-face {
+    font-family: "Chicle-Regular";
+    src: url("../../../fonts/Chicle-Regular.ttf");
+}
+
 .diff-modal-wrapper {
     position: absolute;
     padding-left: 4rem;
@@ -90,6 +95,12 @@
 .emoji {
     font-size: 50px;
     margin-bottom: 0.5rem;
+}
+
+.card-points-text {
+    font-size: 30px;
+    font-family: 'Chicle-Regular', sans-serif;
+    color: #FB8500;
 }
 
 .card-points,
