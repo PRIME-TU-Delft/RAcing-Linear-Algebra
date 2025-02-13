@@ -218,13 +218,10 @@ module.exports = {
                     const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
                     if (usedUpAllQuestionsForDifficulty) {
                         const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.id)
+                        socket.emit("disable-difficulty", difficulty)
 
                         if (answeredAllQuestions) {
                             socket.emit("answered-all-questions")
-                            game.onUserAnsweredAllQuestions(socket.id)
-                        } else {
-                            console.log("Disabling difficulty... ")
-                            socket.emit("disable-difficulty", difficulty)
                         }
                     }
 
@@ -243,6 +240,7 @@ module.exports = {
 
                     const user = game.users.get(socket.id)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+                    console.log(user?.streaks)
 
                     if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)

@@ -364,7 +364,8 @@ function App() {
         }
 
         function onAnsweredAllQuestions() {
-            setDifficultyAvailability(curr => ({ easy: true, medium: true, hard: true }))
+            // setDifficultyAvailability(curr => ({ easy: true, medium: true, hard: true }))
+            
         }
 
         socket.on("round-duration", onRoundDuration)

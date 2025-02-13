@@ -83,7 +83,7 @@ function Game(props: Props) {
             }
             
             if (e.data.properties.correct) {
-                socket.emit("questionAnswered", true)
+                socket.emit("questionAnswered", true, graspleQuestionData.questionData.difficulty.toLowerCase())
             } else if (updatedNumberOfAttempts) {
                 onQuestionAnsweredIncorrectly(currentNumberOfAttempts - 1)
             } else {
@@ -174,7 +174,7 @@ function Game(props: Props) {
 
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(false)
-        socket.emit("questionAnswered", false)
+        socket.emit("questionAnswered", false, graspleQuestionData.questionData.difficulty.toLowerCase())
         
         if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) {
             socket.emit("getNewQuestion")

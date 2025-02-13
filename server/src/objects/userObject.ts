@@ -104,7 +104,6 @@ export class User {
      */
     continueUserStreak(difficulty: string) {
         const streak = this.getStreakForDifficulty(difficulty)
-
         if (!streak) 
             return
 

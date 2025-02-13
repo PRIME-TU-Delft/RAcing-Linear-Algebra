@@ -204,8 +204,8 @@ export class Game {
             })
         } else {
             //Calculate score and update values
-            user.continueUserStreak(questionDifficulty)
             score = this.calculateScore(question, user)
+            user.continueUserStreak(questionDifficulty)
             user.score += score
             this.totalScore += score
             this.avgScore = this.totalScore / this.users.size
