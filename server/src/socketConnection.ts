@@ -210,7 +210,6 @@ module.exports = {
             socket.on("getNewQuestion", async (difficulty?: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
-                    console.log("requested exercise.........")
                     const game = getGame(lobbyId)
                     const exercise = game.getNewExercise(socket.id, difficulty)
                     // socket.emit("get-next-question", question)
@@ -224,7 +223,8 @@ module.exports = {
                             socket.emit("answered-all-questions")
                             game.onUserAnsweredAllQuestions(socket.id)
                         } else {
-                            socket.emit("disable-difficulty")
+                            console.log("Disabling difficulty... ")
+                            socket.emit("disable-difficulty", difficulty)
                         }
                     }
 
