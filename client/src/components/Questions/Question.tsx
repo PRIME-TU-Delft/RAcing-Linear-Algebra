@@ -25,6 +25,7 @@ import QuestionOverlayBox from "./QuestionOverlayBox"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faQuestion } from "@fortawesome/free-solid-svg-icons"
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext"
+import { ChoosingDifficultyContext } from "../../contexts/ChoosingDifficultyContext"
 
 interface Props {
     hideQuestion: boolean,
@@ -38,6 +39,7 @@ function Question(props: Props) {
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
     const questionStatusContext = useContext(QuestionStatusContext)
+    const {choosingDifficulty, setChoosingDifficulty} = useContext(ChoosingDifficultyContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -59,12 +61,12 @@ function Question(props: Props) {
 
     // All the socket events for the questions are handled here
     useEffect(() => {
-        
-        socket.off("chooseDifficulty").on("chooseDifficulty", () => {
+        if (choosingDifficulty) {
             setDisableButton(true)
             setHasToSelectDifficulty(true)
-        })
-    }, [])
+            setChoosingDifficulty(false)
+        }
+    }, [choosingDifficulty])
 
     useEffect(() => {
         if (hasToSelectDifficulty && !props.infoModalDisplayed) {

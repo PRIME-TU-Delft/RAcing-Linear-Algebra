@@ -32,13 +32,13 @@ interface Props {
     onDifficultySelected: () => void
     easyIsOnCooldown: boolean
 }
+
 /**
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
     const streaks = useContext(StreakContext)
-    const difficultyAvailability = useContext(DifficultyAvailabilityContext)
-
+    const difficultyAvailability = useContext(DifficultyAvailabilityContext)    
     const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)
 
     const updateFlameAnimationStatus = () => {

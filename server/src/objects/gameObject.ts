@@ -70,6 +70,25 @@ export class Game {
     }
 
     /**
+     * Checks whether the mandatory exercises exist for the current topic
+     * @returns whether the topic contains mandatory exercises
+     */
+    mandatoryExercisesExistForCurrentTopic(): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        return topic.mandatoryExercises.length > 0
+    }
+
+    /**
+     * Makes the user not on mandatory exercises anymore
+     * @param socketId the user socket id
+     */
+    makeUserNotOnMandatory(socketId: string): void {
+        const user = this.users.get(socketId)
+        if (user === undefined) throw Error("This user is not in this game")
+        user.isOnMandatory = false
+    }
+
+    /**
      * Gets a new mandatory question
      * @param topic the current round the user is in
      * @param user the user object that needs a question

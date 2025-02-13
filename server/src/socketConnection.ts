@@ -211,18 +211,25 @@ module.exports = {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
-                    const exercise = game.getNewExercise(socket.id, difficulty)
-                    // socket.emit("get-next-question", question)
-                    socket.emit("get-next-grasple-question", exercise)
-
-                    const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
-                    if (usedUpAllQuestionsForDifficulty) {
-                        const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.id)
-                        socket.emit("disable-difficulty", difficulty)
-
-                        if (answeredAllQuestions) {
-                            socket.emit("answered-all-questions")
+                    if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
+                        const exercise = game.getNewExercise(socket.id, difficulty)
+                        // socket.emit("get-next-question", question)
+                        socket.emit("get-next-grasple-question", exercise)
+    
+                        const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
+                        if (usedUpAllQuestionsForDifficulty) {
+                            const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.id)
+                            socket.emit("disable-difficulty", difficulty)
+    
+                            if (answeredAllQuestions) {
+                                socket.emit("answered-all-questions")
+                            }
                         }
+                    }
+                    
+                    else {
+                        game.makeUserNotOnMandatory(socket.id)
+                        socket.emit("chooseDifficulty")
                     }
 
                 } catch (error) {
