@@ -13,6 +13,11 @@
     src: url("../../../fonts/Chicle-Regular.ttf");
 }
 
+@font-face {
+    font-family: "PermanentMarker";
+    src: url("../../../fonts/PermanentMarker-Regular.ttf");
+}
+
 .diff-modal-wrapper {
     position: absolute;
     padding-left: 4rem;
@@ -66,8 +71,7 @@
 
 .card-title {
     font-size: 30px;
-    font-family: Century Gothic, sans-serif;
-    font-style: bold;
+    font-family: 'PermanentMarker', sans-serif;
     text-align: center;
 }
 

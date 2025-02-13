@@ -21,7 +21,8 @@ import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../
 interface CardInfo {
     difficulty: string
     emoji: string
-    points: string
+    pointsText: string
+    points: number
     attempts: string
 }
 
@@ -97,19 +98,22 @@ export default function DifficultySelection(props: Props) {
         {
             difficulty: "Easy",
             emoji: "😃",
-            points: "Base points: 10",
+            pointsText: "Base points: 10",
+            points: 10,
             attempts: "Tries: 1",
         },
         {
             difficulty: "Medium",
             emoji: "😐",
-            points: "Base points: 50",
+            pointsText: "Base points: 50",
+            points: 50,
             attempts: "Tries: 2",
         },
         {
             difficulty: "Hard",
             emoji: "😈",
-            points: "Base points: 150",
+            pointsText: "Base points: 150",
+            points: 150,
             attempts: "Tries: 3",
         },
     ]
@@ -236,7 +240,8 @@ export default function DifficultySelection(props: Props) {
                                 <DifficultyCard
                                     difficulty={item.difficulty}
                                     emoji={item.emoji}
-                                    points={item.points}
+                                    pointsText={item.pointsText}
+                                    totalPoints={item.points * getStreakForDifficulty(item.difficulty).streakMultiplier}
                                     attempts={item.attempts}
                                     streak={getStreakForDifficulty(item.difficulty)}
                                     onDifficultySelected={props.onDifficultySelected}
