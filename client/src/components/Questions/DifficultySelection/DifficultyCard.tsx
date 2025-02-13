@@ -64,19 +64,22 @@ export default function DifficultyCard(props: Props) {
                             </Card.Title>
                             <Card.Text className="emoji"> {props.emoji}</Card.Text>
                             <Card.Text>
-                                        {showStreak ? (
-                                        <div className="d-flex justify-content-center align-items-center card-streak">
-                                            <div>
-                                                Streak:
+                                        {true ? (
+                                            <div className="container">
+                                                <div className="row justify-content-center card-streak">
+                                                    <div className="ms-2 col d-flex justify-content-center">
+                                                        <div className="d-flex justify-content-center align-items-center">
+                                                            <b>{props.streak.streakValue}</b>
+                                                        </div>
+                                                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    50 points
+                                                </div>
+
                                             </div>
-                                            <div className="ms-2">
-                                                <b>{props.streak.streakValue}</b>
-                                            </div>
-                                            <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
-                                            <div className="ms-1">
-                                                ({props.streak.streakMultiplier}x)
-                                            </div>
-                                        </div>
+                                        
                                     ) : null}
                             </Card.Text>
                         </Card.Body>
@@ -101,6 +104,20 @@ export default function DifficultyCard(props: Props) {
                 )}
                 <p className="card-points">{props.points}</p>
                 <p className="card-attempts">{props.attempts}</p>
+                {showStreak ? (
+                    <div className="d-flex justify-content-center align-items-center card-streak">
+                        <div>
+                            Streak:
+                        </div>
+                        <div className="ms-2">
+                            <b>{props.streak.streakValue}</b>
+                        </div>
+                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
+                        <div className="ms-1">
+                            ({props.streak.streakMultiplier}x)
+                        </div>
+                    </div>
+                ) : null}
             </div>
         </>
     )

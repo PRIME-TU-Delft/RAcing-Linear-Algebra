@@ -72,7 +72,7 @@
 }
 
 .card-body {
-    height: 10em;
+    height: 14em;
 }
 
 .difficulty-card {
@@ -89,6 +89,7 @@
 
 .emoji {
     font-size: 50px;
+    margin-bottom: 0.5rem;
 }
 
 .card-points,
