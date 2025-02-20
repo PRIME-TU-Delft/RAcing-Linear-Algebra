@@ -33,8 +33,7 @@ module.exports = {
     getIo: (server) => {
         const io = require("socket.io")(server, {
             cors: {
-                origin: '*',
-                methods: ['GET', 'POST'],
+                origin: "*",
             },
             connectionStateRecovery: {
                 // the backup duration of the sessions and the packets
