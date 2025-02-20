@@ -34,6 +34,16 @@ module.exports = {
         const io = require("socket.io")(server, {
             cors: {
                 origin: "*",
+                methods: ['GET', 'POST']
+            },
+            handlePreflightRequest: (req, res) => {
+                const headers = {
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "GET, POST",
+                  "Access-Control-Allow-Headers": "Content-Type"
+                };
+                res.writeHead(200, headers);
+                res.end();
             },
             connectionStateRecovery: {
                 // the backup duration of the sessions and the packets
