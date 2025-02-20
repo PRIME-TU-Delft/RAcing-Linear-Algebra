@@ -223,8 +223,14 @@ module.exports = {
                     const game = getGame(lobbyId)
                     if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
                         const exercise = game.getNewExercise(socket.id, difficulty)
+                        const user = game.users.get(socket.id)
+                        let scoreToGain = 0;
+                        if (exercise !== undefined && user !== undefined) {
+
+                            scoreToGain = game.calculateScore(exercise, user);
+                        }
                         // socket.emit("get-next-question", question)
-                        socket.emit("get-next-grasple-question", exercise)
+                        socket.emit("get-next-grasple-question", exercise, scoreToGain)
     
                         const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
                         if (usedUpAllQuestionsForDifficulty) {

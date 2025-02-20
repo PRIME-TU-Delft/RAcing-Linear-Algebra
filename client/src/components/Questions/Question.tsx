@@ -33,6 +33,9 @@ interface Props {
     infoModalDisplayed: boolean,
     calculateResponseTime: (startTime: number, endTime: number) => void,
     easyQuestionsOnCooldown: boolean
+    pointsToGain: number
+    difficultyEmoji: string
+    difficultyName: string
 }
 
 function Question(props: Props) {
@@ -180,9 +183,29 @@ function Question(props: Props) {
                     startOpenDelay={3}/>
 
                 <QuestionOverlayBox 
+                    margin={140} 
+                    openOnStart={true} 
+                    closedText= {`${props.difficultyEmoji}`}
+                    color="#003082"
+                    openText={`${String(props.difficultyName).charAt(0).toUpperCase() + String(props.difficultyName).slice(1)} ${props.difficultyEmoji}`}
+                    show={!questionStatusContext.questionFinished}
+                    openOnHover={true}
+                    startOpenDelay={3}/>
+
+                <QuestionOverlayBox 
+                    margin={220} 
+                    closedText= {`${props.pointsToGain}`}
+                    color="#003082"
+                    openText={`Points ${props.pointsToGain}`}
+                    show={!questionStatusContext.questionFinished}
+                    openOnHover={true}
+                    startOpenDelay={3}/>
+
+                <QuestionOverlayBox 
                     isAction={true} 
                     margin={80} 
                     openText="Next question" 
+                    color="#198754"
                     staysOpen={true} 
                     openOnStart={true}
                     show={questionStatusContext.questionFinished}

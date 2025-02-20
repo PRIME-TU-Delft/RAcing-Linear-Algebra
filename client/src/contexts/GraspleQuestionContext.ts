@@ -4,7 +4,8 @@ import { GraspleExercise } from '../components/RaceThemes/SharedUtils';
 interface QuestionData {
     questionData: GraspleExercise,
     questionNumber: number,
-    numberOfMandatory: number
+    numberOfMandatory: number,
+    pointsToGain: number
 }
 
 export const GraspleQuestionContext = createContext<QuestionData>({
@@ -18,5 +19,6 @@ export const GraspleQuestionContext = createContext<QuestionData>({
         isMandatory: false
     },
     questionNumber: 0,
-    numberOfMandatory: 0
+    numberOfMandatory: 0,
+    pointsToGain: 0
 })

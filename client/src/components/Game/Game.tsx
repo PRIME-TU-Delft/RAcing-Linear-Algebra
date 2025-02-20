@@ -360,6 +360,22 @@ function Game(props: Props) {
         }
     }
 
+    const getEmojiForDifficulty = (difficulty: string) => {
+        switch (difficulty.toLowerCase()) {
+            case "easy":
+                return "😃"
+
+            case "medium":
+                return "😐"
+            
+            case "hard":
+                return "😈"
+            
+            default:
+                return "❓"
+        }
+    }
+
     useEffect(() => {
         if (spamAnswerCounter >= 3) {
             setEasyQuestionsOnCooldown(curr => true)
@@ -456,6 +472,9 @@ function Game(props: Props) {
                                 infoModalDisplayed={showInfoModal}
                                 calculateResponseTime={calculateResponseTime}
                                 easyQuestionsOnCooldown={easyQuestionsOnCooldown}
+                                difficultyName={graspleQuestionData.questionData.difficulty}
+                                difficultyEmoji={getEmojiForDifficulty(graspleQuestionData.questionData.difficulty)}
+                                pointsToGain={graspleQuestionData.pointsToGain}
                             />  
                     </QuestionStatusContext.Provider>    
                 </div>

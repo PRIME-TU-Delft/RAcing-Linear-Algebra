@@ -9,6 +9,7 @@ interface Props {
     margin: number
     show?: boolean
     openOnStart?: boolean
+    color?: string
     staysOpen?:boolean
     openDuration?: number
     startOpenDelay?: number
@@ -25,6 +26,7 @@ const QuestionOverlayBox: React.FC<Props> = ({
     show = true,            // by default we want the overlay box to be shown, unless specified otherwise 
     openOnStart = false,    // don't want it to open on start by default
     staysOpen = false,
+    color = "#F8B700",
     openDuration = 3,
     startOpenDelay = 0,
     openOnHover = false,     // don't want it to be hoverable by default
@@ -166,7 +168,7 @@ const QuestionOverlayBox: React.FC<Props> = ({
         <a.div className={getVisibiilityClass()} style={fade}>  
             <div 
                 className={"question-overlay-box " + getOverlayOpenClassValue() + getClickableHoverClass()} 
-                style={getMarginStyle()}
+                style={{...getMarginStyle(), backgroundColor: color}}
                 onMouseEnter={handleOverlayBoxHover}
                 onMouseLeave={handleOverlayBoxMouseLeave}
                 onClick={clickHandler}

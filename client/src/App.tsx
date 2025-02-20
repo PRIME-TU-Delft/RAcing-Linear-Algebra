@@ -89,6 +89,7 @@ function App() {
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
     const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
     const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
+    const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -306,9 +307,10 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
-        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise) {
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number) {
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
+            setPointsToGainForCurrentQuestion(curr => pointsToGain)
         }
 
         function onGetNumberOfMandatoryQuestions(num: number) {
@@ -522,7 +524,7 @@ function App() {
                                 <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
                                     <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                         <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                            <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                            <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
                                                 <StreakContext.Provider value={streaks}>
                                                     <RaceProgressContext.Provider value={stopShowingRace}>
                                                         <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
