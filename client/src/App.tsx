@@ -310,7 +310,7 @@ function App() {
         function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number) {
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
-            setPointsToGainForCurrentQuestion(curr => pointsToGain)
+            setPointsToGainForCurrentQuestion(curr => Math.floor(pointsToGain))
         }
 
         function onGetNumberOfMandatoryQuestions(num: number) {

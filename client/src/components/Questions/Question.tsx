@@ -186,7 +186,7 @@ function Question(props: Props) {
                     margin={140} 
                     openOnStart={true} 
                     closedText= {`${props.difficultyEmoji}`}
-                    color="#003082"
+                    color="#0063D3"
                     openText={`${String(props.difficultyName).charAt(0).toUpperCase() + String(props.difficultyName).slice(1)} ${props.difficultyEmoji}`}
                     show={!questionStatusContext.questionFinished}
                     openOnHover={true}
@@ -195,7 +195,7 @@ function Question(props: Props) {
                 <QuestionOverlayBox 
                     margin={220} 
                     closedText= {`${props.pointsToGain}`}
-                    color="#003082"
+                    color="#0063D3"
                     openText={`Points ${props.pointsToGain}`}
                     show={!questionStatusContext.questionFinished}
                     openOnHover={true}
