@@ -398,10 +398,6 @@ function App() {
         socket.on("disable-difficulty", onDisableDifficulty)
         socket.on("answered-all-questions", onAnsweredAllQuestions)
         socket.on("chooseDifficulty", onChooseDifficulty)
-
-        socket.on("connect", () => {
-            console.log("Client: Successfully connected to server!", socket.id);
-          });
     }, [])
 
     // useEffect(() => {
