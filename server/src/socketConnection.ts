@@ -253,7 +253,6 @@ module.exports = {
                     console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
                     const score = game.processUserAnswer(socket.id, answeredCorrectly, difficulty)
-                    const attempts = game.attemptChecker(socket.id)
 
                     const user = game.users.get(socket.id)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
@@ -275,7 +274,7 @@ module.exports = {
                             accuracy: Math.floor(accuracy),
                             averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
-                    } else if (attempts === 0) {
+                    } else {
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                     }
                 } catch (error) {
