@@ -37,6 +37,7 @@ function JoinGame(props: Props) {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "skip-browser-warning"
                 },
             }
         )

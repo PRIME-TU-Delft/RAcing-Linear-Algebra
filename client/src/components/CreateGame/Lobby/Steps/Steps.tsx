@@ -86,6 +86,7 @@ function Steps(props: Props) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "skip-browser-warning"
             },
         })
         const rounds = await res.json()
