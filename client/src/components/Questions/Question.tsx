@@ -21,6 +21,11 @@ import QuestionTrainBackground from "./Themes/QuestionTrainBackground"
 import { useNavigate } from "react-router-dom"
 import { QuestionContext } from "../../contexts/QuestionContext"
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext"
+import QuestionOverlayBox from "./QuestionOverlayBox"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faQuestion } from "@fortawesome/free-solid-svg-icons"
+import { QuestionStatusContext } from "../../contexts/QuestionStatusContext"
+import { ChoosingDifficultyContext } from "../../contexts/ChoosingDifficultyContext"
 
 interface Props {
     hideQuestion: boolean,
@@ -33,6 +38,8 @@ interface Props {
 function Question(props: Props) {
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
+    const questionStatusContext = useContext(QuestionStatusContext)
+    const {choosingDifficulty, setChoosingDifficulty} = useContext(ChoosingDifficultyContext)
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -54,12 +61,12 @@ function Question(props: Props) {
 
     // All the socket events for the questions are handled here
     useEffect(() => {
-        
-        socket.off("chooseDifficulty").on("chooseDifficulty", () => {
+        if (choosingDifficulty) {
             setDisableButton(true)
             setHasToSelectDifficulty(true)
-        })
-    }, [])
+            setChoosingDifficulty(false)
+        }
+    }, [choosingDifficulty])
 
     useEffect(() => {
         if (hasToSelectDifficulty && !props.infoModalDisplayed) {
@@ -144,6 +151,11 @@ function Question(props: Props) {
         setQuestionStartTime(Date.now())
     }
 
+    const overlayContent1 = (<div>HELLO</div>)
+    const overlayContent2 = (<div>
+        <FontAwesomeIcon icon={faQuestion} />
+    </div>)
+
     return (
            <animated.div
                 className="question-container"
@@ -158,9 +170,27 @@ function Question(props: Props) {
                     easyIsOnCooldown={props.easyQuestionsOnCooldown}
                 ></DifficultySelection>
 
+                <QuestionOverlayBox 
+                    margin={60} 
+                    openOnStart={true} 
+                    closedText= {`${graspleQuestionData.questionNumber}`}
+                    openText={`Question ${graspleQuestionData.questionNumber}`}
+                    show={!questionStatusContext.questionFinished}
+                    openOnHover={true}
+                    startOpenDelay={3}/>
+
+                <QuestionOverlayBox 
+                    isAction={true} 
+                    margin={80} 
+                    openText="Next question" 
+                    staysOpen={true} 
+                    openOnStart={true}
+                    show={questionStatusContext.questionFinished}
+                    startOpenDelay={2}/>
+
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
-                    <div>
-                        <iframe height="560" src={graspleQuestionData.questionData.questionUrl} title="Grasple Exercise 77975" width="100%" allow="clipboard-read; clipboard-write"></iframe>
+                    <div style={{height: "100%"}}>
+                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (

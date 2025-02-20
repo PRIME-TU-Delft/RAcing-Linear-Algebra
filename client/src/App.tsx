@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, GraspleQuestion, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleExercise, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -33,6 +33,9 @@ import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
 import { TopicDataContext } from "./contexts/TopicDataContext"
+import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
+import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
+import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -57,6 +60,12 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
+    const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
+        easy: true,
+        medium: true,
+        hard: true
+    })
 
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
@@ -67,14 +76,19 @@ function App() {
         options: [],
         variants: []
     })
-    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleQuestion>({
-        questionUrl: "",
+    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleExercise>({
+        _id: "",
+        name: "",
+        exerciseId: 0,
         difficulty: "",
-        subject: ""
+        url: "",
+        numOfAttempts: 0,
+        isMandatory: false
     })
 
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
     const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
+    const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -103,6 +117,7 @@ function App() {
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
+        socket.emit("getLobbyData")
     }
 
     const isPlayerHandler = (isPlayer: boolean) => {
@@ -291,7 +306,7 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
-        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleQuestion) {
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise) {
             setCurrentGraspleQuestion(newGraspleQuestion)
             setCurrentQuestionNumber(curr => curr + 1)
         }
@@ -331,6 +346,34 @@ function App() {
             setAllExercises(curr => [...allExercises])
         }
 
+        function onGetLobbyData(lobbyData: LobbyData) {
+            setLobbyData({...lobbyData})
+        }
+
+        function onDisableDifficulty(difficulty: string) {
+            setDifficultyAvailability(curr => {
+                switch(difficulty) {
+                    case "easy":
+                        return { ...curr, easy: false }
+                    case "medium":
+                        return { ...curr, medium: false }
+                    case "hard":
+                        return { ...curr, hard: false }
+                    default:
+                        return curr
+                }
+            })
+        }
+
+        function onAnsweredAllQuestions() {
+            // setDifficultyAvailability(curr => ({ easy: true, medium: true, hard: true }))
+            
+        }
+
+        function onChooseDifficulty() {
+            setChoosingNextQuestionDifficulty(curr => true)
+        }
+ 
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -351,6 +394,10 @@ function App() {
         socket.on("all-exercises", onGetAllExercises)
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
+        socket.on("lobby-data", onGetLobbyData)
+        socket.on("disable-difficulty", onDisableDifficulty)
+        socket.on("answered-all-questions", onAnsweredAllQuestions)
+        socket.on("chooseDifficulty", onChooseDifficulty)
     }, [])
 
     // useEffect(() => {
@@ -417,18 +464,20 @@ function App() {
                 <Route
                     path="/Lobby"
                     element={
-                        <Lobby
-                            lobbyId={lobbyId}
-                            onTeamNameCreated={(name: string) =>
-                                teamNameHandler(name)
-                            }
-                            onThemeSelected={(theme: string) =>
-                                themeHandler(theme)
-                            }
-                            onStudySelected={(study: string) => 
-                                setStudy(curr => study)
-                            }
-                        />
+                        <LobbyDataContext.Provider value={lobbyData}>
+                            <Lobby
+                                lobbyId={lobbyId}
+                                onTeamNameCreated={(name: string) =>
+                                    teamNameHandler(name)
+                                }
+                                onThemeSelected={(theme: string) =>
+                                    themeHandler(theme)
+                                }
+                                onStudySelected={(study: string) => 
+                                    setStudy(curr => study)
+                                }
+                            />
+                        </LobbyDataContext.Provider>
                     }
                 ></Route>
                 <Route
@@ -469,17 +518,22 @@ function App() {
                             checkpoints: [],
                             selectedMap: trainMaps[0]
                         }}>
-                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                        <StreakContext.Provider value={streaks}>
-                                            <RaceProgressContext.Provider value={stopShowingRace}>
-                                                <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
-                                            </RaceProgressContext.Provider>
-                                        </StreakContext.Provider>
-                                    </GraspleQuestionContext.Provider>
-                                </QuestionContext.Provider>
-                            </ScoreContext.Provider>
+                            <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
+                                <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
+                                    <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                        <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                            <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                                <StreakContext.Provider value={streaks}>
+                                                    <RaceProgressContext.Provider value={stopShowingRace}>
+                                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
+                                                    </RaceProgressContext.Provider>
+                                                </StreakContext.Provider>
+                                            </GraspleQuestionContext.Provider>
+                                        </QuestionContext.Provider>
+                                    </ScoreContext.Provider>
+                                </DifficultyAvailabilityContext.Provider>
+                            </ChoosingDifficultyContext.Provider>
+                            
                         </RaceDataContext.Provider>
                     </TimeContext.Provider>
                 } />

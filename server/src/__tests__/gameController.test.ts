@@ -55,14 +55,14 @@ describe("Game functionality testing", () => {
         const game = getGame(234)
         game.avgScore = 50
         game.totalScore = 100
-        game.round = 2
+        game.currentTopicIndex = 2
         game.checkpoints = [1, 2, 3]
         game.correct = 15
         game.incorrect = 5
         endRound(234)
         expect(game.avgScore == 0)
         expect(game.totalScore == 0)
-        expect(game.round == 3)
+        expect(game.currentTopicIndex == 3)
         expect(game.checkpoints.length == 0)
         expect(game.correct == 0)
         expect(game.incorrect == 0)
@@ -74,7 +74,7 @@ describe("Game functionality testing", () => {
         const game = getGame(234)
         game.avgScore = 50
         game.totalScore = 100
-        game.round = 2
+        game.currentTopicIndex = 2
         game.checkpoints = [1, 2, 3]
         game.correct = 15
         game.incorrect = 5

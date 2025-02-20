@@ -31,7 +31,7 @@ describe("Test successfull connection", () => {
     const study = "CSE"
     const teamName1 = "Team1"
     const checkpoint = ["Team1", 200]
-    const stats = new Statistic("question1", "answer1", "easy", 1, 2)
+    const stats = new Statistic("question1", "easy", 1, 2)
     const user1 = new User()
     user1.score += 50
 

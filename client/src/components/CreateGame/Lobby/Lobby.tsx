@@ -51,7 +51,7 @@ function Lobby(props: Props) {
             props.lobbyId,
             selectedRounds.map(x => x.topicName),
             selectedRounds.map(x => x.roundDuration),
-            selectedStudy.toUpperCase(),
+            selectedStudy,
             teamName
         )
         socket.emit("getAverageFinalScore")

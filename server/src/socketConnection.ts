@@ -1,6 +1,6 @@
 import type { Socket } from "socket.io"
 import { addGame, getGame, endRound, getRoundDuration } from "./controllers/gameController"
-import { getIRounds } from "./controllers/roundDBController"
+import { getIRounds, getTopicsByStudy } from "./controllers/roundDBController"
 import { startLobby } from "./controllers/lobbyController"
 import {
     saveNewScore,
@@ -16,31 +16,12 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import type { IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopics, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
 const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
-
-const graspleQuestionExamples = [{
-    difficulty: "mandatory",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/8cea917e-4c9b-4e18-90ce-3c0ada0294cf?id=77975"
-},
-{
-    difficulty: "mandatory",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/13091e5e-f7bd-4e7b-b915-a525c1a28773?id=77983"
-},
-{
-    difficulty: "medium",
-    subject: "Eigenvalues",
-    questionUrl: "https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"
-},
-]
-
-let current_index = 0
 
 function hashString(input: string): string {
     const hash = createHash('sha256')
@@ -193,12 +174,12 @@ module.exports = {
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     startLobby(lobbyId)
                     try {
-                        const rounds = await getIRounds(study, topics)
+                        const selectedTopics = await getSelectedITopics(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const socketIds: string[] = io.sockets.adapter.rooms.get(
                             `players${lobbyId}`
                         )
-                        addGame(rounds, roundDurations, teamName, socketIds, lobbyId, study)
+                        addGame(selectedTopics, roundDurations, teamName, socketIds, lobbyId, study)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -210,10 +191,10 @@ module.exports = {
                         const lobbyId = socketToLobbyId.get(socket.id)!
     
                         const game = getGame(lobbyId)
-                        const round = game.rounds[game.round]
-                        const roundId: number = round.id
+                        const topic = game.topics[game.currentTopicIndex]
+                        const topicId: string = topic._id
     
-                        const ghostTrainScores = await getGhostTrainScores(roundId)
+                        const ghostTrainScores = await getGhostTrainScores(topicId)
     
                         socket.emit("ghost-trains", ghostTrainScores)
                     } catch (error) {
@@ -230,40 +211,45 @@ module.exports = {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
-                    const question = await game.getNewQuestion(socket.id, difficulty)
-
-                    const graspleQuestion = graspleQuestionExamples[current_index]
-                    if (current_index >= graspleQuestionExamples.length)
-                        current_index = 0
-                    else
-                        current_index += 1
+                    if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
+                        const exercise = game.getNewExercise(socket.id, difficulty)
+                        // socket.emit("get-next-question", question)
+                        socket.emit("get-next-grasple-question", exercise)
+    
+                        const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.id, difficulty)
+                        if (usedUpAllQuestionsForDifficulty) {
+                            const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.id)
+                            socket.emit("disable-difficulty", difficulty)
+    
+                            if (answeredAllQuestions) {
+                                socket.emit("answered-all-questions")
+                            }
+                        }
+                    }
                     
-                    // socket.emit("get-next-question", question)
-                    socket.emit("get-next-grasple-question", graspleQuestion)
-                    console.log(question?.answer)
+                    else {
+                        game.makeUserNotOnMandatory(socket.id)
+                        socket.emit("chooseDifficulty")
+                    }
+
                 } catch (error) {
                     console.error(error)
                 }
             })
 
-            /**
-             * Checks the answer a user gave
-             * If they answered incorrect while having attempts left, they can try again
-             * If they have no more mandatory questions left, they get the choose difficulty screen
-             * If they answered correctly the new score gets sent to the lecturer
-             */
-            socket.on("checkAnswer", (answer: string, difficulty: string) => {
+            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
-                    console.log(`Given answer: ${answer}`)
+                    console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
-                    const [correctAnswer, score] = game.checkAnswer(socket.id, answer, difficulty)
+                    const score = game.processUserAnswer(socket.id, answeredCorrectly, difficulty)
                     const attempts = game.attemptChecker(socket.id)
 
                     const user = game.users.get(socket.id)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+                    console.log(user?.streaks)
 
-                    if (correctAnswer) {
+                    if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
                         const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
@@ -280,15 +266,58 @@ module.exports = {
                             averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
                         })
                     } else if (attempts === 0) {
-                        socket.emit("wrongAnswer", 0)
                         if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
-                    } else {
-                        socket.emit("wrongAnswer", attempts)
                     }
                 } catch (error) {
                     console.error(error)
                 }
             })
+
+
+            /**
+             * DEPRECATED
+             * Checks the answer a user gave
+             * If they answered incorrect while having attempts left, they can try again
+             * If they have no more mandatory questions left, they get the choose difficulty screen
+             * If they answered correctly the new score gets sent to the lecturer
+             */
+            // socket.on("checkAnswer", (answer: string, difficulty: string) => {
+            //     const lobbyId = socketToLobbyId.get(socket.id)!
+            //     try {
+            //         console.log(`Given answer: ${answer}`)
+            //         const game = getGame(lobbyId)
+            //         const [correctAnswer, score] = game.checkAnswer(socket.id, answer, difficulty)
+            //         const attempts = game.attemptChecker(socket.id)
+
+            //         const user = game.users.get(socket.id)
+            //         if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+
+            //         if (correctAnswer) {
+            //             socket.emit("rightAnswer", score)
+            //             if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
+            //             const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+            //             const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                        
+            //             io.to(`lecturer${lobbyId}`).emit("score", {
+            //                 score: Math.floor(game.totalScore),
+            //                 accuracy: Math.floor(accuracy),
+            //                 averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+            //             })
+            //             io.to(`players${lobbyId}`).emit("score", {
+            //                 score: Math.floor(game.totalScore),
+            //                 accuracy: Math.floor(accuracy),
+            //                 averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
+            //             })
+            //         } else if (attempts === 0) {
+            //             socket.emit("wrongAnswer", 0)
+            //             if (game.isMandatoryDone(socket.id)) socket.emit("chooseDifficulty")
+            //         } else {
+            //             socket.emit("wrongAnswer", attempts)
+            //         }
+            //     } catch (error) {
+            //         console.error(error)
+            //     }
+            // })
 
             /**
              * Adds a checkpoint to the gameobject
@@ -301,8 +330,8 @@ module.exports = {
                     const game = getGame(lobbyId)
                     game.addCheckpoint(seconds)
 
-                    const round = game.rounds[game.round]
-                    const result = await getCheckpoints(round.id, game.checkpoints.length - 1)
+                    const topic = game.topics[game.currentTopicIndex]
+                    const result = await getCheckpoints(topic._id, game.checkpoints.length - 1)
                     socket.emit("get-checkpoints", result)
                 } catch (error) {
                     console.error(error)
@@ -330,14 +359,14 @@ module.exports = {
                         game.teamName,
                         game.timeScores,
                         game.checkpoints,
-                        game.rounds[game.round]._id,
-                        game.roundDurations[game.round],
+                        game.topics[game.currentTopicIndex]._id,
+                        game.roundDurations[game.currentTopicIndex],
                         game.study,
                         accuracy
                     )
-                    const currentRound = game.rounds[game.round]
+                    const currentTopic = game.topics[game.currentTopicIndex]
     
-                    const result = await getAllScores(currentRound.id)
+                    const result = await getAllScores(currentTopic._id)
                     socket.emit("get-all-scores", result)
                 }
             })
@@ -360,10 +389,10 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
 
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: string = topic._id
 
-                    const ghostTeams = await getGhostTeams(roundId)
+                    const ghostTeams = await getGhostTeams(topicId)
                     const interpolatedGhostTeams = ghostTeams.map(x => ({
                         teamName: x.teamname,
                         timeScores: game.getGhostTeamTimePointScores(x.scores),
@@ -386,13 +415,13 @@ module.exports = {
                 try {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: string = topic._id
 
-                    const normalizedHighestFinalScore = await getBestTeamFinalScore(roundId)
+                    const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId)
                     const halvedHighestFinalScore = Math.floor(
                         normalizedHighestFinalScore 
-                        * game.roundDurations[game.round] 
+                        * game.roundDurations[game.currentTopicIndex] 
                         * game.users.size 
                         / 3)
 
@@ -428,7 +457,7 @@ module.exports = {
 
                 //If this was the last round display end game button for lecturer
                 //And let the users go back to homescreen whenever they want
-                if (game.round + 1 >= game.rounds.length) {
+                if (game.currentTopicIndex + 1 >= game.topics.length) {
                     io.to(`players${lobbyId}`).emit("game-ended")
                     socket.emit("game-ended")
                 }
@@ -495,10 +524,10 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
 
                     const game = getGame(lobbyId)
-                    const round = game.rounds[game.round]
-                    const roundId: number = round.id
+                    const topic = game.topics[game.currentTopicIndex]
+                    const topicId: string = topic._id
 
-                    const ghostTrainScores = await getGhostTrainScores(roundId)
+                    const ghostTrainScores = await getGhostTrainScores(topicId)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {
@@ -573,7 +602,7 @@ module.exports = {
              */
             socket.on("getAllTopics", async() => {
                 try {
-                    const topics = await getAllTopics();
+                    const topics = await getAllTopicData();
                     socket.emit("all-topics", topics);
                 } catch (error) {
                     socket.emit("error", error.message);
@@ -622,6 +651,20 @@ module.exports = {
                     }
             })
 
+            socket.on("getLobbyData", async (study?: string) => {
+                try {
+                    const topicNames = await getTopicNamesByStudy(study)
+                    const allStudies = await getAllStudies()
+                    const lobbyData = {
+                        topics: topicNames,
+                        studies: allStudies.map(study => study.name)
+                    }
+                    socket.emit("lobby-data", lobbyData)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+
             /**
              * Authentication function that has a hardcoded password
              * This function is used when trying to create a game so only people who know the password can create them
@@ -648,22 +691,21 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     
-                    const round = game.rounds[game.round]
-                    const topic = round.subject
+                    const topic = game.topics[game.currentTopicIndex]
                     const teamName = game.teamName
 
                     const lobbyIdString = lobbyId.toString()
                     const theme = themes.get(parseInt(lobbyIdString))
                     
                     io.to(`players${lobbyId}`).emit("round-information", ({
-                        topic: topic,
+                        topic: topic.name,
                         teamName: teamName,
                         theme: theme,
                         study: game.study
                     }))
                     
                     socket.emit("round-information", ({
-                        topic: topic,
+                        topic: topic.name,
                         teamName: teamName,
                         theme: theme,
                         study: game.study

@@ -1,6 +1,7 @@
+import { IExercise } from "../models/exerciseModel"
+
 export class Statistic {
-    question: string
-    answer: string
+    question: IExercise
     difficulty: string
     correctlyAnswered: number
     incorrectlyAnswered: number
@@ -13,9 +14,8 @@ export class Statistic {
      * @param correctlyAnswered the amount of correct answers given
      * @param incorrectlyAnswered the amount of incorrect answers given
      */
-    constructor(question, answer, difficulty, correctlyAnswered, incorrectlyAnswered) {
+    constructor(question, difficulty, correctlyAnswered, incorrectlyAnswered) {
         this.question = question
-        this.answer = answer
         this.difficulty = difficulty
         this.correctlyAnswered = correctlyAnswered
         this.incorrectlyAnswered = incorrectlyAnswered

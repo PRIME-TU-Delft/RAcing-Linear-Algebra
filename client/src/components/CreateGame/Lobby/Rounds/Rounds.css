@@ -28,11 +28,22 @@
 }
 
 .dropbox-title {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
     margin-top: 0.5rem;
     margin-bottom: 0.4rem;
     color: gray;
+    width: 100%;
+    text-align: left;
+}
+
+.dropbox-helper-functionality {
+    width: 100%;
+    text-align: left;
+    color: gray;
+    margin-bottom: 0.1rem;
+    margin-left: 0.5rem;
+
 }
 
 .empty-container {
