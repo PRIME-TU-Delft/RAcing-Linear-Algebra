@@ -25,7 +25,7 @@ interface Props {
  * DifficultyCard component that will displyed in the select difficulty modal.
  * This contains the difficulty and the emoji for that difficulty
  */
-export default function DifficultyCard(props: Props) {
+export default function  DifficultyCard(props: Props) {
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
 
@@ -126,7 +126,7 @@ export default function DifficultyCard(props: Props) {
                 ) : 
                 (<div>
                     <p className="card-points">{props.pointsText}</p>
-                    <p>
+                    <p className="card-points">
                         Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
                     </p>
                 </div>)}
