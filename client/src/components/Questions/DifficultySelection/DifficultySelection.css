@@ -178,4 +178,8 @@
         margin-top: 5px;
         font-size: 45px;
     }
+
+    .card-points {
+        font-size: 10px;
+    }
 }
