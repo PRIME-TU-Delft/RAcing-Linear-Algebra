@@ -52,6 +52,15 @@ export function getGame(lobbyId: number): Game {
 }
 
 /**
+ * Determine whether a game with a given id is in progress
+ * @param lobbyId the id of the game
+ * @returns whether there is such a game currently in progress
+ */
+export function gameIsInProgress(lobbyId: number): boolean {
+    return games.has(`${lobbyId}`)
+}
+
+/**
  * Ends a round by reseting all the values for the game.
  * @param lobbyId the id of the game
  * @returns true if this game contains another round, false if this was the last round
