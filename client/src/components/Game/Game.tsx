@@ -44,11 +44,7 @@ interface Statistic {
 }
 
 function Game(props: Props) {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
     const raceData = useContext(RaceDataContext)
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
     const [currentNumberOfAttempts, setCurrentNumberOfAttempts] = useState<number>(0)
@@ -60,6 +56,24 @@ function Game(props: Props) {
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
+
+    const [dimensions, setDimensions] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    
+      useEffect(() => {
+        const handleResize = () => {
+          setDimensions({
+            width: window.innerWidth,
+            height: window.innerHeight,
+          });
+        };
+    
+        window.addEventListener("resize", handleResize);
+        
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
 
     const navigate = useNavigate()
 
@@ -91,6 +105,10 @@ function Game(props: Props) {
             }
         }
     };
+
+    const racePathSizing = getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height)
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
+
 
     socket.emit("getMandatoryNum")
 

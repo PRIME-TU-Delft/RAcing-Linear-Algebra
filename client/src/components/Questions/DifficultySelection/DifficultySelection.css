@@ -124,7 +124,7 @@
 @media only screen and (max-width: 1300px) {
     /* Adjust the width for smaller screens */
     .card-body {
-        height: 10em;
+        height: 14em;
     }
 
     .card-grid {
@@ -142,11 +142,31 @@
     .diff-modal-wrapper {
         padding-left: 1rem;
     }
+
+    .card-points-text {
+        font-size: 25px;
+    }
+
+    .card-points {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 2000px) {
+    .diff-modal-text0 {
+        font-size: 25px;
+        margin-top: 15px;
+    }
+
+    .diff-modal-text1 {
+        margin: 10px 20px 10px 20px;
+        font-size: 14px;
+    }
 }
 
 @media only screen and (max-width: 1090px) {
     .card-body {
-        height: 8em;
+        height: 12em;
     }
 
     .difficulty-card,
@@ -159,11 +179,7 @@
         font-size: 45px;
     }
 
-    .diff-modal-text0 {
-        font-size: 30px;
-    }
-
-    .diff-modal-text1 {
-        font-size: 15px;
+    .card-points {
+        font-size: 10px;
     }
 }

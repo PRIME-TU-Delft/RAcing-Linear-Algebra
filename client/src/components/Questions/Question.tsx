@@ -175,7 +175,7 @@ function Question(props: Props) {
 
                 <QuestionOverlayBox 
                     margin={60} 
-                    openOnStart={true} 
+                    openOnStart={false} 
                     closedText= {`${graspleQuestionData.questionNumber}`}
                     openText={`Question ${graspleQuestionData.questionNumber}`}
                     show={!questionStatusContext.questionFinished}
@@ -184,7 +184,7 @@ function Question(props: Props) {
 
                 <QuestionOverlayBox 
                     margin={140} 
-                    openOnStart={true} 
+                    openOnStart={false} 
                     closedText= {`${props.difficultyEmoji}`}
                     color="#0063D3"
                     openText={`${String(props.difficultyName).charAt(0).toUpperCase() + String(props.difficultyName).slice(1)} ${props.difficultyEmoji}`}
