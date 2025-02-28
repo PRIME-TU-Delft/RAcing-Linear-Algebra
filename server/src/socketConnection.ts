@@ -1,7 +1,7 @@
 import type { Socket } from "socket.io"
 import { addGame, getGame, endRound, getRoundDuration, gameIsInProgress } from "./controllers/gameController"
 import { getIRounds, getTopicsByStudy } from "./controllers/roundDBController"
-import { startLobby } from "./controllers/lobbyController"
+import { endLobby } from "./controllers/lobbyController"
 import {
     saveNewScore,
     getAllScores,
@@ -72,7 +72,7 @@ module.exports = {
                         user.socketId = socket.id;
                         user.disconnected = false;
                     }
-                    
+
                     game.totalScore += socket.data.lastRecordedUserData.score
 
                     game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
@@ -113,7 +113,7 @@ module.exports = {
              */
             socket.on("joinLobby", (lobbyId: number, userId: string) => {
                 socket.data.userId = userId // Setting the userId to the socket data for later use (used for identifying reconnecting players)
-
+                console.log("JOINED LOBBY: " + (socket.data.userId as string))
                 void socket.join(`players${lobbyId}`)
                 socketToLobbyId.set(socket.id, lobbyId)
                 
@@ -132,9 +132,11 @@ module.exports = {
                         
                     } else {
                         // Add new user with initial data
+                        console.log("NEW USER JOINED")
                         const user = new User();
                         user.socketId = socket.id;
                         game.users.set(userId, user);
+                        console.log(game.users)
                     }
                 }
 
@@ -217,14 +219,18 @@ module.exports = {
             socket.on(
                 "startGame",
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
-                    startLobby(lobbyId)
                     try {
                         const selectedTopics = await getSelectedITopics(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
-                        const socketIds: string[] = io.sockets.adapter.rooms.get(
-                            `players${lobbyId}`
-                        )
-                        addGame(selectedTopics, roundDurations, teamName, socketIds, lobbyId, study)
+                        const room = io.sockets.adapter.rooms.get(`players${lobbyId}`) as Set<string> | undefined
+                        if (!room || room.size === 0) return
+
+                        const userIds: string[] = Array.from(room).map(socketId => {
+                            const socket = io.sockets.sockets.get(socketId);
+                            return socket?.data.userId as string;
+                        }).filter(userId => userId !== undefined)
+
+                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -257,7 +263,7 @@ module.exports = {
                 try {
                     const game = getGame(lobbyId)
                     if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
-                        const exercise = game.getNewExercise(socket.id, difficulty)
+                        const exercise = game.getNewExercise(socket.data.userId, difficulty)
                         const user = game.users.get(socket.data.userId)
                         let scoreToGain = 0;
                         if (exercise !== undefined && user !== undefined) {
@@ -530,7 +536,10 @@ module.exports = {
                 //Reset the round to prepare for the next
                 const continueGame = endRound(lobbyId)
 
-                if (!continueGame) io.to(`players${lobbyId}`).emit("end-game")
+                if (!continueGame) {
+                    io.to(`players${lobbyId}`).emit("end-game")
+                    endLobby(lobbyId)
+                }
                 else {
                     const roundDuration = getRoundDuration(lobbyId)
                     io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)

@@ -22,12 +22,12 @@ export function addGame(
     topics: ITopic[],
     roundDurations: number[],
     teamName: string,
-    socketIds: string[],
+    userIds: string[],
     lobbyId: number,
     study: string
 ) {
     const map: Map<string, User> = new Map()
-    for (const socketId of socketIds) map.set(socketId, new User())
+    for (const userId of userIds) map.set(userId, new User())
     const game: Game = new Game(topics, roundDurations, teamName, map, study)
     games.set(`${lobbyId}`, game)
 }

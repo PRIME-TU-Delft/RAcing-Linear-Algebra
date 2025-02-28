@@ -212,6 +212,7 @@ export class Game {
      * @returns boolean depending on correctness of the answer
      */
     processUserAnswer(userId: string, answeredCorrectly: boolean, questionDifficulty: string): number {
+        console.log(userId)
         const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
 
