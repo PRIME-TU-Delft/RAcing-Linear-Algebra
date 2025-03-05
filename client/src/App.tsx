@@ -90,6 +90,7 @@ function App() {
     const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
     const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
     const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
+    const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -141,6 +142,7 @@ function App() {
         setCurrentScore(curr => 0)
         setCurrentAccuracy(curr => 0)
         setStartTimer(curr => false)
+        setPlayerScoreBeforeReconnecting(curr => 0)
     }
 
     useEffect(() => {
@@ -270,10 +272,14 @@ function App() {
         }
 
         function onRoundDuration(roundDuration: number) {
+            getGhostAndRaceInformation()
+            initializeRoundValues(roundDuration)
+        }
+
+        function getGhostAndRaceInformation() {
             socket.emit("getGhostTeams")
             socket.emit("getRaceTrackEndScore")
             socket.emit("getInformation")
-            initializeRoundValues(roundDuration)
         }
 
         function onThemeChange(theme: string) {
@@ -285,6 +291,7 @@ function App() {
         }
 
         function onScoreUpdate(stats: {score: number, accuracy: number, averageTeamScore: number}) {
+            console.log(stats)
             setCurrentScore((current) =>
                 current < stats.score ? stats.score : current
             )
@@ -375,6 +382,17 @@ function App() {
         function onChooseDifficulty() {
             setChoosingNextQuestionDifficulty(curr => true)
         }
+
+        function onJoinedGameInProgress(remainingTime: number, questionNumber: number, previousPlayerScore: number) {
+            console.log("prevscore " + previousPlayerScore.toString())
+            setRoundDuration(curr => remainingTime)
+            setPlayerScoreBeforeReconnecting(curr => previousPlayerScore)
+            setRoundStarted(curr => true)
+            setCurrentQuestionNumber(questionNumber)
+            setAllRoundsFinished(curr => false)
+            setStopShowingRace(false)
+            onRaceStarted()
+        } 
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -400,6 +418,7 @@ function App() {
         socket.on("disable-difficulty", onDisableDifficulty)
         socket.on("answered-all-questions", onAnsweredAllQuestions)
         socket.on("chooseDifficulty", onChooseDifficulty)
+        socket.on("joined-game-in-progress", onJoinedGameInProgress)
     }, [])
 
     // useEffect(() => {
@@ -527,7 +546,7 @@ function App() {
                                             <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
                                                 <StreakContext.Provider value={streaks}>
                                                     <RaceProgressContext.Provider value={stopShowingRace}>
-                                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
+                                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler} playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}/>
                                                     </RaceProgressContext.Provider>
                                                 </StreakContext.Provider>
                                             </GraspleQuestionContext.Provider>

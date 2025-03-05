@@ -19,6 +19,7 @@ import type { IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
+import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./socketUtils"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -73,23 +74,16 @@ module.exports = {
                         user.disconnected = false;
                     }
 
-                    game.totalScore += socket.data.lastRecordedUserData.score
+                    if (socket.data.lastRecordedUserData !== undefined) {
+                        game.totalScore += socket.data.lastRecordedUserData.score
+                        game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
+                    }                    
 
-                    game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
-
-                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                    const teamScoreData = getTeamScoreData(game, numberOfPlayers)
 
-                    io.to(`lecturer${lobbyId}`).emit("score", {
-                        score: Math.floor(game.totalScore),
-                        accuracy: Math.floor(accuracy),
-                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                    })
-                    io.to(`players${lobbyId}`).emit("score", {
-                        score: Math.floor(game.totalScore),
-                        accuracy: Math.floor(accuracy),
-                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                    })
+                    io.to(`lecturer${lobbyId}`).emit("score", teamScoreData)
+                    io.to(`players${lobbyId}`).emit("score", teamScoreData)
 
                 } catch (error) {
                     //If an error is throw it means the game was not started yet
@@ -111,7 +105,7 @@ module.exports = {
             /**
              * Join a lobby by lobbyId
              */
-            socket.on("joinLobby", (lobbyId: number, userId: string) => {
+            socket.on("joinLobby", async (lobbyId: number, userId: string) => {
                 socket.data.userId = userId // Setting the userId to the socket data for later use (used for identifying reconnecting players)
                 console.log("JOINED LOBBY: " + (socket.data.userId as string))
                 void socket.join(`players${lobbyId}`)
@@ -131,7 +125,10 @@ module.exports = {
                             user.socketId = socket.id;
                             user.disconnected = false;
                             user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
-                        }                        
+                        }              
+                        
+                        game.totalScore += user?.score as number
+                        game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
                     } 
                     
                     else {
@@ -146,10 +143,22 @@ module.exports = {
                     const roundDuration = getRoundDuration(lobbyId)
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
+                    const user = game.users.get(userId);
 
+                    const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
+                    const halvedHighestFinalScore = await getRaceTrackEndScore(game)
+                    const raceInformation = getRaceInformation(game, lobbyId, themes)
 
-                    socket.emit("round-started", remainingTimeInSeconds)
-                    socket.emit("race-started")
+                    const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                    const teamScoreData = getTeamScoreData(game, numberOfPlayers)
+                
+                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+                    socket.emit("round-information", (raceInformation))
+
+                    socket.emit("score", teamScoreData)
+
+                    socket.emit("joined-game-in-progress", remainingTimeInSeconds, user?.questionIds.length, user?.score)
                 }
 
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
@@ -196,19 +205,11 @@ module.exports = {
 
                     game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
 
-                    const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                    const teamScoreData = getTeamScoreData(game, numberOfPlayers)
 
-                    io.to(`lecturer${lobbyId}`).emit("score", {
-                        score: Math.floor(game.totalScore),
-                        accuracy: Math.floor(accuracy),
-                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                    })
-                    io.to(`players${lobbyId}`).emit("score", {
-                        score: Math.floor(game.totalScore),
-                        accuracy: Math.floor(accuracy),
-                        averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                    })
+                    io.to(`lecturer${lobbyId}`).emit("score", teamScoreData)
+                    io.to(`players${lobbyId}`).emit("score", teamScoreData)
                 } catch (error) {
                     console.log(error)
                     //If an error is throw it means the game was not started yet
@@ -325,19 +326,12 @@ module.exports = {
                     if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
-                        const accuracy = (game.correct / (game.incorrect + game.correct)) * 100
+
                         const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
+                        const teamScoreData = getTeamScoreData(game, numberOfPlayers)
                         
-                        io.to(`lecturer${lobbyId}`).emit("score", {
-                            score: Math.floor(game.totalScore),
-                            accuracy: Math.floor(accuracy),
-                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                        })
-                        io.to(`players${lobbyId}`).emit("score", {
-                            score: Math.floor(game.totalScore),
-                            accuracy: Math.floor(accuracy),
-                            averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
-                        })
+                        io.to(`lecturer${lobbyId}`).emit("score", teamScoreData)
+                        io.to(`players${lobbyId}`).emit("score", teamScoreData)
                     } else {
                         if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
                     }
@@ -462,17 +456,8 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
 
                     const game = getGame(lobbyId)
-                    const topic = game.topics[game.currentTopicIndex]
-                    const topicId: string = topic._id
+                    const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
 
-                    const ghostTeams = await getGhostTeams(topicId)
-                    const interpolatedGhostTeams = ghostTeams.map(x => ({
-                        teamName: x.teamname,
-                        timeScores: game.getGhostTeamTimePointScores(x.scores),
-                        checkpoints: x.checkpoints,
-                        study: x.study,
-                        accuracy: x.accuracy
-                    }))
                     io.to(`players${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                     io.to(`lecturer${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
@@ -488,15 +473,7 @@ module.exports = {
                 try {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
-                    const topic = game.topics[game.currentTopicIndex]
-                    const topicId: string = topic._id
-
-                    const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId)
-                    const halvedHighestFinalScore = Math.floor(
-                        normalizedHighestFinalScore 
-                        * game.roundDurations[game.currentTopicIndex] 
-                        * game.getNumberOfActiveUsers()
-                        / 3)
+                    const halvedHighestFinalScore = await getRaceTrackEndScore(game)
 
                     io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                     io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
@@ -769,25 +746,11 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     
-                    const topic = game.topics[game.currentTopicIndex]
-                    const teamName = game.teamName
-
-                    const lobbyIdString = lobbyId.toString()
-                    const theme = themes.get(parseInt(lobbyIdString))
+                    const raceInformation = getRaceInformation(game, lobbyId, themes)
                     
-                    io.to(`players${lobbyId}`).emit("round-information", ({
-                        topic: topic.name,
-                        teamName: teamName,
-                        theme: theme,
-                        study: game.study
-                    }))
+                    io.to(`players${lobbyId}`).emit("round-information", (raceInformation))
                     
-                    socket.emit("round-information", ({
-                        topic: topic.name,
-                        teamName: teamName,
-                        theme: theme,
-                        study: game.study
-                    }))
+                    socket.emit("round-information", (raceInformation))
 
                 } catch (error) {
                     console.log(error)
