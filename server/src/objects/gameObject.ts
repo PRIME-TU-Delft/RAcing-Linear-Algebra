@@ -20,6 +20,7 @@ export class Game {
     study: string //The study of this game
     correct: number //The number of correct answers
     incorrect: number //The number of incorrect answers
+    roundStartTime: number //The time the game started
 
     /**
      * Constructor for a game object,
@@ -108,12 +109,29 @@ export class Game {
 
         const numberOfAnswered = user.questionIds.length
         const question = topic.mandatoryExercises[numberOfAnswered]
+
         if (question === undefined) throw Error("Could not generate new question")
         user.attempts = question.numOfAttempts
-        //Check if after adding this question all the mandatories are done
-        if (numberOfAnswered + 1 >= topic.mandatoryExercises.length) user.isOnMandatory = false
         this.initializeUserAttempts(question, user)
         return question
+    }
+
+    /**
+     * Checks whether the user has answered all mandatory questions by looking at the number of the questions answered so far
+     * @param topic the topic of the current round
+     * @param user the user
+     * @returns whether the user has answered all mandatory questions
+     */
+    allMandatoryQuestionsAnswered(userId: string): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
+        if (user === undefined) return false
+
+        const numberOfAnswered = user.questionIds.length
+        if (numberOfAnswered >= topic.mandatoryExercises.length)
+            return true
+
+        return false
     }
 
     /**

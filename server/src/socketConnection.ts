@@ -125,12 +125,16 @@ module.exports = {
                     if (game.users.has(userId)) {
                         // Update the socket ID and mark as reconnected
                         const user = game.users.get(userId);
+                        console.log("RECONNECTED USER:")
+                        console.log(user)
                         if (user !== undefined) {
                             user.socketId = socket.id;
                             user.disconnected = false;
-                        }
-                        
-                    } else {
+                            user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
+                        }                        
+                    } 
+                    
+                    else {
                         // Add new user with initial data
                         console.log("NEW USER JOINED")
                         const user = new User();
@@ -138,6 +142,14 @@ module.exports = {
                         game.users.set(userId, user);
                         console.log(game.users)
                     }
+
+                    const roundDuration = getRoundDuration(lobbyId)
+                    const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
+                    const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
+
+
+                    socket.emit("round-started", remainingTimeInSeconds)
+                    socket.emit("race-started")
                 }
 
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
@@ -242,6 +254,7 @@ module.exports = {
                         const lobbyId = socketToLobbyId.get(socket.id)!
     
                         const game = getGame(lobbyId)
+                        game.roundStartTime = Date.now()
                         const topic = game.topics[game.currentTopicIndex]
                         const topicId: string = topic._id
     
@@ -305,6 +318,10 @@ module.exports = {
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
                     console.log(user?.streaks)
 
+                    if (game.allMandatoryQuestionsAnswered(socket.data.userId)) {
+                        game.makeUserNotOnMandatory(socket.data.userId)
+                    }
+                    
                     if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
@@ -541,6 +558,8 @@ module.exports = {
                     endLobby(lobbyId)
                 }
                 else {
+                    const game = getGame(lobbyId)
+                    game.roundStartTime = Date.now()
                     const roundDuration = getRoundDuration(lobbyId)
                     io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                     io.to(`players${lobbyId}`).emit("round-started", roundDuration)
