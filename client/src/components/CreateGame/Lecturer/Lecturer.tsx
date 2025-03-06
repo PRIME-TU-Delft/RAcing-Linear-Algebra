@@ -137,16 +137,24 @@ function Lecturer(props: Props) {
 
     return (
         <div>
-            <div className="lecturer-header">
-                <div className="t-name">Team Name: {props.teamName}</div>
-                <div className="countdown">
-                    <div>Time: {LecturerService.formatTime(usedTime)}</div>
+            <div className="lecturer-header row">
+                <div className="col text-start">
+                    <div className="t-name">Lobby Code: {props.lobbyId}</div>
+                    <div className="t-name">Team Name: {props.teamName}</div>
                 </div>
-
-                <div className="total-score">
-                    <div>Score: {scores.currentPoints}</div>
-                    <div>Accuracy: {scores.currentAccuracy}%</div>
+                <div className="col">
+                    <div className="countdown">
+                        <div>Time: {LecturerService.formatTime(usedTime)}</div>
+                    </div>
                 </div>
+                
+                <div className="col">
+                    <div className="total-score text-end">
+                        <div>Score: {scores.currentPoints}</div>
+                        <div>Accuracy: {scores.currentAccuracy}%</div>
+                    </div>
+                </div>
+                
             </div>
             <div
                 style={{ width: "100%", height: `${height - 100}px` }}
