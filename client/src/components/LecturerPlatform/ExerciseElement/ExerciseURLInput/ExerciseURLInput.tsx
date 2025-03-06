@@ -1,8 +1,9 @@
 import { TextField } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { ExistingExercisesContext } from "../../ExistingExercisesContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     url: string
@@ -101,12 +102,12 @@ function ExerciseURLInput(props: Props) {
                     <ClipLoader size={20} color={"#1976D2"} loading={loading} />
                 ) : checked ? (
                     <div>
-                        <FaCheckCircle size={20} color={"#4CAF50"} />
+                        <FontAwesomeIcon icon={faCheckCircle} color={"#4CAF50"} />
                         <span style={{marginLeft: "0.5rem"}}>{getIdValue()}</span>
                     </div>
                 ) : (
                     <div>
-                        <FaTimesCircle size={20} color={"#F44336"} />
+                        <FontAwesomeIcon icon={faTimesCircle} color={"#4CAF50"} />
                         <span style={{marginLeft: "0.5rem"}}>{urlErrorMessage}</span>
                     </div>
                 )}
