@@ -7,7 +7,6 @@
     height: 100px;
     background-color: #00a6d6;
     position: relative;
-    width: 100%;
     z-index: 9999;
     color: white;
     display: flex;
@@ -17,15 +16,13 @@
 }
 
 .total-score {
-    position: absolute;
-    font-size: xx-large;
-    right: 25px;
+    font-size: 25px;
+    margin-right: 1rem;
 }
 
 .t-name {
-    position: absolute;
-    left: 25px;
-    font-size: xx-large;
+    font-size: 25px;
+    margin-left: 1rem;
 }
 
 .countdown {

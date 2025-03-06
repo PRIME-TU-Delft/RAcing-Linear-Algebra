@@ -383,15 +383,27 @@ function App() {
             setChoosingNextQuestionDifficulty(curr => true)
         }
 
-        function onJoinedGameInProgress(remainingTime: number, questionNumber: number, previousPlayerScore: number) {
-            console.log("prevscore " + previousPlayerScore.toString())
-            setRoundDuration(curr => remainingTime)
+        function onJoinedGameInProgress(roundDuration: number, remainingTime: number, questionNumber: number, previousPlayerScore: number) {
+            setRoundDuration(curr => roundDuration)
             setPlayerScoreBeforeReconnecting(curr => previousPlayerScore)
             setRoundStarted(curr => true)
             setCurrentQuestionNumber(questionNumber)
             setAllRoundsFinished(curr => false)
             setStopShowingRace(false)
-            onRaceStarted()
+
+            const newExpiry = new Date();
+            newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
+            restart(newExpiry);
+
+            socket.emit("getNewQuestion")
+            socket.emit("getMandatoryNum")
+            
+            if (isPlayer) {
+                navigate("/Game")
+            }
+            else {
+                navigate("/Lecturer")
+            }
         } 
  
         socket.on("round-duration", onRoundDuration)
