@@ -31,6 +31,7 @@ interface Props {
     theme: string
     roundDuration: number
     roundStarted: boolean
+    playerScoreBeforeReconnecting: number
     isFirstRound: boolean
     onRoundEnded: () => void
 }
@@ -206,6 +207,14 @@ function Game(props: Props) {
     }, [graspleQuestionData.questionNumber])
 
     useEffect(() => {
+        console.log(props.playerScoreBeforeReconnecting)
+        console.log(score)
+        if (props.playerScoreBeforeReconnecting > score) {
+            setScore(props.playerScoreBeforeReconnecting)
+        }
+    }, [props.playerScoreBeforeReconnecting])
+
+    useEffect(() => {
         // Question started is just used as a signal for the question overlay nodes to update
         if (questionStarted) {
             setQuestionStarted(curr => false)
@@ -223,7 +232,9 @@ function Game(props: Props) {
 
     useEffect(() => {
         setShowInfoModal(false)
-        setScore(0)
+        if (props.playerScoreBeforeReconnecting == 0) {
+            setScore(0)
+        } 
         setRightAnswers(0)
         setWrongAnswers(0)
         setStreak(0)

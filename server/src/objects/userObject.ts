@@ -11,6 +11,8 @@ export class User {
     score: number //The score of the player
     isOnMandatory: boolean //A check to see if the player is done with the mandatory questions
     streaks: Streak[] // Array of streak objects for the user
+    socketId: string //The socket id of the user
+    disconnected: boolean
 
     /**
      * Constructor for the user object
@@ -23,6 +25,8 @@ export class User {
         this.score = 0
         this.isOnMandatory = true
         this.initializeUserStreaks()
+        this.socketId = ""
+        this.disconnected = false
     }
 
     /**

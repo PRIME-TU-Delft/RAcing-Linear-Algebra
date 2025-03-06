@@ -20,6 +20,7 @@ export class Game {
     study: string //The study of this game
     correct: number //The number of correct answers
     incorrect: number //The number of incorrect answers
+    roundStartTime: number //The time the game started
 
     /**
      * Constructor for a game object,
@@ -55,18 +56,26 @@ export class Game {
 
     /**
      * Gets a new question for a certain player and adds it to the array of used questions
-     * @param socketId the player that needs a new question
+     * @param userId the player that needs a new question
      * @param lobbyId the lobby that the player is in
      * @returns the new question
      */
-    getNewExercise(socketId: string, difficulty?: string): IExercise | undefined {
+    getNewExercise(userId: string, difficulty?: string): IExercise | undefined {
         const topic = this.topics[this.currentTopicIndex]
-        const user = this.users.get(socketId)
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         if (user.isOnMandatory) return this.getMandatoryQuestion(topic, user)
         else if (difficulty !== undefined)
             return this.getDifficultyExercise(topic, user, difficulty)
         else throw Error("No difficulty was given")
+    }
+
+    /**
+     * Filters the users map to find users which have not disconnected from the game, and returns the number of them
+     * @returns the number of currently active users
+     */
+    getNumberOfActiveUsers(): number {
+        return Array.from(this.users.values()).filter(x => !x.disconnected).length
     }
 
     /**
@@ -80,10 +89,10 @@ export class Game {
 
     /**
      * Makes the user not on mandatory exercises anymore
-     * @param socketId the user socket id
+     * @param userId the user id
      */
-    makeUserNotOnMandatory(socketId: string): void {
-        const user = this.users.get(socketId)
+    makeUserNotOnMandatory(userId: string): void {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         user.isOnMandatory = false
     }
@@ -100,12 +109,29 @@ export class Game {
 
         const numberOfAnswered = user.questionIds.length
         const question = topic.mandatoryExercises[numberOfAnswered]
+
         if (question === undefined) throw Error("Could not generate new question")
         user.attempts = question.numOfAttempts
-        //Check if after adding this question all the mandatories are done
-        if (numberOfAnswered + 1 >= topic.mandatoryExercises.length) user.isOnMandatory = false
         this.initializeUserAttempts(question, user)
         return question
+    }
+
+    /**
+     * Checks whether the user has answered all mandatory questions by looking at the number of the questions answered so far
+     * @param topic the topic of the current round
+     * @param user the user
+     * @returns whether the user has answered all mandatory questions
+     */
+    allMandatoryQuestionsAnswered(userId: string): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
+        if (user === undefined) return false
+
+        const numberOfAnswered = user.questionIds.length
+        if (numberOfAnswered >= topic.mandatoryExercises.length)
+            return true
+
+        return false
     }
 
     /**
@@ -139,12 +165,12 @@ export class Game {
 
     /**
      * Checks whether the user answered all questions from all difficulties
-     * @param socketId the id of the user socket
+     * @param userId the id of the user
      * @returns whether all questions have been answered
      */
-    checkIfUserAnsweredAllQuestions(socketId: string) {
+    checkIfUserAnsweredAllQuestions(userId: string) {
 
-        const user = this.users.get(socketId)
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         
         const topic = this.topics[this.currentTopicIndex]
@@ -153,7 +179,7 @@ export class Game {
         let answeredAllQuestions = true
 
         difficulties.forEach(difficulty => {
-            const answeredAllForDifficulty = this.checkIfUserAnsweredAllQuestionsOfDifficulty(socketId, difficulty)
+            const answeredAllForDifficulty = this.checkIfUserAnsweredAllQuestionsOfDifficulty(userId, difficulty)
             answeredAllQuestions = answeredAllQuestions && answeredAllForDifficulty
         })
         
@@ -162,14 +188,14 @@ export class Game {
 
     /**
      * Checks whether the user answered all questions of a particular difficulty
-     * @param socketId the user socket id
+     * @param userId the user id
      * @param difficulty the difficulty to check
      * @returns whether the user answered all questions of a difficulty
      */
-    checkIfUserAnsweredAllQuestionsOfDifficulty(socketId: string, difficulty?: string) {
+    checkIfUserAnsweredAllQuestionsOfDifficulty(userId: string, difficulty?: string) {
         if (difficulty == undefined) return false
 
-        const user = this.users.get(socketId)
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
 
         const topic = this.topics[this.currentTopicIndex]
@@ -182,10 +208,10 @@ export class Game {
 
     /**
      * Event triggered when all of the questions have been answered by the user
-     * @param socketId user socket id
+     * @param userId user id
      */
-    onUserAnsweredAllQuestions(socketId: string) {
-        const user = this.users.get(socketId)
+    onUserAnsweredAllQuestions(userId: string) {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         
         user.resetUserQuestionsAnswered()
@@ -199,12 +225,13 @@ export class Game {
 
     /**
      * Checks the answer for a user
-     * @param socketId the user
+     * @param userId the user
      * @param answer the answer from the user
      * @returns boolean depending on correctness of the answer
      */
-    processUserAnswer(socketId: string, answeredCorrectly: boolean, questionDifficulty: string): number {
-        const user = this.users.get(socketId)
+    processUserAnswer(userId: string, answeredCorrectly: boolean, questionDifficulty: string): number {
+        console.log(userId)
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
 
         const question = user.currentQuestion
@@ -227,7 +254,7 @@ export class Game {
             user.continueUserStreak(questionDifficulty)
             user.score += score
             this.totalScore += score
-            this.avgScore = this.totalScore / this.users.size
+            this.avgScore = this.totalScore / this.getNumberOfActiveUsers()
 
             user.attempts = 3
             this.correct++
@@ -268,7 +295,7 @@ export class Game {
      */
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
-        const numberOfPlayers = this.users.size
+        const numberOfPlayers = this.getNumberOfActiveUsers()
         const roundDuration = this.roundDurations[this.currentTopicIndex]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
@@ -289,12 +316,12 @@ export class Game {
 
         const result = timePoints.map(x => ({
             timePoint: x,
-            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.users.size
+            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
         }))
 
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
-        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.users.size
+        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
         result[result.length - 1] = lastElement
 
         return result
@@ -332,16 +359,16 @@ export class Game {
      * @returns the scaled up values for the scores based on current number of players and round duration
      */
     transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
-        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.currentTopicIndex])
+        return ghostTeamScores.map(x => x[1] * this.getNumberOfActiveUsers() * this.roundDurations[this.currentTopicIndex])
     }
 
     /**
      * Helper function to check if the mandatory questions are done for a user
-     * @param socketId the player to check for
+     * @param userId the player to check for
      * @returns if user has already asnwered x mandatory questions
      */
-    isMandatoryDone(socketId: string): boolean {
-        const user = this.users.get(socketId)
+    isMandatoryDone(userId: string): boolean {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         return !user.isOnMandatory
     }
@@ -383,11 +410,11 @@ export class Game {
 
     /**
      * Checks how many attempts a user has left
-     * @param socketId the socket id of the user
+     * @param userId the id of the user
      * @returns the amount of attempts remaining
      */
-    attemptChecker(socketId: string): number {
-        const user = this.users.get(socketId)
+    attemptChecker(userId: string): number {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         return user.attempts
     }

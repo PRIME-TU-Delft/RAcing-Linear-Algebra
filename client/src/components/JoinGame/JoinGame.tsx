@@ -5,6 +5,7 @@ import "./JoinGame.css"
 import { useForm } from "react-hook-form"
 import { host } from "../../utils/APIRoutes"
 import socket from "../../socket"
+import { getOrCreateUserId } from "../../utils/userIdGenerator"
 
 interface Props {
     onLobbyJoined: (lobbyId: number) => void
@@ -47,7 +48,8 @@ function JoinGame(props: Props) {
             return
         }
 
-        socket.emit("joinLobby", lobbyId)
+        const userId = getOrCreateUserId()
+        socket.emit("joinLobby", lobbyId, userId)
         props.onLobbyJoined(parseInt(lobbyId))
         //go to the waiting screen
         navigate("/Waiting")

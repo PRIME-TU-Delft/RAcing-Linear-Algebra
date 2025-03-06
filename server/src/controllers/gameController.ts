@@ -22,12 +22,12 @@ export function addGame(
     topics: ITopic[],
     roundDurations: number[],
     teamName: string,
-    socketIds: string[],
+    userIds: string[],
     lobbyId: number,
     study: string
 ) {
     const map: Map<string, User> = new Map()
-    for (const socketId of socketIds) map.set(socketId, new User())
+    for (const userId of userIds) map.set(userId, new User())
     const game: Game = new Game(topics, roundDurations, teamName, map, study)
     games.set(`${lobbyId}`, game)
 }
@@ -49,6 +49,15 @@ export function getGame(lobbyId: number): Game {
     const game = games.get(`${lobbyId}`)
     if (game === undefined) throw Error("No such game")
     return game
+}
+
+/**
+ * Determine whether a game with a given id is in progress
+ * @param lobbyId the id of the game
+ * @returns whether there is such a game currently in progress
+ */
+export function gameIsInProgress(lobbyId: number): boolean {
+    return games.has(`${lobbyId}`)
 }
 
 /**
