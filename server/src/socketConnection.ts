@@ -255,7 +255,6 @@ module.exports = {
                         const lobbyId = socketToLobbyId.get(socket.id)!
     
                         const game = getGame(lobbyId)
-                        game.roundStartTime = Date.now()
                         const topic = game.topics[game.currentTopicIndex]
                         const topicId: string = topic._id
     
@@ -517,7 +516,9 @@ module.exports = {
              * Once the lecturer screen countdown is complete, start the game for all players regardless of their individual countdowns
              */
             socket.on("beginRace", () => {
-                const lobbyId = socketToLobbyId.get(socket.id)!
+                const lobbyId = socketToLobbyId.get(socket.id)!    
+                const game = getGame(lobbyId)
+                game.roundStartTime = Date.now()
                 io.to(`players${lobbyId}`).emit("race-started")
             })
 
@@ -535,8 +536,6 @@ module.exports = {
                     endLobby(lobbyId)
                 }
                 else {
-                    const game = getGame(lobbyId)
-                    game.roundStartTime = Date.now()
                     const roundDuration = getRoundDuration(lobbyId)
                     io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                     io.to(`players${lobbyId}`).emit("round-started", roundDuration)
