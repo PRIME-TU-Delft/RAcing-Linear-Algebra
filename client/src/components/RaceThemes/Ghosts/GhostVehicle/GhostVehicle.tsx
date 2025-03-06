@@ -26,7 +26,6 @@ function GhostVehicle(props: Props) {
 
     const usedTime = useContext(TimeContext)
     const stopShowingRace = useContext(RaceProgressContext)
-
     const animationControls = useAnimationControls()
 
     /**

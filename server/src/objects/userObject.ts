@@ -13,6 +13,7 @@ export class User {
     streaks: Streak[] // Array of streak objects for the user
     socketId: string //The socket id of the user
     disconnected: boolean
+    attemptedToAnswerQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
 
     /**
      * Constructor for the user object
@@ -149,6 +150,7 @@ export class User {
         this.score = 0
         this.isOnMandatory = true
         this.streaks.map((streak: Streak) => streak.resetStreak())
+        this.attemptedToAnswerQuestion = false
     }
 
     resetUserQuestionsAnswered() {

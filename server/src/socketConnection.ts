@@ -118,10 +118,12 @@ module.exports = {
 
                     if (game.users.has(userId)) {
                         // Update the socket ID and mark as reconnected
-                        const user = game.users.get(userId);
+                        const user = game.users.get(userId)
+
                         console.log("RECONNECTED USER:")
                         console.log(user)
                         if (user !== undefined) {
+                            user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
                             user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
@@ -158,7 +160,7 @@ module.exports = {
 
                     socket.emit("score", teamScoreData)
 
-                    socket.emit("joined-game-in-progress", remainingTimeInSeconds, user?.questionIds.length, user?.score)
+                    socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, user?.questionIds.length, user?.score)
                 }
 
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
@@ -276,13 +278,23 @@ module.exports = {
                 try {
                     const game = getGame(lobbyId)
                     if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
-                        const exercise = game.getNewExercise(socket.data.userId, difficulty)
                         const user = game.users.get(socket.data.userId)
+                        let exercise: IExercise | undefined = undefined
+
+                        if (user != null && user.questionIds.length > 0) {
+                            console.log(user.questionIds)
+                            if (!user.attemptedToAnswerQuestion) {
+                                exercise = user.currentQuestion
+                            }
+                        }
+
+                        exercise = game.getNewExercise(socket.data.userId, difficulty)
+
                         let scoreToGain = 0;
                         if (exercise !== undefined && user !== undefined) {
-
                             scoreToGain = game.calculateScore(exercise, user);
                         }
+
                         // socket.emit("get-next-question", question)
                         socket.emit("get-next-grasple-question", exercise, scoreToGain)
     
@@ -316,6 +328,11 @@ module.exports = {
 
                     const user = game.users.get(socket.data.userId)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
+                    
+                    if (user != undefined) {
+                        user.attemptedToAnswerQuestion = true
+                    }
+
                     console.log(user?.streaks)
 
                     if (game.allMandatoryQuestionsAnswered(socket.data.userId)) {
