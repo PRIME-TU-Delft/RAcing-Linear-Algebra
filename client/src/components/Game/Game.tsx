@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { Bounce, Flip, ToastContainer, Zoom, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
 import TeamStats from "./TeamStats/TeamStats";
@@ -151,12 +151,13 @@ function Game(props: Props) {
 
     function onQuestionAnsweredCorrectly(score: number) {
         // What happens if the answer is correct
-        setModalText(["✔️ Your answer is correct!"])
-        setModalType("correctAnswer")
+        // setModalText(["✔️ Your answer is correct!"])
+        // setModalType("correctAnswer")
         setScoreToAdd((cur) => score)
         setRightAnswers((rightAnswers) => rightAnswers + 1)
         setStreak((streak) => streak + 1)
-        setShowInfoModal(true)
+        // setShowInfoModal(true)
+        correctAnswerToast()
 
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(true)
@@ -350,6 +351,25 @@ function Game(props: Props) {
                 theme: "light",
             }
         )
+    }
+
+    function correctAnswerToast() {
+        toast.success('✔️ Your answer is correct!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+            style: {
+                fontSize: '20px',
+                minWidth: '400px',
+                marginTop: '4rem'
+              }
+            });
     }
 
     function calculateStats(statistic: Statistic[]) {

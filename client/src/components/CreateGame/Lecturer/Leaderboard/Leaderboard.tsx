@@ -9,6 +9,8 @@ import socket from "../../../../socket";
 interface Props {
     teamname: string
     teamScore: number
+    playerScore: number
+    averageTeamScore: number
     teamStudy: string
     ghosts: Ghost[]
     lapsCompleted: number
@@ -71,14 +73,19 @@ function Leaderboard(props: Props) {
                     <div className="col-1">
                         Rank
                     </div>
-                    <div className="col-5">
+                    <div className="col-3">
                         Name
                     </div>
-                    <div className="col-1"></div>
-                    <div className="col-2 text-center">
-                        Score
+                    <div className="col-1 text-center">
+                        Individual
                     </div>
                     <div className="col-1 text-center">
+                        Average
+                    </div>
+                    <div className="col-2 text-center">
+                        Team Score
+                    </div>
+                    <div className="col-2 text-center">
                         Study
                     </div>
                     <div className="col-1 text-center">
@@ -88,21 +95,26 @@ function Leaderboard(props: Props) {
             </div>
             <div className="end-leaderboard-container">
                 
-                {leaderboardAnimation.map((props, index) => (
-                    <a.div style={props} className={"leaderboard-item rounded" + (sortedLeaderboardItems[index].isMainTeam ? " main-team-item" : "")} key={index}>
+                {leaderboardAnimation.map((stl, index) => (
+                    <a.div style={stl} className={"leaderboard-item rounded" + (sortedLeaderboardItems[index].isMainTeam ? " main-team-item" : "")} key={index}>
                         <div className="row">
                             <div className="col-1">
                                 {index  + 1}
                                 <span className="first-place-crown">{index == 0 ? "👑" : ""}</span>
                             </div>
-                            <div className="col-5">
+                            <div className="col-3">
                                 {sortedLeaderboardItems[index].teamname}
                             </div>
-                            <div className="col-1"></div>
+                            <div className="col-1 text-center">
+                                {sortedLeaderboardItems[index].isMainTeam ? props.playerScore : ""}
+                            </div>
+                            <div className="col-1 text-center">
+                                {sortedLeaderboardItems[index].isMainTeam ? props.averageTeamScore : ""}
+                            </div>
                             <div className="col-2 text-center">
                                 {sortedLeaderboardItems[index].score}
                             </div>
-                            <div className="col-1 text-center">
+                            <div className="col-2 text-center">
                                 {sortedLeaderboardItems[index].study}
                             </div>
                             <div className="col-1 text-center">

@@ -606,6 +606,8 @@ function App() {
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
+                            playerScore={currentScore}
+                            averageTeamScore={averageTeamScore}
                         />
                     }
                 ></Route>

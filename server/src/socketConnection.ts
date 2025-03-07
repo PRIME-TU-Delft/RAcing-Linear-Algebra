@@ -281,14 +281,11 @@ module.exports = {
                         const user = game.users.get(socket.data.userId)
                         let exercise: IExercise | undefined = undefined
 
-                        if (user != null && user.questionIds.length > 0) {
-                            console.log(user.questionIds)
-                            if (!user.attemptedToAnswerQuestion) {
-                                exercise = user.currentQuestion
-                            }
+                        if (user != null && user.questionIds.length > 0 && !user.attemptedToAnswerQuestion) {
+                            exercise = user.currentQuestion
+                        } else if (user != null) {
+                            exercise = game.getNewExercise(socket.data.userId, difficulty)
                         }
-
-                        exercise = game.getNewExercise(socket.data.userId, difficulty)
 
                         let scoreToGain = 0;
                         if (exercise !== undefined && user !== undefined) {
