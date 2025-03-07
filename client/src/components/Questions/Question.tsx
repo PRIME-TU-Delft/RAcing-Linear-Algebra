@@ -61,6 +61,7 @@ function Question(props: Props) {
     const [disableButton, setDisableButton] = useState<boolean>(false)
     
     const [questionStartTime, setQuestionStartTime] = useState<number>(0)
+    const [skipQuestionAvailable, setSkipQuestionAvailable] = useState<boolean>(false)
 
     // All the socket events for the questions are handled here
     useEffect(() => {
@@ -78,6 +79,14 @@ function Question(props: Props) {
             setDisableButton(false)
         }
     }, [props.infoModalDisplayed, hasToSelectDifficulty])
+
+    useEffect(() => {
+        setSkipQuestionAvailable(false)
+        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) return
+        setTimeout(() => {
+            setSkipQuestionAvailable(true)
+        }, 20000);
+    }, [questionStartTime])
 
     // Animations
     const bodyAnimationRef = useSpringRef()
@@ -204,12 +213,16 @@ function Question(props: Props) {
                 <QuestionOverlayBox 
                     isAction={true} 
                     margin={80} 
+                    closedText=">>"
                     openText="Next question" 
                     color="#198754"
-                    staysOpen={true} 
-                    openOnStart={true}
-                    show={questionStatusContext.questionFinished}
-                    startOpenDelay={2}/>
+                    staysOpen={questionStatusContext.questionFinished} 
+                    openOnStart={questionStatusContext.questionFinished}
+                    show={questionStatusContext.questionFinished || skipQuestionAvailable}
+                    openOnHover={true}
+                    startOpenDelay={2}
+                    onBoxClicked={() => setSkipQuestionAvailable(false)}
+                    />
 
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div style={{height: "100%"}}>

@@ -152,6 +152,7 @@ const QuestionOverlayBox: React.FC<Props> = ({
 
     const clickHandler = () => {
         if (isAction) {
+            onBoxClicked()
             questionStatusContext.newQuestionEvent()
         }
     }
