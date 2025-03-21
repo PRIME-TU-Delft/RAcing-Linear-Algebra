@@ -15,7 +15,7 @@ import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
-import type { IExercise } from "./models/exerciseModel"
+import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
@@ -121,11 +121,11 @@ module.exports = {
                         const user = game.users.get(userId)
 
                         console.log("RECONNECTED USER:")
-                        console.log(user)
                         if (user !== undefined) {
                             user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
+                            user.questions = user.questionIds.length > 0 ? new Map(Array.from(user.questions.entries()).slice(0, -1)) : new Map();
                             user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
                         }              
                         
@@ -281,9 +281,15 @@ module.exports = {
                         const user = game.users.get(socket.data.userId)
                         let exercise: IExercise | undefined = undefined
 
-                        if (user != null && user.questionIds.length > 0 && !user.attemptedToAnswerQuestion) {
+                        if (user == null)
+                        {
+                            throw new Error("User not found")
+                        }
+
+                        if (user.questionIds.length > 0 && !user.attemptedToAnswerQuestion) {
                             exercise = user.currentQuestion
-                        } else if (user != null) {
+                            game.initializeUserAttempts(exercise, user)
+                        } else{
                             exercise = game.getNewExercise(socket.data.userId, difficulty)
                         }
 
@@ -330,7 +336,7 @@ module.exports = {
                         user.attemptedToAnswerQuestion = true
                     }
 
-                    console.log(user?.streaks)
+                    console.log("Answered mandatory: " + game.allMandatoryQuestionsAnswered(socket.data.userId).toString())
 
                     if (game.allMandatoryQuestionsAnswered(socket.data.userId)) {
                         game.makeUserNotOnMandatory(socket.data.userId)

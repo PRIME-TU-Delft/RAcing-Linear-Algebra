@@ -395,9 +395,9 @@ function App() {
             const newExpiry = new Date();
             newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
             restart(newExpiry);
-
-            socket.emit("getNewQuestion")
+            
             socket.emit("getMandatoryNum")
+            socket.emit("getNewQuestion")
             
             if (isPlayer) {
                 navigate("/Game")

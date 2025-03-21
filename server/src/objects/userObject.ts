@@ -155,5 +155,6 @@ export class User {
 
     resetUserQuestionsAnswered() {
         this.questionIds = []
+        this.questions = new Map()
     }
 }
