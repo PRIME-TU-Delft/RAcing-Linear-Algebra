@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import "./Question.css"
 import MultipleChoice from "./MultipleChoiceQuestions/MultipleChoice"
 import OpenQuestion from "./OpenQuestion/OpenQuestion"
@@ -47,7 +47,7 @@ function Question(props: Props) {
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
-
+    const skipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [showDifficultySelectionDescription, setShowDifficultySelectionDescription] = useState(true)
 
     const [hasToSelectDifficulty, setHasToSelectDifficulty] = useState(false)
@@ -81,12 +81,23 @@ function Question(props: Props) {
     }, [props.infoModalDisplayed, hasToSelectDifficulty])
 
     useEffect(() => {
-        setSkipQuestionAvailable(false)
-        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) return
-        setTimeout(() => {
-            setSkipQuestionAvailable(true)
+        setSkipQuestionAvailable(false);
+        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) return;
+
+        if (skipTimeoutRef.current) {
+            clearTimeout(skipTimeoutRef.current);
+        }
+
+        skipTimeoutRef.current = setTimeout(() => {
+            setSkipQuestionAvailable(true);
         }, 20000);
-    }, [questionStartTime])
+
+        return () => {
+            if (skipTimeoutRef.current) {
+                clearTimeout(skipTimeoutRef.current);
+            }
+        };
+    }, [questionStartTime]);
 
     // Animations
     const bodyAnimationRef = useSpringRef()
