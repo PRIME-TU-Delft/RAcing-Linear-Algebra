@@ -99,6 +99,10 @@ function Question(props: Props) {
         };
     }, [questionStartTime]);
 
+    const nextQuestionHandler = () => {
+        setSkipQuestionAvailable(false)
+        questionStatusContext.newQuestionEvent()
+    }
     // Animations
     const bodyAnimationRef = useSpringRef()
     const bodyAnimation = useSpring({
@@ -232,7 +236,7 @@ function Question(props: Props) {
                     show={questionStatusContext.questionFinished || skipQuestionAvailable}
                     openOnHover={true}
                     startOpenDelay={2}
-                    onBoxClicked={() => setSkipQuestionAvailable(false)}
+                    onBoxClicked={nextQuestionHandler}
                     />
 
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
