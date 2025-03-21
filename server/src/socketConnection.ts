@@ -725,7 +725,10 @@ module.exports = {
                     const allStudies = await getAllStudies()
                     const lobbyData = {
                         topics: topicNames,
-                        studies: allStudies.map(study => study.name)
+                        studies: allStudies.map(study => ({
+                            name: study.name,
+                            abbreviation: study.abbreviation
+                        }))
                     }
                     socket.emit("lobby-data", lobbyData)
                 } catch (error) {

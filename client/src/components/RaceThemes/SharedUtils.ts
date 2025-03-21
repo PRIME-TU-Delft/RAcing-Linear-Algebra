@@ -131,6 +131,11 @@ interface GraspleExercise {
     isMandatory: boolean
 }
 
+interface StudyElement {
+    name: string,
+    abbreviation: string
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -145,5 +150,6 @@ export {
     type IQuestion,
     type RoundInformation,
     type Streak,
-    type GraspleExercise
+    type GraspleExercise,
+    type StudyElement
 }

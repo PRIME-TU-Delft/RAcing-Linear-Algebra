@@ -61,6 +61,7 @@ function App() {
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
+    const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
         easy: true,
         medium: true,
@@ -558,7 +559,14 @@ function App() {
                                             <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
                                                 <StreakContext.Provider value={streaks}>
                                                     <RaceProgressContext.Provider value={stopShowingRace}>
-                                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler} playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}/>
+                                                        <Game 
+                                                            theme={theme} 
+                                                            roundDuration={roundDuration} 
+                                                            roundStarted={roundstarted} 
+                                                            isFirstRound={isFirstRound} 
+                                                            onRoundEnded={leaderboardNavigationHandler} 
+                                                            playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
+                                                            onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}/>
                                                     </RaceProgressContext.Provider>
                                                 </StreakContext.Provider>
                                             </GraspleQuestionContext.Provider>
@@ -606,7 +614,7 @@ function App() {
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
-                            playerScore={currentScore}
+                            playerScore={currentIndividualScore}
                             averageTeamScore={averageTeamScore}
                         />
                     }

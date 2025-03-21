@@ -34,6 +34,7 @@ interface Props {
     playerScoreBeforeReconnecting: number
     isFirstRound: boolean
     onRoundEnded: () => void
+    onUpdatePlayerScore: (score: number) => void
 }
 
 interface Statistic {
@@ -336,6 +337,10 @@ function Game(props: Props) {
     useEffect(() => {
         setHideQuestion(curr => showInfoModal)
     }, [showInfoModal])
+
+    useEffect(() => {
+        props.onUpdatePlayerScore(score)
+    }, [score])
 
     function wrongAnswerToast(triesLeft: number) {
         toast(
