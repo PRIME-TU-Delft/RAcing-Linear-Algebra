@@ -7,6 +7,13 @@ import { CurveInterpolator } from 'curve-interpolator';
 import type { ITopic } from "../models/topicModel"
 import type { IExercise } from "../models/exerciseModel"
 
+export interface GameGhostTeam {
+    teamName: string
+    timeScores: number[]
+    checkpoints: number[]
+    study: string
+    accuracy: number
+}
 export class Game {
     avgScore: number //The average score of the team's users
     totalScore: number //The total (sum) score of the team's users
@@ -21,6 +28,7 @@ export class Game {
     correct: number //The number of correct answers
     incorrect: number //The number of incorrect answers
     roundStartTime: number //The time the game started
+    ghostTeams: GameGhostTeam[] //The ghost teams for this game
 
     /**
      * Constructor for a game object,

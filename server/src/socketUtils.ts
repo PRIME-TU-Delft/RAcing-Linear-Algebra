@@ -1,19 +1,19 @@
 import { getBestTeamFinalScore, getGhostTeams } from "./controllers/scoreDBController";
-import type { Game } from "./objects/gameObject";
+import type { Game, GameGhostTeam } from "./objects/gameObject";
 
 export async function getInterpolatedGhostTeams(game: Game) {
-    const topic = game.topics[game.currentTopicIndex];
+    const topic = game.topics[game.currentTopicIndex]
     const topicId: string = topic._id;
 
-    const ghostTeams = await getGhostTeams(topicId);
-    const interpolatedGhostTeams = ghostTeams.map(x => ({
+    const ghostTeams = await getGhostTeams(topicId)
+    const interpolatedGhostTeams: GameGhostTeam[] = ghostTeams.map(x => ({
         teamName: x.teamname,
         timeScores: game.getGhostTeamTimePointScores(x.scores),
         checkpoints: x.checkpoints,
         study: x.study,
         accuracy: x.accuracy
     }));
-
+    game.ghostTeams = interpolatedGhostTeams
     return interpolatedGhostTeams;
 }
 

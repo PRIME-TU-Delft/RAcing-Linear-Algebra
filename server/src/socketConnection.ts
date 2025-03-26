@@ -147,14 +147,13 @@ module.exports = {
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
 
-                    const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
                     const raceInformation = getRaceInformation(game, lobbyId, themes)
 
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                     const teamScoreData = getTeamScoreData(game, numberOfPlayers)
                 
-                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                    socket.emit("ghost-teams", game.ghostTeams)
                     socket.emit("race-track-end-score", halvedHighestFinalScore)
                     socket.emit("round-information", (raceInformation))
 
