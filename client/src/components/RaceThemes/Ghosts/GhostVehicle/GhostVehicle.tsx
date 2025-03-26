@@ -35,7 +35,7 @@ function GhostVehicle(props: Props) {
     const getNewTimeScoreIndex = () => {
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
         if (currentTimeScoreIndex >= props.ghost.timeScores.length - 1) return -1
-
+        console.log(usedTime)
         // Finds the last index which has expired in terms of time, in order to set the next goal to its next neighbour
         let newIndex = currentTimeScoreIndex
         for (let i = currentTimeScoreIndex; i < props.ghost.timeScores.length; i++) {
@@ -46,6 +46,12 @@ function GhostVehicle(props: Props) {
 
         return newIndex + 1
     }
+
+    useEffect(() => 
+    {
+        props.ghost.animationStatus.timeScoreIndex = getNewTimeScoreIndex()
+        CheckForAnimationUpdates()
+    }, [props.ghost.timeScores])
 
     /**
      * Updates the values of the ghost to account for reaching a new time point.
@@ -66,6 +72,10 @@ function GhostVehicle(props: Props) {
     }
 
     useEffect(() => {
+        CheckForAnimationUpdates()
+    }, [usedTime])
+
+    const CheckForAnimationUpdates = () => {
         // Introduce constants to reduce code repetition
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
 
@@ -76,9 +86,10 @@ function GhostVehicle(props: Props) {
 
         // If the time matches a ghost's time point, it is time to update its score (make it move)
         if (currentGhostTimePoint <= usedTime) { 
+
             setStartAnimation(curr => true)
         }
-    }, [usedTime])
+    }
 
     useEffect(() => {
         if (startAnimation) {
@@ -89,7 +100,7 @@ function GhostVehicle(props: Props) {
 
             const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
             const progress = (currentGhostNewScore/ props.totalPoints) * 100 // progress determined as the ratio of points and total points
-        
+
             const currentGhostPreviousScore = props.ghost.timeScores[Math.max(currentTimeScoreIndex - 1, 0)].score
             const previousProgress = (currentGhostPreviousScore/ props.totalPoints) * 100 
 
