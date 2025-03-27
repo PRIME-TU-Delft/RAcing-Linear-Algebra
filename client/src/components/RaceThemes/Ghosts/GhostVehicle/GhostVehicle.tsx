@@ -31,8 +31,8 @@ function GhostVehicle(props: Props) {
     useEffect(() => 
     {
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
-        props.ghost.animationStatus.timeScoreIndex = getNewTimeScoreIndex(currentTimeScoreIndex, props.ghost.timeScores, usedTime)
-        CheckForAnimationUpdates()
+        props.ghost.animationStatus.timeScoreIndex = Math.max(0, getNewTimeScoreIndex(currentTimeScoreIndex, props.ghost.timeScores, usedTime) - 1)
+        checkForAnimationUpdates()
     }, [props.ghost.timeScores])
 
     /**
@@ -54,10 +54,10 @@ function GhostVehicle(props: Props) {
     }
 
     useEffect(() => {
-        CheckForAnimationUpdates()
+        checkForAnimationUpdates()
     }, [usedTime])
 
-    const CheckForAnimationUpdates = () => {
+    const checkForAnimationUpdates = () => {
         // Introduce constants to reduce code repetition
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
 
