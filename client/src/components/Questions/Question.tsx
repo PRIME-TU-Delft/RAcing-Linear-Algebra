@@ -62,6 +62,12 @@ function Question(props: Props) {
     
     const [questionStartTime, setQuestionStartTime] = useState<number>(0)
     const [skipQuestionAvailable, setSkipQuestionAvailable] = useState<boolean>(false)
+    const showDifficultyRef = useRef<boolean>(showDifficulty); // Ref to track the latest value of showDifficulty
+
+
+    useEffect(() => {
+        showDifficultyRef.current = showDifficulty;
+    }, [showDifficulty]);
 
     // All the socket events for the questions are handled here
     useEffect(() => {
@@ -89,7 +95,10 @@ function Question(props: Props) {
         }
 
         skipTimeoutRef.current = setTimeout(() => {
-            setSkipQuestionAvailable(true);
+
+            if (!showDifficultyRef.current) {
+                setSkipQuestionAvailable(true);
+            }
         }, 20000);
 
         return () => {
