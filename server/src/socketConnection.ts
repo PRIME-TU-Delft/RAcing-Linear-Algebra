@@ -107,6 +107,20 @@ module.exports = {
              */
             socket.on("joinLobby", async (lobbyId: number, userId: string) => {
                 socket.data.userId = userId // Setting the userId to the socket data for later use (used for identifying reconnecting players)
+                
+                const playersRoom = io.sockets.adapter.rooms.get(`players${lobbyId}`);
+                if (playersRoom != undefined) {
+                    const isUserAlreadyInRoom = Array.from(playersRoom).some((socketId) => {
+                        const playerSocket = io.sockets.sockets.get(socketId) as Socket | undefined;
+                        return playerSocket?.data.userId === userId;
+                    });
+
+                    if (isUserAlreadyInRoom) {
+                        socket.emit("already-in-room");
+                        return; // Exit early if the user is already in the room
+                    }
+                }
+
                 console.log("JOINED LOBBY: " + (socket.data.userId as string))
                 void socket.join(`players${lobbyId}`)
                 socketToLobbyId.set(socket.id, lobbyId)

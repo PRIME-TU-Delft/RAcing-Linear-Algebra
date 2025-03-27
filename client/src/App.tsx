@@ -26,7 +26,7 @@ import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatist
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
-import { ReactNotifications } from "react-notifications-component"
+import { ReactNotifications, Store } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
@@ -413,6 +413,21 @@ function App() {
             setUserReconnectionAvailableTime(curr => reconnectionAvailableAtTime)
             navigate("/JoinGame")
         }
+
+        function onPlayerAlreadyInLobby() {
+            navigate("/")
+            Store.addNotification({
+                title: "Already in lobby!",
+                message: "You are already using another tab to play the game. Please close the other tab if you want to play in this one.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                dismiss: {
+                  duration: 10000,
+                  onScreen: true
+                }
+            });
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -440,6 +455,7 @@ function App() {
         socket.on("chooseDifficulty", onChooseDifficulty)
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
         socket.on("blocked-user-reconnection", onBlockedUserReconnection)
+        socket.on("already-in-room", onPlayerAlreadyInLobby)
     }, [])
 
     // useEffect(() => {
