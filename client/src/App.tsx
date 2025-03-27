@@ -169,7 +169,7 @@ function App() {
         resetValues()
         setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
-        setCurrentQuestionNumber(0)
+        setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
         setStopShowingRace(false)
     
@@ -388,7 +388,7 @@ function App() {
             setRoundDuration(curr => roundDuration)
             setPlayerScoreBeforeReconnecting(curr => previousPlayerScore)
             setRoundStarted(curr => true)
-            setCurrentQuestionNumber(questionNumber)
+            setCurrentQuestionNumber(curr => questionNumber)
             setAllRoundsFinished(curr => false)
             setStopShowingRace(false)
 
