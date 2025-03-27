@@ -34,7 +34,7 @@ function RaceStatus(props: Props) {
         // Adding the main train
         newRacingTeams.push({
             isGhost: false,
-            score: 0
+            score: scores.currentPoints
         })
 
         // Adding the ghost teams
