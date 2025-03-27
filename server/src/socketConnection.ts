@@ -124,26 +124,22 @@ module.exports = {
                         console.log("RECONNECTED USER:")
                         if (user !== undefined) {
 
-                            user.attemptedToAnswerQuestion = false
+                            // user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
                             console.log(user.questions)
 
-                            if (user.questionIds.length > 0) {
-                                if (game.hasUserAttemptedNonMandatoryQuestion(userId)) {
+                            if (user.getQuestionIds().length > 0) {
+                                if (game.hasUserAttemptedNonMandatoryQuestion(userId) && !user.usedUpAttemptsOnLastQuestion) {
                                     user.questions = new Map(Array.from(user.questions.entries()).slice(0, -1))
-                                    user.questionIds = user.questionIds.slice(0, -1)
-                                } else {
-                                    user.isOnMandatory = true;
+                                } 
+                                else if (!user.usedUpAttemptsOnLastQuestion){
                                     offsetQuestionNumber = true;
                                 }
                             }
                             else {
                                 user.questions = new Map()
-                                user.questionIds = []
                             }
-                            console.log("USER QUESTION DATA")
-                            console.log(user.questions)
                         }              
                         
                         game.totalScore += user?.score as number
@@ -162,7 +158,7 @@ module.exports = {
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
-                    let attempts =  user?.questionIds.length
+                    let attempts =  user?.questions.size
                     if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
@@ -176,7 +172,7 @@ module.exports = {
                     socket.emit("round-information", (raceInformation))
 
                     socket.emit("score", teamScoreData)
-
+                    socket.emit("currentStreaks", user?.streaks)
                     socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, attempts, user?.score)
                 }
 
@@ -309,11 +305,12 @@ module.exports = {
                     {
                         let exercise: IExercise | undefined = undefined
 
-                        if (user.questionIds.length > 0 && !user.attemptedToAnswerQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
+                        if (user.getQuestionIds().length > 0 && !user.usedUpAttemptsOnLastQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
                             exercise = user.currentQuestion
                             game.initializeUserAttempts(exercise, user)
                         } else{
                             exercise = game.getNewExercise(socket.data.userId, difficulty)
+                            user.usedUpAttemptsOnLastQuestion = false
                         }
 
                         let scoreToGain = 0;
@@ -356,15 +353,14 @@ module.exports = {
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
                     
                     if (user != undefined) {
-                        user.attemptedToAnswerQuestion = true
+                        user.usedUpAttemptsOnLastQuestion = true
                     }
 
                     console.log("Answered mandatory: " + game.allMandatoryQuestionsAnswered(socket.data.userId).toString())
-
                     if (game.allMandatoryQuestionsAnswered(socket.data.userId)) {
                         game.makeUserNotOnMandatory(socket.data.userId)
                     }
-                    
+
                     if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")

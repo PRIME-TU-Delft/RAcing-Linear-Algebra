@@ -112,10 +112,10 @@ export class Game {
      * @returns a new question
      */
     getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
-        console.log("Answered: " + user.questionIds.length.toString())
+        console.log("Answered: " + user.getQuestionIds().length.toString())
         console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
 
-        const numberOfAnswered = user.questionIds.length
+        const numberOfAnswered = user.getQuestionIds().length
         const question = topic.mandatoryExercises[numberOfAnswered]
 
         if (question === undefined) throw Error("Could not generate new question")
@@ -135,7 +135,7 @@ export class Game {
         const user = this.users.get(userId)
         if (user === undefined) return false
 
-        const numberOfAnswered = user.questionIds.length
+        const numberOfAnswered = user.getQuestionIds().length
         if (numberOfAnswered >= topic.mandatoryExercises.length)
             return true
 
@@ -152,7 +152,7 @@ export class Game {
         const user = this.users.get(userId)
         if (user === undefined) return false
 
-        const numberOfAnswered = user.questionIds.length
+        const numberOfAnswered = user.getQuestionIds().length
         if (numberOfAnswered >= topic.mandatoryExercises.length + 1)
             return true
 
@@ -245,7 +245,6 @@ export class Game {
     initializeUserAttempts(exericse: IExercise, user: User) {
         user.currentQuestion = exericse
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
-        user.questionIds.push(exericse.exerciseId)
     }
 
     /**

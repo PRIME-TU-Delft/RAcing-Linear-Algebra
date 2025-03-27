@@ -4,7 +4,6 @@ import type { IQuestion } from "../models/questionModel"
 import { Streak } from "./streakObject";
 
 export class User {
-    questionIds: number[] //The ids of the grasple exercises that have already been used
     questions: Map<IExercise, { attempts: number; correct: number }> //A map containing all the statistics per question per user correct is 0 for incorrectly and 1 for correctly answered
     currentQuestion: IExercise //The question this user is currently on
     attempts: number //The amount of attempts on the current question
@@ -13,14 +12,13 @@ export class User {
     streaks: Streak[] // Array of streak objects for the user
     socketId: string //The socket id of the user
     disconnected: boolean
-    attemptedToAnswerQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
+    usedUpAttemptsOnLastQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
 
     /**
      * Constructor for the user object
      * Initializes all the values
      */
     constructor() {
-        this.questionIds = []
         this.questions = new Map()
         this.attempts = 3
         this.score = 0
@@ -28,6 +26,11 @@ export class User {
         this.initializeUserStreaks()
         this.socketId = ""
         this.disconnected = false
+        this.usedUpAttemptsOnLastQuestion = false
+    }
+
+    getQuestionIds(): number[] {
+        return Array.from(this.questions.keys()).map((exercise) => exercise.exerciseId);
     }
 
     /**
@@ -56,7 +59,7 @@ export class User {
             const randomIndex = Math.floor(Math.random() * size)
             question = questions[randomIndex]
             size--
-            if (this.questionIds.includes(question)) {
+            if (this.getQuestionIds().includes(question)) {
                 questions.splice(randomIndex, 1)
             } else {
                 flag = true
@@ -85,7 +88,7 @@ export class User {
     }
 
     checkIfUsedUpAllVariantsForDifficulty(questions: number[]): boolean {
-        return questions.every(question => this.questionIds.includes(question))
+        return questions.every(question => this.getQuestionIds().includes(question))
     }
 
     /**
@@ -144,17 +147,15 @@ export class User {
     }
 
     resetUser() {
-        this.questionIds = []
         this.questions = new Map()
         this.attempts = 3
         this.score = 0
         this.isOnMandatory = true
         this.streaks.map((streak: Streak) => streak.resetStreak())
-        this.attemptedToAnswerQuestion = false
+        this.usedUpAttemptsOnLastQuestion = false
     }
 
     resetUserQuestionsAnswered() {
-        this.questionIds = []
         this.questions = new Map()
     }
 }
