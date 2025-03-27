@@ -90,7 +90,7 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
-    //window.addEventListener("load", () => navigate("/"))
+    window.addEventListener("load", () => navigate("/"))
 
     window.onmessage = function(e) {
         if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {

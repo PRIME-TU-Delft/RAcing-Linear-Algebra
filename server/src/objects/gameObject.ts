@@ -143,6 +143,23 @@ export class Game {
     }
 
     /**
+     * Checks whether the user has started answering a non-mandatory question, relevant for reconnecting users
+     * @param userId the id of the user
+     * @returns whether the user has started answering a difficulty-based (non-mandatory) question
+     */
+    hasUserAttemptedNonMandatoryQuestion(userId: string): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
+        if (user === undefined) return false
+
+        const numberOfAnswered = user.questionIds.length
+        if (numberOfAnswered >= topic.mandatoryExercises.length + 1)
+            return true
+
+        return false
+    }
+
+    /**
      * Gets a new exercise based on the seleced difficulty
      * @param round the current round the user is in
      * @param user the user object that needs a question

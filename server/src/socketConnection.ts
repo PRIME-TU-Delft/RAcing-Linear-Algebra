@@ -110,7 +110,8 @@ module.exports = {
                 console.log("JOINED LOBBY: " + (socket.data.userId as string))
                 void socket.join(`players${lobbyId}`)
                 socketToLobbyId.set(socket.id, lobbyId)
-                
+                let offsetQuestionNumber = false;
+
                 // If the game is in progress, update the socket ID and mark as reconnected or create a new user
                 // who has joined the lobby mid-game
                 if (gameIsInProgress(lobbyId)) {
@@ -122,11 +123,27 @@ module.exports = {
 
                         console.log("RECONNECTED USER:")
                         if (user !== undefined) {
+
                             user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
-                            user.questions = user.questionIds.length > 0 ? new Map(Array.from(user.questions.entries()).slice(0, -1)) : new Map();
-                            user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
+                            console.log(user.questions)
+
+                            if (user.questionIds.length > 0) {
+                                if (game.hasUserAttemptedNonMandatoryQuestion(userId)) {
+                                    user.questions = new Map(Array.from(user.questions.entries()).slice(0, -1))
+                                    user.questionIds = user.questionIds.slice(0, -1)
+                                } else {
+                                    user.isOnMandatory = true;
+                                    offsetQuestionNumber = true;
+                                }
+                            }
+                            else {
+                                user.questions = new Map()
+                                user.questionIds = []
+                            }
+                            console.log("USER QUESTION DATA")
+                            console.log(user.questions)
                         }              
                         
                         game.totalScore += user?.score as number
@@ -139,13 +156,14 @@ module.exports = {
                         const user = new User();
                         user.socketId = socket.id;
                         game.users.set(userId, user);
-                        console.log(game.users)
                     }
 
                     const roundDuration = getRoundDuration(lobbyId)
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
+                    let attempts =  user?.questionIds.length
+                    if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
                     const raceInformation = getRaceInformation(game, lobbyId, themes)
@@ -159,7 +177,7 @@ module.exports = {
 
                     socket.emit("score", teamScoreData)
 
-                    socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, user?.questionIds.length, user?.score)
+                    socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, attempts, user?.score)
                 }
 
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
@@ -276,16 +294,22 @@ module.exports = {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
-                    if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
-                        const user = game.users.get(socket.data.userId)
-                        let exercise: IExercise | undefined = undefined
+                    const user = game.users.get(socket.data.userId)
 
-                        if (user == null)
+                    if (user == null)
                         {
                             throw new Error("User not found")
                         }
 
-                        if (user.questionIds.length > 0 && !user.attemptedToAnswerQuestion) {
+                    if ((difficulty != undefined 
+                        || (game.mandatoryExercisesExistForCurrentTopic() 
+                                && user.isOnMandatory)
+                            )
+                        ) 
+                    {
+                        let exercise: IExercise | undefined = undefined
+
+                        if (user.questionIds.length > 0 && !user.attemptedToAnswerQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
                             exercise = user.currentQuestion
                             game.initializeUserAttempts(exercise, user)
                         } else{
@@ -351,7 +375,7 @@ module.exports = {
                         io.to(`lecturer${lobbyId}`).emit("score", teamScoreData)
                         io.to(`players${lobbyId}`).emit("score", teamScoreData)
                     } else {
-                        if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
+                        if (game.allMandatoryQuestionsAnswered(socket.data.userId)) socket.emit("chooseDifficulty")
                     }
                 } catch (error) {
                     console.error(error)
