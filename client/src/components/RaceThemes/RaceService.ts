@@ -97,3 +97,27 @@ export function getRacePathObject(trackPoints: PercentCoordinate[], containerWid
         components: components
     }
 }
+
+/**
+ * Retrieves the next time score index the team will aim to reach
+ * @param currentTimeScoreIndex The current time score index
+ * @param timeScores The array of time scores
+ * @param usedTime The current time used
+ * @returns The new time score index, or -1 if there are no more time scores
+ */
+export const getNewTimeScoreIndex = (
+    currentTimeScoreIndex: number,
+    timeScores: { timePoint: number, score: number }[],
+    usedTime: number
+): number => {
+    if (currentTimeScoreIndex >= timeScores.length - 1) return -1;
+
+    let newIndex = currentTimeScoreIndex;
+    for (let i = currentTimeScoreIndex; i < timeScores.length; i++) {
+        const timeScore = timeScores[i];
+        if (timeScore && timeScore.timePoint <= usedTime) newIndex = i;
+        else break;
+    }
+
+    return newIndex + 1;
+};

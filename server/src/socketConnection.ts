@@ -15,7 +15,7 @@ import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
-import type { IExercise } from "./models/exerciseModel"
+import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
@@ -107,26 +107,65 @@ module.exports = {
              */
             socket.on("joinLobby", async (lobbyId: number, userId: string) => {
                 socket.data.userId = userId // Setting the userId to the socket data for later use (used for identifying reconnecting players)
+                
+                const playersRoom = io.sockets.adapter.rooms.get(`players${lobbyId}`);
+                if (playersRoom != undefined) {
+                    const isUserAlreadyInRoom = Array.from(playersRoom).some((socketId) => {
+                        const playerSocket = io.sockets.sockets.get(socketId) as Socket | undefined;
+                        return playerSocket?.data.userId === userId;
+                    });
+
+                    if (isUserAlreadyInRoom) {
+                        socket.emit("already-in-room");
+                        return; // Exit early if the user is already in the room
+                    }
+                }
+
                 console.log("JOINED LOBBY: " + (socket.data.userId as string))
                 void socket.join(`players${lobbyId}`)
                 socketToLobbyId.set(socket.id, lobbyId)
-                
+                let offsetQuestionNumber = false;
+
                 // If the game is in progress, update the socket ID and mark as reconnected or create a new user
                 // who has joined the lobby mid-game
                 if (gameIsInProgress(lobbyId)) {
                     const game = getGame(lobbyId);
 
                     if (game.users.has(userId)) {
-                        // Update the socket ID and mark as reconnected
+
                         const user = game.users.get(userId)
 
+                        // Check that user hasn't attempted reconnecting in the last 30 seconds, to prevent abusing reconnections
+                        // if (user !== undefined) {
+                        //     const currentTime = Date.now()
+                        //     const lastConnectionTime = user.lastConnectionTime
+                        //     if (currentTime - lastConnectionTime < 30000) {
+                        //         socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
+                        //         void socket.leave(`players${lobbyId}`)
+                        //         return
+                        //     }
+                        // }
+                        
+                        // Update the socket ID and mark as reconnected
                         console.log("RECONNECTED USER:")
-                        console.log(user)
                         if (user !== undefined) {
-                            user.attemptedToAnswerQuestion = false
+                            user.lastConnectionTime = Date.now()
+                            // user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
-                            user.questionIds = user.questionIds.length > 0 ? user.questionIds.slice(0, -1) : [];
+                            console.log(user.questions)
+
+                            if (user.getQuestionIds().length > 0) {
+                                if (game.hasUserAttemptedNonMandatoryQuestion(userId) && !user.usedUpAttemptsOnLastQuestion) {
+                                    user.questions = new Map(Array.from(user.questions.entries()).slice(0, -1))
+                                } 
+                                else if (!user.usedUpAttemptsOnLastQuestion){
+                                    offsetQuestionNumber = true;
+                                }
+                            }
+                            else {
+                                user.questions = new Map()
+                            }
                         }              
                         
                         game.totalScore += user?.score as number
@@ -139,28 +178,28 @@ module.exports = {
                         const user = new User();
                         user.socketId = socket.id;
                         game.users.set(userId, user);
-                        console.log(game.users)
                     }
 
                     const roundDuration = getRoundDuration(lobbyId)
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
+                    let attempts =  user?.questions.size
+                    if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
-                    const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
                     const raceInformation = getRaceInformation(game, lobbyId, themes)
 
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                     const teamScoreData = getTeamScoreData(game, numberOfPlayers)
                 
-                    socket.emit("ghost-teams", interpolatedGhostTeams)
+                    socket.emit("ghost-teams", game.ghostTeams)
                     socket.emit("race-track-end-score", halvedHighestFinalScore)
                     socket.emit("round-information", (raceInformation))
 
                     socket.emit("score", teamScoreData)
-
-                    socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, user?.questionIds.length, user?.score)
+                    socket.emit("currentStreaks", user?.streaks)
+                    socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, attempts, user?.score)
                 }
 
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
@@ -277,14 +316,27 @@ module.exports = {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     const game = getGame(lobbyId)
-                    if (difficulty != undefined || game.mandatoryExercisesExistForCurrentTopic()) {
-                        const user = game.users.get(socket.data.userId)
+                    const user = game.users.get(socket.data.userId)
+
+                    if (user == null)
+                        {
+                            throw new Error("User not found")
+                        }
+
+                    if ((difficulty != undefined 
+                        || (game.mandatoryExercisesExistForCurrentTopic() 
+                                && user.isOnMandatory)
+                            )
+                        ) 
+                    {
                         let exercise: IExercise | undefined = undefined
 
-                        if (user != null && user.questionIds.length > 0 && !user.attemptedToAnswerQuestion) {
+                        if (user.getQuestionIds().length > 0 && !user.usedUpAttemptsOnLastQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
                             exercise = user.currentQuestion
-                        } else if (user != null) {
+                            game.initializeUserAttempts(exercise, user)
+                        } else{
                             exercise = game.getNewExercise(socket.data.userId, difficulty)
+                            user.usedUpAttemptsOnLastQuestion = false
                         }
 
                         let scoreToGain = 0;
@@ -293,7 +345,7 @@ module.exports = {
                         }
 
                         // socket.emit("get-next-question", question)
-                        socket.emit("get-next-grasple-question", exercise, scoreToGain)
+                        socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)
     
                         const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
                         if (usedUpAllQuestionsForDifficulty) {
@@ -327,15 +379,14 @@ module.exports = {
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
                     
                     if (user != undefined) {
-                        user.attemptedToAnswerQuestion = true
+                        user.usedUpAttemptsOnLastQuestion = true
                     }
 
-                    console.log(user?.streaks)
-
+                    console.log("Answered mandatory: " + game.allMandatoryQuestionsAnswered(socket.data.userId).toString())
                     if (game.allMandatoryQuestionsAnswered(socket.data.userId)) {
                         game.makeUserNotOnMandatory(socket.data.userId)
                     }
-                    
+
                     if (answeredCorrectly) {
                         socket.emit("rightAnswer", score)
                         if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
@@ -346,7 +397,7 @@ module.exports = {
                         io.to(`lecturer${lobbyId}`).emit("score", teamScoreData)
                         io.to(`players${lobbyId}`).emit("score", teamScoreData)
                     } else {
-                        if (game.isMandatoryDone(socket.data.userId)) socket.emit("chooseDifficulty")
+                        if (game.allMandatoryQuestionsAnswered(socket.data.userId)) socket.emit("chooseDifficulty")
                     }
                 } catch (error) {
                     console.error(error)
@@ -725,7 +776,10 @@ module.exports = {
                     const allStudies = await getAllStudies()
                     const lobbyData = {
                         topics: topicNames,
-                        studies: allStudies.map(study => study.name)
+                        studies: allStudies.map(study => ({
+                            name: study.name,
+                            abbreviation: study.abbreviation
+                        }))
                     }
                     socket.emit("lobby-data", lobbyData)
                 } catch (error) {

@@ -76,9 +76,11 @@ function Leaderboard(props: Props) {
                     <div className="col-3">
                         Name
                     </div>
-                    <div className="col-1 text-center">
-                        Individual
-                    </div>
+                    {!props.isLecturer && (
+                        <div className="col-1 text-center">
+                            Individual
+                        </div>
+                    )}
                     <div className="col-1 text-center">
                         Average
                     </div>
@@ -105,9 +107,11 @@ function Leaderboard(props: Props) {
                             <div className="col-3">
                                 {sortedLeaderboardItems[index].teamname}
                             </div>
-                            <div className="col-1 text-center">
-                                {sortedLeaderboardItems[index].isMainTeam ? props.playerScore : ""}
-                            </div>
+                            {!props.isLecturer && (
+                                <div className="col-1 text-center">
+                                    {sortedLeaderboardItems[index].isMainTeam ? props.playerScore : ""}
+                                </div>
+                            )}
                             <div className="col-1 text-center">
                                 {sortedLeaderboardItems[index].isMainTeam ? props.averageTeamScore : ""}
                             </div>

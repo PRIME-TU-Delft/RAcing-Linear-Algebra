@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import "./JoinGame.css"
@@ -6,9 +6,12 @@ import { useForm } from "react-hook-form"
 import { host } from "../../utils/APIRoutes"
 import socket from "../../socket"
 import { getOrCreateUserId } from "../../utils/userIdGenerator"
+import { toast, Zoom } from "react-toastify"
+import { Store } from "react-notifications-component"
 
 interface Props {
     onLobbyJoined: (lobbyId: number) => void
+    reconnectionAvailableTime: number
 }
 
 function JoinGame(props: Props) {
@@ -19,6 +22,22 @@ function JoinGame(props: Props) {
     const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLobbyId(event.target.value)
     }
+
+    useEffect(() => {
+        if (props.reconnectionAvailableTime < Date.now()) return
+        const timeLeft = Math.max(Math.floor((props.reconnectionAvailableTime - Date.now()) / 1000), 1)
+        Store.addNotification({
+            title: "Reconnection spam detected!",
+            message: "You are trying to reconnect too fast! Please wait " + timeLeft.toString() + " seconds.",
+            type: "warning",
+            insert: "top",
+            container: "top-right",
+            dismiss: {
+              duration: 5000,
+              onScreen: true
+            }
+        });
+    }, [props.reconnectionAvailableTime])
 
     //validate the lobby code entered
     const onSubmit = methods.handleSubmit(async (data) => {

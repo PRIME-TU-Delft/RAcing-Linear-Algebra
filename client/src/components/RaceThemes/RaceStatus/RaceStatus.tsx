@@ -4,7 +4,7 @@ import { RaceDataContext } from "../../../contexts/RaceDataContext";
 import { ScoreContext } from "../../../contexts/ScoreContext";
 import { RaceObject } from "../SharedUtils";
 import { currentGhostIsOpen } from "../Ghosts/GhostService";
-import { formatRacePositionText, getColorForRaceLap, getZIndexValues } from "../RaceService";
+import { formatRacePositionText, getColorForRaceLap, getNewTimeScoreIndex, getZIndexValues } from "../RaceService";
 import Ghosts from "../Ghosts/Ghosts";
 import VehicleImage from "../VehicleImage/VehicleImage";
 import { motion } from "framer-motion";
@@ -34,20 +34,23 @@ function RaceStatus(props: Props) {
         // Adding the main train
         newRacingTeams.push({
             isGhost: false,
-            score: 0
+            score: scores.currentPoints
         })
 
         // Adding the ghost teams
         for (const ghost of raceData.ghostTeams) {
+            const currentTimeScoreIndex = getNewTimeScoreIndex(0, ghost.timeScores, remainingTime > 0 ? props.roundDuration - remainingTime : 0)
+            const previousIndex = Math.max(currentTimeScoreIndex - 1, 0)
             newRacingTeams.push({
                 isGhost: true,
                 ghostKey: ghost.key,
-                score: 0
+                score: ghost.timeScores[previousIndex].score ? ghost.timeScores[previousIndex].score : 0
             })
         }
-
+        const newOrderOfTeams = [...newRacingTeams]
+        newOrderOfTeams.sort((x, y) => x.score > y.score ? -1 : x.score < y.score ? 1 : 0)
         setRacingTeamStats(curr => [...newRacingTeams])
-        setSortedRacingTeamStats(curr => [...newRacingTeams])
+        setSortedRacingTeamStats(curr => [...newOrderOfTeams])
     }, [raceData.ghostTeams])
 
     useEffect(() => {

@@ -26,7 +26,7 @@ import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatist
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
-import { ReactNotifications } from "react-notifications-component"
+import { ReactNotifications, Store } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
@@ -61,6 +61,7 @@ function App() {
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
+    const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
         easy: true,
         medium: true,
@@ -91,6 +92,7 @@ function App() {
     const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
     const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
     const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
+    const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -168,7 +170,7 @@ function App() {
         resetValues()
         setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
-        setCurrentQuestionNumber(0)
+        setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
         setStopShowingRace(false)
     
@@ -314,9 +316,9 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
-        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number) {
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number, questionNumber: number) {
             setCurrentGraspleQuestion(newGraspleQuestion)
-            setCurrentQuestionNumber(curr => curr + 1)
+            setCurrentQuestionNumber(curr => questionNumber)
             setPointsToGainForCurrentQuestion(curr => Math.floor(pointsToGain))
         }
 
@@ -387,16 +389,16 @@ function App() {
             setRoundDuration(curr => roundDuration)
             setPlayerScoreBeforeReconnecting(curr => previousPlayerScore)
             setRoundStarted(curr => true)
-            setCurrentQuestionNumber(questionNumber)
+            setCurrentQuestionNumber(curr => questionNumber)
             setAllRoundsFinished(curr => false)
             setStopShowingRace(false)
 
             const newExpiry = new Date();
             newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
             restart(newExpiry);
-
-            socket.emit("getNewQuestion")
+            
             socket.emit("getMandatoryNum")
+            socket.emit("getNewQuestion")
             
             if (isPlayer) {
                 navigate("/Game")
@@ -405,6 +407,27 @@ function App() {
                 navigate("/Lecturer")
             }
         } 
+
+        function onBlockedUserReconnection(reconnectionAvailableAtTime: number) {
+            console.log(reconnectionAvailableAtTime)
+            setUserReconnectionAvailableTime(curr => reconnectionAvailableAtTime)
+            navigate("/JoinGame")
+        }
+
+        function onPlayerAlreadyInLobby() {
+            navigate("/")
+            Store.addNotification({
+                title: "Already in lobby!",
+                message: "You are already using another tab to play the game. Please close the other tab if you want to play in this one.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                dismiss: {
+                  duration: 10000,
+                  onScreen: true
+                }
+            });
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -431,6 +454,8 @@ function App() {
         socket.on("answered-all-questions", onAnsweredAllQuestions)
         socket.on("chooseDifficulty", onChooseDifficulty)
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
+        socket.on("blocked-user-reconnection", onBlockedUserReconnection)
+        socket.on("already-in-room", onPlayerAlreadyInLobby)
     }, [])
 
     // useEffect(() => {
@@ -492,7 +517,9 @@ function App() {
                                 lobbyIdHandler(id)
                                 isPlayerHandler(true)
                             }
-                        } />}>
+                        } 
+                        reconnectionAvailableTime={userReconnectionAvailableTime}
+                    />}>
                 </Route>
                 <Route
                     path="/Lobby"
@@ -558,7 +585,14 @@ function App() {
                                             <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
                                                 <StreakContext.Provider value={streaks}>
                                                     <RaceProgressContext.Provider value={stopShowingRace}>
-                                                        <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler} playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}/>
+                                                        <Game 
+                                                            theme={theme} 
+                                                            roundDuration={roundDuration} 
+                                                            roundStarted={roundstarted} 
+                                                            isFirstRound={isFirstRound} 
+                                                            onRoundEnded={leaderboardNavigationHandler} 
+                                                            playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
+                                                            onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}/>
                                                     </RaceProgressContext.Provider>
                                                 </StreakContext.Provider>
                                             </GraspleQuestionContext.Provider>
@@ -606,7 +640,7 @@ function App() {
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
-                            playerScore={currentScore}
+                            playerScore={currentIndividualScore}
                             averageTeamScore={averageTeamScore}
                         />
                     }
