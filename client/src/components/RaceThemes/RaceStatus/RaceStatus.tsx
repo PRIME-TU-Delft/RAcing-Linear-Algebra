@@ -40,10 +40,11 @@ function RaceStatus(props: Props) {
         // Adding the ghost teams
         for (const ghost of raceData.ghostTeams) {
             const currentTimeScoreIndex = getNewTimeScoreIndex(0, ghost.timeScores, remainingTime > 0 ? props.roundDuration - remainingTime : 0)
+            const previousIndex = Math.max(currentTimeScoreIndex - 1, 0)
             newRacingTeams.push({
                 isGhost: true,
                 ghostKey: ghost.key,
-                score: ghost.timeScores[currentTimeScoreIndex].score ? ghost.timeScores[currentTimeScoreIndex].score : 0
+                score: ghost.timeScores[previousIndex].score ? ghost.timeScores[previousIndex].score : 0
             })
         }
         const newOrderOfTeams = [...newRacingTeams]
