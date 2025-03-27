@@ -118,12 +118,24 @@ module.exports = {
                     const game = getGame(lobbyId);
 
                     if (game.users.has(userId)) {
-                        // Update the socket ID and mark as reconnected
+
                         const user = game.users.get(userId)
 
+                        // Check that user hasn't attempted reconnecting in the last 30 seconds, to prevent abusing reconnections
+                        // if (user !== undefined) {
+                        //     const currentTime = Date.now()
+                        //     const lastConnectionTime = user.lastConnectionTime
+                        //     if (currentTime - lastConnectionTime < 30000) {
+                        //         socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
+                        //         void socket.leave(`players${lobbyId}`)
+                        //         return
+                        //     }
+                        // }
+                        
+                        // Update the socket ID and mark as reconnected
                         console.log("RECONNECTED USER:")
                         if (user !== undefined) {
-
+                            user.lastConnectionTime = Date.now()
                             // user.attemptedToAnswerQuestion = false
                             user.socketId = socket.id;
                             user.disconnected = false;
@@ -319,7 +331,7 @@ module.exports = {
                         }
 
                         // socket.emit("get-next-question", question)
-                        socket.emit("get-next-grasple-question", exercise, scoreToGain)
+                        socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)
     
                         const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
                         if (usedUpAllQuestionsForDifficulty) {

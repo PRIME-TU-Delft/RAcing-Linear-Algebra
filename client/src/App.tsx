@@ -92,6 +92,7 @@ function App() {
     const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
     const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
     const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
+    const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -315,9 +316,9 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
-        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number) {
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number, questionNumber: number) {
             setCurrentGraspleQuestion(newGraspleQuestion)
-            setCurrentQuestionNumber(curr => curr + 1)
+            setCurrentQuestionNumber(curr => questionNumber)
             setPointsToGainForCurrentQuestion(curr => Math.floor(pointsToGain))
         }
 
@@ -406,6 +407,12 @@ function App() {
                 navigate("/Lecturer")
             }
         } 
+
+        function onBlockedUserReconnection(reconnectionAvailableAtTime: number) {
+            console.log(reconnectionAvailableAtTime)
+            setUserReconnectionAvailableTime(curr => reconnectionAvailableAtTime)
+            navigate("/JoinGame")
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -432,6 +439,7 @@ function App() {
         socket.on("answered-all-questions", onAnsweredAllQuestions)
         socket.on("chooseDifficulty", onChooseDifficulty)
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
+        socket.on("blocked-user-reconnection", onBlockedUserReconnection)
     }, [])
 
     // useEffect(() => {
@@ -493,7 +501,9 @@ function App() {
                                 lobbyIdHandler(id)
                                 isPlayerHandler(true)
                             }
-                        } />}>
+                        } 
+                        reconnectionAvailableTime={userReconnectionAvailableTime}
+                    />}>
                 </Route>
                 <Route
                     path="/Lobby"

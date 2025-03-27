@@ -13,6 +13,7 @@ export class User {
     socketId: string //The socket id of the user
     disconnected: boolean
     usedUpAttemptsOnLastQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
+    lastConnectionTime: number // timestamp of the last connection time
 
     /**
      * Constructor for the user object
@@ -27,6 +28,7 @@ export class User {
         this.socketId = ""
         this.disconnected = false
         this.usedUpAttemptsOnLastQuestion = false
+        this.lastConnectionTime = Date.now() - 60000 // 1 minute ago (to ensure possibility of reconnection initially, refer to socket connection reconnect segment)
     }
 
     getQuestionIds(): number[] {
