@@ -247,6 +247,12 @@ export class Game {
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
     }
 
+    hasUserJoinedLate(userId: string): boolean {
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        return user.lastConnectionTime > this.roundStartTime
+    }
+
     /**
      * Checks the answer for a user
      * @param userId the user

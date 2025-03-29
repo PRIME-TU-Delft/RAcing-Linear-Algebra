@@ -177,6 +177,8 @@ module.exports = {
                         console.log("NEW USER JOINED")
                         const user = new User();
                         user.socketId = socket.id;
+                        user.isOnMandatory = false
+                        user.lastConnectionTime = Date.now()
                         game.users.set(userId, user);
                     }
 
@@ -323,11 +325,15 @@ module.exports = {
                             throw new Error("User not found")
                         }
 
+                    if (difficulty == undefined && game.hasUserJoinedLate(socket.data.userId)) {
+                        socket.emit("chooseDifficulty")
+                        return
+                    }
+
                     if ((difficulty != undefined 
                         || (game.mandatoryExercisesExistForCurrentTopic() 
                                 && user.isOnMandatory)
-                            )
-                        ) 
+                        )) 
                     {
                         let exercise: IExercise | undefined = undefined
 
