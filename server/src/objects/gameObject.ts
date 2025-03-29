@@ -29,6 +29,7 @@ export class Game {
     incorrect: number //The number of incorrect answers
     roundStartTime: number //The time the game started
     ghostTeams: GameGhostTeam[] //The ghost teams for this game
+    lapEndScore: number // Number of points required to complete a single lap
 
     /**
      * Constructor for a game object,

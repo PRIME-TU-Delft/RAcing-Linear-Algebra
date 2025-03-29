@@ -189,14 +189,14 @@ module.exports = {
                     let attempts =  user?.questions.size
                     if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
-                    const halvedHighestFinalScore = await getRaceTrackEndScore(game)
+                    const lapEndScore = game.lapEndScore
                     const raceInformation = getRaceInformation(game, lobbyId, themes)
 
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                     const teamScoreData = getTeamScoreData(game, numberOfPlayers)
                 
                     socket.emit("ghost-teams", game.ghostTeams)
-                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+                    socket.emit("race-track-end-score", lapEndScore)
                     socket.emit("round-information", (raceInformation))
 
                     socket.emit("score", teamScoreData)
@@ -544,7 +544,8 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
-
+                    game.lapEndScore = halvedHighestFinalScore
+                    
                     io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                     io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
