@@ -30,6 +30,7 @@ export class Game {
     roundStartTime: number //The time the game started
     ghostTeams: GameGhostTeam[] //The ghost teams for this game
     lapEndScore: number // Number of points required to complete a single lap
+    numberOfPlayersAtStart: number // Number of players at the start of the game
 
     /**
      * Constructor for a game object,
@@ -326,7 +327,7 @@ export class Game {
      */
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
-        const numberOfPlayers = this.getNumberOfActiveUsers()
+        const numberOfPlayers = Math.max(this.getNumberOfActiveUsers(), this.numberOfPlayersAtStart)
         const roundDuration = this.roundDurations[this.currentTopicIndex]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)

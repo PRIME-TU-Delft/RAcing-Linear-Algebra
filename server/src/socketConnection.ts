@@ -300,7 +300,7 @@ module.exports = {
                         const game = getGame(lobbyId)
                         const topic = game.topics[game.currentTopicIndex]
                         const topicId: string = topic._id
-    
+                        game.numberOfPlayersAtStart = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                         const ghostTrainScores = await getGhostTrainScores(topicId)
     
                         socket.emit("ghost-trains", ghostTrainScores)
@@ -545,7 +545,7 @@ module.exports = {
                     const game = getGame(lobbyId)
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
                     game.lapEndScore = halvedHighestFinalScore
-                    
+
                     io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                     io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                 } catch (error) {
