@@ -193,8 +193,8 @@ const QuestionOverlayBox: React.FC<Props> = ({
                                 custom={1}
                             />
                         </svg>)}
-                        <div className="overlay-text">
-                            <div className="open-text">
+                        <div className="overlay-text d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
+                        <div className="open-text">
                                 {openText}
                             </div>
                             <div className="closed-text">
