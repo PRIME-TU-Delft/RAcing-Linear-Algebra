@@ -33,6 +33,15 @@
     padding-left: 30%;
 }
 
+.stats-item-value {
+    margin-left: 0.5rem;
+}
+
+.stats-item {
+    width: 20%;
+    border-left: #003082 solid 3px;
+}
+
 .accuracy {
     font-size: 22px;
     padding-bottom: 5px;
@@ -47,6 +56,10 @@
 
 .answer-title {
     font-weight: 600;
+}
+
+.statistics-header {
+    margin-bottom: 1rem;
 }
 
 .statistics-wrapper {
@@ -87,4 +100,17 @@
   .question-statistics-continue:hover {
     cursor: pointer;
     background-color: #004BA0;
+  }
+
+  .question-statistics-item {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+  }
+
+  .exercise-name {
+    margin-left: 1rem;
+    width: 40%;
+    text-align: left;
   }

@@ -13,12 +13,13 @@
         "prettier": "npx prettier -w ."
     },
     "dependencies": {
-        "@emotion/react": "^11.11.1",
-        "@emotion/styled": "^11.11.0",
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.5",
         "@fortawesome/fontawesome-svg-core": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/react-fontawesome": "^0.2.0",
-        "@mui/material": "^5.14.18",
+        "@mui/icons-material": "^7.0.1",
+        "@mui/material": "^5.15.19",
         "@mui/x-date-pickers": "^6.18.1",
         "@react-navigation/native": "^6.1.6",
         "@react-navigation/native-stack": "^6.9.12",
