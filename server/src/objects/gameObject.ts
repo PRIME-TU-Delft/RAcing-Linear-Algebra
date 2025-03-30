@@ -29,6 +29,8 @@ export class Game {
     incorrect: number //The number of incorrect answers
     roundStartTime: number //The time the game started
     ghostTeams: GameGhostTeam[] //The ghost teams for this game
+    lapEndScore: number // Number of points required to complete a single lap
+    numberOfPlayersAtStart: number // Number of players at the start of the game
 
     /**
      * Constructor for a game object,
@@ -247,6 +249,12 @@ export class Game {
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
     }
 
+    hasUserJoinedLate(userId: string): boolean {
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        return user.lastConnectionTime > this.roundStartTime
+    }
+
     /**
      * Checks the answer for a user
      * @param userId the user
@@ -319,7 +327,7 @@ export class Game {
      */
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
-        const numberOfPlayers = this.getNumberOfActiveUsers()
+        const numberOfPlayers = Math.max(this.getNumberOfActiveUsers(), this.numberOfPlayersAtStart)
         const roundDuration = this.roundDurations[this.currentTopicIndex]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)

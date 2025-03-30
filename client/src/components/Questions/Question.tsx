@@ -211,7 +211,7 @@ function Question(props: Props) {
                     openOnStart={false} 
                     closedText= {`${graspleQuestionData.questionNumber}`}
                     openText={`Question ${graspleQuestionData.questionNumber}`}
-                    show={!questionStatusContext.questionFinished}
+                    show={!questionStatusContext.questionFinished && !showDifficulty}
                     openOnHover={true}
                     startOpenDelay={3}/>
 
@@ -221,7 +221,7 @@ function Question(props: Props) {
                     closedText= {`${props.difficultyEmoji}`}
                     color="#0063D3"
                     openText={`${String(props.difficultyName).charAt(0).toUpperCase() + String(props.difficultyName).slice(1)} ${props.difficultyEmoji}`}
-                    show={!questionStatusContext.questionFinished}
+                    show={!questionStatusContext.questionFinished && !showDifficulty}
                     openOnHover={true}
                     startOpenDelay={3}/>
 
@@ -230,7 +230,7 @@ function Question(props: Props) {
                     closedText= {`${props.pointsToGain}`}
                     color="#0063D3"
                     openText={`Points ${props.pointsToGain}`}
-                    show={!questionStatusContext.questionFinished}
+                    show={!questionStatusContext.questionFinished && !showDifficulty}
                     openOnHover={true}
                     startOpenDelay={3}/>
 
@@ -242,7 +242,7 @@ function Question(props: Props) {
                     color="#198754"
                     staysOpen={questionStatusContext.questionFinished} 
                     openOnStart={questionStatusContext.questionFinished}
-                    show={questionStatusContext.questionFinished || skipQuestionAvailable}
+                    show={(questionStatusContext.questionFinished || skipQuestionAvailable) && !showDifficulty}
                     openOnHover={true}
                     startOpenDelay={2}
                     onBoxClicked={nextQuestionHandler}

@@ -181,6 +181,7 @@ function Game(props: Props) {
             setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
             // setShowInfoModal(true)
             setQuestionFinished(curr => true)
+            incorrectAnswerToast()
         } else {
             wrongAnswerToast(triesLeft)
             setCurrentNumberOfAttempts(curr => Math.max(0, curr - 1))
@@ -360,6 +361,25 @@ function Game(props: Props) {
 
     function correctAnswerToast() {
         toast.success('✔️ Your answer is correct!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+            style: {
+                fontSize: '20px',
+                minWidth: '400px',
+                marginTop: '4rem'
+              }
+            });
+    }
+
+    function incorrectAnswerToast() {
+        toast.error('❌ Your answer is incorrect!', {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: false,

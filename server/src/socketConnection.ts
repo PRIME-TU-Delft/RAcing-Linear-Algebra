@@ -136,15 +136,15 @@ module.exports = {
                         const user = game.users.get(userId)
 
                         // Check that user hasn't attempted reconnecting in the last 30 seconds, to prevent abusing reconnections
-                        // if (user !== undefined) {
-                        //     const currentTime = Date.now()
-                        //     const lastConnectionTime = user.lastConnectionTime
-                        //     if (currentTime - lastConnectionTime < 30000) {
-                        //         socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
-                        //         void socket.leave(`players${lobbyId}`)
-                        //         return
-                        //     }
-                        // }
+                        if (user !== undefined) {
+                            const currentTime = Date.now()
+                            const lastConnectionTime = user.lastConnectionTime
+                            if (currentTime - lastConnectionTime < 30000) {
+                                socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
+                                void socket.leave(`players${lobbyId}`)
+                                return
+                            }
+                        }
                         
                         // Update the socket ID and mark as reconnected
                         console.log("RECONNECTED USER:")
@@ -177,6 +177,8 @@ module.exports = {
                         console.log("NEW USER JOINED")
                         const user = new User();
                         user.socketId = socket.id;
+                        user.isOnMandatory = false
+                        user.lastConnectionTime = Date.now()
                         game.users.set(userId, user);
                     }
 
@@ -187,14 +189,14 @@ module.exports = {
                     let attempts =  user?.questions.size
                     if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
-                    const halvedHighestFinalScore = await getRaceTrackEndScore(game)
+                    const lapEndScore = game.lapEndScore
                     const raceInformation = getRaceInformation(game, lobbyId, themes)
 
                     const numberOfPlayers: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                     const teamScoreData = getTeamScoreData(game, numberOfPlayers)
                 
                     socket.emit("ghost-teams", game.ghostTeams)
-                    socket.emit("race-track-end-score", halvedHighestFinalScore)
+                    socket.emit("race-track-end-score", lapEndScore)
                     socket.emit("round-information", (raceInformation))
 
                     socket.emit("score", teamScoreData)
@@ -298,7 +300,7 @@ module.exports = {
                         const game = getGame(lobbyId)
                         const topic = game.topics[game.currentTopicIndex]
                         const topicId: string = topic._id
-    
+                        game.numberOfPlayersAtStart = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                         const ghostTrainScores = await getGhostTrainScores(topicId)
     
                         socket.emit("ghost-trains", ghostTrainScores)
@@ -323,11 +325,15 @@ module.exports = {
                             throw new Error("User not found")
                         }
 
+                    if (difficulty == undefined && game.hasUserJoinedLate(socket.data.userId)) {
+                        socket.emit("chooseDifficulty")
+                        return
+                    }
+
                     if ((difficulty != undefined 
                         || (game.mandatoryExercisesExistForCurrentTopic() 
                                 && user.isOnMandatory)
-                            )
-                        ) 
+                        )) 
                     {
                         let exercise: IExercise | undefined = undefined
 
@@ -538,6 +544,7 @@ module.exports = {
                     const lobbyId = socketToLobbyId.get(socket.id)!
                     const game = getGame(lobbyId)
                     const halvedHighestFinalScore = await getRaceTrackEndScore(game)
+                    game.lapEndScore = halvedHighestFinalScore
 
                     io.to(`players${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
                     io.to(`lecturer${lobbyId}`).emit("race-track-end-score", halvedHighestFinalScore)
