@@ -136,15 +136,15 @@ module.exports = {
                         const user = game.users.get(userId)
 
                         // Check that user hasn't attempted reconnecting in the last 30 seconds, to prevent abusing reconnections
-                        // if (user !== undefined) {
-                        //     const currentTime = Date.now()
-                        //     const lastConnectionTime = user.lastConnectionTime
-                        //     if (currentTime - lastConnectionTime < 30000) {
-                        //         socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
-                        //         void socket.leave(`players${lobbyId}`)
-                        //         return
-                        //     }
-                        // }
+                        if (user !== undefined) {
+                            const currentTime = Date.now()
+                            const lastConnectionTime = user.lastConnectionTime
+                            if (currentTime - lastConnectionTime < 30000) {
+                                socket.emit("blocked-user-reconnection", lastConnectionTime + 30000)
+                                void socket.leave(`players${lobbyId}`)
+                                return
+                            }
+                        }
                         
                         // Update the socket ID and mark as reconnected
                         console.log("RECONNECTED USER:")
