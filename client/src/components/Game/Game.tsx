@@ -26,6 +26,7 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
+import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
 
 interface Props {
     theme: string
@@ -90,7 +91,7 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
-    window.addEventListener("load", () => navigate("/"))
+    // window.addEventListener("load", () => navigate("/"))
 
     window.onmessage = function(e) {
         if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
@@ -538,6 +539,7 @@ function Game(props: Props) {
             )}
             <div className="game-container">
                 <div className="game-left-container">
+                    <PowerUpsContainer/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
                         <Question 

@@ -1,0 +1,9 @@
+.power-ups-container {
+    height: 12vh;
+    width: 25rem;
+    right: 0;
+    position: absolute;
+    background-color: #fcd996;
+
+    border-radius: 10px;
+}

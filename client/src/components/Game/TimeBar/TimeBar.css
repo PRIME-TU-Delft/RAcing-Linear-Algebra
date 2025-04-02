@@ -1,5 +1,6 @@
 .time-container {
     height: 10vh;
+    margin-top: 7vh;
     margin-left: 4rem;
     display: flex;
     flex-direction: column;
