@@ -7,3 +7,23 @@
 
     border-radius: 10px;
 }
+
+.container-symbol-element {
+    width: 17%;
+    height: 100%;
+    background-color: #f8b700;
+    margin-left: auto;
+
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.container-symbol-element > .symbol-image {
+    width: 65%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
