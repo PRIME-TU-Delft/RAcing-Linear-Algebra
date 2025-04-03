@@ -1,0 +1,9 @@
+.power-up-element {
+    height: 5rem;
+    width: 5rem;
+    background-color: white;
+    border-radius: 10px;
+
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
