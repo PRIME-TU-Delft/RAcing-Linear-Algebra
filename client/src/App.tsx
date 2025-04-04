@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleExercise, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -26,9 +26,16 @@ import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatist
 import { useTimer } from "react-timer-hook"
 import { QuestionContext } from "./contexts/QuestionContext"
 import 'react-notifications-component/dist/theme.css'
-import { ReactNotifications } from "react-notifications-component"
+import { ReactNotifications, Store } from "react-notifications-component"
 import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
+import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
+import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
+import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { TopicDataContext } from "./contexts/TopicDataContext"
+import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
+import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
+import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -49,7 +56,18 @@ function App() {
     const [isFirstRound, setIsFirstRound] = useState<boolean>(true)
     const [streaks, setStreaks] = useState<Streak[]>([])
     const [stopShowingRace, setStopShowingRace] = useState<boolean>(false)
-    
+    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [allExercises, setAllExercises] = useState<Exercise[]>([])
+    const [allTopics, setAllTopics] = useState<Topic[]>([])
+    const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
+    const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
+    const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
+        easy: true,
+        medium: true,
+        hard: true
+    })
+
     const [currentQuestion, setCurrentQuestion] = useState<IQuestion>({
         question: "",
         answer: "",
@@ -59,8 +77,22 @@ function App() {
         options: [],
         variants: []
     })
+    const [currentGraspleQuestion, setCurrentGraspleQuestion] = useState<GraspleExercise>({
+        _id: "",
+        name: "",
+        exerciseId: 0,
+        difficulty: "",
+        url: "",
+        numOfAttempts: 0,
+        isMandatory: false
+    })
+
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState<number>(0)
     const [numberOfMandatoryQuestions, setNumberOfMandatoryQuestions] = useState<number>(0)
+    const [choosingNextQuestionDifficulty, setChoosingNextQuestionDifficulty] = useState<boolean>(false)
+    const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
+    const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
+    const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -84,11 +116,12 @@ function App() {
         pause,
         resume,
         restart,
-      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler });
+      } = useTimer({ expiryTimestamp: new Date(), autoStart: false, onExpire: timerExpirationHandler })
 
 
     const lobbyIdHandler = (id: number) => {
         setLobbyId(curr => id)
+        socket.emit("getLobbyData")
     }
 
     const isPlayerHandler = (isPlayer: boolean) => {
@@ -111,6 +144,7 @@ function App() {
         setCurrentScore(curr => 0)
         setCurrentAccuracy(curr => 0)
         setStartTimer(curr => false)
+        setPlayerScoreBeforeReconnecting(curr => 0)
     }
 
     useEffect(() => {
@@ -136,7 +170,7 @@ function App() {
         resetValues()
         setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
-        setCurrentQuestionNumber(0)
+        setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
         setStopShowingRace(false)
     
@@ -157,7 +191,77 @@ function App() {
     useEffect(() => {
         if (stopShowingRace)
             navigate("/Leaderboard")
-    }, [stopShowingRace])
+    }, [stopShowingRace])    
+
+    const updateExerciseHandler = (exerciseData: Exercise) => {
+        const updateData = {
+            url: exerciseData.url,
+            name: exerciseData.name,
+            difficulty: exerciseData.difficulty,
+            numOfAttempts: exerciseData.numOfAttempts
+        }
+        socket.emit("updateExercise", exerciseData.exerciseId, updateData)
+    }
+
+    const updateTopicHandler = (topicData: Topic) => {
+        const exerciseData = topicData.exercises.map(exercise => ({
+            exerciseId: exercise.exerciseId,
+            updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
+            isMandatory: exercise.isMandatory
+        }))
+        const studyIds = topicData.studies.map(study => study._id)
+
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+    }
+
+    function onGetUpdatedExercise(updatedExercise: Exercise) {
+        const updatedExercises = allExercises.map(exercise => {
+            if (exercise.exerciseId === updatedExercise.exerciseId) {
+                return updatedExercise
+            }
+            return exercise
+        })
+
+        if (allExercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+            setAllExercises([...updatedExercises])
+        } else {
+            setAllExercises([...allExercises, updatedExercise])
+        }
+
+        const updatedTopicsWithExercise = allTopics.map(topic => {
+            if (topic.exercises.some(exercise => exercise.exerciseId === updatedExercise.exerciseId)) {
+                const updatedExercises = topic.exercises.map(exercise => {
+                    if (exercise.exerciseId === updatedExercise.exerciseId) {
+                        return {...updatedExercise, isMandatory: exercise.isMandatory}
+                    }
+                    return exercise
+                })
+                return { ...topic, exercises: updatedExercises }
+            }
+            return topic
+        })
+
+        setAllTopics([...updatedTopicsWithExercise])
+    }
+
+    function onGetUpdatedTopic(updatedTopic: Topic) {
+        const updatedTopics = allTopics.map(topic => {
+            if (topic._id === updatedTopic._id) {
+                return updatedTopic
+            }
+            return topic
+        })
+        if (allTopics.some(topic => topic._id === updatedTopic._id)) {
+            setAllTopics([...updatedTopics])
+        } else {
+            setAllTopics([...allTopics, updatedTopic])
+        }
+    }
+
+    useEffect(() => {
+        socket.on("updated-exercise", onGetUpdatedExercise)
+        socket.on("updated-topic", onGetUpdatedTopic)
+    }, [allExercises, allTopics])
 
     useEffect(() => {
         function onGhostTeamsReceived(data: ServerGhost[]) {
@@ -170,10 +274,14 @@ function App() {
         }
 
         function onRoundDuration(roundDuration: number) {
+            getGhostAndRaceInformation()
+            initializeRoundValues(roundDuration)
+        }
+
+        function getGhostAndRaceInformation() {
             socket.emit("getGhostTeams")
             socket.emit("getRaceTrackEndScore")
             socket.emit("getInformation")
-            initializeRoundValues(roundDuration)
         }
 
         function onThemeChange(theme: string) {
@@ -185,6 +293,7 @@ function App() {
         }
 
         function onScoreUpdate(stats: {score: number, accuracy: number, averageTeamScore: number}) {
+            console.log(stats)
             setCurrentScore((current) =>
                 current < stats.score ? stats.score : current
             )
@@ -207,6 +316,12 @@ function App() {
             setCurrentQuestionNumber(curr => curr + 1)
         }
 
+        function onGetNewGraspleQuestion(newGraspleQuestion: GraspleExercise, pointsToGain: number, questionNumber: number) {
+            setCurrentGraspleQuestion(newGraspleQuestion)
+            setCurrentQuestionNumber(curr => questionNumber)
+            setPointsToGainForCurrentQuestion(curr => Math.floor(pointsToGain))
+        }
+
         function onGetNumberOfMandatoryQuestions(num: number) {
             setNumberOfMandatoryQuestions(curr => num)
         }
@@ -222,6 +337,98 @@ function App() {
             setStreaks(curr => [...new_streaks])
         }
 
+        function onAccessGranted(hasBeenGranted: boolean) {
+            if (hasBeenGranted) {
+                setLoggedIn(true)
+            } else {
+                setLoggedIn(false)
+            }
+        }
+
+        function onGetAllStudies(allStudies: Study[]) {
+            setAllStudies(curr => [...allStudies])
+        }
+
+        function onGetAllTopics(allTopics: Topic[]) {
+            setAllTopics(curr => [...allTopics])
+        }
+
+        function onGetAllExercises(allExercises: Exercise[]) {
+            setAllExercises(curr => [...allExercises])
+        }
+
+        function onGetLobbyData(lobbyData: LobbyData) {
+            setLobbyData({...lobbyData})
+        }
+
+        function onDisableDifficulty(difficulty: string) {
+            setDifficultyAvailability(curr => {
+                switch(difficulty) {
+                    case "easy":
+                        return { ...curr, easy: false }
+                    case "medium":
+                        return { ...curr, medium: false }
+                    case "hard":
+                        return { ...curr, hard: false }
+                    default:
+                        return curr
+                }
+            })
+        }
+
+        function onAnsweredAllQuestions() {
+            // setDifficultyAvailability(curr => ({ easy: true, medium: true, hard: true }))
+            
+        }
+
+        function onChooseDifficulty() {
+            setChoosingNextQuestionDifficulty(curr => true)
+        }
+
+        function onJoinedGameInProgress(roundDuration: number, remainingTime: number, questionNumber: number, previousPlayerScore: number) {
+            setRoundDuration(curr => roundDuration)
+            setPlayerScoreBeforeReconnecting(curr => previousPlayerScore)
+            setRoundStarted(curr => true)
+            setCurrentQuestionNumber(curr => questionNumber)
+            setAllRoundsFinished(curr => false)
+            setStopShowingRace(false)
+
+            const newExpiry = new Date();
+            newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
+            restart(newExpiry);
+            
+            socket.emit("getMandatoryNum")
+            socket.emit("getNewQuestion")
+            
+            if (isPlayer) {
+                navigate("/Game")
+            }
+            else {
+                navigate("/Lecturer")
+            }
+        } 
+
+        function onBlockedUserReconnection(reconnectionAvailableAtTime: number) {
+            console.log(reconnectionAvailableAtTime)
+            setUserReconnectionAvailableTime(curr => reconnectionAvailableAtTime)
+            navigate("/JoinGame")
+        }
+
+        function onPlayerAlreadyInLobby() {
+            navigate("/")
+            Store.addNotification({
+                title: "Already in lobby!",
+                message: "You are already using another tab to play the game. Please close the other tab if you want to play in this one.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                dismiss: {
+                  duration: 10000,
+                  onScreen: true
+                }
+            });
+        }
+ 
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
         socket.on("round-started", onRoundStarted)
@@ -232,9 +439,23 @@ function App() {
         socket.on("score", onScoreUpdate)
         socket.on("game-ended", onGameEnded)
         socket.on("get-next-question", onGetNewQuestion)
+        socket.on("get-next-grasple-question", onGetNewGraspleQuestion)
         socket.on("mandatoryNum", onGetNumberOfMandatoryQuestions)
         socket.on("round-information", onRoundInformation)
         socket.on("currentStreaks", onCurrentStreaks)
+        socket.on("access-granted", onAccessGranted)
+        socket.on("all-studies", onGetAllStudies)
+        socket.on("all-topics", onGetAllTopics)
+        socket.on("all-exercises", onGetAllExercises)
+        socket.on("updated-exercise", onGetUpdatedExercise)
+        socket.on("updated-topic", onGetUpdatedTopic)
+        socket.on("lobby-data", onGetLobbyData)
+        socket.on("disable-difficulty", onDisableDifficulty)
+        socket.on("answered-all-questions", onAnsweredAllQuestions)
+        socket.on("chooseDifficulty", onChooseDifficulty)
+        socket.on("joined-game-in-progress", onJoinedGameInProgress)
+        socket.on("blocked-user-reconnection", onBlockedUserReconnection)
+        socket.on("already-in-room", onPlayerAlreadyInLobby)
     }, [])
 
     // useEffect(() => {
@@ -262,11 +483,21 @@ function App() {
         } 
     }, [totalSeconds])
 
+    useEffect(() => {
+        if (loggedIn) {
+            socket.emit("getAllTopics")
+            socket.emit("getAllStudies")	
+            socket.emit("getAllExercises")
+            navigate("/LecturerPlatform")
+            setLoggedIn(false)
+        }
+    }, [loggedIn])
+
     return (
         <div className="App">
             <ReactNotifications/>
             <Routes>
-                <Route path="/" element={<Home />}></Route>
+                <Route path="/" element={<Home loggedIn={loggedIn}/>}></Route>
                 <Route
                     path="/CreateGame"
                     element={
@@ -286,23 +517,27 @@ function App() {
                                 lobbyIdHandler(id)
                                 isPlayerHandler(true)
                             }
-                        } />}>
+                        } 
+                        reconnectionAvailableTime={userReconnectionAvailableTime}
+                    />}>
                 </Route>
                 <Route
                     path="/Lobby"
                     element={
-                        <Lobby
-                            lobbyId={lobbyId}
-                            onTeamNameCreated={(name: string) =>
-                                teamNameHandler(name)
-                            }
-                            onThemeSelected={(theme: string) =>
-                                themeHandler(theme)
-                            }
-                            onStudySelected={(study: string) => 
-                                setStudy(curr => study)
-                            }
-                        />
+                        <LobbyDataContext.Provider value={lobbyData}>
+                            <Lobby
+                                lobbyId={lobbyId}
+                                onTeamNameCreated={(name: string) =>
+                                    teamNameHandler(name)
+                                }
+                                onThemeSelected={(theme: string) =>
+                                    themeHandler(theme)
+                                }
+                                onStudySelected={(study: string) => 
+                                    setStudy(curr => study)
+                                }
+                            />
+                        </LobbyDataContext.Provider>
                     }
                 ></Route>
                 <Route
@@ -343,15 +578,29 @@ function App() {
                             checkpoints: [],
                             selectedMap: trainMaps[0]
                         }}>
-                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                    <StreakContext.Provider value={streaks}>
-                                        <RaceProgressContext.Provider value={stopShowingRace}>
-                                            <Game theme={theme} roundDuration={roundDuration} roundStarted={roundstarted} isFirstRound={isFirstRound} onRoundEnded={leaderboardNavigationHandler}/>
-                                        </RaceProgressContext.Provider>
-                                    </StreakContext.Provider>
-                                </QuestionContext.Provider>
-                            </ScoreContext.Provider>
+                            <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
+                                <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
+                                    <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                        <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                            <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
+                                                <StreakContext.Provider value={streaks}>
+                                                    <RaceProgressContext.Provider value={stopShowingRace}>
+                                                        <Game 
+                                                            theme={theme} 
+                                                            roundDuration={roundDuration} 
+                                                            roundStarted={roundstarted} 
+                                                            isFirstRound={isFirstRound} 
+                                                            onRoundEnded={leaderboardNavigationHandler} 
+                                                            playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
+                                                            onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}/>
+                                                    </RaceProgressContext.Provider>
+                                                </StreakContext.Provider>
+                                            </GraspleQuestionContext.Provider>
+                                        </QuestionContext.Provider>
+                                    </ScoreContext.Provider>
+                                </DifficultyAvailabilityContext.Provider>
+                            </ChoosingDifficultyContext.Provider>
+                            
                         </RaceDataContext.Provider>
                     </TimeContext.Provider>
                 } />
@@ -391,7 +640,21 @@ function App() {
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
+                            playerScore={currentIndividualScore}
+                            averageTeamScore={averageTeamScore}
                         />
+                    }
+                ></Route>
+                <Route
+                    path="/LecturerPlatform"
+                    element={
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
+                            <LecturerPlatform 
+                                loggedIn={loggedIn} 
+                                onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
+                                onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
+                                />
+                        </TopicDataContext.Provider>
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>

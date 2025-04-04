@@ -62,3 +62,31 @@
     transition-duration: 0.3s;
     cursor: pointer;
 }
+
+.settings-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #00a6d6;
+    transition-duration: 0.2s;
+}
+
+.settings-icon:hover {
+    color: #0c2340;
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+.lecturer-login-modal {
+    background-color: white;
+    width: 30rem;
+    margin: auto;
+    margin-top: 13rem;
+    padding: 1rem;
+    padding-bottom: 2rem;
+}
+
+.password-incorrect-text {
+    color: red;
+    margin-top: 5px;
+}

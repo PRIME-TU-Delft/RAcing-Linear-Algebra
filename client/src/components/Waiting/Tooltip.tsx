@@ -39,7 +39,7 @@ export default function Tooltip() {
         },
         {
             title: "Race Laps",
-            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team. They go from green, to yellow, to red. And if you perform particularly well, you might even see a few others!"
+            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team."
         },
         {
             title: "Question Attempts",
@@ -47,7 +47,7 @@ export default function Tooltip() {
         },
         {
             title: "Lecturer's Screen",
-            content: "While you will be busy answering the questions, the race will be shown on the lecturer's screen. But don't worry, you will still have a minimap on your screen to get a general idea of the race!"
+            content: "While you will be busy answering the questions, the race will be shown on the lecturer's screen. You will have a minimap on your screen to keep track!"
         },
         {
             title: "The Minimap",

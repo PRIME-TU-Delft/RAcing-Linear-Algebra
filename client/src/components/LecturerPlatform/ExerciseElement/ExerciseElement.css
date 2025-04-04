@@ -1,0 +1,44 @@
+.exercise-header {
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.exercise-difficulty-label {
+    font-weight: 300;
+}
+
+.exercise-header-id {
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+.exercise-details {
+    font-size: 15px;
+}
+
+.exercise-details > .col > div {
+    margin-bottom: 0.5rem;
+}
+
+.editing-exercise > .col > div {
+    margin-bottom: 0;
+    height: 3rem;
+    justify-content: center;
+    line-height: 3rem;
+}
+
+.disabled-exercise {
+    opacity: 0.3;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(500%, -50%);
+}
+
+.edit-icon:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,100 @@
+.topic-element {
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    width: 80%;
+    text-align: left;
+    position: relative;
+}
+
+.topic-title {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.edit-studies-icon {
+    margin-left: 0.5rem;
+}
+
+.edit-studies-icon:hover {
+    cursor: pointer;
+}
+
+.number-of-exercises {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.studies-header {
+    font-size: 16px;
+}
+
+.studies-list {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.study-element {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    margin: 0.5rem 0.2rem;  
+    transition-duration: 0.3s;
+}
+
+.exercises-header {
+    font-size: 16px;
+}
+
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover {
+    cursor: pointer;
+}
+
+.add-exercise-icon, .link-exercise-icon, .reorder-exercises-icon {
+    margin-left: 1rem;
+}
+
+.remove-exercises-icon, .edit-exercises-icon {
+    margin-left: 1rem;
+}
+
+.topic-header {
+    font-weight: 500;
+}
+
+.name-header {
+    margin-bottom: 0.5rem;
+}
+
+.topic-save-icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(500%, -50%);
+}
+
+.topic-save-icon:hover {
+    cursor: pointer;
+}
+
+.grasple-id-list-item:hover {
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border-radius: 0.5rem;
+    transition-duration: 0.3s;
+}
+
+.grasple-id-list-item {
+    transition-duration: 0.3s;
+}
+
+.reorder-exercises-instructions {
+    margin-left: 0.5rem;
+    color: #acacac;
+    font-size: 16px;
+    font-style: italic;
+}

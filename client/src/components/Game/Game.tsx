@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { Bounce, Flip, ToastContainer, Zoom, toast } from "react-toastify";
 import RoundOverModal from "../Questions/RoundOverModal";
 import InfoModal from "../Questions/InfoModal";
 import TeamStats from "./TeamStats/TeamStats";
@@ -24,23 +24,17 @@ import ColorationInfo from "../ColorationInfo/ColorationInfo";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
-
-export interface IQuestion {
-    question: string
-    answer: string
-    difficulty: string
-    subject: string
-    type: string
-    options?: string[]
-    variants?: any[]
-}
+import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
+import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 
 interface Props {
     theme: string
     roundDuration: number
     roundStarted: boolean
+    playerScoreBeforeReconnecting: number
     isFirstRound: boolean
     onRoundEnded: () => void
+    onUpdatePlayerScore: (score: number) => void
 }
 
 interface Statistic {
@@ -52,16 +46,36 @@ interface Statistic {
 }
 
 function Game(props: Props) {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const racePathSizing = getRacePathSizeAndOffsetMargins(width, height)
     const raceData = useContext(RaceDataContext)
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
     const questionData = useContext(QuestionContext)
+    const graspleQuestionData = useContext(GraspleQuestionContext)
+    const [currentNumberOfAttempts, setCurrentNumberOfAttempts] = useState<number>(0)
+    const [updatedNumberOfAttempts, setUpdatedNumberOfAttempts] = useState<boolean>(false);
+
+    const [questionStarted, setQuestionStarted] = useState<boolean>(false)
+    const [questionFinished, setQuestionFinished] = useState<boolean>(false)
 
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
+
+    const [dimensions, setDimensions] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    
+      useEffect(() => {
+        const handleResize = () => {
+          setDimensions({
+            width: window.innerWidth,
+            height: window.innerHeight,
+          });
+        };
+    
+        window.addEventListener("resize", handleResize);
+        
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
 
     const navigate = useNavigate()
 
@@ -75,7 +89,28 @@ function Game(props: Props) {
 
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
+    //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
     window.addEventListener("load", () => navigate("/"))
+
+    window.onmessage = function(e) {
+        if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
+            if (!updatedNumberOfAttempts) {
+                setNumberOfAttempts(e.data.properties.max_attempts)
+            }
+            
+            if (e.data.properties.correct) {
+                socket.emit("questionAnswered", true, graspleQuestionData.questionData.difficulty.toLowerCase())
+            } else if (updatedNumberOfAttempts) {
+                onQuestionAnsweredIncorrectly(currentNumberOfAttempts - 1)
+            } else {
+                onQuestionAnsweredIncorrectly(e.data.properties.max_attempts - 1)
+            }
+        }
+    };
+
+    const racePathSizing = getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height)
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
+
 
     socket.emit("getMandatoryNum")
 
@@ -115,9 +150,94 @@ function Game(props: Props) {
         }
     }
 
+    function onQuestionAnsweredCorrectly(score: number) {
+        // What happens if the answer is correct
+        // setModalText(["✔️ Your answer is correct!"])
+        // setModalType("correctAnswer")
+        setScoreToAdd((cur) => score)
+        setRightAnswers((rightAnswers) => rightAnswers + 1)
+        setStreak((streak) => streak + 1)
+        // setShowInfoModal(true)
+        correctAnswerToast()
+
+        if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
+            easyQuestionAnswered(true)
+
+        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) {
+            socket.emit("getNewQuestion")
+        }
+    }
+
+    function onQuestionAnsweredIncorrectly(triesLeft: number) {
+        setModalText([
+            "Your answer is incorrect! The correct answer is:",
+        ])
+
+        if (triesLeft === 0) {
+            // setModalType("incorrectAnswer")
+            // setModalAnswer("")
+            setStreak(0)
+            setScoreToAdd(0)
+            setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
+            // setShowInfoModal(true)
+            setQuestionFinished(curr => true)
+            incorrectAnswerToast()
+        } else {
+            wrongAnswerToast(triesLeft)
+            setCurrentNumberOfAttempts(curr => Math.max(0, curr - 1))
+        }
+    }
+
+    // Function meant for when the player uses all attempts and answers incorrectly
+    // Instead of immediately moving to the next question, they need to request it with a button
+    // This gives them time to review their mistake if necessary
+    const onPlayerReadyForNewQuestion = () => {
+        setQuestionFinished(curr => false)
+
+        if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
+            easyQuestionAnswered(false)
+        socket.emit("questionAnswered", false, graspleQuestionData.questionData.difficulty.toLowerCase())
+        
+        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) {
+            socket.emit("getNewQuestion")
+        }
+    }
+
+    useEffect(() => {
+        setUpdatedNumberOfAttempts(curr => false)
+        setQuestionFinished(curr => false)
+        setQuestionStarted(true)
+    }, [graspleQuestionData.questionNumber])
+
+    useEffect(() => {
+        console.log(props.playerScoreBeforeReconnecting)
+        console.log(score)
+        if (props.playerScoreBeforeReconnecting > score) {
+            setScore(props.playerScoreBeforeReconnecting)
+        }
+    }, [props.playerScoreBeforeReconnecting])
+
+    useEffect(() => {
+        // Question started is just used as a signal for the question overlay nodes to update
+        if (questionStarted) {
+            setQuestionStarted(curr => false)
+        }
+    }, [questionStarted])
+
+    const setNumberOfAttempts = (newNumberOfAttemtps: number) => {
+        setCurrentNumberOfAttempts(curr => newNumberOfAttemtps);
+        setUpdatedNumberOfAttempts(curr => true)
+    }
+
+    useEffect(() => {
+        console.log(currentNumberOfAttempts)
+    }, [currentNumberOfAttempts])
+
     useEffect(() => {
         setShowInfoModal(false)
-        setScore(0)
+        if (props.playerScoreBeforeReconnecting == 0) {
+            setScore(0)
+        } 
         setRightAnswers(0)
         setWrongAnswers(0)
         setStreak(0)
@@ -142,39 +262,13 @@ function Game(props: Props) {
 
         socket.off("rightAnswer").on("rightAnswer", (score: number) => {
             // What happens if the answer is correct
-            setModalText(["✔️ Your answer is correct!"])
-            setModalType("correctAnswer")
-            setScoreToAdd((cur) => score)
-            setRightAnswers((rightAnswers) => rightAnswers + 1)
-            setStreak((streak) => streak + 1)
-            setShowInfoModal(true)
-
-            if (questionData.iQuestion.difficulty.toLowerCase() === "easy")
-                easyQuestionAnswered(true)
-
-            if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
+            setScoreToAdd(score)
+            onQuestionAnsweredCorrectly(score)
         })
 
         socket.off("wrongAnswer").on("wrongAnswer", (triesLeft: number) => {
             // What happens if the answer is incorrect and you have no tries left
-            setModalText([
-                "Your answer is incorrect! The correct answer is:",
-            ])
-            if (triesLeft === 0) {
-                setModalType("incorrectAnswer")
-                setModalAnswer(questionData.iQuestion.answer)
-                setStreak(0)
-                setScoreToAdd(0)
-                setWrongAnswers((wrongAnswers) => wrongAnswers + 1)
-                setShowInfoModal(true)
-
-                if (questionData.iQuestion.difficulty.toLowerCase() === "easy")
-                    easyQuestionAnswered(false)
-
-                if (questionData.questionNumber < questionData.numberOfMandatory) socket.emit("getNewQuestion")
-            } else {
-                wrongAnswerToast(triesLeft)
-            }
+            onQuestionAnsweredIncorrectly(triesLeft)
         })
 
         socket.off("result").on("result", (result: string) => {
@@ -245,6 +339,10 @@ function Game(props: Props) {
         setHideQuestion(curr => showInfoModal)
     }, [showInfoModal])
 
+    useEffect(() => {
+        props.onUpdatePlayerScore(score)
+    }, [score])
+
     function wrongAnswerToast(triesLeft: number) {
         toast(
             `❌ Your answer is incorrect. You have ${triesLeft} attempts left`,
@@ -259,6 +357,44 @@ function Game(props: Props) {
                 theme: "light",
             }
         )
+    }
+
+    function correctAnswerToast() {
+        toast.success('✔️ Your answer is correct!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+            style: {
+                fontSize: '20px',
+                minWidth: '400px',
+                marginTop: '4rem'
+              }
+            });
+    }
+
+    function incorrectAnswerToast() {
+        toast.error('❌ Your answer is incorrect!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+            style: {
+                fontSize: '20px',
+                minWidth: '400px',
+                marginTop: '4rem'
+              }
+            });
     }
 
     function calculateStats(statistic: Statistic[]) {
@@ -295,6 +431,22 @@ function Game(props: Props) {
         } 
         else {
             setNonSpamAnswerCounter(curr => curr + 1)
+        }
+    }
+
+    const getEmojiForDifficulty = (difficulty: string) => {
+        switch (difficulty.toLowerCase()) {
+            case "easy":
+                return "😃"
+
+            case "medium":
+                return "😐"
+            
+            case "hard":
+                return "😈"
+            
+            default:
+                return "❓"
         }
     }
 
@@ -387,13 +539,18 @@ function Game(props: Props) {
             <div className="game-container">
                 <div className="game-left-container">
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
-                    <Question 
-                        hideQuestion={hideQuestion}
-                        theme={props.theme}
-                        infoModalDisplayed={showInfoModal}
-                        calculateResponseTime={calculateResponseTime}
-                        easyQuestionsOnCooldown={easyQuestionsOnCooldown}
-                    />  
+                    <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
+                        <Question 
+                                hideQuestion={hideQuestion}
+                                theme={props.theme}
+                                infoModalDisplayed={showInfoModal}
+                                calculateResponseTime={calculateResponseTime}
+                                easyQuestionsOnCooldown={easyQuestionsOnCooldown}
+                                difficultyName={graspleQuestionData.questionData.difficulty}
+                                difficultyEmoji={getEmojiForDifficulty(graspleQuestionData.questionData.difficulty)}
+                                pointsToGain={graspleQuestionData.pointsToGain}
+                            />  
+                    </QuestionStatusContext.Provider>    
                 </div>
                  <div className="game-right-container">
                     <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>

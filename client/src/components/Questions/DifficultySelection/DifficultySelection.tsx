@@ -11,6 +11,7 @@ import {
 import DifficultyCard from "./DifficultyCard"
 import { StreakContext } from "../../../contexts/StreakContext"
 import { Streak } from "../../RaceThemes/SharedUtils"
+import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../contexts/DifficultyAvailabilityContext"
 
 /**
  * @interface CardInfo - interface used due to the animations, has info related to the difficulty card
@@ -20,7 +21,8 @@ import { Streak } from "../../RaceThemes/SharedUtils"
 interface CardInfo {
     difficulty: string
     emoji: string
-    points: string
+    pointsText: string
+    points: number
     attempts: string
 }
 
@@ -31,11 +33,13 @@ interface Props {
     onDifficultySelected: () => void
     easyIsOnCooldown: boolean
 }
+
 /**
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
     const streaks = useContext(StreakContext)
+    const difficultyAvailability = useContext(DifficultyAvailabilityContext)    
     const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)
 
     const updateFlameAnimationStatus = () => {
@@ -94,19 +98,22 @@ export default function DifficultySelection(props: Props) {
         {
             difficulty: "Easy",
             emoji: "😃",
-            points: "Base points: 10",
+            pointsText: "Base points: 10",
+            points: 10,
             attempts: "Tries: 1",
         },
         {
             difficulty: "Medium",
             emoji: "😐",
-            points: "Base points: 50",
+            pointsText: "Base points: 50",
+            points: 50,
             attempts: "Tries: 2",
         },
         {
             difficulty: "Hard",
             emoji: "😈",
-            points: "Base points: 150",
+            pointsText: "Base points: 150",
+            points: 150,
             attempts: "Tries: 3",
         },
     ]
@@ -133,16 +140,15 @@ export default function DifficultySelection(props: Props) {
     )
 
     const [easyCounter, setEasyCounter] = useState(0)
-    const [disableButton, setDisableButton] = useState(false)
+    const [disableDifficultyButtons, setDisableDifficultyButtons] = useState<DifficultyAvailability>({
+        easy: false,
+        medium: false,
+        hard: false
+    })
 
     const handleEasyCardClick = () => {
         setEasyCounter((prevCounter) => prevCounter + 1)
     }
-
-    useEffect(() => {
-        if (easyCounter === 7 && props.type === "Diagonalization")
-            setDisableButton(true)
-    }, [easyCounter])
 
     const getStreakForDifficulty = (difficulty: string) => {
         const streak: Streak | undefined = streaks.find(x => x.questionType == difficulty.toLowerCase())
@@ -155,6 +161,54 @@ export default function DifficultySelection(props: Props) {
                 streakValue: 0,
                 streakMultiplier: 1
             }
+    }
+
+    useEffect(() => {
+        setDisableDifficultyButtons(curr => ({
+            easy: !difficultyAvailability.easy,
+            medium: !difficultyAvailability.medium,
+            hard: !difficultyAvailability.hard,
+        }));
+    }, [difficultyAvailability]);
+
+    const updateDifficultyButtonStatus = (index: number, status: boolean) => {
+        const statuses = {...disableDifficultyButtons}
+
+        switch(index) {
+            case 0:
+                statuses.easy = status
+                break
+
+            case 1:
+                statuses.medium = status
+                break
+
+            case 2:
+                statuses.hard = status
+                break
+
+            default:
+                break
+        }
+
+        setDisableDifficultyButtons(curr => ({ ...statuses }));
+    }
+
+    const getDifficultyStatus = (index: number) => {
+        switch(index) {
+            case 0:
+                return disableDifficultyButtons.easy
+
+            case 1:
+                return disableDifficultyButtons.medium
+
+            case 2:
+                return disableDifficultyButtons.hard
+
+            default:
+                return disableDifficultyButtons.easy
+        }
+
     }
 
     return (
@@ -186,13 +240,14 @@ export default function DifficultySelection(props: Props) {
                                 <DifficultyCard
                                     difficulty={item.difficulty}
                                     emoji={item.emoji}
-                                    points={item.points}
+                                    pointsText={item.pointsText}
+                                    totalPoints={item.points * getStreakForDifficulty(item.difficulty).streakMultiplier}
                                     attempts={item.attempts}
                                     streak={getStreakForDifficulty(item.difficulty)}
                                     onDifficultySelected={props.onDifficultySelected}
                                     setEasyCounter={setEasyCounter}
                                     onEasyCardClick={handleEasyCardClick}
-                                    disableButton={disableButton}
+                                    disableButton={getDifficultyStatus(index)}
                                     showFlame={showFlameAnimation}
                                     isOnCooldown={item.difficulty.toLowerCase() === "easy" ? props.easyIsOnCooldown : false}
                                 ></DifficultyCard>

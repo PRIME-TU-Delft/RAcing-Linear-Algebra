@@ -1,6 +1,6 @@
 import request from "supertest"
 import app from "../app"
-import { startLobby } from "../controllers/lobbyController"
+import { makeLobbyNotJoinable } from "../controllers/lobbyController"
 const sinon = require("sinon")
 const stub = sinon.stub()
 stub.withArgs("CSE").returns(["Determinants"])
@@ -34,7 +34,7 @@ describe("Validate lobby Id Endpoint", () => {
         expect(result1.statusCode).toEqual(200)
         const lobbyId: number = result1.body[0]
         const str = `${path}${lobbyId}`
-        startLobby(lobbyId)
+        makeLobbyNotJoinable(lobbyId)
 
         const result2: request.Response = await request(app).get(str)
         expect(result2.statusCode).toEqual(200)

@@ -67,9 +67,13 @@ lobbyRouter.get("/validate/:lobbyid", (req: Request, res: Response) => {
 })
 
 /**
- * This function starts the lobby by setting the boolean to false
+ * This function makes the lobby no longer joinable
  * @param lobbyId the id of the lobby
  */
-export function startLobby(lobbyId: number) {
+export function makeLobbyNotJoinable(lobbyId: number) {
     lobbies.set(lobbyId, false)
+}
+
+export function endLobby(lobbyId: number) {
+    lobbies.delete(lobbyId)
 }

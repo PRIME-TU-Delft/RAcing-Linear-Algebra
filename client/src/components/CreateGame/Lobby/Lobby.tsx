@@ -46,13 +46,12 @@ function Lobby(props: Props) {
         props.onThemeSelected(selectedTheme)
         props.onStudySelected(selectedStudy.toUpperCase())
         navigate("/TeamPreview")
-        //Replace teamNameHere with actual teamname
         socket.emit(
             "startGame",
             props.lobbyId,
             selectedRounds.map(x => x.topicName),
             selectedRounds.map(x => x.roundDuration),
-            selectedStudy.toUpperCase(),
+            selectedStudy,
             teamName
         )
         socket.emit("getAverageFinalScore")

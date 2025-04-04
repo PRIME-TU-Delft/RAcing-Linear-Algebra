@@ -1,139 +1,131 @@
-import React, { useEffect, useState } from "react"
-import "./QuestionStatistics.css"
-import socket from "../../../../socket"
-import { useTrail, a, useSpring } from "react-spring"
-import katex from "katex"
+import React, { useEffect, useState } from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import socket from "../../../../socket";
+import "./QuestionStatistics.css";
+import { Divider } from "@mui/material";
 
 interface Statistic {
-    question: string // the text of the question at hand
-    answer: string // answer to the question
-    difficulty: string // difficulty of the question
-    correctlyAnswered: number // number of players who correctly answered the question
-    incorrectlyAnswered: number // number of players who incorrectly answered the question
+  question: {
+    _id: string;
+    exerciseId: number;
+    url: string;
+    difficulty: string;
+    numOfAttempts: number;
+    name: string;
+    __v: number;
+  };
+  correctlyAnswered: number;
+  incorrectlyAnswered: number;
 }
 
 interface Props {
-    onContinue: () => void
+  onContinue: () => void;
 }
 
 function QuestionStatistics(props: Props) {
-    const [statistics, setStatistics] = useState<Statistic[]>([])
+  const [statistics, setStatistics] = useState<Statistic[]>([]);
 
-    /**
-     * Renders the latex question to string
-     * @param latex     // the latex form of the question
-     * @returns         // the string form of the question
-     */
-    function renderLatexQuestion(latex: string): string {
-        const regex = /\$\$(.*?)\$\$/g
-        return latex.replace(regex, (_, equation) => {
-            try {
-                return katex.renderToString(equation, {
-                    throwOnError: false,
-                    output: "mathml",
-                })
-            } catch (error) {
-                console.error("Error rendering equation:", equation)
-                return ""
-            }
-        })
-    }
+  useEffect(() => {
+    socket.on("statistics", (data: string) => {
+      const parsedStatistics: Statistic[] = JSON.parse(data);
+      setStatistics(parsedStatistics);
+    });
+    return () => {
+      socket.off("statistics");
+    };
+  }, []);
 
-    function renderLatexAnswer(latex: string): string {
-        try {
-            return katex.renderToString(latex, {
-                throwOnError: false,
-                output: "mathml",
-            })
-        } catch (error) {
-            console.error("Error rendering equation:", latex)
-            return ""
-        }
-    }
+  const calculateAccuracy = (stat: Statistic) => {
+    const total = stat.correctlyAnswered + stat.incorrectlyAnswered;
+    if (total === 0) return "0.00";
+    return ((stat.correctlyAnswered / total) * 100).toFixed(2);
+  };
 
-    // Enter animation for the statistics, created using react-spring
-    const enterAnimation = useTrail(statistics.length, {
-        config: { mass: 5, tension: 2000, friction: 200 },
-        opacity: 1,
-        y: 20,
-        from: { opacity: 0, y: 0 },
-    })
-
-    // Listens for events from the socket
-    useEffect(() => {
-        // When statistics are received, filters them based on number of attempts and sorts them based on accuracy and difficulty
-        socket.on("statistics", (data: string) => {
-            const parsedStatistics: Statistic[] = JSON.parse(data)
-            setStatistics((curr) => parsedStatistics)
-        })
-    }, [socket])
-
-    return (
-        <div>
-            <div className="question-statistics-title">
-                Question Statistics
-            </div>
-            <div className="question-statistics-continue" onClick={() => props.onContinue()}>
-                Continue
-            </div>
-            {enterAnimation.map(({ ...style }, index) => (
-                <a.div key={index} className="question-statistic" style={style}>
-                    <div className="row">
-                        <div
-                            className="col-8 text"
-                            dangerouslySetInnerHTML={{
-                                __html: renderLatexQuestion(
-                                    statistics[index].question
-                                ),
-                            }}
-                        ></div>
-                        <div className="col-4 stats">
-                            <div className="row">
-                                <div className="row accuracy">
-                                    Wrong attempts:{" "}
-                                        {statistics[index].incorrectlyAnswered}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="row total-attemptys">
-                                    Accuracy:{" "}
-                                        {(
-                                            (statistics[index].correctlyAnswered /
-                                                (statistics[index]
-                                                    .correctlyAnswered +
-                                                    statistics[index]
-                                                        .incorrectlyAnswered)) *
-                                            100
-                                        )
-                                            .toString()
-                                            .slice(0, 5)}
-                                        %
-                                </div>
-                            </div>
-                            <div className="row difficulty">
-                                    Difficulty:{" "}
-                                    {statistics[index].difficulty
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        statistics[index].difficulty.slice(1)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row question-answer">
-                        <div className="col-1 answer-title">Answer:</div>
-                        <div
-                            className="col-11 answer-value"
-                            dangerouslySetInnerHTML={{
-                                __html: renderLatexAnswer(
-                                    statistics[index].answer
-                                ),
-                            }}
-                        ></div>
-                    </div>
-                </a.div>
-            ))}
+  return (
+    <div>
+      <div className="statistics-header">
+        <div className="question-statistics-title">
+            Question Statistics
         </div>
-    )
+        <div className="question-statistics-continue" onClick={() => props.onContinue()}>
+            Continue
+        </div>
+      </div>
+      
+      {statistics.map((stat, index) => (
+        <div key={stat.question._id} className="question-statistics-item">
+            <Accordion sx={{ mb: 1, boxShadow: 2 }}>
+              <AccordionSummary  aria-controls={`panel${index}-content`} id={`panel${index}-header`}>
+                <div className="exercise-name">
+                  <Typography variant="h6" component="div" className="exercise-name-text">
+                    {stat.question.name}
+                  </Typography>
+                </div>
+
+                <div className="stats-item d-flex justify-content-center align-items-center">
+                    <strong>Difficulty:</strong>
+                    <div className="stats-item-value">
+                      {stat.question.difficulty.charAt(0).toUpperCase() + stat.question.difficulty.slice(1)}
+                    </div>
+                </div>
+
+                <div className="stats-item d-flex justify-content-center align-items-center">
+                    <strong>Accuracy:</strong>
+                    <div className="stats-item-value">
+                      {calculateAccuracy(stat)}%
+                    </div>
+                </div>
+
+                <div className="stats-item d-flex justify-content-center align-items-center">
+                    <strong>Wrong Attempts:</strong>
+                    <div className="stats-item-value">
+                      {stat.incorrectlyAnswered}
+                    </div>
+                </div>
+
+                {/* <Grid container spacing={1} alignItems="center">
+                  <Grid item xs={6}>
+                    <Typography variant="body2">
+                      <strong>Difficulty:</strong> {" "}
+                      {stat.question.difficulty.charAt(0).toUpperCase() + stat.question.difficulty.slice(1)}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Accuracy:</strong> {" "}
+                      {calculateAccuracy(stat)}%
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="body2">
+                      <strong>Wrong Attempts:</strong> {" "}
+                      {stat.incorrectlyAnswered}
+                    </Typography>
+                  </Grid>
+                </Grid> */}
+              </AccordionSummary>
+              <AccordionDetails>
+              <Divider />
+                <Box sx={{ width: "100%", height: "600px" }}>
+                  <iframe
+                    src={stat.question.url}
+                    title={`Question ${index + 1}`}
+                    width="60%"
+                    height="100%"
+                    frameBorder="0"
+                    allow="fullscreen"
+                  ></iframe>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default QuestionStatistics
+export default QuestionStatistics;

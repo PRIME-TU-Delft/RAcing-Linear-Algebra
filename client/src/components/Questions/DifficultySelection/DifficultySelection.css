@@ -8,6 +8,16 @@
     src: url("../../../fonts/CenturyGothic.ttf");
 }
 
+@font-face {
+    font-family: "Chicle-Regular";
+    src: url("../../../fonts/Chicle-Regular.ttf");
+}
+
+@font-face {
+    font-family: "PermanentMarker";
+    src: url("../../../fonts/PermanentMarker-Regular.ttf");
+}
+
 .diff-modal-wrapper {
     position: absolute;
     padding-left: 4rem;
@@ -61,13 +71,17 @@
 
 .card-title {
     font-size: 30px;
-    font-family: Century Gothic, sans-serif;
-    font-style: bold;
+    font-family: 'PermanentMarker', sans-serif;
     text-align: center;
 }
 
+.difficulty-card-disabled {
+    background-color: rgb(239, 239, 239);
+    cursor: not-allowed;
+}
+
 .card-body {
-    height: 10em;
+    height: 14em;
 }
 
 .difficulty-card {
@@ -84,6 +98,13 @@
 
 .emoji {
     font-size: 50px;
+    margin-bottom: 0.5rem;
+}
+
+.card-points-text {
+    font-size: 30px;
+    font-family: 'Chicle-Regular', sans-serif;
+    color: #FB8500;
 }
 
 .card-points,
@@ -103,7 +124,7 @@
 @media only screen and (max-width: 1300px) {
     /* Adjust the width for smaller screens */
     .card-body {
-        height: 10em;
+        height: 14em;
     }
 
     .card-grid {
@@ -121,11 +142,31 @@
     .diff-modal-wrapper {
         padding-left: 1rem;
     }
+
+    .card-points-text {
+        font-size: 25px;
+    }
+
+    .card-points {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 2000px) {
+    .diff-modal-text0 {
+        font-size: 25px;
+        margin-top: 15px;
+    }
+
+    .diff-modal-text1 {
+        margin: 10px 20px 10px 20px;
+        font-size: 14px;
+    }
 }
 
 @media only screen and (max-width: 1090px) {
     .card-body {
-        height: 8em;
+        height: 12em;
     }
 
     .difficulty-card,
@@ -138,11 +179,7 @@
         font-size: 45px;
     }
 
-    .diff-modal-text0 {
-        font-size: 30px;
-    }
-
-    .diff-modal-text1 {
-        font-size: 15px;
+    .card-points {
+        font-size: 10px;
     }
 }

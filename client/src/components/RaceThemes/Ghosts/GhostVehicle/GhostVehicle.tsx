@@ -2,7 +2,7 @@ import { motion, useAnimationControls } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
 import "./GhostVehicle.css"
 import { Ghost } from "../../SharedUtils";
-import { getColorForRaceLap, getZIndexValues } from "../../RaceService";
+import { getColorForRaceLap, getNewTimeScoreIndex, getZIndexValues } from "../../RaceService";
 import { getColorForStudy, getGhostStyle } from "../GhostService";
 import GhostText from "../GhostText/GhostText";
 import LapCompletedText from "../LapCompletedText/LapCompletedText";
@@ -26,27 +26,14 @@ function GhostVehicle(props: Props) {
 
     const usedTime = useContext(TimeContext)
     const stopShowingRace = useContext(RaceProgressContext)
-
     const animationControls = useAnimationControls()
 
-    /**
-     * Retrieves the next time score index the team will aim to reach
-     * @returns the new time score index, or -1 if there are no more time scores
-     */
-    const getNewTimeScoreIndex = () => {
+    useEffect(() => 
+    {
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
-        if (currentTimeScoreIndex >= props.ghost.timeScores.length - 1) return -1
-
-        // Finds the last index which has expired in terms of time, in order to set the next goal to its next neighbour
-        let newIndex = currentTimeScoreIndex
-        for (let i = currentTimeScoreIndex; i < props.ghost.timeScores.length; i++) {
-            const timeScore = props.ghost.timeScores[i]
-            if (timeScore && timeScore.timePoint <= usedTime) newIndex = i
-            else break
-        }
-
-        return newIndex + 1
-    }
+        props.ghost.animationStatus.timeScoreIndex = Math.max(0, getNewTimeScoreIndex(currentTimeScoreIndex, props.ghost.timeScores, usedTime) - 1)
+        checkForAnimationUpdates()
+    }, [props.ghost.timeScores])
 
     /**
      * Updates the values of the ghost to account for reaching a new time point.
@@ -56,7 +43,7 @@ function GhostVehicle(props: Props) {
      * @param newProgress  the new race path progress of the ghost
      */
     const updateGhostValues = (currentTimeScoreIndex: number, newScore: number, newProgress: number) => {
-        const newTimeScoreIndex = getNewTimeScoreIndex() 
+        const newTimeScoreIndex = getNewTimeScoreIndex(currentTimeScoreIndex, props.ghost.timeScores, usedTime)
         props.onGhostScoreUpdate(newScore, props.ghost.key)
         props.ghost.animationStatus.timeScoreIndex = newTimeScoreIndex    
         props.ghost.animationStatus.pathProgress = newProgress
@@ -67,6 +54,10 @@ function GhostVehicle(props: Props) {
     }
 
     useEffect(() => {
+        checkForAnimationUpdates()
+    }, [usedTime])
+
+    const checkForAnimationUpdates = () => {
         // Introduce constants to reduce code repetition
         const currentTimeScoreIndex = props.ghost.animationStatus.timeScoreIndex
 
@@ -77,9 +68,10 @@ function GhostVehicle(props: Props) {
 
         // If the time matches a ghost's time point, it is time to update its score (make it move)
         if (currentGhostTimePoint <= usedTime) { 
+
             setStartAnimation(curr => true)
         }
-    }, [usedTime])
+    }
 
     useEffect(() => {
         if (startAnimation) {
@@ -90,7 +82,7 @@ function GhostVehicle(props: Props) {
 
             const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
             const progress = (currentGhostNewScore/ props.totalPoints) * 100 // progress determined as the ratio of points and total points
-        
+
             const currentGhostPreviousScore = props.ghost.timeScores[Math.max(currentTimeScoreIndex - 1, 0)].score
             const previousProgress = (currentGhostPreviousScore/ props.totalPoints) * 100 
 

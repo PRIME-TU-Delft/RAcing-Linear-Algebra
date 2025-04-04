@@ -11,7 +11,8 @@ interface Props {
     difficulty: string
     emoji: string
     onDifficultySelected: () => void
-    points: string
+    pointsText: string
+    totalPoints: number
     attempts: string
     streak: Streak
     setEasyCounter: React.Dispatch<React.SetStateAction<number>>
@@ -24,8 +25,18 @@ interface Props {
  * DifficultyCard component that will displyed in the select difficulty modal.
  * This contains the difficulty and the emoji for that difficulty
  */
-export default function DifficultyCard(props: Props) {
+export default function  DifficultyCard(props: Props) {
     const [showStreak, setShowStreak] = useState<boolean>(false)
+    const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (props.disableButton && !props.isOnCooldown )
+            setTimeout(() => {
+                setDifficultyCleared(curr => true)
+            }, 500);
+        else
+            setDifficultyCleared(curr => false)
+    }, [props.disableButton, props.isOnCooldown])
 
     useEffect(() => {
         if (props.streak.streakValue > 0)
@@ -35,6 +46,8 @@ export default function DifficultyCard(props: Props) {
     }, [props.streak])
 
     function sendDifficulty() {
+        if (props.disableButton) return
+
         props.onDifficultySelected()
         socket.emit("getNewQuestion", props.difficulty.toLowerCase())
         if (props.difficulty === "Easy") {
@@ -54,19 +67,48 @@ export default function DifficultyCard(props: Props) {
                 ): (
                     <Card className="difficulty-card">
                         <Card.Body
-                            style={{
-                                pointerEvents:
-                                    props.disableButton &&
-                                    props.difficulty === "Easy"
-                                        ? "none"
-                                        : "auto",
-                            }}
+                            className={props.disableButton ? "difficulty-card-disabled" : ""}
                             onClick={sendDifficulty}
                         >
                             <Card.Title className="card-title">
                                 {props.difficulty}
                             </Card.Title>
-                            <Card.Text className="emoji"> {props.emoji}</Card.Text>
+                            <Card.Text className="emoji"> 
+                                {difficultyCleared ? 
+                                (<div>
+                                    👑
+                                </div>) 
+                                : (<div>
+                                    {props.emoji}
+                                </div>)}
+                            </Card.Text>
+                            <Card.Text>
+                                {difficultyCleared ? 
+                                    (<div className="row justify-content-center card-points-text">
+                                        CLEARED!
+                                    </div>)
+                                    : (
+                                    <div className="row justify-content-center card-points-text">
+                                        {Math.floor(props.totalPoints)}
+                                    </div>)
+                                }
+                                        
+                                        {showStreak && !difficultyCleared ? (
+                                            <div className="container">
+                                                <div className="row justify-content-center card-streak">
+                                                    <div className="ms-2 col d-flex justify-content-center">
+                                                        <div className="d-flex justify-content-center align-items-center">
+                                                            <b>{props.streak.streakValue}</b>
+                                                        </div>
+                                                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
+                                                    </div>
+                                                </div>
+                                                
+
+                                            </div>
+                                        
+                                    ) : null}
+                            </Card.Text>
                         </Card.Body>
                     </Card>
                 )}
@@ -75,27 +117,20 @@ export default function DifficultyCard(props: Props) {
                      place="right"
                      style={{backgroundColor: "#F0C80F", fontSize: "17px", zIndex: 9999}}
                 />
-                {props.disableButton && props.difficulty === "Easy" && (
-                    <p className="optional-text-diff">
-                        You have to select a different difficulty
-                    </p>
-                )}
-                <p className="card-points">{props.points}</p>
-                <p className="card-attempts">{props.attempts}</p>
-                {showStreak ? (
-                    <div className="d-flex justify-content-center align-items-center card-streak">
-                        <div>
-                            Streak:
-                        </div>
-                        <div className="ms-2">
-                            <b>{props.streak.streakValue}</b>
-                        </div>
-                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
-                        <div className="ms-1">
-                            ({props.streak.streakMultiplier}x)
-                        </div>
+                {difficultyCleared ? (
+                    <div className="optional-text-diff">
+                        Difficulty cleared. 
+                        <br></br>
+                        Try another one!
                     </div>
-                ) : null}
+                ) : 
+                (<div>
+                    <p className="card-points">{props.pointsText}</p>
+                    <p className="card-points">
+                        Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
+                    </p>
+                </div>)}
+                
             </div>
         </>
     )

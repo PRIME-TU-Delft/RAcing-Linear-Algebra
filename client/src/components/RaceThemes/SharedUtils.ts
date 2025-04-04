@@ -121,6 +121,21 @@ interface RoundInformation {
     study: string
 }
 
+interface GraspleExercise {
+    _id: string,
+    name: string,
+    exerciseId: number,
+    difficulty: string,
+    url: string,
+    numOfAttempts: number   
+    isMandatory: boolean
+}
+
+interface StudyElement {
+    name: string,
+    abbreviation: string
+}
+
 export {
     type PercentCoordinate,
     Point,
@@ -134,5 +149,7 @@ export {
     type RacePathObject,
     type IQuestion,
     type RoundInformation,
-    type Streak
+    type Streak,
+    type GraspleExercise,
+    type StudyElement
 }

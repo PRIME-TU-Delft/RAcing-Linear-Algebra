@@ -7,6 +7,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs';
 import { SECONDS } from "react-time-sync";
+import { Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface SelectedRound {
     topicName: string,
@@ -17,13 +20,17 @@ interface Props {
     onRoundSelected: (rounds: SelectedRound[]) => void
     onStepCompleted: (completed: boolean) => void
     availableRounds: string[]
+    onFilterByStudyProgramme: (filter: boolean) => void
 }
 
 function Rounds(props: Props) {
     const [selectedRounds, setSelectedRounds] = useState<SelectedRound[]>([])
     const [unselectedRounds, setUnselectedRounds] = useState<string[]>([])
     const [availableRounds, setAvailableRounds] = useState<string[]>([])
+    const [searchFilteredRounds, setSearchFilteredRounds] = useState<string[]>([])
+    const [enableFilterByStudyProgramme, setEnableFilterByStudyProgramme] = useState<boolean>(false)
     const [hideDurations, setHideDurations] = useState<boolean>(false)
+    const [topicSearchQuery, setTopicSearchQuery] = useState<string>("")
 
     useEffect(() => {
         if (availableRounds.toString() != props.availableRounds.toString()) {
@@ -32,6 +39,19 @@ function Rounds(props: Props) {
             setSelectedRounds(curr => [])
         }
     }, [props.availableRounds])
+
+    useEffect(() => {
+        if (topicSearchQuery == "") {
+            setSearchFilteredRounds(curr => [...unselectedRounds])
+        }
+        else {
+            setSearchFilteredRounds(curr => unselectedRounds.filter(topic => topic.toLowerCase().includes(topicSearchQuery.toLowerCase())))
+        }
+    }, [topicSearchQuery, unselectedRounds])
+
+    useEffect(() => {
+        props.onFilterByStudyProgramme(enableFilterByStudyProgramme)
+    }, [enableFilterByStudyProgramme])
 
     /**
      * Adds or removes selected topic, based on whether it was already selected or deselected and making sure number of rounds doesnt exceed 3
@@ -50,6 +70,10 @@ function Rounds(props: Props) {
             handleSelectRound(unselectedRounds.indexOf(topic), selectedRounds.length)
         }
         // We don't allow deselecting by click as it is not intuitive
+    }
+
+    const handleTopicSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setTopicSearchQuery(event.target.value)
     }
 
     const changeSelectedRoundsOrder = (startIndex: number, endIndex: number) => {
@@ -122,7 +146,7 @@ function Rounds(props: Props) {
 
     return (
         <DragDropContext onDragStart={() => setHideDurations(curr => true)} onDragEnd={(result) => handleOnDragEnd(result)}>
-            <div className="dropbox-title">Rounds selected</div>
+            <div className="dropbox-title">Selected topics</div>
             <Droppable droppableId="selected-rounds" direction="vertical">
                 {(provided) => (
                     <div className={ (selectedRounds.length == 0 ? "empty-container " : "") + "selected-rounds-container"} {...provided.droppableProps} ref={provided.innerRef}>
@@ -167,11 +191,42 @@ function Rounds(props: Props) {
                 )}
             </Droppable>
             <div className="horizontal-line"></div>
-            <div className="dropbox-title">Available rounds</div>
+            <div className="dropbox-title">
+                Available topics
+            </div>
+            <div className="dropbox-helper-functionality">
+            <TextField
+                    placeholder="Search Available Topics"
+                    variant="outlined"
+                    size="small"
+                    style={{width: '40%' }}
+                    value={topicSearchQuery}
+                    onChange={handleTopicSearchChange}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <FontAwesomeIcon icon={faSearch} />
+                            </InputAdornment>
+                        ),
+                        style: { height: '2.5rem' }
+                    }}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                        checked={enableFilterByStudyProgramme}
+                        onChange={(event) => setEnableFilterByStudyProgramme(event.target.checked)}
+                        name="filterByStudyProgramme"
+                        />
+                    }
+                    label="Filter by Study Programme"
+                    style={{ marginLeft: '1rem' }}
+                />
+            </div>
             <Droppable droppableId="available-rounds" direction="horizontal">
                 {(provided) => (
                     <div className="available-rounds-container" {...provided.droppableProps} ref={provided.innerRef}>
-                        {unselectedRounds.map((roundTopic, index) => (
+                        {searchFilteredRounds.map((roundTopic, index) => (
                             <Draggable draggableId={roundTopic} index={index} key={roundTopic}>
                                 {(provided) => (
                                     <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>

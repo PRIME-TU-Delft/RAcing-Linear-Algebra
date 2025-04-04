@@ -1,35 +1,47 @@
 import { getVariantById, parseVariantToQuestion } from "../controllers/questionDBController"
 import type { IQuestion } from "../models/questionModel"
-import type { IRound } from "../models/roundModel"
 import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
+import type { ITopic } from "../models/topicModel"
+import type { IExercise } from "../models/exerciseModel"
 
+export interface GameGhostTeam {
+    teamName: string
+    timeScores: number[]
+    checkpoints: number[]
+    study: string
+    accuracy: number
+}
 export class Game {
     avgScore: number //The average score of the team's users
     totalScore: number //The total (sum) score of the team's users
     timeScores: number[]
     teamName: string //The name of the team
-    round: number //Number of the current round that is being played
-    rounds: IRound[] //The selected rounds
+    currentTopicIndex: number //Number of the current round that is being played
+    topics: ITopic[] //The selected rounds
     roundDurations: number[] // The durations of the rounds
     users: Map<string, User> //The map of users in the game
     checkpoints: number[] //The amount of seconds taken to reach each checkpoint
     study: string //The study of this game
     correct: number //The number of correct answers
     incorrect: number //The number of incorrect answers
+    roundStartTime: number //The time the game started
+    ghostTeams: GameGhostTeam[] //The ghost teams for this game
+    lapEndScore: number // Number of points required to complete a single lap
+    numberOfPlayersAtStart: number // Number of players at the start of the game
 
     /**
      * Constructor for a game object,
      * This object can be used to easily represent a game and all values that need to be stored with it
-     * @param rounds the selected rounds for this game
+     * @param topics the selected rounds for this game
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(rounds: IRound[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
-        this.round = 0
-        this.rounds = rounds
+    constructor(topics: ITopic[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
+        this.currentTopicIndex = 0
+        this.topics = topics
         this.roundDurations = roundDurations
         this.teamName = teamName
         this.avgScore = 0
@@ -54,113 +66,212 @@ export class Game {
 
     /**
      * Gets a new question for a certain player and adds it to the array of used questions
-     * @param socketId the player that needs a new question
+     * @param userId the player that needs a new question
      * @param lobbyId the lobby that the player is in
      * @returns the new question
      */
-    async getNewQuestion(socketId: string, difficulty?: string): Promise<IQuestion | undefined> {
-        const round = this.rounds[this.round]
-        const user = this.users.get(socketId)
+    getNewExercise(userId: string, difficulty?: string): IExercise | undefined {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
-        if (user.isOnMandatory) return await this.getMandatoryQuestion(round, user)
+        if (user.isOnMandatory) return this.getMandatoryQuestion(topic, user)
         else if (difficulty !== undefined)
-            return await this.getBonusQuestion(round, user, difficulty)
+            return this.getDifficultyExercise(topic, user, difficulty)
         else throw Error("No difficulty was given")
     }
 
     /**
-     * Gets a new mandatory question
-     * @param round the current round the user is in
-     * @param user the user object that needs a question
-     * @returns a new question
+     * Filters the users map to find users which have not disconnected from the game, and returns the number of them
+     * @returns the number of currently active users
      */
-    async getMandatoryQuestion(round: IRound, user: User): Promise<IQuestion | undefined> {
-        const numberOfAnswered = user.questionIds.length
-        const question = round.mandatory_questions[numberOfAnswered]
-        if (question === undefined) throw Error("Could not generate new question")
-        this.attemptSetter(user, "mandatory", question.type)
-        //Check if after adding this question all the mandatories are done
-        if (numberOfAnswered + 1 >= round.mandatory_questions.length) user.isOnMandatory = false
-        try {
-            return await this.variantToQuestion(question, user)
-        } catch (error) {
-            throw error
-        }
+    getNumberOfActiveUsers(): number {
+        return Array.from(this.users.values()).filter(x => !x.disconnected).length
     }
 
     /**
-     * Gets a new bonus question
+     * Checks whether the mandatory exercises exist for the current topic
+     * @returns whether the topic contains mandatory exercises
+     */
+    mandatoryExercisesExistForCurrentTopic(): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        return topic.mandatoryExercises.length > 0
+    }
+
+    /**
+     * Makes the user not on mandatory exercises anymore
+     * @param userId the user id
+     */
+    makeUserNotOnMandatory(userId: string): void {
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        user.isOnMandatory = false
+    }
+
+    /**
+     * Gets a new mandatory question
+     * @param topic the current round the user is in
+     * @param user the user object that needs a question
+     * @returns a new question
+     */
+    getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
+        console.log("Answered: " + user.getQuestionIds().length.toString())
+        console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
+
+        const numberOfAnswered = user.getQuestionIds().length
+        const question = topic.mandatoryExercises[numberOfAnswered]
+
+        if (question === undefined) throw Error("Could not generate new question")
+        user.attempts = question.numOfAttempts
+        this.initializeUserAttempts(question, user)
+        return question
+    }
+
+    /**
+     * Checks whether the user has answered all mandatory questions by looking at the number of the questions answered so far
+     * @param topic the topic of the current round
+     * @param user the user
+     * @returns whether the user has answered all mandatory questions
+     */
+    allMandatoryQuestionsAnswered(userId: string): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
+        if (user === undefined) return false
+
+        const numberOfAnswered = user.getQuestionIds().length
+        if (numberOfAnswered >= topic.mandatoryExercises.length)
+            return true
+
+        return false
+    }
+
+    /**
+     * Checks whether the user has started answering a non-mandatory question, relevant for reconnecting users
+     * @param userId the id of the user
+     * @returns whether the user has started answering a difficulty-based (non-mandatory) question
+     */
+    hasUserAttemptedNonMandatoryQuestion(userId: string): boolean {
+        const topic = this.topics[this.currentTopicIndex]
+        const user = this.users.get(userId)
+        if (user === undefined) return false
+
+        const numberOfAnswered = user.getQuestionIds().length
+        if (numberOfAnswered >= topic.mandatoryExercises.length + 1)
+            return true
+
+        return false
+    }
+
+    /**
+     * Gets a new exercise based on the seleced difficulty
      * @param round the current round the user is in
      * @param user the user object that needs a question
      * @param difficulty the difficulty of the new question
-     * @returns a new question
+     * @returns a new exercise
      */
-    async getBonusQuestion(
-        round: IRound,
+    getDifficultyExercise(
+        topic: ITopic,
         user: User,
         difficulty: string
-    ): Promise<IQuestion | undefined> {
+    ): IExercise | undefined {
         try {
-            const questionIds = round.bonus_questions
-                .filter((x) => x.difficulty === difficulty)
-                .map((x) => x.id)
-            const questionId = user.getRandomQuestionId(questionIds)
-            const question = round.bonus_questions.find((x) => x.id === questionId)
-            if (question === undefined) throw Error("A question with this id could not be found")
-            this.attemptSetter(user, difficulty, question.type)
-            const res = await this.variantToQuestion(question, user)
-            return res
+            const exerciseIds = topic.difficultyExercises
+                .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
+                .map((x) => x.exerciseId)
+            console.log(topic.difficultyExercises)
+
+            const exerciseId = user.getRandomQuestionId(exerciseIds)
+            const exercise = topic.difficultyExercises.find((x) => x.exerciseId === exerciseId)
+            if (exercise === undefined) throw Error("An exercise with this id could not be found")
+            user.attempts = exercise.numOfAttempts
+        this.initializeUserAttempts(exercise, user)
+            return exercise
         } catch (error) {
             throw error
         }
     }
 
     /**
-     * Function that takes a question, gets a random variant of it and parses it to the correct question and answer string
-     * @param question the question to get a variant from
-     * @param user the user that needs a variant
-     * @returns the variant of the question
+     * Checks whether the user answered all questions from all difficulties
+     * @param userId the id of the user
+     * @returns whether all questions have been answered
      */
-    async variantToQuestion(question: IQuestion, user: User): Promise<IQuestion | undefined> {
-        try {
-            if (question.variants !== undefined && question.variants.length !== 0) {
-                const variant = user.getRandomQuestionId(question.variants)
-                const variantDocument = await getVariantById(variant, question.subject)
-                if (variantDocument === undefined) throw Error("Variant was not found")
-                const result = parseVariantToQuestion(variantDocument, question)
-                user.currentQuestion = result
-                user.questions = user.questions.set(result, { attempts: 0, correct: 0 })
-                user.questionIds.push(variant)
-                return result
-            } else {
-                user.currentQuestion = question
-                user.questions = user.questions.set(question, { attempts: 0, correct: 0 })
-                user.questionIds.push(question.id)
-                return question
-            }
-        } catch (error) {
-            throw error
-        }
+    checkIfUserAnsweredAllQuestions(userId: string) {
+
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        
+        const topic = this.topics[this.currentTopicIndex]
+
+        const difficulties = ["easy", "medium", "hard"]
+        let answeredAllQuestions = true
+
+        difficulties.forEach(difficulty => {
+            const answeredAllForDifficulty = this.checkIfUserAnsweredAllQuestionsOfDifficulty(userId, difficulty)
+            answeredAllQuestions = answeredAllQuestions && answeredAllForDifficulty
+        })
+        
+        return answeredAllQuestions
+    }
+
+    /**
+     * Checks whether the user answered all questions of a particular difficulty
+     * @param userId the user id
+     * @param difficulty the difficulty to check
+     * @returns whether the user answered all questions of a difficulty
+     */
+    checkIfUserAnsweredAllQuestionsOfDifficulty(userId: string, difficulty?: string) {
+        if (difficulty == undefined) return false
+
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+
+        const topic = this.topics[this.currentTopicIndex]
+        const exerciseIds = topic.difficultyExercises
+                .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
+                .map((x) => x.exerciseId)
+
+        return user.checkIfUsedUpAllVariantsForDifficulty(exerciseIds)
+    }
+
+    /**
+     * Event triggered when all of the questions have been answered by the user
+     * @param userId user id
+     */
+    onUserAnsweredAllQuestions(userId: string) {
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        
+        user.resetUserQuestionsAnswered()
+    }
+
+    initializeUserAttempts(exericse: IExercise, user: User) {
+        user.currentQuestion = exericse
+        user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
+    }
+
+    hasUserJoinedLate(userId: string): boolean {
+        const user = this.users.get(userId)
+        if (user === undefined) throw Error("This user is not in this game")
+        return user.lastConnectionTime > this.roundStartTime
     }
 
     /**
      * Checks the answer for a user
-     * @param socketId the user
+     * @param userId the user
      * @param answer the answer from the user
      * @returns boolean depending on correctness of the answer
      */
-    checkAnswer(socketId: string, answer: any, questionDifficulty: string): (boolean | number)[] {
-        const user = this.users.get(socketId)
+    processUserAnswer(userId: string, answeredCorrectly: boolean, questionDifficulty: string): number {
+        console.log(userId)
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
 
         const question = user.currentQuestion
-        const finalAnswer = question.answer
-        const result = checkAnswerEqual(question, finalAnswer, answer)
         const usedAttempts = user.questions.get(question)?.attempts ?? 0
         let score = 0
 
         //Case of incorrect answer
-        if (!result) {
+        if (!answeredCorrectly) {
             user.attempts--
             if (user.attempts === 0) this.incorrect++
             user.resetUserStreak(questionDifficulty)
@@ -171,18 +282,18 @@ export class Game {
             })
         } else {
             //Calculate score and update values
-            user.continueUserStreak(questionDifficulty)
             score = this.calculateScore(question, user)
+            user.continueUserStreak(questionDifficulty)
             user.score += score
             this.totalScore += score
-            this.avgScore = this.totalScore / this.users.size
+            this.avgScore = this.totalScore / this.getNumberOfActiveUsers()
 
             user.attempts = 3
             this.correct++
             //Sets the correctlyAnswered value to 1
             user.questions = user.questions.set(question, { attempts: usedAttempts, correct: 1 })
         }
-        return [result, score]
+        return score
     }
 
     /* Calculates the score a player will receive for answering a question
@@ -190,8 +301,9 @@ export class Game {
      * @param user the user that answered the question
      * @returns the amount of score gained
      */
-    calculateScore(question: IQuestion, user: User) {
-        const difficulty = question.difficulty
+    
+    calculateScore(exercise: IExercise, user: User) {
+        const difficulty = exercise.difficulty.toLowerCase()
         const difficulties = ["easy", "medium", "hard", "mandatory"]
         const scores = [10, 50, 150, 50]
 
@@ -215,12 +327,11 @@ export class Game {
      */
     addNewTimeScore() {
         const currentTotalScore = this.totalScore
-        const numberOfPlayers = this.users.size
-        const roundDuration = this.roundDurations[this.round]
+        const numberOfPlayers = Math.max(this.getNumberOfActiveUsers(), this.numberOfPlayersAtStart)
+        const roundDuration = this.roundDurations[this.currentTopicIndex]
 
         const newTimeScore = currentTotalScore / (numberOfPlayers * roundDuration)
         this.timeScores.push(newTimeScore)
-        console.log(this.timeScores)
     }
 
     /**
@@ -230,22 +341,20 @@ export class Game {
      * @returns a list of interpolated points for the given round to be used for this ghost team
      */
     getGhostTeamTimePointScores(ghostTeamScores: number[]) {
-        const numberOfTimePoints = Math.floor(this.roundDurations[this.round] / 20)
+        const numberOfTimePoints = Math.floor(this.roundDurations[this.currentTopicIndex] / 20)
         const points = ghostTeamScores.map((x, index) => [index * 30, x])
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
 
         const result = timePoints.map(x => ({
             timePoint: x,
-            score: interp.getPointAt(x / this.roundDurations[this.round])[1] * this.roundDurations[this.round] * this.users.size
+            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
         }))
 
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
-        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.round] * this.users.size
+        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
         result[result.length - 1] = lastElement
-
-        console.log(result)
 
         return result
     }
@@ -257,7 +366,7 @@ export class Game {
      */
     getTimePointsForTeam(numberOfTimePoints: number) {
         const timePoints: number[] = [];
-        const maxDuration = this.roundDurations[this.round] * 1000; // Convert duration to milliseconds
+        const maxDuration = this.roundDurations[this.currentTopicIndex] * 1000; // Convert duration to milliseconds
         let currentTime = 0;
       
         for (let i = numberOfTimePoints + 1; i > 1; i--) {
@@ -282,16 +391,16 @@ export class Game {
      * @returns the scaled up values for the scores based on current number of players and round duration
      */
     transformGhostTeamScoresForCurrentRound(ghostTeamScores: number[][]) {
-        return ghostTeamScores.map(x => x[1] * this.users.size * this.roundDurations[this.round])
+        return ghostTeamScores.map(x => x[1] * this.getNumberOfActiveUsers() * this.roundDurations[this.currentTopicIndex])
     }
 
     /**
      * Helper function to check if the mandatory questions are done for a user
-     * @param socketId the player to check for
+     * @param userId the player to check for
      * @returns if user has already asnwered x mandatory questions
      */
-    isMandatoryDone(socketId: string): boolean {
-        const user = this.users.get(socketId)
+    isMandatoryDone(userId: string): boolean {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         return !user.isOnMandatory
     }
@@ -319,8 +428,7 @@ export class Game {
                 res.set(
                     question.id,
                     new Statistic(
-                        question.question,
-                        question.answer,
+                        question,
                         question.difficulty,
                         currentAnswered + correct,
                         currentAttempts + attempts
@@ -333,42 +441,12 @@ export class Game {
     }
 
     /**
-     * Sets the number of attempts for a user depending on the difficulty of the question. The system is as follows:
-     * Hard or mandatory questions: 3 attempts
-     * Medium questions: 2 attempt
-     * Easy questions: 1 attempt
-     * @param user the user object that needs a question
-     * @param type the type of the question
-     * @param options the number of options for the multiple choice question
-     */
-    attemptSetter(user: User, difficulty: string, type: string): void {
-        if (user === undefined) throw Error("This user is not in this game")
-        if (type === "true/false") {
-            user.attempts = 1
-            return
-        }
-        switch (difficulty) {
-            case "mandatory" || "hard":
-                user.attempts = 3
-                break
-            case "medium":
-                user.attempts = 2
-                break
-            case "easy":
-                user.attempts = 1
-                break
-            default:
-                user.attempts = 3
-        }
-    }
-
-    /**
      * Checks how many attempts a user has left
-     * @param socketId the socket id of the user
+     * @param userId the id of the user
      * @returns the amount of attempts remaining
      */
-    attemptChecker(socketId: string): number {
-        const user = this.users.get(socketId)
+    attemptChecker(userId: string): number {
+        const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
         return user.attempts
     }
@@ -378,7 +456,7 @@ export class Game {
      * @returns the amount of mandatory questions
      */
     getMandatoryNum(): number {
-        const round = this.rounds[this.round]
-        return round.mandatory_questions.length
+        const topic = this.topics[this.currentTopicIndex]
+        return topic.mandatoryExercises.length
     }
 }

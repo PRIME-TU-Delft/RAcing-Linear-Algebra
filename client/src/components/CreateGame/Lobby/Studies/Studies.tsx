@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 import "./Studies.css"
+import { StudyElement } from "../../../RaceThemes/SharedUtils"
 
 interface Props {
     onSelectStudy: (study: string) => void
     onStepCompleted: () => void
+    availableStudies: StudyElement[]
 }
 
 function Studies(props: Props) {
@@ -22,57 +24,16 @@ function Studies(props: Props) {
 
     return (
         <div className="studies-container">
-            <div
-                className={"study-container " + studyClassHandler("cse")}
-                onClick={() => selectStudyHandler("cse")}
-            >
-                <div className="study-title">
-                    Computer Science and Engineering
+            {props.availableStudies.map((study, index) => (
+                <div
+                    key={index}
+                    className={"study-container " + studyClassHandler(study.abbreviation)}
+                    onClick={() => selectStudyHandler(study.abbreviation)}
+                >
+                    <div className="study-title">{study.name}</div>
+                    <div className="checked">&#9989;</div>
                 </div>
-                <div className="checked">&#9989;</div>
-            </div>
-            <div
-                className={"study-container " + studyClassHandler("ae")}
-                onClick={() => selectStudyHandler("ae")}
-            >
-                <div className="study-title">Aerospace Engineering</div>
-                <div className="checked">&#9989;</div>
-            </div>
-            {/*<div
-                className={"study-container " + studyClassHandler("ae")}
-                onClick={() => selectStudyHandler("ae")}
-            >
-                <div className="study-title">Aerospace Engineering</div>
-                <div className="checked">&#9989;</div>
-            </div>*/}
-            <div
-                className={"study-container " + studyClassHandler("mch")}
-                onClick={() => selectStudyHandler("mch")}
-            >
-                <div className="study-title">Mechanical Engineering</div>
-                <div className="checked">&#9989;</div>
-            </div>
-            <div
-                className={"study-container " + studyClassHandler("mar")}
-                onClick={() => selectStudyHandler("mar")}
-            >
-                <div className="study-title">Maritime Engineering</div>
-                <div className="checked">&#9989;</div>
-            </div>
-            <div
-                className={"study-container " + studyClassHandler("as")}
-                onClick={() => selectStudyHandler("as")}
-            >
-                <div className="study-title">Applied Sciences</div>
-                <div className="checked">&#9989;</div>
-            </div>
-            <div
-                className={"study-container " + studyClassHandler("ci")}
-                onClick={() => selectStudyHandler("ci")}
-            >
-                <div className="study-title">Civil Engineering</div>
-                <div className="checked">&#9989;</div>
-            </div>
+            ))}
         </div>
     )
 }

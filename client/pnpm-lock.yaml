@@ -6,10 +6,10 @@ settings:
 
 dependencies:
   '@emotion/react':
-    specifier: ^11.11.1
+    specifier: ^11.11.4
     version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
   '@emotion/styled':
-    specifier: ^11.11.0
+    specifier: ^11.11.5
     version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.3)(react@18.3.1)
   '@fortawesome/fontawesome-svg-core':
     specifier: ^6.4.0
@@ -20,8 +20,11 @@ dependencies:
   '@fortawesome/react-fontawesome':
     specifier: ^0.2.0
     version: 0.2.2(@fortawesome/fontawesome-svg-core@6.5.2)(react@18.3.1)
+  '@mui/icons-material':
+    specifier: ^7.0.1
+    version: 7.0.1(@mui/material@5.15.19)(@types/react@18.3.3)(react@18.3.1)
   '@mui/material':
-    specifier: ^5.14.18
+    specifier: ^5.15.19
     version: 5.15.19(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@mui/x-date-pickers':
     specifier: ^6.18.1
@@ -83,6 +86,9 @@ dependencies:
   react-hook-form:
     specifier: ^7.43.9
     version: 7.51.5(react@18.3.1)
+  react-icons:
+    specifier: ^5.5.0
+    version: 5.5.0(react@18.3.1)
   react-mathquill:
     specifier: ^1.0.3
     version: 1.0.3(react@18.3.1)
@@ -98,6 +104,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.11.1
     version: 6.23.1(react-dom@18.3.1)(react@18.3.1)
+  react-spinners:
+    specifier: ^0.14.1
+    version: 0.14.1(react-dom@18.3.1)(react@18.3.1)
   react-spring:
     specifier: ^9.7.1
     version: 9.7.3(@react-three/fiber@8.16.8)(konva@9.3.11)(react-dom@18.3.1)(react-konva@18.2.10)(react-native@0.74.2)(react-zdog@1.2.2)(react@18.3.1)(three@0.165.0)(zdog@1.1.3)
@@ -122,6 +131,9 @@ dependencies:
   typescript:
     specifier: ^4.9.5
     version: 4.9.5
+  uuid:
+    specifier: ^11.1.0
+    version: 11.1.0
   web-vitals:
     specifier: ^2.1.4
     version: 2.1.4
@@ -1733,6 +1745,13 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  /@babel/runtime@7.27.0:
+    resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
+
   /@babel/template@7.24.7:
     resolution: {integrity: sha512-jYqfPrU9JTF0PmPy1tLYHW4Mp4KlgxJD9l2nP9fD6yT/ICi554DmrWBAEYpIelzjHf1msDP3PxJIRt/nFNfBig==}
     engines: {node: '>=6.9.0'}
@@ -3106,6 +3125,23 @@ packages:
 
   /@mui/core-downloads-tracker@5.15.19:
     resolution: {integrity: sha512-tCHSi/Tomez9ERynFhZRvFO6n9ATyrPs+2N80DMDzp6xDVirbBjEwhPcE+x7Lj+nwYw0SqFkOxyvMP0irnm55w==}
+    dev: false
+
+  /@mui/icons-material@7.0.1(@mui/material@5.15.19)(@types/react@18.3.3)(react@18.3.1):
+    resolution: {integrity: sha512-x8Em7LISFQ6s/KeZj6ZKwJHq2WttRNe9KJLWFa72eQx7B53s/TzMKOEjGKB/YyhOx+bqqSv1pMvK373M4Xf07A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@mui/material': ^7.0.1
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@mui/material': 5.15.19(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@types/react': 18.3.3
+      react: 18.3.1
     dev: false
 
   /@mui/material@5.15.19(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
@@ -9037,6 +9073,7 @@ packages:
   /eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
@@ -12406,6 +12443,7 @@ packages:
 
   /lodash.omit@4.5.0:
     resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
     dev: false
 
   /lodash.sortby@4.7.0:
@@ -14744,6 +14782,14 @@ packages:
       react: 18.3.1
     dev: false
 
+  /react-icons@5.5.0(react@18.3.1):
+    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.3.1
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -15073,6 +15119,16 @@ packages:
       object-assign: 4.1.1
       react: 18.3.1
       react-is: 18.3.1
+    dev: false
+
+  /react-spinners@0.14.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-2Izq+qgQ08HTofCVEdcAQCXFEYfqTDdfeDQJeo/HHQiQJD4imOicNLhkfN2eh1NYEWVOX4D9ok2lhuDB0z3Aag==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /react-spring@9.7.3(@react-three/fiber@8.16.8)(konva@9.3.11)(react-dom@18.3.1)(react-konva@18.2.10)(react-native@0.74.2)(react-zdog@1.2.2)(react@18.3.1)(three@0.165.0)(zdog@1.1.3):
@@ -16525,6 +16581,7 @@ packages:
 
   /sudo-prompt@9.2.1:
     resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
   /supports-color@2.0.0:
@@ -17234,6 +17291,11 @@ packages:
   /utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+
+  /uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+    dev: false
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}

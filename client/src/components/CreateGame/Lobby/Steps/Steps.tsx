@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import "./Steps.css"
 import Step from "./Step/Step"
 import Themes from "../Themes/Themes"
@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify"
 import { host } from "../../../../utils/APIRoutes"
 import socket from "../../../../socket"
 import SelectName from "../SelectName/SelectName"
+import { LobbyDataContext } from "../../../../contexts/LobbyDataContext"
 
 interface SelectedRound {
     topicName: string,
@@ -41,9 +42,7 @@ function Steps(props: Props) {
     const [selectedStudy, setSelectedStudy] = useState("")
     const [selectedRounds, setSelectedRounds] = useState<SelectedRound[]>([])
 
-    const [availableRounds, setAvailableRounds] = useState<string[]>([])
-
-    const temporaryRounds = ["Eigen values", "Diagonalization", "Determinants", "Transformation", "Multiplication"]
+    const lobbyData = useContext(LobbyDataContext)
 
     /**
      * Function called when a step has been selected on the lobby screen
@@ -87,10 +86,18 @@ function Steps(props: Props) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "skip-browser-warning"
             },
         })
         const rounds = await res.json()
-        setAvailableRounds(rounds as string[])
+    }
+
+    const topicsFilterHandler = (filter: boolean) => {
+        if (filter) {
+            socket.emit("getLobbyData", selectedStudy)
+        } else {
+            socket.emit("getLobbyData")
+        }
     }
 
     return (
@@ -140,8 +147,8 @@ function Steps(props: Props) {
             <Step
                 stepNumber={3}
                 onStepSelected={stepSelectedHandler}
-                stepTitle="Select a study"
-                stepCaption="A study filters the available topics based on the study programme."
+                stepTitle="Select a study programme"
+                stepCaption="A study programme allows you to filter the available topics to only include those made with your program in mind."
                 stepContent={
                     <Studies
                         onSelectStudy={(study: string) => {
@@ -150,6 +157,7 @@ function Steps(props: Props) {
                             setActiveStep(4)
                         }}
                         onStepCompleted={() => stepCompletionHandler(3, true)}
+                        availableStudies={lobbyData.studies}
                     ></Studies>
                 }
                 stepActive={activeStep == 3 ? true : false}
@@ -160,8 +168,8 @@ function Steps(props: Props) {
             <Step
                 stepNumber={4}
                 onStepSelected={stepSelectedHandler}
-                stepTitle="Select rounds"
-                stepCaption="Rounds determine the topics for your race."
+                stepTitle="Select topics"
+                stepCaption="Each topic will be a seperate round in the race."
                 stepContent={
                     <Rounds
                         onRoundSelected={(rounds: SelectedRound[]) => {
@@ -170,7 +178,8 @@ function Steps(props: Props) {
                         onStepCompleted={(completed: boolean) =>
                             stepCompletionHandler(4, completed)
                         }
-                        availableRounds={availableRounds}
+                        availableRounds={lobbyData.topics}
+                        onFilterByStudyProgramme={(filter: boolean) => topicsFilterHandler(filter)}
                     ></Rounds>
                 }
                 stepActive={activeStep == 4 ? true : false}
