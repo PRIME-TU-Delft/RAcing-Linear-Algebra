@@ -11,8 +11,8 @@ function PowerUpsContainer() {
 
   useEffect(() => {
     if (powerUps.length > maxPowerUps) {
-      const removedFirstPowerUp = powerUps.slice(1)
-      setPowerUps(curr => [...removedFirstPowerUp]);
+      const expiringPowerUp = powerUps[0]
+      removePowerUp(expiringPowerUp)
     }
   }, [powerUps]);
 
@@ -23,14 +23,18 @@ function PowerUpsContainer() {
   const usePowerUp = (powerUp: PowerUp) => {
     if (powerUps.find(p => p == powerUp) != undefined) {
       // Call power up's function
-      const filteredPowerUps = powerUps.filter(p => p != powerUp)
-      setPowerUps(curr => [...filteredPowerUps])
+      removePowerUp(powerUp)
     }
+  }
+
+  const removePowerUp = (powerUp: PowerUp) => {
+    const filteredPowerUps = powerUps.filter(p => p != powerUp)
+    setPowerUps(curr => [...filteredPowerUps])
   }
 
   return (
     <div className="power-ups-container d-flex">
-      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS"})}>ADD</div>
+      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 8000})}>ADD</div>
         <div className="container d-flex justify-content-end align-items-center">
             <AnimatePresence>
                 {powerUps.map((powerUp) => (
@@ -46,7 +50,11 @@ function PowerUpsContainer() {
                       exit: { duration: 0.6 }
                     }}
                   >
-                    <PowerUpElement onClick={() => usePowerUp(powerUp)}/>
+                    <PowerUpElement 
+                        onClick={() => usePowerUp(powerUp)} 
+                        powerUp={powerUp}
+                        onPowerUpExpired={() => removePowerUp(powerUp)}
+                    />
                   </motion.div>
                 ))}
             </AnimatePresence>

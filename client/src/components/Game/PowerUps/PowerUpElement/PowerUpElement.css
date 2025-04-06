@@ -3,6 +3,7 @@
     width: 5rem;
     background-color: white;
     border-radius: 10px;
+    position: relative;
 
     margin-left: 0.5rem;
     margin-right: 0.5rem;
@@ -13,6 +14,32 @@
     cursor: pointer;
     transform: scale(1.1);
     transition-duration: 0.3s;
+}
+
+.power-up-expiring {
+    animation: flash 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.expiry-timer {
+    font-family: Cherry Bomb, sans-serif;
+    width: 100%;
+    font-size: 15px;
+    position: absolute;
+    bottom: 3px;
+    z-index: 1000;
+}
+
+@keyframes flash {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
 }
 
 @media screen and (max-height: 700px) {
