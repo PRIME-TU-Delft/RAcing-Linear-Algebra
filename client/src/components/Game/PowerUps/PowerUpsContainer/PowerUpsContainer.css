@@ -30,3 +30,80 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
+
+@media screen and (max-width: 1550px) {
+    .power-ups-container {
+        width: 20rem;
+        padding-right: 3rem;
+    }
+    
+}
+
+@media screen and (max-width: 1350px) {
+    .power-ups-container {
+        width: 15rem;
+        padding-right: 2rem;
+    }
+    
+}
+
+@media screen and (min-width: 1550px) {
+    .power-ups-container {
+        width: 22rem;
+        padding-right: 3rem;
+    }
+    
+}
+
+@media screen and (min-width: 1800px) {
+    .power-ups-container {
+        width: 22rem;
+        padding-right: 3.5rem;
+    }
+    
+}
+
+@media screen and (min-width: 2000px) {
+    .power-ups-container {
+        width: 25rem;
+        padding-right: 4rem;
+    }
+
+    .container-symbol-element > .symbol-image {
+        width: 50%;
+    }
+    
+}
+
+@media screen and (min-width: 2250px) {
+    .power-ups-container {
+        width: 21rem;
+        padding-right: 3.5rem;
+    }
+
+    .container-symbol-element > .symbol-image {
+        width: 45%;
+    }
+    
+}
+
+@media screen and (min-height: 800px) {
+    .power-ups-container {
+        height: 10vh;
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (min-height: 1000px) {
+    .power-ups-container {
+        height: 9vh;
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (min-height: 1250px) {
+    .power-ups-container {
+        height: 6vh;
+        margin-top: 3rem;
+    }
+}

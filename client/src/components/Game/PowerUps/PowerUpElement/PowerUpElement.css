@@ -6,4 +6,47 @@
 
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    transition-duration: 0.3s;
+}
+
+.power-up-element:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition-duration: 0.3s;
+}
+
+@media screen and (max-height: 700px) {
+    .power-up-element {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+
+@media screen and (min-height: 700px) {
+    .power-up-element {
+        width: 4rem;
+        height: 4rem;
+    }
+}
+
+@media screen and (min-height: 1250px) {
+    .power-up-element {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+@media screen and (min-height: 1450px) {
+    .power-up-element {
+        width: 4rem;
+        height: 4rem;
+    }
+}
+
+@media screen and (min-height: 1800px) {
+    .power-up-element {
+        width: 5rem;
+        height: 5rem;
+    }
 }

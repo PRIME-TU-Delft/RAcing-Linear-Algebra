@@ -40,7 +40,11 @@ function PowerUpsContainer() {
                     initial={{ opacity: 0, scale: 0.8, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
+                    
+                    transition={{ 
+                      duration: 0.3,
+                      exit: { duration: 0.6 }
+                    }}
                   >
                     <PowerUpElement onClick={() => usePowerUp(powerUp)}/>
                   </motion.div>
