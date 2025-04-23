@@ -51,7 +51,7 @@ function StartGame(props: Props) {
     const nameIncompleteText = (
         <div className="incomplete">
             <FontAwesomeIcon icon={faExclamationTriangle} /> You have not
-            selected a name.
+            selected a team name.
         </div>
     )
 
@@ -75,14 +75,14 @@ function StartGame(props: Props) {
     const studyIncompleteText = (
         <div className="incomplete">
             <FontAwesomeIcon icon={faExclamationTriangle} /> You have not
-            selected a study.
+            selected a study programme.
         </div>
     )
 
     // Text to display if study is selected
     const studyCompleteText = (
         <div className="complete">
-            <FontAwesomeIcon icon={faCheck} /> Selected study:{" "}
+            <FontAwesomeIcon icon={faCheck} /> Selected study programme:{" "}
             {props.selectedStudy.toUpperCase()}
         </div>
     )
