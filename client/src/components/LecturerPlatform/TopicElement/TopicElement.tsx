@@ -538,11 +538,17 @@ function TopicElement(props: Props) {
                                 </div>
                                 <div className="studies-list">
                                     {studies.map((study, index) => (
-                                        <div key={index} className="study-element">
-                                            {study.abbreviation}
-                                        </div>
+                                        <div 
+                                        key={index}
+                                        className="study-element"
+                                        data-tooltip-id="study-tooltip"
+                                        data-tooltip-content={study.name}
+                                    >
+                                        {study.abbreviation}
+                                    </div>
                                     ))}
                                 </div>
+                                <Tooltip id="study-tooltip" place="top" style={{zIndex: "9999"}}/>
                             </div>
                         ) : (
                             <StudyEdit studies={studies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges.studies}></StudyEdit>

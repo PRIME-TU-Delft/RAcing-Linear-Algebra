@@ -171,9 +171,9 @@ function ExerciseElement(props: Props) {
                             <div>
                                 Difficulty:
                             </div>
-                            <div>
+                            {/* <div>
                                 Attempts:
-                            </div>
+                            </div> */}
                         </div>
                         <div className="d-flex col" style={{flexDirection: "column", textAlign: props.isIndependentElement ? "left" : "inherit"}}>
                             {!props.beingEdited && !beingEdited ? (
@@ -241,7 +241,7 @@ function ExerciseElement(props: Props) {
                                     </TextField>
                                 </div>
                             )}
-                            {!props.beingEdited && !beingEdited ? (
+                            {/* {!props.beingEdited && !beingEdited ? (
                                 <div>
                                     {props.numOfAttempts}
                                 </div>
@@ -263,7 +263,7 @@ function ExerciseElement(props: Props) {
                                         <option value="2">2</option>
                                     </TextField>
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </AccordionDetails>
