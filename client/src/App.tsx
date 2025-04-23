@@ -36,6 +36,7 @@ import { TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
+import { StudiesContext } from "./contexts/StudiesContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -157,6 +158,7 @@ function App() {
     }, [roundDuration, startTimer])
 
     const gameStartHandler = () => {
+        socket.emit("getAllStudies")
         setStartTimer(curr => true)
         if (isPlayer) {
             navigate("/Game")
@@ -571,62 +573,66 @@ function App() {
                     }
                 ></Route>
                 <Route path="/Game" element={
-                    <TimeContext.Provider value={totalSeconds}>
-                        <RaceDataContext.Provider value={{
-                            theme: theme,
-                            ghostTeams: ghostTeams,
-                            checkpoints: [],
-                            selectedMap: trainMaps[0]
-                        }}>
-                            <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
-                                <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
-                                    <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                        <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                            <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
-                                                <StreakContext.Provider value={streaks}>
-                                                    <RaceProgressContext.Provider value={stopShowingRace}>
-                                                        <Game 
-                                                            theme={theme} 
-                                                            roundDuration={roundDuration} 
-                                                            roundStarted={roundstarted} 
-                                                            isFirstRound={isFirstRound} 
-                                                            onRoundEnded={leaderboardNavigationHandler} 
-                                                            playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
-                                                            onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}/>
-                                                    </RaceProgressContext.Provider>
-                                                </StreakContext.Provider>
-                                            </GraspleQuestionContext.Provider>
-                                        </QuestionContext.Provider>
-                                    </ScoreContext.Provider>
-                                </DifficultyAvailabilityContext.Provider>
-                            </ChoosingDifficultyContext.Provider>
-                            
-                        </RaceDataContext.Provider>
-                    </TimeContext.Provider>
+                    <StudiesContext.Provider value={allStudies}>
+                        <TimeContext.Provider value={totalSeconds}>
+                            <RaceDataContext.Provider value={{
+                                theme: theme,
+                                ghostTeams: ghostTeams,
+                                checkpoints: [],
+                                selectedMap: trainMaps[0]
+                            }}>
+                                <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
+                                    <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
+                                        <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                            <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                                <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
+                                                    <StreakContext.Provider value={streaks}>
+                                                        <RaceProgressContext.Provider value={stopShowingRace}>
+                                                            <Game 
+                                                                theme={theme} 
+                                                                roundDuration={roundDuration} 
+                                                                roundStarted={roundstarted} 
+                                                                isFirstRound={isFirstRound} 
+                                                                onRoundEnded={leaderboardNavigationHandler} 
+                                                                playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
+                                                                onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}/>
+                                                        </RaceProgressContext.Provider>
+                                                    </StreakContext.Provider>
+                                                </GraspleQuestionContext.Provider>
+                                            </QuestionContext.Provider>
+                                        </ScoreContext.Provider>
+                                    </DifficultyAvailabilityContext.Provider>
+                                </ChoosingDifficultyContext.Provider>
+                                
+                            </RaceDataContext.Provider>
+                        </TimeContext.Provider>
+                    </StudiesContext.Provider>
                 } />
                 <Route
                     path="/Lecturer"
                     element={
-                        <TimeContext.Provider value={totalSeconds}>
-                            <RaceDataContext.Provider value={{
-                            theme: theme,
-                            ghostTeams: ghostTeams,
-                            checkpoints: [],
-                            selectedMap: trainMaps[0]
-                            }}>
-                                <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                   <RaceProgressContext.Provider value={stopShowingRace}>
-                                    <Lecturer
-                                            lobbyId={lobbyId}
-                                            teamName={teamName}
-                                            ghostTeams={ghostTeams}
-                                            theme={theme}
-                                            roundDuration={roundDuration}
-                                        />
-                                   </RaceProgressContext.Provider>
-                                </ScoreContext.Provider>
-                            </RaceDataContext.Provider>
-                        </TimeContext.Provider>
+                        <StudiesContext.Provider value={allStudies}>
+                            <TimeContext.Provider value={totalSeconds}>
+                                <RaceDataContext.Provider value={{
+                                theme: theme,
+                                ghostTeams: ghostTeams,
+                                checkpoints: [],
+                                selectedMap: trainMaps[0]
+                                }}>
+                                    <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                    <RaceProgressContext.Provider value={stopShowingRace}>
+                                        <Lecturer
+                                                lobbyId={lobbyId}
+                                                teamName={teamName}
+                                                ghostTeams={ghostTeams}
+                                                theme={theme}
+                                                roundDuration={roundDuration}
+                                            />
+                                    </RaceProgressContext.Provider>
+                                    </ScoreContext.Provider>
+                                </RaceDataContext.Provider>
+                            </TimeContext.Provider>
+                        </StudiesContext.Provider>
                     }
                 ></Route>
                 <Route

@@ -233,8 +233,30 @@ export function getColorForStudy(study: string) {
             return { mainColor: "#9E1976", highlightColor: "#2AD8D3" }
         case "as":
             return { mainColor: "#4ABF32", highlightColor: "#C652E2" }
-         case "ce":
+        case "ce":
             return { mainColor: "#FFFF5A", highlightColor: "#539AE0" }
+        case "am":
+            return { mainColor: "#556B2F", highlightColor: "#FFD700" }
+        case "ap":
+            return { mainColor: "#1E90FF", highlightColor: "#FF6F61" }
+        case "aubs":
+            return { mainColor: "#DAA520", highlightColor: "#6A5ACD" }
+        case "ct":
+            return { mainColor: "#8A2BE2", highlightColor: "#FFB347" }
+        case "ect":
+            return { mainColor: "#20B2AA", highlightColor: "#F08080" }
+        case "ee":
+            return { mainColor: "#4169E1", highlightColor: "#FF69B4" }
+        case "ide":
+            return { mainColor: "#FF4500", highlightColor: "#7FFFD4" }
+        case "lst":
+            return { mainColor: "#00CED1", highlightColor: "#FF8C00" }
+        case "mst":
+            return { mainColor: "#DC143C", highlightColor: "#20B2AA" }
+        case "nb":
+            return { mainColor: "#8B008B", highlightColor: "#FFDE59" }
+        case "sepam":
+            return { mainColor: "#228B22", highlightColor: "#FF69B4" }
         default:
             return { mainColor: "#003B91", highlightColor: "#D585FF" }
     }

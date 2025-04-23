@@ -19,7 +19,7 @@ function ColorationInfo() {
                     <RaceLapCarousel></RaceLapCarousel>
                 </div>
                 <div className="horizontal-line-seperator"></div>
-                <div className="carousel-title">{"The fill color indicates the team's study."}</div>
+                <div className="carousel-title">{"The fill color indicates the team's study programme."}</div>
                 <div className="study-carousel-container">
                     <StudyCarousel></StudyCarousel>
                 </div>

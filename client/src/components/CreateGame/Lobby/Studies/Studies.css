@@ -17,6 +17,12 @@
     transition-duration: 0.3s;
 }
 
+.study-search-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .study-title {
     height: 100%;
     display: flex;
