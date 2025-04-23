@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText, Snackbar, Typography, MenuItem} from "@mui/material"
 import "./TopicElement.css"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faBarsStaggered, faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
@@ -11,6 +11,7 @@ import { Exercise, Study, Topic } from "../SharedUtils"
 import socket from "../../../socket"
 import { TopicDataContext } from "../../../contexts/TopicDataContext"
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
+import { ExistingExercisesContext } from "../ExistingExercisesContext"
 
 
 interface ExerciseListElement {
@@ -47,6 +48,8 @@ function TopicElement(props: Props) {
     const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1)
 
+    const existingExerciseIds = useContext(ExistingExercisesContext);
+    
     const [saveChanges, setSaveChanges] = useState<TopicChangesState>({
         name: false,
         studies: false,
@@ -75,7 +78,111 @@ function TopicElement(props: Props) {
     const [matchingExercises, setMatchingExercises] = useState<number[]>([])
     const [saveTopicChanges, setSaveTopicChanges] = useState<boolean>(false)
     const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false)
+    const notificationFlags = useRef<{ [key: string]: boolean }>({});
 
+    const [isBatchDialogOpen, setIsBatchDialogOpen] = useState<boolean>(false);
+    const [batchDifficulty, setBatchDifficulty] = useState<string>("Easy");
+    const [batchText, setBatchText] = useState<string>("");
+
+    const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
+        // only add a notification if it hasn't already been shown
+        if (notificationFlags.current[incorrectTopicField]) return;
+        notificationFlags.current[incorrectTopicField] = true;
+
+        let message = "";
+        switch (incorrectTopicField) {
+            case "name":
+                message = "The topic must have a name set";
+                break;
+            case "studies":
+                message = "The topic must have at least one study programme selected";
+                break;
+            case "exercises":
+                message = "The topic must have at least one exercise";
+                break;
+            default:
+                return;
+        }
+
+        Store.addNotification({
+            title: "Warning",
+            message: message,
+            type: "warning",
+            insert: "top",
+            container: "bottom-right",
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        });
+
+        // Reset the flag after the notification has finished dismissing (with a small buffer)
+        setTimeout(() => {
+            notificationFlags.current[incorrectTopicField] = false;
+        }, 5100);
+    };
+
+    const createBatchExercisesHandler = () => {
+        const lines = batchText.split('\n').map(line => line.trim()).filter(line => line.length > 0)
+        let newExercisesBatch: ExerciseListElement[] = []
+        lines.forEach(line => {
+            let extractedUrl = line
+            if (line.includes("<iframe")) {
+                const srcMatch = line.match(/src="([^"]+)"/)
+                if (srcMatch && srcMatch[1]) {
+                    extractedUrl = srcMatch[1]
+                }
+            }
+            if (!extractedUrl.includes("embed.grasple.com/exercises")) return
+      
+            const idMatch = extractedUrl.match(/id=(\d+)$/)
+            let exerciseId = 0
+            if (idMatch && idMatch[1]) {
+                exerciseId = parseInt(idMatch[1], 10)
+            }
+
+            if (existingExerciseIds
+                        .includes(exerciseId) 
+                && !exercises
+                        .map(exercise => exercise.exercise.exerciseId)
+                        .includes(exerciseId)
+                && !newExercisesBatch
+                        .map(exercise => exercise.exercise.exerciseId)
+                        .includes(exerciseId)
+            ) {
+                // In this case, we just link the existing exercise without asking to prevent overhead of notifications
+                handleExerciseSelect(exerciseId)
+            } else if (
+                exercises
+                        .map(exercise => exercise.exercise.exerciseId)
+                        .includes(exerciseId)
+                || newExercisesBatch
+                        .map(exercise => exercise.exercise.exerciseId)
+                        .includes(exerciseId)
+            ) {
+                // already in the topic, skip it
+                console.log("Exercise already exists in the topic, skipping it")
+                return
+            }
+
+            const newExercise: Exercise = {
+                _id: "",
+                name: "Exercise " + exerciseId.toString(),
+                exerciseId: exerciseId,
+                difficulty: batchDifficulty,
+                url: extractedUrl,
+                numOfAttempts: 1,
+                isMandatory: false
+            }
+            newExercisesBatch.push({ exercise: newExercise, incompleteExercise: false });
+        })
+        if (newExercisesBatch.length > 0) {
+            setExercises(curr => [...newExercisesBatch, ...curr])
+        }
+        setIsBatchDialogOpen(false)
+        setBatchText("")
+    }
+    
     const anyUnsavedChanges = () => {
         return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
     }
@@ -96,55 +203,6 @@ function TopicElement(props: Props) {
                 onScreen: true
             }
         })
-    }
-
-    const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
-        switch (incorrectTopicField) {
-            case "name":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have a name set",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-            
-            case "studies":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one study programme selected",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-
-            case "exercises":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one exercise",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-            
-            default:
-                break
-        }
     }
 
     const editingExerciseHandler = (index: number) => {
@@ -305,7 +363,6 @@ function TopicElement(props: Props) {
         setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
         props.onLinkExercise(existingExerciseGraspleId)
         setIsExistingExerciseDialogOpen(false)
-        showSuccessNotification("Added the exercise")
     }
 
     const onDragEnd = (result: DropResult) => {
@@ -549,11 +606,17 @@ function TopicElement(props: Props) {
                                 </div>
                                 <div className="studies-list">
                                     {studies.map((study, index) => (
-                                        <div key={index} className="study-element">
-                                            {study.abbreviation}
-                                        </div>
+                                        <div 
+                                        key={index}
+                                        className="study-element"
+                                        data-tooltip-id="study-tooltip"
+                                        data-tooltip-content={study.name}
+                                    >
+                                        {study.abbreviation}
+                                    </div>
                                     ))}
                                 </div>
+                                <Tooltip id="study-tooltip" place="top" style={{zIndex: "9999"}}/>
                             </div>
                         ) : (
                             <StudyEdit studies={studies} onStudiesSelected={studiesChangedHandler} saveChanges={saveChanges.studies}></StudyEdit>
@@ -579,6 +642,7 @@ function TopicElement(props: Props) {
                                 </Tooltip>
                                 <Tooltip id="reorder-tooltip" place="top" style={{zIndex: "9999"}}>
                                 </Tooltip>
+                                <Tooltip id="batch-tooltip" place="top" style={{ zIndex: "9999" }} />
                                 <FontAwesomeIcon
                                     icon={faCircleInfo}
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
@@ -608,7 +672,16 @@ function TopicElement(props: Props) {
                                     data-tooltip-id="reorder-tooltip"
                                     data-tooltip-place="top"
                                     data-tooltip-html="Reorder mandatory exercises"/>
+                                <FontAwesomeIcon 
+                                    icon={faFileImport} 
+                                    className="batch-exercise-icon" 
+                                    onClick={() => setIsBatchDialogOpen(true)}
+                                    data-tooltip-id="batch-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Create batch of exercises"
+                                />
                                 </>
+                                
                             ) : (
                                 <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setExercisesMode(curr => "edit")}/>
                             )}
@@ -631,6 +704,7 @@ function TopicElement(props: Props) {
                                         onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
                                         isIndependentElement={false}
                                         isMandatory={exerciseElement.exercise.isMandatory}
+                                        currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
                                     ></ExerciseElement>
                                     {exercisesMode === "edit" && (
                                         <div className="d-flex col  m-auto">
@@ -679,6 +753,7 @@ function TopicElement(props: Props) {
                                                                         onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
                                                                         isIndependentElement={false}
                                                                         isMandatory={exerciseElement.exercise.isMandatory}
+                                                                        currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
                                                                     />
                                                                 </div>
                                                             )}
@@ -717,34 +792,40 @@ function TopicElement(props: Props) {
                 </Dialog>
 
                 <Dialog open={isLinkDialogOpen} onClose={() => setIsLinkDialogOpen(false)}>
-                <DialogTitle>Link Existing Exercise</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Search by Grasple ID"
-                        type="text"
-                        fullWidth
-                        value={searchInput}
-                        onChange={handleSearchInputChange}
-                    />
-                    <List>
-                        {matchingExercises.map((graspleId, index) => (
-                            <ListItem className="grasple-id-list-item" key={index} onClick={() => handleExerciseSelect(graspleId)}>
-                                <ListItemText primary={`#${graspleId}`} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsLinkDialogOpen(false)}>Close</Button>
-                </DialogActions>
-            </Dialog>
+                    <DialogTitle>Link Existing Exercise</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Search by Grasple ID"
+                            type="text"
+                            fullWidth
+                            value={searchInput}
+                            onChange={handleSearchInputChange}
+                        />
+                        { matchingExercises.length === 0 && searchInput.length > 0 ? (
+                            <Typography variant="body2" align="left" style={{ marginTop: "0.5rem", marginLeft: "0.1rem", color: "grey" }}>
+                                Exercise not found
+                            </Typography>
+                        ) : (
+                            <List>
+                                {matchingExercises.map((graspleId, index) => (
+                                    <ListItem className="grasple-id-list-item" key={index} onClick={() => handleExerciseSelect(graspleId)}>
+                                        <ListItemText primary={`#${graspleId}`} />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsLinkDialogOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
 
             <Dialog open={isExistingExerciseDialogOpen} onClose={() => setIsExistingExerciseDialogOpen(false)}>
                 <DialogTitle>Link Existing Exercise</DialogTitle>
                 <DialogContent>
-                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to add it to this topic directly?`}
+                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to import the metadata for this exercise?`}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsExistingExerciseDialogOpen(false)} color="primary">Cancel</Button>
@@ -752,11 +833,53 @@ function TopicElement(props: Props) {
                 </DialogActions>
             </Dialog>
 
-                {anyUnsavedChanges() && (
-                    <div className="topic-save-icon">
-                        <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>
-                    </div>
-                )}
+            <Dialog open={isBatchDialogOpen} onClose={() => setIsBatchDialogOpen(false)} fullWidth maxWidth="sm">
+                <DialogTitle>Create a Batch of Exercises</DialogTitle>
+                <DialogContent sx={{ overflow: 'hidden' }}>
+                    <Typography variant="body2" color="textSecondary" style={{ marginBottom: "1.5rem" }}>
+                        Paste one or more iframe codes (each on a new line). The system will automatically extract the URL and exercise ID from each iframe. Indicate the difficulty of the exercises (same difficulty per batch) and click "Create" to add the exercises.
+                    </Typography>
+                    
+                    <TextField
+                        select
+                        label="Select Difficulty"
+                        value={batchDifficulty}
+                        onChange={e => setBatchDifficulty(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                        >
+                        <MenuItem value="Easy">Easy</MenuItem>
+                        <MenuItem value="Medium">Medium</MenuItem>
+                        <MenuItem value="Hard">Hard</MenuItem>
+                    </TextField>
+                    <TextField 
+                        label="Paste iframe codes (one per line)" 
+                        placeholder={`e.g. \n<iframe ...></iframe> \n<iframe ...></iframe>`}
+                        multiline
+                        rows={8}
+                        value={batchText}
+                        onChange={(e) => setBatchText(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                        style={{ marginTop: "1rem" }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsBatchDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={createBatchExercisesHandler} variant="contained">Create</Button>
+                </DialogActions>
+            </Dialog>
+            
+            <Snackbar
+                open={anyUnsavedChanges()}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                message="You have unsaved changes."
+                action={
+                    <Button color="primary" size="medium" onClick={saveTopicChangesHandler}>
+                        Save
+                    </Button>
+                }
+            />
         </div>
     )
 }
