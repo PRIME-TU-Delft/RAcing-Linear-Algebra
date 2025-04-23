@@ -1,35 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./StudyCarousel.css"
 import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css';
 import { getColorForStudy } from "../../RaceThemes/Ghosts/GhostService";
+import { StudiesContext } from "../../../contexts/StudiesContext";
 
 function StudyCarousel() {
-    const studies = [{
-        study: "Computer Science",
-        abbreviation: "CSE"
-    },
-    {
-        study: "Aerospace Engineering",
-        abbreviation: "AE"
-    },
-    {
-        study: "Civil Engineering",
-        abbreviation: "CE"
-    },
-    {
-        study: "Maritime Engineering",
-        abbreviation: "MAR"
-    },
-    {
-        study: "Applied Sciences",
-        abbreviation: "AS"
-    },
-    {
-        study: "Mechanical Engineering",
-        abbreviation: "MCH"
-    }]
-
+    const studies = useContext(StudiesContext)
     return(
         <div>
             <Carousel  additionalTransfrom={0}
@@ -98,7 +75,7 @@ function StudyCarousel() {
                         {studies.map((study, index) => (
                             <div key={index} className="study-carousel-item">
                                 <div className="study-color" style={{backgroundColor: getColorForStudy(study.abbreviation).mainColor}}></div>
-                                <div className="carousel-item-caption">{study.study}</div>
+                                <div className="carousel-item-caption">{study.name}</div>
                             </div>
                         ))}
             </Carousel>
