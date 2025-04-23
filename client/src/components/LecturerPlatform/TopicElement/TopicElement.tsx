@@ -1,6 +1,6 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText} from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText, Snackbar, Typography} from "@mui/material"
 import "./TopicElement.css"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faBarsStaggered, faCircleInfo, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
@@ -75,7 +75,46 @@ function TopicElement(props: Props) {
     const [matchingExercises, setMatchingExercises] = useState<number[]>([])
     const [saveTopicChanges, setSaveTopicChanges] = useState<boolean>(false)
     const [unsavedTopicChanges, setUnsavedTopicChanges] = useState<boolean>(false)
+    const notificationFlags = useRef<{ [key: string]: boolean }>({});
 
+    const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
+        // only add a notification if it hasn't already been shown
+        if (notificationFlags.current[incorrectTopicField]) return;
+        notificationFlags.current[incorrectTopicField] = true;
+
+        let message = "";
+        switch (incorrectTopicField) {
+            case "name":
+                message = "The topic must have a name set";
+                break;
+            case "studies":
+                message = "The topic must have at least one study programme selected";
+                break;
+            case "exercises":
+                message = "The topic must have at least one exercise";
+                break;
+            default:
+                return;
+        }
+
+        Store.addNotification({
+            title: "Warning",
+            message: message,
+            type: "warning",
+            insert: "top",
+            container: "bottom-right",
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        });
+
+        // Reset the flag after the notification has finished dismissing (with a small buffer)
+        setTimeout(() => {
+            notificationFlags.current[incorrectTopicField] = false;
+        }, 5100);
+    };
+    
     const anyUnsavedChanges = () => {
         return unsavedChanges.name || unsavedChanges.studies || unsavedChanges.exercises
     }
@@ -96,55 +135,6 @@ function TopicElement(props: Props) {
                 onScreen: true
             }
         })
-    }
-
-    const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
-        switch (incorrectTopicField) {
-            case "name":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have a name set",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-            
-            case "studies":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one study programme selected",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-
-            case "exercises":
-                Store.addNotification({
-                    title: "Warning",
-                    message: "The topic must have at least one exercise",
-                    type: "warning",
-                    insert: "top",
-                    container: "bottom-right",
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                })
-                break
-            
-            default:
-                break
-        }
     }
 
     const editingExerciseHandler = (index: number) => {
@@ -305,7 +295,6 @@ function TopicElement(props: Props) {
         setExercises(curr => [...curr.filter((exercise, index) => exercise.incompleteExercise === false)])
         props.onLinkExercise(existingExerciseGraspleId)
         setIsExistingExerciseDialogOpen(false)
-        showSuccessNotification("Added the exercise")
     }
 
     const onDragEnd = (result: DropResult) => {
@@ -717,34 +706,40 @@ function TopicElement(props: Props) {
                 </Dialog>
 
                 <Dialog open={isLinkDialogOpen} onClose={() => setIsLinkDialogOpen(false)}>
-                <DialogTitle>Link Existing Exercise</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Search by Grasple ID"
-                        type="text"
-                        fullWidth
-                        value={searchInput}
-                        onChange={handleSearchInputChange}
-                    />
-                    <List>
-                        {matchingExercises.map((graspleId, index) => (
-                            <ListItem className="grasple-id-list-item" key={index} onClick={() => handleExerciseSelect(graspleId)}>
-                                <ListItemText primary={`#${graspleId}`} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsLinkDialogOpen(false)}>Close</Button>
-                </DialogActions>
-            </Dialog>
+                    <DialogTitle>Link Existing Exercise</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Search by Grasple ID"
+                            type="text"
+                            fullWidth
+                            value={searchInput}
+                            onChange={handleSearchInputChange}
+                        />
+                        { matchingExercises.length === 0 && searchInput.length > 0 ? (
+                            <Typography variant="body2" align="left" style={{ marginTop: "0.5rem", marginLeft: "0.1rem", color: "grey" }}>
+                                Exercise not found
+                            </Typography>
+                        ) : (
+                            <List>
+                                {matchingExercises.map((graspleId, index) => (
+                                    <ListItem className="grasple-id-list-item" key={index} onClick={() => handleExerciseSelect(graspleId)}>
+                                        <ListItemText primary={`#${graspleId}`} />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsLinkDialogOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
 
             <Dialog open={isExistingExerciseDialogOpen} onClose={() => setIsExistingExerciseDialogOpen(false)}>
                 <DialogTitle>Link Existing Exercise</DialogTitle>
                 <DialogContent>
-                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to add it to this topic directly?`}
+                    {`The exercise with Grasple ID #${existingExerciseGraspleId} already exists in the system. Do you want to import the metadata for this exercise?`}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsExistingExerciseDialogOpen(false)} color="primary">Cancel</Button>
@@ -752,11 +747,16 @@ function TopicElement(props: Props) {
                 </DialogActions>
             </Dialog>
 
-                {anyUnsavedChanges() && (
-                    <div className="topic-save-icon">
-                        <FontAwesomeIcon icon={faFloppyDisk} size="xl" onClick={() => saveTopicChangesHandler()}/>
-                    </div>
-                )}
+            <Snackbar
+                open={anyUnsavedChanges()}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                message="You have unsaved changes."
+                action={
+                    <Button color="primary" size="medium" onClick={saveTopicChangesHandler}>
+                        Save
+                    </Button>
+                }
+            />
         </div>
     )
 }
