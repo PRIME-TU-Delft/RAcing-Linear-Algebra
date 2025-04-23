@@ -13,7 +13,8 @@ export async function saveNewScore(
     topicId: string,
     roundDuration: number,
     study: string,
-    accuracy: number
+    accuracy: number,
+    isFakeTeam?: boolean
 ) {
     const newScore: IScore = new Score({
         teamname,
@@ -23,6 +24,7 @@ export async function saveNewScore(
         roundDuration,
         study,
         accuracy,
+        isFakeTeam: isFakeTeam != null ? isFakeTeam : false,
     })
     if (scores === null || scores.length === 0) return    
     await Score.create(newScore)
@@ -152,26 +154,28 @@ async function getBinsOfTeams(topicId: string, numberOfBins: number, excludeTeam
  * @returns ghost teams for current round
  */
 export async function getGhostTeams(topicId: string) {
-    const config = {
-        numberOfTopTeamsToGet: 3, // Currently we take top 3 teams fixed
-        numberOfTeamsToRandomlySample: 15, // We randomly sample for 15 additional teams (with binning)
-        numberOfBins: 5 // Number of bins to create before sampling
-    }
-    const topicIdStr: string = topicId.toString()
+    const totalTeams = await Score.countDocuments({ topicId: new ObjectId(topicId) })
+    if (totalTeams === 0) return []
 
-    const bestTeams = await getBestTeams(topicIdStr, config.numberOfTopTeamsToGet)
+    const numberOfTopTeamsToGet = Math.min(3, totalTeams)
+    const numberOfBins = Math.min(5, totalTeams)
+
+    const topicIdStr = topicId.toString()
+    const bestTeams = await getBestTeams(topicIdStr, numberOfTopTeamsToGet)
     const bestTeamIds = bestTeams.map(x => x._id)
+
     let ghostTeams = bestTeams
-
-    const teamBins = await getBinsOfTeams(topicIdStr, config.numberOfBins, bestTeamIds)
-
+    const teamBins = await getBinsOfTeams(topicIdStr, numberOfBins, bestTeamIds)
+    
     for (const bin of teamBins) {
-        const sampledTeams = sample(bin.documents, {size: 3, replace: false})
+      const sampleSize = Math.min(3, bin.documents.length)
+      if (sampleSize > 0) {
+        const sampledTeams = sample(bin.documents, { size: sampleSize, replace: false })
         ghostTeams = ghostTeams.concat(sampledTeams)
+      }
     }
-
     return shuffle(ghostTeams)
-}
+  }
 
 /**
  * Retrieves the final score of the best performing team for a given round
@@ -181,6 +185,9 @@ export async function getGhostTeams(topicId: string) {
 export async function getBestTeamFinalScore(topicId: string) {
     const topicIdStr: string = topicId.toString()
     const bestTeams = await getBestTeams(topicIdStr, 1)
+    if (bestTeams[0] == null || bestTeams[0].lastElement === undefined) {
+        return 1
+      }
     const bestTeam = bestTeams[0]
     return bestTeam.lastElement
 }

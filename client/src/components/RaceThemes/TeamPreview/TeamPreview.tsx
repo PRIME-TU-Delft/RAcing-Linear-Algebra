@@ -88,7 +88,7 @@ function TeamPreview(props: Props) {
     }, [showMainTeam])
 
     useEffect(() => {
-        if (numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) setShowMainTeam(curr => true)
+        if ((numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) || props.ghostTeams.length == 0) setShowMainTeam(curr => true)
     }, [numberOfGhostTeamAnimationsCompleted])
 
     useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.15], 10000)

@@ -304,8 +304,7 @@ function App() {
         }
 
         function onRaceStarted() {
-            socket.emit("getNewQuestion")
-            socket.emit("getMandatoryNum")
+            socket.emit("checkForDisabledDifficulties")
             gameStartHandler()
         }
 
@@ -365,7 +364,7 @@ function App() {
 
         function onDisableDifficulty(difficulty: string) {
             setDifficultyAvailability(curr => {
-                switch(difficulty) {
+                switch(difficulty.toLowerCase()) {
                     case "easy":
                         return { ...curr, easy: false }
                     case "medium":
@@ -395,12 +394,11 @@ function App() {
             setAllRoundsFinished(curr => false)
             setStopShowingRace(false)
 
+            socket.emit("checkForDisabledDifficulties")
+
             const newExpiry = new Date();
             newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
             restart(newExpiry);
-            
-            socket.emit("getMandatoryNum")
-            socket.emit("getNewQuestion")
             
             if (isPlayer) {
                 navigate("/Game")
@@ -430,6 +428,11 @@ function App() {
                 }
             });
         }
+
+        function onReadyForQuestionRequest() {
+            socket.emit("getMandatoryNum")
+            socket.emit("getNewQuestion")
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -458,6 +461,7 @@ function App() {
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
         socket.on("blocked-user-reconnection", onBlockedUserReconnection)
         socket.on("already-in-room", onPlayerAlreadyInLobby)
+        socket.on("ready-for-question-request", onReadyForQuestionRequest)
     }, [])
 
     // useEffect(() => {

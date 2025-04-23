@@ -167,6 +167,19 @@ module.exports = {
                                 user.questions = new Map()
                             }
                         }              
+
+                        const difficulties = ["Easy", "Medium", "Hard"]
+                        for (const difficulty of difficulties) {
+                                const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                            if (usedUpAllQuestionsForDifficulty) {
+                                const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                                socket.emit("disable-difficulty", difficulty)
+        
+                                if (answeredAllQuestions) {
+                                    socket.emit("answered-all-questions")
+                                }
+                            }
+                        }
                         
                         game.totalScore += user?.score as number
                         game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
@@ -186,6 +199,23 @@ module.exports = {
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
+
+                    // Also make sure a difficulty is disabled if no questions are available for a specific difficulty
+                    const difficulties = ["Easy", "Medium", "Hard"]
+                    for (const difficulty of difficulties) {
+                        const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                        
+                        console.log("Used up all questions for difficulty: " + difficulty + " " + usedUpAllQuestionsForDifficulty.toString())
+                        if (usedUpAllQuestionsForDifficulty) {
+                            const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                            socket.emit("disable-difficulty", difficulty)
+
+                            if (answeredAllQuestions) {
+                                socket.emit("answered-all-questions")
+                            }
+                        }
+                    }
+
                     let attempts =  user?.questions.size
                     if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
@@ -202,8 +232,8 @@ module.exports = {
                     socket.emit("score", teamScoreData)
                     socket.emit("currentStreaks", user?.streaks)
                     socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, attempts, user?.score)
-                }
-
+                }                
+                
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                 io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
             })
@@ -527,7 +557,8 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
-
+                    console.log("INTERPOLATED GHOSTS")
+                    console.log(interpolatedGhostTeams)
                     io.to(`players${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                     io.to(`lecturer${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
@@ -659,6 +690,29 @@ module.exports = {
                 } catch (error) {
                     console.log(error)
                 }
+            })
+
+            socket.on("checkForDisabledDifficulties", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                const game = getGame(lobbyId)
+
+                // Also make sure a difficulty is disabled if no questions are available for a specific difficulty
+                const difficulties = ["Easy", "Medium", "Hard"]
+                for (const difficulty of difficulties) {
+                    const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                    
+                    console.log("Used up all questions for difficulty: " + difficulty + " " + usedUpAllQuestionsForDifficulty.toString())
+                    if (usedUpAllQuestionsForDifficulty) {
+                        const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                        socket.emit("disable-difficulty", difficulty)
+
+                        if (answeredAllQuestions) {
+                            socket.emit("answered-all-questions")
+                        }
+                    }
+                }
+
+                socket.emit("ready-for-question-request")
             })
 
             /**

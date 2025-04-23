@@ -8,6 +8,7 @@ export interface IScore extends mongoose.Document {
     roundDuration: number
     study: string
     accuracy: number
+    isFakeTeam: boolean
 }
 
 export const scoreSchema: mongoose.Schema = new mongoose.Schema({
@@ -43,6 +44,11 @@ export const scoreSchema: mongoose.Schema = new mongoose.Schema({
     accuracy: {
         type: Number,
         required: true,
+    },
+    isFakeTeam: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
 })
 export const Score: mongoose.Model<IScore> = mongoose.model<IScore>("Score", scoreSchema)

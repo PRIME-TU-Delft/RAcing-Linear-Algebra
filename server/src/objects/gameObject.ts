@@ -177,7 +177,6 @@ export class Game {
             const exerciseIds = topic.difficultyExercises
                 .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
                 .map((x) => x.exerciseId)
-            console.log(topic.difficultyExercises)
 
             const exerciseId = user.getRandomQuestionId(exerciseIds)
             const exercise = topic.difficultyExercises.find((x) => x.exerciseId === exerciseId)
