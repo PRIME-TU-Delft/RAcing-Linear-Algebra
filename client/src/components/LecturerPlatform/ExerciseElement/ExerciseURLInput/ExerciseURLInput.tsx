@@ -4,11 +4,13 @@ import { ClipLoader } from "react-spinners";
 import { ExistingExercisesContext } from "../../ExistingExercisesContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { Exercise } from "../../SharedUtils";
 
 interface Props {
     url: string;
     onURLValueChange: (url: string, grasple_id: number) => void;
     onExerciseAlreadyExists: (exerciseId: number) => void;
+    currentTopicExerciseIds: number[]
 }
 
 function ExerciseURLInput(props: Props) {
@@ -52,7 +54,7 @@ function ExerciseURLInput(props: Props) {
     };
 
     const exerciseDoesntAlreadyExist = () => {
-        return !existingExerciseIds.includes(graspleId) || props.url === urlValue;
+        return (!existingExerciseIds.includes(graspleId) && !props.currentTopicExerciseIds.includes(graspleId)) || props.url === urlValue
     };
 
     const getIdValue = () => {
@@ -86,6 +88,7 @@ function ExerciseURLInput(props: Props) {
         } else if (correctDomain && correctId) {
             setChecked(false);
             props.onExerciseAlreadyExists(graspleId);
+            setUrlValue("")
         } else {
             setChecked(false);
         }

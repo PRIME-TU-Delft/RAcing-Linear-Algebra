@@ -293,6 +293,7 @@ function LecturerPlatform(props: Props) {
                                     onExerciseAlreadyExists={() => {}}
                                     isIndependentElement={true}
                                     isMandatory={false}
+                                    currentTopicExerciseIds={[]}
                                 />
                             ))}
                         </div>

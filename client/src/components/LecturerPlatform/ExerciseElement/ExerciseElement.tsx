@@ -24,6 +24,7 @@ interface Props {
     onExerciseAlreadyExists: (exerciseId: number) => void
     isIndependentElement: boolean
     isMandatory: boolean
+    currentTopicExerciseIds: number[]
 }
 
 function ExerciseElement(props: Props) {
@@ -215,6 +216,7 @@ function ExerciseElement(props: Props) {
                                     url={props.url} 
                                     onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}
                                     onExerciseAlreadyExists={(exerciseId: number) => props.onExerciseAlreadyExists(exerciseId)} 
+                                    currentTopicExerciseIds={props.currentTopicExerciseIds}
                                 ></ExerciseURLInput>
                             )}
                             {!props.beingEdited && !beingEdited ? (
