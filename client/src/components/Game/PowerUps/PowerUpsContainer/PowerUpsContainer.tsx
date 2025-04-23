@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./PowerUpsContainer.css"
 import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
-import { PowerUp } from "../PowerUpUtils";
+import { IPowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
 
 function PowerUpsContainer() {
-  const [powerUps, setPowerUps] = useState<PowerUp[]>([]);
+  const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
   const maxPowerUps = 3;
 
   useEffect(() => {
@@ -16,25 +16,25 @@ function PowerUpsContainer() {
     }
   }, [powerUps]);
 
-  const addNewPowerUp = (powerUp: PowerUp) => {
+  const addNewPowerUp = (powerUp: IPowerUp) => {
     setPowerUps((prevPowerUps) => [...prevPowerUps, powerUp]);
   }
 
-  const usePowerUp = (powerUp: PowerUp) => {
+  const usePowerUp = (powerUp: IPowerUp) => {
     if (powerUps.find(p => p == powerUp) != undefined) {
       // Call power up's function
       removePowerUp(powerUp)
     }
   }
 
-  const removePowerUp = (powerUp: PowerUp) => {
+  const removePowerUp = (powerUp: IPowerUp) => {
     const filteredPowerUps = powerUps.filter(p => p != powerUp)
     setPowerUps(curr => [...filteredPowerUps])
   }
 
   return (
     <div className="power-ups-container d-flex">
-      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 8000})}>ADD</div>
+      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 15000})}>ADD</div>
         <div className="container d-flex justify-content-end align-items-center">
             <AnimatePresence>
                 {powerUps.map((powerUp) => (

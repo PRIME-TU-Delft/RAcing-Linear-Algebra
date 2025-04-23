@@ -1,4 +1,4 @@
-interface PowerUp {
+interface IPowerUp {
     id: number
     name: string
     description: string
@@ -6,5 +6,5 @@ interface PowerUp {
 }
 
 export {
-    type PowerUp
+    type IPowerUp,
 }

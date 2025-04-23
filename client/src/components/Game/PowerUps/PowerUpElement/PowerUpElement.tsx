@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./PowerUpElement.css";
-import { PowerUp } from "../PowerUpUtils";
+import { IPowerUp } from "../PowerUpUtils";
 import { Typography } from "@mui/material";
 
 interface Props {
     onClick: () => void
-    powerUp: PowerUp
+    powerUp: IPowerUp
     onPowerUpExpired: () => void
 }
 
