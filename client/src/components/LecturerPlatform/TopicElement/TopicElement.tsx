@@ -83,6 +83,7 @@ function TopicElement(props: Props) {
     const [isBatchDialogOpen, setIsBatchDialogOpen] = useState<boolean>(false);
     const [batchDifficulty, setBatchDifficulty] = useState<string>("Easy");
     const [batchText, setBatchText] = useState<string>("");
+    const [changingTeams, setChangingTeams] = useState<boolean>(false);
 
     const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
         // only add a notification if it hasn't already been shown
@@ -558,6 +559,8 @@ function TopicElement(props: Props) {
                             {(newTopicData.name == "" ? "" : newTopicData.name)}
                         </div>
                         <div className="number-of-exercises">Exercises: {exercises.length}</div>
+                        <div className="number-of-default-teams">There are currently {exercises.length}/{30} fake teams in the database for this topic</div>
+
                     </div>
                 </AccordionSummary>
                 <Divider/>
@@ -627,6 +630,45 @@ function TopicElement(props: Props) {
                     <Button size="small" onClick={() => {if (studies.length != 0) setChangingStudies(false)}}>Discard</Button>
                     <Button size="small" onClick={() => setSaveChanges(curr => ({...curr, studies: true}))} variant="contained">Save</Button>
                 </AccordionActions>)}
+
+                <Divider/>
+                <AccordionDetails>
+                <div className="fake-teams-section">
+                    <div className="fake-teams-header topic-header">
+                    Default teams 
+                    {changingTeams ? (<>
+                        <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}/>
+                        <FontAwesomeIcon
+                                    icon={faCircleInfo}
+                                    style={{ color: "#1976D2", marginLeft: "0.5rem" }}
+                                    data-tooltip-id="info-tooltip"
+                                    data-tooltip-place="right"
+                                    data-tooltip-html="Add new default teams by pressing the + button.<br /> Remove the default teams from the database by pressing the trash icon."
+                        />
+                        <FontAwesomeIcon 
+                            icon={faPlus} 
+                            className="fake-teams-add-icon" 
+                            onClick={() => {}}
+                            style={{ marginLeft: "1rem", cursor: "pointer" }}
+                        />
+                        <FontAwesomeIcon 
+                        icon={faTrash} 
+                        className="fake-teams-remove-icon" 
+                        onClick={() => {}}
+                        style={{ marginLeft: "1rem", cursor: "pointer" }}
+                        />
+                    </>)
+                    :
+                    <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingTeams(curr => true)}/>
+                    }
+                    
+                    </div>
+                    <Typography variant="body2" color="textSecondary" style={{ marginTop: "0.5rem" }}>
+                    There are currently {20} fake teams in the database for this topic.
+                    </Typography>
+                </div>
+                </AccordionDetails>
+
                 <Divider/>
                 <AccordionDetails>
                     <div className="exercises-section">

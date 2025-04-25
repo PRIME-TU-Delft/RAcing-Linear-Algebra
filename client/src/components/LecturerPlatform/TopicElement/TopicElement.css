@@ -26,6 +26,13 @@
     font-weight: 400;
 }
 
+.number-of-default-teams {
+    font-size: 18px;
+    font-weight: 400;
+    color: #838383;
+    font-style: italic;
+}
+
 .studies-header {
     font-size: 16px;
 }
@@ -50,7 +57,7 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover {
     cursor: pointer;
 }
 
@@ -64,6 +71,11 @@
 
 .topic-header {
     font-weight: 500;
+}
+
+.fake-teams-header {
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .name-header {
