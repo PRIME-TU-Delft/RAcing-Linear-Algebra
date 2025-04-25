@@ -2,7 +2,7 @@ import { getVariantById, parseVariantToQuestion } from "../controllers/questionD
 import type { IQuestion } from "../models/questionModel"
 import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
-import { checkAnswerEqual } from "../latexParser"
+import { checkAnswerEqual } from "../utils/latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
 import type { ITopic } from "../models/topicModel"
 import type { IExercise } from "../models/exerciseModel"

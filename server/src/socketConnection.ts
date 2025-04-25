@@ -19,7 +19,7 @@ import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
-import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./socketUtils"
+import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
