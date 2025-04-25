@@ -32,7 +32,7 @@ import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
-import { TopicDataContext } from "./contexts/TopicDataContext"
+import { DefaultTeamsData, TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
@@ -61,6 +61,7 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
@@ -139,6 +140,10 @@ function App() {
 
     const topicHandler = (topic: string) => {
         setTopic((current) => topic)
+    }
+
+    const addDefaultTeamsHandler = (topicId: string, teamsToAddCount: number, avgTimePerQuestion: number) => {
+        socket.emit("addDefaultTeams", topicId, teamsToAddCount, avgTimePerQuestion)
     }
 
     const resetValues = () => {
@@ -351,7 +356,13 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
+            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
+        }
+
+        function onGetAllDefaultTeamData(defaultTeams: DefaultTeamsData[]) {
+            console.log(defaultTeams)
+            setAllDefaultTeamData(curr => [...defaultTeams])
         }
 
         function onGetAllExercises(allExercises: Exercise[]) {
@@ -452,6 +463,7 @@ function App() {
         socket.on("all-studies", onGetAllStudies)
         socket.on("all-topics", onGetAllTopics)
         socket.on("all-exercises", onGetAllExercises)
+        socket.on("all-default-teams", onGetAllDefaultTeamData)	
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
         socket.on("lobby-data", onGetLobbyData)
@@ -494,6 +506,7 @@ function App() {
             socket.emit("getAllTopics")
             socket.emit("getAllStudies")	
             socket.emit("getAllExercises")
+            socket.emit("getAllDefaultTeams")
             navigate("/LecturerPlatform")
             setLoggedIn(false)
         }
@@ -658,11 +671,12 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData}}>
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                 onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
+                                onAddDefaultTeamsForTopic={addDefaultTeamsHandler}
                                 />
                         </TopicDataContext.Provider>
                     }

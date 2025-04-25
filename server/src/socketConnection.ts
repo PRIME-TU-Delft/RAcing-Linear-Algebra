@@ -9,6 +9,8 @@ import {
     getGhostTrainScores,
     getGhostTeams,
     getBestTeamFinalScore,
+    getAllDefaultTeams,
+    saveMultipleScores,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -20,6 +22,7 @@ import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFro
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
+import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -796,6 +799,38 @@ module.exports = {
                 try {
                     const exercises = await getAllExercises();
                     socket.emit("all-exercises", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**
+             * Returns a list of all default teams (fake teams) stored in the database
+             */
+            socket.on("getAllDefaultTeams", async() => {
+                try {
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("addDefaultTeams", async (topicId: string, teamsToAddCount: number, avgTimePerQuestion: number) => {
+                try {
+                    const opts: GeneratorOptions = {
+                        studies: ['CSE', 'AE', 'MCH', 'MAR', 'CE'],
+                        topicId: topicId,
+                        numTeams: teamsToAddCount,
+                        avgExpectedTime: avgTimePerQuestion,
+                    }
+
+                    const newTeams = generateFakeScores(opts)
+                    await saveMultipleScores(newTeams)
+
+                    // Update values on frontend
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }

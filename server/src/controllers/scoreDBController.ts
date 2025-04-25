@@ -6,6 +6,12 @@ const { MongoClient } = require("mongodb")
 const sample = require( '@stdlib/random-sample' );
 const shuffle = require( '@stdlib/random-shuffle' );
 
+export interface DefaultTeamsData {
+    fakeTeamsCount: number
+    totalTeamsCount: number
+    topicId: string
+}
+
 export async function saveNewScore(
     teamname: string,
     scores: number[],
@@ -36,6 +42,27 @@ export async function getAllScores(topicId: string): Promise<IScore[]> {
         return result
     } catch (error) {
         throw error
+    }
+}
+
+export async function getAllDefaultTeams(): Promise<DefaultTeamsData[]> {
+    try {
+      const teams = await Score.aggregate([
+        { 
+          $group: {
+            _id: "$topicId",
+            totalTeams: { $sum: 1 },
+            fakeTeams: { $sum: { $cond: [ "$isFakeTeam", 1, 0 ] } }
+          }
+        }
+      ])
+      return teams.map(team => ({
+        topicId: team._id.toString(),
+        totalTeamsCount: team.totalTeams,
+        fakeTeamsCount: team.fakeTeams
+      }))
+    } catch (error) {
+      throw error
     }
 }
 
@@ -240,3 +267,12 @@ export async function getGhostTrainScores(topicId: string) {
         console.log(error)
     }
 }
+
+export async function saveMultipleScores(scoresArray: IScore[]) {
+    try {
+      await Score.insertMany(scoresArray)
+    }
+    catch (error) {
+      throw error
+    }
+  }

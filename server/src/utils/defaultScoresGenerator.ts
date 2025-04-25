@@ -52,27 +52,37 @@ const generateScores = (
     numPlayers: number,
     roundDuration: number,
     avgExpectedTime: number,
-    ): number[] => {
-    const scoreMultiplier = 1.0
-
-    const iterations = Math.floor(roundDuration / avgExpectedTime)
-    const scores: number[] = [0]
-    let cumulative = 0
-
-    for (let i = 1; i <= iterations; i++) {
-        for (let j = 1; j <= numPlayers; j++) {
-            const base = numPlayers * scoreMultiplier
-            const variation = (Math.random() - 0.5) * 0.8 * base
-            cumulative += base + variation
-        }
-        scores.push(Math.max(0, Number(cumulative.toFixed(2))))
-        }
-
-    return scores.map(x =>
-        Number((x / (roundDuration * numPlayers)).toFixed(4))
-        );
-}
-
+  ): number[] => {
+    const scoreMultiplier = 1.0;
+    const iterations = Math.floor(roundDuration / avgExpectedTime);
+    const raw: number[] = [];
+    let cumulative = 0;
+  
+    for (let i = 0; i < iterations; i++) {
+      for (let j = 0; j < numPlayers; j++) {
+        const base = numPlayers * scoreMultiplier + 30;
+        const variation = (Math.random() - 0.5) * 0.8 * base;
+        cumulative += base + variation;
+      }
+      raw.push(cumulative);
+    }
+  
+    const timepoints = Math.floor(roundDuration / 30);
+    const out: number[] = [0]; // t=0
+    for (let k = 1; k <= timepoints; k++) {
+      const t = k * 30;
+      // find which raw-step covers time t
+      const idx = Math.min(
+        raw.length - 1,
+        Math.floor(t / avgExpectedTime) - 1
+      );
+      const val = idx >= 0 ? raw[idx] : 0;
+      out.push(Number((val / (roundDuration * numPlayers)).toFixed(4)));
+    }
+  
+    return out;
+  }
+  
 export function generateFakeScores(
     options: GeneratorOptions
     ): IScore[] {
