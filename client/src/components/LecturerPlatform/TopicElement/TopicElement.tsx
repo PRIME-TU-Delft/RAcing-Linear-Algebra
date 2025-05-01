@@ -685,7 +685,7 @@ function TopicElement(props: Props) {
                     </div>
                     {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ? 
                         <Typography variant="body2" color="textSecondary" style={{ marginTop: "0.5rem" }}>
-                            Warning! There are currently no teams in the database for this topic. This will mean the race won't have any competing racers other than the team who's playing.
+                            There are currently no teams in the database for this topic. This will mean the race won't have any competing racers other than the team who's playing.
                         </Typography>
                     :
                     <Typography variant="body2" style={{ marginTop: "0.5rem",  }}>
