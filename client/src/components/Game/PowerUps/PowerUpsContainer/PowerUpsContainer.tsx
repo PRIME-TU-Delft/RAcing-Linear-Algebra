@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PowerUpsContainer.css"
 import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
-import { IPowerUp } from "../PowerUpUtils";
+import { BaseBoostIcon, IPowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
@@ -44,7 +44,7 @@ function PowerUpsContainer(props: Props) {
 
   return (
     <div className="power-ups-container d-flex">
-      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 15000,  type: 'boost', imageSrc: ""})}>ADD</div>
+      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 15000,  type: 'boost', imageSrc: BaseBoostIcon})}>ADD</div>
         <div className="container d-flex justify-content-end align-items-center">
             <AnimatePresence>
                 {powerUps.map((powerUp) => (

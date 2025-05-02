@@ -1,0 +1,15 @@
+.boost-powerup-title {
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+    font-size: 2rem;
+    color: #fff;
+    font-family: 'PermanentMarker', sans-serif;
+    margin-top: 0.5rem;
+  }
+
+.boost-powerup-description {
+    color: #cbcbcb;
+    font-family: 'Century Gothic', sans-serif;
+    margin-top: 0.5rem;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
