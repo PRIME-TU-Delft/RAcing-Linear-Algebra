@@ -1,64 +1,62 @@
-import React, { useEffect, useState } from "react";
-import "./PowerUpElement.css";
-import { IPowerUp } from "../PowerUpUtils";
-import { Typography } from "@mui/material";
+import React, { useEffect } from "react"
+import { useTimer } from "react-timer-hook"
+import { motion } from "framer-motion"
+import { IPowerUp } from "../PowerUpUtils"
+import "./PowerUpElement.css"
 
 interface Props {
-    onClick: () => void
-    powerUp: IPowerUp
-    onPowerUpExpired: () => void
+  onClick: () => void
+  powerUp: IPowerUp
+  onPowerUpExpired: () => void
 }
 
 function PowerUpElement(props: Props) {
-    const [timeFormatted, setTimeFormatted] = useState("00:00");
+  const expiryTimestamp = new Date(props.powerUp.expiryTime)
 
-    useEffect(() => {
-        if (!props.powerUp.expiryTime) return
+  const {
+    seconds,
+    minutes,
+    restart
+  } = useTimer({
+    expiryTimestamp,
+    autoStart: true,
+    onExpire: props.onPowerUpExpired
+  })
 
-        const updateTime = () => {
-            const timeLeft = (props.powerUp.expiryTime ? props.powerUp.expiryTime : 0) - Date.now()
-            const totalSeconds = Math.max(Math.floor(timeLeft / 1000), 0)
+  useEffect(() => {
+    restart(expiryTimestamp)
+  }, [expiryTimestamp, restart])
 
-            if (totalSeconds === 0) {
-                setTimeFormatted("00:00");
-                props.onPowerUpExpired();
-                if (interval) {
-                    clearInterval(interval);
-                }
-            } else {
-                const minutes = Math.floor(totalSeconds / 60)
-                const seconds = totalSeconds % 60
-                const formatted = `${minutes.toString().padStart(2, "0")}:${seconds
-                    .toString()
-                    .padStart(2, "0")}`
-                setTimeFormatted(formatted)
+  const timeFormatted = `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`
+
+  const totalSeconds = minutes * 60 + seconds
+  const isExpiring = totalSeconds <= 10
+
+  const cycleDuration = 1
+  const now = performance.now() / 1000
+  const delay = -(now % cycleDuration)
+
+  return (
+    <motion.div
+      className="power-up-element"
+      onClick={props.onClick}
+      animate={isExpiring ? { opacity: [1, 0.7, 1], scale: [1, 0.95, 1] } : {}}
+      transition={
+        isExpiring
+          ? {
+              duration: cycleDuration,
+              repeat: Infinity,
+              ease: "linear",
+              delay
             }
-        }
-
-        updateTime()
-        const interval = setInterval(updateTime, 1000)
-        return () => clearInterval(interval)
-    }, [props.powerUp.expiryTime])
-
-    const animateIfExpiring = () => {
-        if (!props.powerUp.expiryTime) return ""
-        const timeLeft = (props.powerUp.expiryTime ? props.powerUp.expiryTime : 0) - Date.now()
-        const totalSeconds = Math.max(Math.floor(timeLeft / 1000), 0)
-
-        if (totalSeconds <= 10) { 
-            return "power-up-expiring"
-        } else {
-            return ""
-        }
-    }
-
-    return (
-        <div className={"power-up-element " + animateIfExpiring()} onClick={props.onClick}>
-            <div className="expiry-timer">
-                {timeFormatted}
-            </div>
-        </div>
-    )
+          : {}
+      }
+    >
+      <div className="expiry-timer">{timeFormatted}</div>
+    </motion.div>
+  )
 }
 
-export default PowerUpElement;
+export default PowerUpElement

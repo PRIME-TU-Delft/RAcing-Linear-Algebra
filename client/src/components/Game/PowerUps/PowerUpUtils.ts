@@ -2,7 +2,7 @@ interface IPowerUp {
     id: number
     name: string
     description: string
-    expiryTime?: number
+    expiryTime: number
 }
 
 export {

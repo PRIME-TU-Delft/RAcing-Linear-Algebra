@@ -22,7 +22,6 @@ function PowerUpsContainer() {
 
   const usePowerUp = (powerUp: IPowerUp) => {
     if (powerUps.find(p => p == powerUp) != undefined) {
-      // Call power up's function
       removePowerUp(powerUp)
     }
   }
