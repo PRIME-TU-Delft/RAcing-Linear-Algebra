@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Card, CardMedia, Typography } from "@mui/material"
 import { motion, AnimatePresence } from "framer-motion"
 import "./BoostPowerUpSelection.css"
-import { DaringBoostIcon, IPowerUp, RecklessBoostIcon, SteadyBoostIcon } from '../PowerUpUtils'
+import { DaringBoost, IPowerUp, RecklessBoost, SteadyBoost } from '../PowerUpUtils'
 
 interface Props {
   onSelectionComplete: (selectedBoost: IPowerUp) => void
@@ -12,32 +12,7 @@ function BoostPowerUpSelection(props: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [overlayExited, setOverlayExited] = useState(false)
 
-  const boostOptions: IPowerUp[] = [
-    {
-      id: 1,
-      name: "Steady Boost",
-      description: "Slow but steady. Grants a permanent 1.1x boost to your score.",
-      expiryTime: Date.now(),
-      type: 'boost',
-      imageSrc: SteadyBoostIcon
-    },
-    {
-      id: 2,
-      name: "Daring Boost",
-      description: "Risky, but rewarding. Grants a 1.3x boost to your score when your streak is 3 or more.",
-      expiryTime: Date.now(),
-      type: 'boost',
-      imageSrc: DaringBoostIcon
-    },
-    {
-      id: 3,
-      name: "Reckless Boost",
-      description: "Surely a bad idea, right? Grants a 1.8x boost to your score when your streak is 5 or more.",
-      expiryTime: Date.now(),
-      type: 'boost',
-      imageSrc: RecklessBoostIcon
-    }
-  ]
+  const boostOptions: IPowerUp[] = [SteadyBoost, DaringBoost, RecklessBoost]
 
   const handleCardClick = (option: IPowerUp) => {
     if (!selectedId) {
