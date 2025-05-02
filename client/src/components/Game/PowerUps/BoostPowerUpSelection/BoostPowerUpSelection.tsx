@@ -16,7 +16,7 @@ function BoostPowerUpSelection(props: Props) {
     {
       id: 1,
       name: "Steady Boost",
-      description: "Increases speed for a short duration.",
+      description: "Slow but steady. Grants a permanent 1.1x boost to your score.",
       expiryTime: Date.now(),
       type: 'boost',
       imageSrc: SteadyBoostIcon
@@ -24,7 +24,7 @@ function BoostPowerUpSelection(props: Props) {
     {
       id: 2,
       name: "Daring Boost",
-      description: "Increases speed for a short duration.",
+      description: "Risky, but rewarding. Grants a 1.3x boost to your score when your streak is 3 or more.",
       expiryTime: Date.now(),
       type: 'boost',
       imageSrc: DaringBoostIcon
@@ -32,7 +32,7 @@ function BoostPowerUpSelection(props: Props) {
     {
       id: 3,
       name: "Reckless Boost",
-      description: "Increases speed for a short duration.",
+      description: "Surely a bad idea, right? Grants a 1.8x boost to your score when your streak is 5 or more.",
       expiryTime: Date.now(),
       type: 'boost',
       imageSrc: RecklessBoostIcon
@@ -72,6 +72,19 @@ function BoostPowerUpSelection(props: Props) {
     notSelected: { opacity: 0, transition: { duration: 0.3 } }
   }
 
+  const getGlowValue = (option: IPowerUp) => {
+    switch(option.id) {
+        case 1:
+            return "0 0 50px rgba(0, 213, 255, 0.5)";
+        case 2:
+            return "0 0 50px rgba(255, 0, 217, 0.64)";
+        case 3:
+            return "0 0 50px rgba(157, 0, 255, 0.5)";
+        default:
+            return "0 0 50px rgba(255, 255, 255, 0.5)";
+    }
+  }
+
   return (
     <AnimatePresence>
       {!overlayExited && (
@@ -87,11 +100,11 @@ function BoostPowerUpSelection(props: Props) {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.9)', // Slightly more black
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
             display: 'flex',
-            alignItems: 'flex-start', // instead of 'center'
+            alignItems: 'flex-start',
             justifyContent: 'center',
-            paddingTop: '18%', 
+            paddingTop: '13%', 
             zIndex: 1300,
           }}
         >
@@ -109,18 +122,19 @@ function BoostPowerUpSelection(props: Props) {
                       : "notSelected"
                     : "animate"
                 }
+                whileHover={{ boxShadow: getGlowValue(option)}}
                 onClick={() => handleCardClick(option)}
-                style={{ cursor: "pointer", display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                className='boost-powerup-card'
               >
                 <Card sx={{ width: 180, height: 180 }}>
                   <CardMedia
                     component="img"
                     image={option.imageSrc}
                     alt={option.name}
-                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover', backgroundColor: 'black' }}
                   />
                 </Card>
-                <Box mt={1} textAlign="center">
+                <Box mt={1} textAlign="center" sx={{ maxWidth: 250 }}>
                   <div className="boost-powerup-title">{option.name}</div>
                     <div className="boost-powerup-description">{option.description}</div>
                 </Box>

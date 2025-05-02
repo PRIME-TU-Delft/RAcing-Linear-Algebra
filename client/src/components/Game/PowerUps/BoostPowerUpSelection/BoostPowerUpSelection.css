@@ -13,3 +13,15 @@
     font-style: italic;
     font-size: 0.9rem;
   }
+
+.boost-powerup-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+    border-radius: 0.5rem;
+}
