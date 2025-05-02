@@ -34,7 +34,7 @@ function PowerUpElement(props: Props) {
   const delay = -(now % cycleDuration)
 
   return (
-    <Tooltip title={props.powerUp.description} arrow placement="top">
+    <Tooltip title={props.powerUp.description} arrow placement="top" data-tooltip-variant="light">
       <motion.div
         className="power-up-element"
         onClick={props.onClick}

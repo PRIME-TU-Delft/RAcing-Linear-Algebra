@@ -12,6 +12,8 @@ import DifficultyCard from "./DifficultyCard"
 import { StreakContext } from "../../../contexts/StreakContext"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../contexts/DifficultyAvailabilityContext"
+import { PowerUpContext } from "../../../contexts/PowerUpContext"
+import { defaultBoostFunction } from "../../Game/PowerUps/PowerUpFunctions"
 
 /**
  * @interface CardInfo - interface used due to the animations, has info related to the difficulty card
@@ -38,7 +40,8 @@ interface Props {
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
-    const streaks = useContext(StreakContext)
+    const powerUps = useContext(PowerUpContext)
+    const streaks = useContext(StreakContext)    
     const difficultyAvailability = useContext(DifficultyAvailabilityContext)    
     const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)
 
@@ -211,6 +214,14 @@ export default function DifficultySelection(props: Props) {
 
     }
 
+    const calculateTotalPoints = (item: CardInfo) => {
+        const streakPoints = item.points * getStreakForDifficulty(item.difficulty).streakMultiplier
+        if (powerUps.boostPowerUpFunction == undefined) return streakPoints
+        
+        const powerUpPoints = powerUps.boostPowerUpFunction(streakPoints, getStreakForDifficulty(item.difficulty).streakValue)
+        return powerUpPoints
+    }
+
     return (
         <>
             <div
@@ -241,7 +252,7 @@ export default function DifficultySelection(props: Props) {
                                     difficulty={item.difficulty}
                                     emoji={item.emoji}
                                     pointsText={item.pointsText}
-                                    totalPoints={item.points * getStreakForDifficulty(item.difficulty).streakMultiplier}
+                                    totalPoints={calculateTotalPoints(item)}
                                     attempts={item.attempts}
                                     streak={getStreakForDifficulty(item.difficulty)}
                                     onDifficultySelected={props.onDifficultySelected}

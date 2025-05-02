@@ -107,6 +107,11 @@
     color: #FB8500;
 }
 
+.active-boost-points {
+    font-size: 30px;
+    font-family: 'Chicle-Regular', sans-serif;
+}
+
 .card-points,
 .card-attempts,
 .card-streak {

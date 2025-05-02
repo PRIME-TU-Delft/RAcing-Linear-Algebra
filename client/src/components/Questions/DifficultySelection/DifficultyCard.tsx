@@ -1,5 +1,5 @@
 import { send } from "process"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Card from "react-bootstrap/Card"
 import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
@@ -7,6 +7,8 @@ import FlameAnimation from "../Streak/Flame/Flame"
 import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import { PowerUpContext } from "../../../contexts/PowerUpContext"
+import { getBoostMultiplier, getBoostStreakRequirement, isBoostActive } from "../../Game/PowerUps/PowerUpFunctions"
 interface Props {
     difficulty: string
     emoji: string
@@ -26,6 +28,8 @@ interface Props {
  * This contains the difficulty and the emoji for that difficulty
  */
 export default function  DifficultyCard(props: Props) {
+    const powerUps = useContext(PowerUpContext)
+    
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
 
@@ -52,6 +56,32 @@ export default function  DifficultyCard(props: Props) {
         socket.emit("getNewQuestion", props.difficulty.toLowerCase())
         if (props.difficulty === "Easy") {
             props.onEasyCardClick() // Call the click handler only for "Easy" DifficultyCard
+        }
+    }
+
+    const getBoostActivityText = () => {
+        switch (powerUps.boost.id) {
+            case 1:
+                return "Steady Boost: " + getBoostMultiplier(powerUps.boost.id) + "x"
+            case 2:
+                return "Daring Boost" + (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? ": " + getBoostMultiplier(powerUps.boost.id) + "x" : "not active")
+            case 3:
+                return "Reckless Boost" + (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? ": " + getBoostMultiplier(powerUps.boost.id) + "x" : "not active")
+            default:
+                return ""
+        }
+    }
+
+    const getBoostTextColor = () => {
+        switch (powerUps.boost.id) {
+            case 1:
+                return "#00D5FF"
+            case 2:
+                return "#FF00D9"
+            case 3:
+                return "#9D00FF"
+            default:
+                return ""
         }
     }
 
@@ -93,21 +123,20 @@ export default function  DifficultyCard(props: Props) {
                                     </div>)
                                 }
                                         
-                                        {showStreak && !difficultyCleared ? (
-                                            <div className="container">
-                                                <div className="row justify-content-center card-streak">
-                                                    <div className="ms-2 col d-flex justify-content-center">
-                                                        <div className="d-flex justify-content-center align-items-center">
-                                                            <b>{props.streak.streakValue}</b>
-                                                        </div>
-                                                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
-                                                    </div>
+                                {showStreak && !difficultyCleared ? (
+                                    <div className="container">
+                                        <div className="row justify-content-center card-streak">
+                                            <div className="ms-2 col d-flex justify-content-center">
+                                                <div className="d-flex justify-content-center align-items-center">
+                                                    <b>{props.streak.streakValue}</b>
                                                 </div>
-                                                
-
+                                                <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
                                             </div>
-                                        
-                                    ) : null}
+                                        </div>
+                                    </div>
+                                
+                                ) : null}
+
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -129,6 +158,10 @@ export default function  DifficultyCard(props: Props) {
                     <p className="card-points">
                         Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
                     </p>
+                    <p className="active-boost-points" style={{color: getBoostTextColor()}}>{getBoostActivityText()}</p>
+                    {!isBoostActive(powerUps.boost.id, props.streak.streakValue) ? (
+                        <p className="active-boost-points" style={{color: getBoostTextColor()}}>Requires streak of {getBoostStreakRequirement(powerUps.boost.id)}</p>
+                    ) : null}
                 </div>)}
                 
             </div>
