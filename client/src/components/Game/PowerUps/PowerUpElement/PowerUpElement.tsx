@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useMemo, useEffect } from "react"
 import { useTimer } from "react-timer-hook"
 import { motion } from "framer-motion"
 import { IPowerUp } from "../PowerUpUtils"
@@ -11,13 +11,9 @@ interface Props {
 }
 
 function PowerUpElement(props: Props) {
-  const expiryTimestamp = new Date(props.powerUp.expiryTime)
+  const expiryTimestamp = useMemo(() => new Date(props.powerUp.expiryTime), [props.powerUp.expiryTime])
 
-  const {
-    seconds,
-    minutes,
-    restart
-  } = useTimer({
+  const { seconds, minutes, restart } = useTimer({
     expiryTimestamp,
     autoStart: true,
     onExpire: props.onPowerUpExpired
@@ -27,9 +23,7 @@ function PowerUpElement(props: Props) {
     restart(expiryTimestamp)
   }, [expiryTimestamp, restart])
 
-  const timeFormatted = `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`
+  const timeFormatted = `${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`
 
   const totalSeconds = minutes * 60 + seconds
   const isExpiring = totalSeconds <= 10

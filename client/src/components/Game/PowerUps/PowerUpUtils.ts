@@ -6,6 +6,7 @@ interface IPowerUp {
     description: string
     expiryTime: number
     type: PowerUpType
+    imageSrc: string
 }
 
 export {

@@ -27,6 +27,8 @@ import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
+import { IPowerUp } from "./PowerUps/PowerUpUtils";
+import BoostPowerUpSelection from "./PowerUps/BoostPowerUpSelection/BoostPowerUpSelection";
 
 interface Props {
     theme: string
@@ -456,7 +458,10 @@ function Game(props: Props) {
 
     const genericBoostPowerUpHandler = () => {
         setShowBoostPowerUpSelection(curr => true)
+    }
 
+    const BoosttSelectionCompletedHandler = (boost: IPowerUp) => {
+        setShowBoostPowerUpSelection(curr => false)
     }
 
     useEffect(() => {
@@ -546,6 +551,9 @@ function Game(props: Props) {
                 <QuestionBoatBackground />
             )}
             <div className="game-container">
+                {showBoostPowerUpSelection && (
+                    <BoostPowerUpSelection onSelectionComplete={BoosttSelectionCompletedHandler}></BoostPowerUpSelection>
+                )}
                 <div className="game-left-container">
                     <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
