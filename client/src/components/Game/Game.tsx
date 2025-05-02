@@ -29,7 +29,7 @@ import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
 import { IPowerUp } from "./PowerUps/PowerUpUtils";
 import BoostPowerUpSelection from "./PowerUps/BoostPowerUpSelection/BoostPowerUpSelection";
-import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
+import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, getBoostValue, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
 import { PowerUpContext } from "../../contexts/PowerUpContext";
 
 interface Props {
@@ -334,7 +334,6 @@ function Game(props: Props) {
     // Powerup variables
     const [showBoostPowerUpSelection, setShowBoostPowerUpSelection] = useState<boolean>(false)
     const [selectedBoost, setSelectedBoost] = useState<IPowerUp>({} as IPowerUp)
-    const [boostPowerUpFunction, setBoostPowerUpFunction] = useState<BoostPowerUpFunction>(defaultBoostFunction)
 
     // Update the score when the scoreToAdd variable changes
     useEffect(() => {
@@ -419,28 +418,6 @@ function Game(props: Props) {
         setNumOfQuestions(rightAnswers + wrongAnswers)
     }
 
-    function activateChosenBoost(powerUp: IPowerUp) {
-        switch (powerUp.id) {
-            // Steady Boost
-            case 1:
-                setBoostPowerUpFunction(steadyBoostFunction)
-                break
-
-            // Daring Boost
-            case 2:
-                setBoostPowerUpFunction(daringBoostFunction)
-                break
-                
-            // Reckless Boost
-            case 3:
-                setBoostPowerUpFunction(recklessBoostFunction)
-                break
-            default:
-                setBoostPowerUpFunction(defaultBoostFunction)
-                break
-        }
-    }
-
     /**
      * Calculates the player response time, and keeps track of internal spam counter, to prevent spam answering of easy questions
      * This is because easy questions are dominated by MCQ and True/False questions, which can be spam answered to amass points
@@ -489,7 +466,6 @@ function Game(props: Props) {
     const BoostSelectionCompletedHandler = (boost: IPowerUp) => {
         setShowBoostPowerUpSelection(curr => false)
         setSelectedBoost(curr => boost)
-        activateChosenBoost(boost)
     }
 
     useEffect(() => {
@@ -585,7 +561,7 @@ function Game(props: Props) {
                 <div className="game-left-container">
                     <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
-                    <PowerUpContext.Provider value={{boostPowerUpFunction: boostPowerUpFunction, boost: selectedBoost}}>
+                    <PowerUpContext.Provider value={{boost: selectedBoost}}>
                         <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
                             <Question 
                                     hideQuestion={hideQuestion}
@@ -595,7 +571,7 @@ function Game(props: Props) {
                                     easyQuestionsOnCooldown={easyQuestionsOnCooldown}
                                     difficultyName={graspleQuestionData.questionData.difficulty}
                                     difficultyEmoji={getEmojiForDifficulty(graspleQuestionData.questionData.difficulty)}
-                                    pointsToGain={graspleQuestionData.pointsToGain}
+                                    pointsToGain={Math.floor(getBoostValue(selectedBoost.id, graspleQuestionData.pointsToGain, streak))}
                                 />  
                         </QuestionStatusContext.Provider>
                     </PowerUpContext.Provider>

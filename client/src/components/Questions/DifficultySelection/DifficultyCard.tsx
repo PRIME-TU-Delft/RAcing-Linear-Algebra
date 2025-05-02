@@ -62,11 +62,11 @@ export default function  DifficultyCard(props: Props) {
     const getBoostActivityText = () => {
         switch (powerUps.boost.id) {
             case 1:
-                return "Steady Boost: " + getBoostMultiplier(powerUps.boost.id) + "x"
+                return getBoostMultiplier(powerUps.boost.id) + "x"
             case 2:
-                return "Daring Boost" + (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? ": " + getBoostMultiplier(powerUps.boost.id) + "x" : "not active")
+                return (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? getBoostMultiplier(powerUps.boost.id) + "x" : " 1x (" + props.streak.streakValue + "/" + getBoostStreakRequirement(powerUps.boost.id) + ")")
             case 3:
-                return "Reckless Boost" + (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? ": " + getBoostMultiplier(powerUps.boost.id) + "x" : "not active")
+                return (isBoostActive(powerUps.boost.id, props.streak.streakValue) ? getBoostMultiplier(powerUps.boost.id) + "x" : " 1x (" + props.streak.streakValue + "/" + getBoostStreakRequirement(powerUps.boost.id) + ")")
             default:
                 return ""
         }
@@ -158,10 +158,7 @@ export default function  DifficultyCard(props: Props) {
                     <p className="card-points">
                         Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
                     </p>
-                    <p className="active-boost-points" style={{color: getBoostTextColor()}}>{getBoostActivityText()}</p>
-                    {!isBoostActive(powerUps.boost.id, props.streak.streakValue) ? (
-                        <p className="active-boost-points" style={{color: getBoostTextColor()}}>Requires streak of {getBoostStreakRequirement(powerUps.boost.id)}</p>
-                    ) : null}
+                    <p className="active-boost-points">{powerUps.boost.name}: <b className="active-boost-points" style={{color: getBoostTextColor()}}>{getBoostActivityText()}</b></p>
                 </div>)}
                 
             </div>

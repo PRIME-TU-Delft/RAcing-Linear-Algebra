@@ -13,7 +13,7 @@ import { StreakContext } from "../../../contexts/StreakContext"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../contexts/DifficultyAvailabilityContext"
 import { PowerUpContext } from "../../../contexts/PowerUpContext"
-import { defaultBoostFunction } from "../../Game/PowerUps/PowerUpFunctions"
+import { defaultBoostFunction, getBoostValue } from "../../Game/PowerUps/PowerUpFunctions"
 
 /**
  * @interface CardInfo - interface used due to the animations, has info related to the difficulty card
@@ -216,9 +216,8 @@ export default function DifficultySelection(props: Props) {
 
     const calculateTotalPoints = (item: CardInfo) => {
         const streakPoints = item.points * getStreakForDifficulty(item.difficulty).streakMultiplier
-        if (powerUps.boostPowerUpFunction == undefined) return streakPoints
         
-        const powerUpPoints = powerUps.boostPowerUpFunction(streakPoints, getStreakForDifficulty(item.difficulty).streakValue)
+        const powerUpPoints = getBoostValue(powerUps.boost.id, streakPoints, getStreakForDifficulty(item.difficulty).streakValue)
         return powerUpPoints
     }
 

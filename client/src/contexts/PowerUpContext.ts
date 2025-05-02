@@ -3,13 +3,11 @@ import { BoostPowerUpFunction, defaultBoostFunction } from "../components/Game/P
 import { IPowerUp } from "../components/Game/PowerUps/PowerUpUtils"
 
 interface PowerUpData {
-    boostPowerUpFunction: BoostPowerUpFunction,
-    boost: IPowerUp,
+    boost: IPowerUp
 }
 
 export const PowerUpContext = createContext<PowerUpData>({
     boost: {} as IPowerUp,
-    boostPowerUpFunction: defaultBoostFunction,
 })
 
 export type { PowerUpData }

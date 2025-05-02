@@ -108,8 +108,10 @@
 }
 
 .active-boost-points {
-    font-size: 30px;
-    font-family: 'Chicle-Regular', sans-serif;
+    font-family: Century Gothic, sans-serif;
+    font-style: bold;
+    text-align: center;
+    margin: 1px;
 }
 
 .card-points,
