@@ -5,7 +5,11 @@ import PowerUpElement from "../PowerUpElement/PowerUpElement";
 import { IPowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
 
-function PowerUpsContainer() {
+interface Props {
+  onGenericBoostPowerUpUsed: () => void
+}
+
+function PowerUpsContainer(props: Props) {
   const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
   const maxPowerUps = 3;
 
@@ -22,6 +26,13 @@ function PowerUpsContainer() {
 
   const usePowerUp = (powerUp: IPowerUp) => {
     if (powerUps.find(p => p == powerUp) != undefined) {
+      switch (powerUp.type) {
+        case 'boost':
+          props.onGenericBoostPowerUpUsed()
+          break;
+        default:
+          break;
+      }
       removePowerUp(powerUp)
     }
   }
@@ -33,7 +44,7 @@ function PowerUpsContainer() {
 
   return (
     <div className="power-ups-container d-flex">
-      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 15000})}>ADD</div>
+      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp({id: Math.random() * 10000,name: "AA", description: "SS", expiryTime: Date.now() + 15000,  type: 'boost'})}>ADD</div>
         <div className="container d-flex justify-content-end align-items-center">
             <AnimatePresence>
                 {powerUps.map((powerUp) => (

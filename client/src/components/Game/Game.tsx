@@ -327,6 +327,9 @@ function Game(props: Props) {
     const [easyQuestionsOnCooldown, setEasyQuestionsOnCooldown] = useState<boolean>(false)
     const [nonSpamAnswerCounter, setNonSpamAnswerCounter] = useState<number>(0)
 
+    // Powerup variables
+    const [showBoostPowerUpSelection, setShowBoostPowerUpSelection] = useState<boolean>(false)
+
     // Update the score when the scoreToAdd variable changes
     useEffect(() => {
         setScore((score) => score + scoreToAdd)
@@ -451,6 +454,11 @@ function Game(props: Props) {
         }
     }
 
+    const genericBoostPowerUpHandler = () => {
+        setShowBoostPowerUpSelection(curr => true)
+
+    }
+
     useEffect(() => {
         if (spamAnswerCounter >= 3) {
             setEasyQuestionsOnCooldown(curr => true)
@@ -539,7 +547,7 @@ function Game(props: Props) {
             )}
             <div className="game-container">
                 <div className="game-left-container">
-                    <PowerUpsContainer/>
+                    <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
                         <Question 
