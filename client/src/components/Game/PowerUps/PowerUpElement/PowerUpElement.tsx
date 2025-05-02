@@ -47,7 +47,14 @@ function PowerUpElement(props: Props) {
             }
           : {}
       }
+      style={{ position: "relative", boxShadow: "0 0 10px rgb(255, 255, 255)" }}
+      
     >
+        <img
+        src={props.powerUp.imageSrc}
+        alt={props.powerUp.name}
+        className="powerup-overlay-icon"
+      />
       <div className="expiry-timer">{timeFormatted}</div>
     </motion.div>
   )

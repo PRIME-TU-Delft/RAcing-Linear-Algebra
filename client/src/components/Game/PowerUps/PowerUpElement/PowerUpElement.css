@@ -1,7 +1,7 @@
 .power-up-element {
-    height: 5rem;
-    width: 5rem;
-    background-color: white;
+    height: 4.5rem;
+    width: 4.5rem;
+    background-color: transparent;
     border-radius: 10px;
     position: relative;
 
@@ -10,9 +10,21 @@
     transition-duration: 0.3s;
 }
 
+.powerup-overlay-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
 .power-up-element:hover {
     cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition-duration: 0.3s;
 }
 
@@ -28,8 +40,10 @@
     width: 100%;
     font-size: 15px;
     position: absolute;
-    bottom: 3px;
+    bottom: 1px;
     z-index: 1000;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.599), 0 0 10px rgba(0, 0, 0, 0.484), 0 0 15px rgba(0, 0, 0, 0.505);
 }
 
 @keyframes flash {
@@ -74,7 +88,7 @@
 
 @media screen and (min-height: 1800px) {
     .power-up-element {
-        width: 5rem;
-        height: 5rem;
+        width: 4.5rem;
+        height: 4.5rem;
     }
 }
