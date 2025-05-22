@@ -7,10 +7,12 @@ import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
   onGenericBoostPowerUpUsed: () => void
+  boostSelected: boolean
 }
 
 function PowerUpsContainer(props: Props) {
   const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
+  const [genericBoostRef, setGenericBoostRef] = useState<IPowerUp | null>(null);
   const maxPowerUps = 3;
 
   useEffect(() => {
@@ -19,6 +21,12 @@ function PowerUpsContainer(props: Props) {
       removePowerUp(expiringPowerUp)
     }
   }, [powerUps]);
+
+  useEffect(() => {
+    if (props.boostSelected && genericBoostRef) {
+      removePowerUp(genericBoostRef)
+    }
+  }, [props.boostSelected, genericBoostRef]);
 
   const addNewPowerUp = (powerUp: IPowerUp) => {
     if (powerUp.duration != undefined) {
@@ -32,11 +40,12 @@ function PowerUpsContainer(props: Props) {
       switch (powerUp.type) {
         case 'boost':
           props.onGenericBoostPowerUpUsed()
+          setGenericBoostRef(powerUp)
           break;
         default:
+          removePowerUp(powerUp)
           break;
       }
-      removePowerUp(powerUp)
     }
   }
 

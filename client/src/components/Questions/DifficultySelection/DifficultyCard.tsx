@@ -189,7 +189,7 @@ export default function  DifficultyCard(props: Props) {
                         </p>
                         ) : (
                             <p className="no-boost-points">
-                                <i>No boost activated</i>
+                                <i>Boost not activated!</i>
                             </p>
                         )}
                     </div>

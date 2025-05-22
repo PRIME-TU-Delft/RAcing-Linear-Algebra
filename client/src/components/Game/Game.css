@@ -15,6 +15,7 @@
 
 .game-right-container {
     padding-top: calc(15vh);
+    position: relative;
     width: 50%;
 }
 
@@ -98,7 +99,7 @@
 
 .coloration-information-element {
     position: absolute;
-    width: inherit;
+    width: 100%;
     bottom: 20px;
 }
 

@@ -6,6 +6,7 @@ import { DaringBoost, IPowerUp, RecklessBoost, SteadyBoost } from '../PowerUpUti
 
 interface Props {
   onSelectionComplete: (selectedBoost: IPowerUp) => void
+  onSelectionCancelled: () => void
 }
 
 function BoostPowerUpSelection(props: Props) {
@@ -24,6 +25,11 @@ function BoostPowerUpSelection(props: Props) {
         }, 300)
       }, 400)
     }
+  }
+
+  const handleCancelClick = () => {
+    setOverlayExited(true)
+    props.onSelectionCancelled()
   }
 
   const overlayVariants = {
@@ -70,20 +76,21 @@ function BoostPowerUpSelection(props: Props) {
           exit="exit"
           variants={overlayVariants}
           style={{
-            position: 'fixed',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            alignItems: 'flex-center',
+            justifyContent: 'center',
+            width: '95%',
+            height: '100%',
+            position: 'absolute',
+            marginLeft: '5%',
             top: 0,
             left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            paddingTop: '13%', 
-            zIndex: 1300,
+            overflow: 'hidden',
           }}
         >
-          <Box display="flex" gap={5}>
+          <Box display="flex" gap={5} justifyContent="center" width="100%">
             {boostOptions.map((option, index) => (
               <motion.div
                 key={option.id}
@@ -101,7 +108,7 @@ function BoostPowerUpSelection(props: Props) {
                 onClick={() => handleCardClick(option)}
                 className='boost-powerup-card'
               >
-                <Card sx={{ width: 180, height: 180 }}>
+                <Card sx={{ width: 160, height: 160 }}>
                   <CardMedia
                     component="img"
                     image={option.imageSrc}
@@ -109,13 +116,26 @@ function BoostPowerUpSelection(props: Props) {
                     sx={{ width: '100%', height: '100%', objectFit: 'cover', backgroundColor: 'black' }}
                   />
                 </Card>
-                <Box mt={1} textAlign="center" sx={{ maxWidth: 250 }}>
+                <Box mt={1} textAlign="center" sx={{ maxWidth: 200 }}>
                   <div className="boost-powerup-title">{option.name}</div>
                     <div className="boost-powerup-description">{option.description}</div>
                 </Box>
               </motion.div>
             ))}
           </Box>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: boostOptions.length * 0.3, duration: 0.4 }}
+            style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 24 }}
+          >
+            <div
+              className='boost-powerup-later'
+              onClick={handleCancelClick}
+            >
+              Select Later
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

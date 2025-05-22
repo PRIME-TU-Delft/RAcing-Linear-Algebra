@@ -463,9 +463,13 @@ function Game(props: Props) {
         setShowBoostPowerUpSelection(curr => true)
     }
 
-    const BoostSelectionCompletedHandler = (boost: IPowerUp) => {
+    const boostSelectionCompletedHandler = (boost: IPowerUp) => {
         setShowBoostPowerUpSelection(curr => false)
         setSelectedBoost(curr => boost)
+    }
+
+    const boostSelectionCancelledHandler = () => {
+        setShowBoostPowerUpSelection(curr => false)
     }
 
     useEffect(() => {
@@ -555,11 +559,8 @@ function Game(props: Props) {
                 <QuestionBoatBackground />
             )}
             <div className="game-container">
-                {showBoostPowerUpSelection && (
-                    <BoostPowerUpSelection onSelectionComplete={BoostSelectionCompletedHandler}></BoostPowerUpSelection>
-                )}
                 <div className="game-left-container">
-                    <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler}/>
+                    <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler} boostSelected={selectedBoost.id > 0}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <PowerUpContext.Provider value={{boost: selectedBoost}}>
                         <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
@@ -581,6 +582,11 @@ function Game(props: Props) {
                     <div className="coloration-information-element">
                         <ColorationInfo></ColorationInfo>
                     </div>
+
+                    {showBoostPowerUpSelection && (
+                    <BoostPowerUpSelection onSelectionComplete={boostSelectionCompletedHandler} onSelectionCancelled={boostSelectionCancelledHandler}></BoostPowerUpSelection>
+                    )}
+                    
                  </div>
             </div>
                    
