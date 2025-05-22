@@ -14,6 +14,7 @@ export class User {
     disconnected: boolean
     usedUpAttemptsOnLastQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
     lastConnectionTime: number // timestamp of the last connection time
+    unlockedBoost: string
 
     /**
      * Constructor for the user object
@@ -91,6 +92,10 @@ export class User {
 
     checkIfUsedUpAllVariantsForDifficulty(questions: number[]): boolean {
         return questions.every(question => this.getQuestionIds().includes(question))
+    }
+
+    hasUnlockedBoost() {
+        return this.unlockedBoost != ""
     }
 
     /**

@@ -40,6 +40,7 @@ interface Props {
     isFirstRound: boolean
     onRoundEnded: () => void
     onUpdatePlayerScore: (score: number) => void
+    onBoostSelected: (boost: IPowerUp) => void
 }
 
 interface Statistic {
@@ -54,6 +55,7 @@ function Game(props: Props) {
     const raceData = useContext(RaceDataContext)
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
+    const powerupContext = useContext(PowerUpContext)
     const [currentNumberOfAttempts, setCurrentNumberOfAttempts] = useState<number>(0)
     const [updatedNumberOfAttempts, setUpdatedNumberOfAttempts] = useState<boolean>(false);
 
@@ -371,7 +373,7 @@ function Game(props: Props) {
     function correctAnswerToast() {
         toast.success('✔️ Your answer is correct!', {
             position: "top-center",
-            autoClose: 3000,
+            autoClose: 1500,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: true,
@@ -390,7 +392,7 @@ function Game(props: Props) {
     function incorrectAnswerToast() {
         toast.error('❌ Your answer is incorrect!', {
             position: "top-center",
-            autoClose: 3000,
+            autoClose: 1500,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: true,
@@ -466,6 +468,7 @@ function Game(props: Props) {
     const boostSelectionCompletedHandler = (boost: IPowerUp) => {
         setShowBoostPowerUpSelection(curr => false)
         setSelectedBoost(curr => boost)
+        props.onBoostSelected(boost)
     }
 
     const boostSelectionCancelledHandler = () => {
@@ -562,7 +565,7 @@ function Game(props: Props) {
                 <div className="game-left-container">
                     <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler} boostSelected={selectedBoost.id > 0}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
-                    <PowerUpContext.Provider value={{boost: selectedBoost}}>
+                    <PowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: powerupContext.playerUnlockedBoost}}>
                         <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
                             <Question 
                                     hideQuestion={hideQuestion}

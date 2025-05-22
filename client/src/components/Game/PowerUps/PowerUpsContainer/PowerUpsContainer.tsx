@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./PowerUpsContainer.css"
 import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
 import { BaseBoost, IPowerUp, TemplatePowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
+import { PowerUpContext } from "../../../../contexts/PowerUpContext";
 
 interface Props {
   onGenericBoostPowerUpUsed: () => void
@@ -11,6 +12,7 @@ interface Props {
 }
 
 function PowerUpsContainer(props: Props) {
+  const powerupContext = useContext(PowerUpContext)
   const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
   const [genericBoostRef, setGenericBoostRef] = useState<IPowerUp | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -28,6 +30,12 @@ function PowerUpsContainer(props: Props) {
       removePowerUp(genericBoostRef)
     }
   }, [props.boostSelected, genericBoostRef]);
+
+  useEffect(() => {
+    if (powerupContext.playerUnlockedBoost) {
+      addNewPowerUp(BaseBoost)
+    }
+  }, [powerupContext.playerUnlockedBoost])
 
   const showNotificationIfBoostUnlocked = (powerUp: IPowerUp) => {
     if (powerUp.type == 'boost') {
