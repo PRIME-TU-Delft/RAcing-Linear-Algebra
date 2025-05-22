@@ -263,6 +263,22 @@ function App() {
         }
     }
 
+    const powerUpActivationHandler = (powerUp: IPowerUp) => {
+        switch (powerUp.type) {
+            case "boost":
+                setSelectedBoost(curr => powerUp)
+                setUnlockedBoost(curr => true)
+                break
+            
+            case "helping-hand":
+                socket.emit("useHelpingHandPowerUp")
+                break
+
+            default:
+                break
+        }
+    }
+
     useEffect(() => {
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
@@ -600,7 +616,8 @@ function App() {
                                                                 onRoundEnded={leaderboardNavigationHandler} 
                                                                 playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
                                                                 onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}
-                                                                onBoostSelected={(boost: IPowerUp) => setSelectedBoost(curr => boost)}/>
+                                                                onBoostSelected={(boost: IPowerUp) => setSelectedBoost(curr => boost)}
+                                                                onPowerUpActivated={powerUpActivationHandler}/>
                                                         </RaceProgressContext.Provider>
                                                     </StreakContext.Provider>
                                                 </GraspleQuestionContext.Provider>

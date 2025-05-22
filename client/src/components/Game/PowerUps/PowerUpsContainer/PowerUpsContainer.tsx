@@ -8,6 +8,7 @@ import { PowerUpContext } from "../../../../contexts/PowerUpContext";
 
 interface Props {
   onGenericBoostPowerUpUsed: () => void
+  onPowerUpActivated: (powerUp: IPowerUp) => void
   boostSelected: boolean
 }
 
@@ -64,7 +65,9 @@ function PowerUpsContainer(props: Props) {
           setGenericBoostRef(powerUp)
           setShowNotification(false)
           break;
+          
         default:
+          props.onPowerUpActivated(powerUp)
           removePowerUp(powerUp)
           break;
       }

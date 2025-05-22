@@ -199,7 +199,7 @@ function Question(props: Props) {
                 data-testid="question-container"
             >
                 <DifficultySelection
-                    open={showDifficulty}
+                    open={true}
                     showDescription={showDifficultySelectionDescription}
                     onDifficultySelected={difficultySelectedHandler}
                     type={questionData.iQuestion.subject}

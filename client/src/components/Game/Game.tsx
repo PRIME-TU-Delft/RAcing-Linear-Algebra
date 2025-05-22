@@ -41,6 +41,7 @@ interface Props {
     onRoundEnded: () => void
     onUpdatePlayerScore: (score: number) => void
     onBoostSelected: (boost: IPowerUp) => void
+    onPowerUpActivated: (powerUp: IPowerUp) => void
 }
 
 interface Statistic {
@@ -563,7 +564,10 @@ function Game(props: Props) {
             )}
             <div className="game-container">
                 <div className="game-left-container">
-                    <PowerUpsContainer onGenericBoostPowerUpUsed={genericBoostPowerUpHandler} boostSelected={selectedBoost.id > 0}/>
+                    <PowerUpsContainer 
+                        onGenericBoostPowerUpUsed={genericBoostPowerUpHandler} 
+                        boostSelected={selectedBoost.id > 0}
+                        onPowerUpActivated={props.onPowerUpActivated}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
                     <PowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: powerupContext.playerUnlockedBoost}}>
                         <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>

@@ -3,7 +3,7 @@ import SteadyBoostIcon from '../../../img/Powerups/boost-steady.png'
 import DaringBoostIcon from '../../../img/Powerups/boost-daring.png'
 import RecklessBoostIcon from '../../../img/Powerups/boost-reckless.png'
 
-type PowerUpType = 'boost' | 'shield'
+type PowerUpType = 'boost' | 'helping-hand'
 interface IPowerUp {
     id: number
     name: string
@@ -60,6 +60,14 @@ const RecklessBoost: IPowerUp = {
       imageSrc: RecklessBoostIcon
 }
 
+const HelpingHand: IPowerUp = {
+    id: 4,
+    name: "Helping Hand",
+    description: "Give a boost to a random teammate!",
+    type: 'helping-hand',
+    imageSrc: BaseBoostIcon
+}
+
 export {
     type IPowerUp,
     type PowerUpType,
@@ -67,5 +75,6 @@ export {
     SteadyBoost,
     DaringBoost,
     RecklessBoost,
+    HelpingHand,
     TemplatePowerUp
 }
