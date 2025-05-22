@@ -13,6 +13,7 @@ interface Props {
 function PowerUpsContainer(props: Props) {
   const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
   const [genericBoostRef, setGenericBoostRef] = useState<IPowerUp | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
   const maxPowerUps = 3;
 
   useEffect(() => {
@@ -28,11 +29,23 @@ function PowerUpsContainer(props: Props) {
     }
   }, [props.boostSelected, genericBoostRef]);
 
+  const showNotificationIfBoostUnlocked = (powerUp: IPowerUp) => {
+    if (powerUp.type == 'boost') {
+      setTimeout(() => {
+        setShowNotification(true)
+        setTimeout(() => {
+          setShowNotification(false)
+        }, 4000);
+      }, 300);
+    }
+  }
+
   const addNewPowerUp = (powerUp: IPowerUp) => {
     if (powerUp.duration != undefined) {
       powerUp.expiryTime = Date.now() + (powerUp.duration * 1000)
     }
     setPowerUps((prevPowerUps) => [...prevPowerUps, powerUp]);
+    showNotificationIfBoostUnlocked(powerUp)
   }
 
   const usePowerUp = (powerUp: IPowerUp) => {
@@ -55,40 +68,56 @@ function PowerUpsContainer(props: Props) {
   }
 
   return (
-    <div className="power-ups-container d-flex">
-      <div className="container d-flex col testing-container">
-        <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(BaseBoost)}>Add Boost</div>
-        <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(TemplatePowerUp)}>Add Default</div>
-      </div>
-        <div className="container d-flex justify-content-end align-items-center">
-            <AnimatePresence>
-                {powerUps.map((powerUp) => (
-                  <motion.div
-                    key={powerUp.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    
-                    transition={{ 
-                      duration: 0.3,
-                      exit: { duration: 0.6 }
-                    }}
-                  >
-                    <PowerUpElement 
-                        onClick={() => usePowerUp(powerUp)} 
-                        powerUp={powerUp}
-                        onPowerUpExpired={() => removePowerUp(powerUp)}
-                    />
-                  </motion.div>
-                ))}
-            </AnimatePresence>
+    <>
+      <div className="power-ups-container d-flex">
+        <div className="container d-flex col testing-container">
+          <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(BaseBoost)}>Add Boost</div>
+          <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(TemplatePowerUp)}>Add Default</div>
         </div>
+          <div className="container d-flex justify-content-end align-items-center">
+              <AnimatePresence>
+                  {powerUps.map((powerUp) => (
+                    <motion.div
+                      key={powerUp.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      
+                      transition={{ 
+                        duration: 0.3,
+                        exit: { duration: 0.6 }
+                      }}
+                    >
+                      <PowerUpElement 
+                          onClick={() => usePowerUp(powerUp)} 
+                          powerUp={powerUp}
+                          onPowerUpExpired={() => removePowerUp(powerUp)}
+                      />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+          </div>
 
-        <div className="container-symbol-element d-flex justify-content-center align-items-center">
-            <img className="symbol-image" src={PowerupsContainerIcon} alt="" />
-        </div>
-    </div>
+          <div className="container-symbol-element d-flex justify-content-center align-items-center">
+              <img className="symbol-image" src={PowerupsContainerIcon} alt="" />
+          </div>
+      </div>
+      <AnimatePresence>
+          {showNotification && (
+            <motion.div
+              className="boost-available-notification"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="notification-visual-pointer"></div>
+              Click to activate power-up!
+            </motion.div>
+          )}
+      </AnimatePresence>
+    </>
   )
 }
 
