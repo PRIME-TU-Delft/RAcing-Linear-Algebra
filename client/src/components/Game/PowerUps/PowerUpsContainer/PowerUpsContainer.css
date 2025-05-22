@@ -9,6 +9,37 @@
     padding-right: 4rem;
 }
 
+.testing-btn {
+    position: relative;
+    top: 5px;
+    left: 0;
+    width: 10rem;
+    height: 2.5rem;
+    background-color: #f8b700;
+}
+
+.testing-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 9999;
+    /* Adjust width and height as needed */
+    width: 400px !important;
+    height: 150px;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.testing-container:hover > .testing-btn {
+    opacity: 0.8;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.testing-container:not(:hover) > .testing-btn {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
 .container-symbol-element {
     width: 17%;
     height: 100%;

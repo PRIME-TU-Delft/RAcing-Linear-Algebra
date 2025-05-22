@@ -14,6 +14,16 @@ interface IPowerUp {
     imageSrc: string
 }
 
+const TemplatePowerUp: IPowerUp = {
+    id: -1,
+    name: "Template PowerUp",
+    description: "This is a template powerup.",
+    type: 'boost',
+    duration: 15,
+    expiryTime: Date.now(),
+    imageSrc: BaseBoostIcon
+}
+
 const BaseBoost: IPowerUp = {
     id: 0,
     name: "Base Boost",
@@ -42,8 +52,6 @@ const RecklessBoost: IPowerUp = {
       id: 3,
       name: "Reckless Boost",
       description: "Surely a bad idea, right? Grants a 1.8x boost to your score when your streak is 5 or more.",
-      expiryTime: Date.now(),
-      duration: 0,
       type: 'boost',
       imageSrc: RecklessBoostIcon
 }
@@ -54,5 +62,6 @@ export {
     BaseBoost,
     SteadyBoost,
     DaringBoost,
-    RecklessBoost
+    RecklessBoost,
+    TemplatePowerUp
 }

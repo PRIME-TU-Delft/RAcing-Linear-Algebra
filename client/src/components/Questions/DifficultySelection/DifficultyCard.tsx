@@ -8,12 +8,13 @@ import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 import { PowerUpContext } from "../../../contexts/PowerUpContext"
-import { getBoostMultiplier, getBoostStreakRequirement, isBoostActive } from "../../Game/PowerUps/PowerUpFunctions"
+import { getBoostMultiplier, getBoostStreakRequirement, isBoostActive, wasBoostPowerupUsed } from "../../Game/PowerUps/PowerUpFunctions"
+import { get } from "http"
 interface Props {
     difficulty: string
     emoji: string
     onDifficultySelected: () => void
-    pointsText: string
+    basePoints: number
     totalPoints: number
     attempts: string
     streak: Streak
@@ -70,6 +71,20 @@ export default function  DifficultyCard(props: Props) {
             default:
                 return ""
         }
+    }
+
+    const getMultiplierTooltipText = () => {
+        const boostActive = isBoostActive(powerUps.boost.id, props.streak.streakValue)
+
+        var initialText = props.basePoints.toString() + " * " + props.streak.streakMultiplier
+        
+        if (boostActive) {
+            const boostMultiplier = getBoostMultiplier(powerUps.boost.id)
+            initialText += " * " + boostMultiplier.toString()
+        }
+        
+        const res = Math.floor(props.totalPoints).toString()
+        return initialText + " = " + res
     }
 
     const getBoostTextColor = () => {
@@ -153,14 +168,33 @@ export default function  DifficultyCard(props: Props) {
                         Try another one!
                     </div>
                 ) : 
-                (<div>
-                    <p className="card-points">{props.pointsText}</p>
-                    <p className="card-points">
-                        Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
-                    </p>
-                    <p className="active-boost-points">{powerUps.boost.name}: <b className="active-boost-points" style={{color: getBoostTextColor()}}>{getBoostActivityText()}</b></p>
-                </div>)}
-                
+                (
+                    <div
+                    {...(wasBoostPowerupUsed(powerUps.boost.id)
+                        ? {
+                            "data-tooltip-id": "multiplier-tooltip",
+                            "data-tooltip-content": getMultiplierTooltipText(),
+                        }
+                        : {})
+                    }
+                    style={{ display: "inline-block" }}
+                    >
+                        <p className="card-points">{"Base points: " + props.basePoints.toString()}</p>
+                        <p className="card-points">
+                            Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
+                        </p>
+                        {wasBoostPowerupUsed(powerUps.boost.id) ? (
+                            <p className="active-boost-points">
+                            {powerUps.boost.name}: <b className="active-boost-points" style={{ color: getBoostTextColor() }}>{getBoostActivityText()}</b>
+                        </p>
+                        ) : (
+                            <p className="no-boost-points">
+                                <i>No boost activated</i>
+                            </p>
+                        )}
+                    </div>
+                )}
+                <Tooltip id="multiplier-tooltip" place="top" style={{ backgroundColor: "#FBCE53", color: "#fff", fontSize: "16px", fontWeight: 500, zIndex: 9999 }} />
             </div>
         </>
     )

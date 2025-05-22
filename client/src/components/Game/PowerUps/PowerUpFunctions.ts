@@ -31,6 +31,10 @@ const getBoostValue: (boostId: number, score: number, streak: number) => number 
     }
 }
 
+const wasBoostPowerupUsed: (boostId: number) => boolean = (boostId: number) => {
+    return boostId > 0
+}
+
 const isBoostActive: (boostId: number, streak: number) => boolean = (boostId: number, streak: number) => {
     switch (boostId) {
         case 1:
@@ -79,5 +83,6 @@ export {
     isBoostActive,
     getBoostMultiplier,
     getBoostStreakRequirement,
-    getBoostValue
+    getBoostValue,
+    wasBoostPowerupUsed
 }

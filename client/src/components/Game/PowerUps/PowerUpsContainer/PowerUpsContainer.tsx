@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PowerUpsContainer.css"
 import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
-import { BaseBoost, IPowerUp } from "../PowerUpUtils";
+import { BaseBoost, IPowerUp, TemplatePowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
@@ -21,6 +21,9 @@ function PowerUpsContainer(props: Props) {
   }, [powerUps]);
 
   const addNewPowerUp = (powerUp: IPowerUp) => {
+    if (powerUp.duration != undefined) {
+      powerUp.expiryTime = Date.now() + (powerUp.duration * 1000)
+    }
     setPowerUps((prevPowerUps) => [...prevPowerUps, powerUp]);
   }
 
@@ -44,7 +47,10 @@ function PowerUpsContainer(props: Props) {
 
   return (
     <div className="power-ups-container d-flex">
-      <div className="btn btn-primary fixed-bottom" onClick={() => addNewPowerUp(BaseBoost)}>ADD</div>
+      <div className="container d-flex col testing-container">
+        <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(BaseBoost)}>Add Boost</div>
+        <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(TemplatePowerUp)}>Add Default</div>
+      </div>
         <div className="container d-flex justify-content-end align-items-center">
             <AnimatePresence>
                 {powerUps.map((powerUp) => (

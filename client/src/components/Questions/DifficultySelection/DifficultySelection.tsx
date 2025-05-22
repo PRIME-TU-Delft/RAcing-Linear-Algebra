@@ -23,7 +23,7 @@ import { defaultBoostFunction, getBoostValue } from "../../Game/PowerUps/PowerUp
 interface CardInfo {
     difficulty: string
     emoji: string
-    pointsText: string
+    basePoints: number
     points: number
     attempts: string
 }
@@ -101,21 +101,21 @@ export default function DifficultySelection(props: Props) {
         {
             difficulty: "Easy",
             emoji: "😃",
-            pointsText: "Base points: 10",
+            basePoints: 10,
             points: 10,
             attempts: "Tries: 1",
         },
         {
             difficulty: "Medium",
             emoji: "😐",
-            pointsText: "Base points: 50",
+            basePoints: 50,
             points: 50,
             attempts: "Tries: 2",
         },
         {
             difficulty: "Hard",
             emoji: "😈",
-            pointsText: "Base points: 150",
+            basePoints: 150,
             points: 150,
             attempts: "Tries: 3",
         },
@@ -250,7 +250,7 @@ export default function DifficultySelection(props: Props) {
                                 <DifficultyCard
                                     difficulty={item.difficulty}
                                     emoji={item.emoji}
-                                    pointsText={item.pointsText}
+                                    basePoints={item.basePoints}
                                     totalPoints={calculateTotalPoints(item)}
                                     attempts={item.attempts}
                                     streak={getStreakForDifficulty(item.difficulty)}
