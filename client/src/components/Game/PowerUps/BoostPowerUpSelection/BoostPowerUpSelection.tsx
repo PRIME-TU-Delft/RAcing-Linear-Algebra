@@ -118,7 +118,8 @@ function BoostPowerUpSelection(props: Props) {
                 </Card>
                 <Box mt={1} textAlign="center" sx={{ maxWidth: 200 }}>
                   <div className="boost-powerup-title">{option.name}</div>
-                    <div className="boost-powerup-description">{option.description}</div>
+                  <div className="boost-powerup-description">{option.description}</div>
+                  <div className="boost-powerup-description">{option.effectDescription}</div>
                 </Box>
               </motion.div>
             ))}

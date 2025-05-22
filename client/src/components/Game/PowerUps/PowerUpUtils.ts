@@ -8,6 +8,7 @@ interface IPowerUp {
     id: number
     name: string
     description: string
+    effectDescription?: string
     duration?: number
     expiryTime?: number
     type: PowerUpType
@@ -35,7 +36,8 @@ const BaseBoost: IPowerUp = {
 const SteadyBoost: IPowerUp = {
       id: 1,
       name: "Steady Boost",
-      description: "Slow but steady. Grants a permanent 1.1x boost to your score.",
+      description: "Slow but steady.",
+      effectDescription: "Grants a permanent 1.1x boost to your score.",
       type: 'boost',
       imageSrc: SteadyBoostIcon
 }
@@ -43,7 +45,8 @@ const SteadyBoost: IPowerUp = {
 const DaringBoost: IPowerUp = {
       id: 2,
       name: "Daring Boost",
-      description: "Risky, but rewarding. Grants a 1.3x boost to your score when your streak is 3 or more.",
+      description: "Risky, but rewarding.",
+      effectDescription: "Grants a 1.3x boost to your score when your streak is 3 or more.",
       type: 'boost',
       imageSrc: DaringBoostIcon
 }
@@ -51,7 +54,8 @@ const DaringBoost: IPowerUp = {
 const RecklessBoost: IPowerUp = {
       id: 3,
       name: "Reckless Boost",
-      description: "Surely a bad idea, right? Grants a 1.8x boost to your score when your streak is 5 or more.",
+      description: "Surely a bad idea, right?",
+      effectDescription: "Grants a 1.8x boost to your score when your streak is 5 or more.",
       type: 'boost',
       imageSrc: RecklessBoostIcon
 }

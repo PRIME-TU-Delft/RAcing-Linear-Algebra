@@ -62,6 +62,7 @@ function PowerUpsContainer(props: Props) {
         case 'boost':
           props.onGenericBoostPowerUpUsed()
           setGenericBoostRef(powerUp)
+          setShowNotification(false)
           break;
         default:
           removePowerUp(powerUp)
