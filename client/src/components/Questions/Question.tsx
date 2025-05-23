@@ -27,6 +27,7 @@ import { faQuestion } from "@fortawesome/free-solid-svg-icons"
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext"
 import { ChoosingDifficultyContext } from "../../contexts/ChoosingDifficultyContext"
 import HelpingHandHoverElement from "../Game/PowerUps/HelpingHand/HelpingHandHoverElement"
+import { HelpingHandPowerUpContext } from "../../contexts/PowerUps/HelpingHandPowerUpContext"
 
 interface Props {
     hideQuestion: boolean,
@@ -44,7 +45,7 @@ function Question(props: Props) {
     const graspleQuestionData = useContext(GraspleQuestionContext)
     const questionStatusContext = useContext(QuestionStatusContext)
     const {choosingDifficulty, setChoosingDifficulty} = useContext(ChoosingDifficultyContext)
-
+    const helpingHandContext = useContext(HelpingHandPowerUpContext)
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
@@ -111,6 +112,10 @@ function Question(props: Props) {
 
     const nextQuestionHandler = () => {
         setSkipQuestionAvailable(false)
+        if (helpingHandContext.helpingHandReceived) {
+            // Lose boost if skipping question
+            helpingHandContext.onHelpingHandBoostApplied()
+        }
         questionStatusContext.newQuestionEvent()
     }
     // Animations
@@ -131,6 +136,16 @@ function Question(props: Props) {
             overflow: "hidden",
         },
     })
+
+    const showHelpingHandForPointsIfReceived = () => {
+        if (helpingHandContext.helpingHandReceived) {
+            return (
+                        <HelpingHandHoverElement open={false}></HelpingHandHoverElement>
+                    )
+        } else {
+            return
+        }
+    }
 
     const modalAnimationRef = useSpringRef()
     const modalAnimation = useSpring({
@@ -233,7 +248,8 @@ function Question(props: Props) {
                     openText={`Points ${props.pointsToGain}`}
                     show={!questionStatusContext.questionFinished && !showDifficulty}
                     openOnHover={true}
-                    startOpenDelay={3}/>
+                    startOpenDelay={3}
+                    boxContent={showHelpingHandForPointsIfReceived()}/>
 
                 <QuestionOverlayBox 
                     isAction={true} 
@@ -251,7 +267,7 @@ function Question(props: Props) {
 
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div style={{height: "100%"}}>
-                        <iframe height="100%" src={"https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
+                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (

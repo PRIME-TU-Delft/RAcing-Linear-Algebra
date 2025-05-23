@@ -29,10 +29,11 @@ import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
 import { HelpingHand, IPowerUp } from "./PowerUps/PowerUpUtils";
 import BoostPowerUpSelection from "./PowerUps/BoostPowerUpSelection/BoostPowerUpSelection";
-import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, applyBoostToScore, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
+import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, applyBoostToScore, recklessBoostFunction, steadyBoostFunction, getHelpingHandMultiplier, getBoostMultiplier, isBoostActive } from "./PowerUps/PowerUpFunctions";
 import { BoostPowerUpContext } from "../../contexts/PowerUps/BoostPowerUpContext";
 import { HelpingHandPowerUpContext } from "../../contexts/PowerUps/HelpingHandPowerUpContext";
 import HelpingHandNotification from "./PowerUps/HelpingHand/HelpingHandNotification";
+import { StaticMathField } from "react-mathquill";
 
 interface Props {
     theme: string
@@ -110,7 +111,7 @@ function Game(props: Props) {
             }
             
             if (e.data.properties.correct) {
-                socket.emit("questionAnswered", true, graspleQuestionData.questionData.difficulty.toLowerCase())
+                socket.emit("questionAnswered", true, graspleQuestionData.questionData.difficulty.toLowerCase(), getTotalPowerUpMultipliers())
             } else if (updatedNumberOfAttempts) {
                 onQuestionAnsweredIncorrectly(currentNumberOfAttempts - 1)
             } else {
@@ -216,7 +217,7 @@ function Game(props: Props) {
 
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(false)
-        socket.emit("questionAnswered", false, graspleQuestionData.questionData.difficulty.toLowerCase())
+        socket.emit("questionAnswered", false, graspleQuestionData.questionData.difficulty.toLowerCase(), getTotalPowerUpMultipliers())
         
         if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) {
             socket.emit("getNewQuestion")
@@ -567,6 +568,23 @@ function Game(props: Props) {
         [0, showRoundOverModal ? 0.1 : 0.1]
     )
 
+    const getTotalPowerUpMultipliers = () => {
+        var multiplier = 1
+        if (isBoostActive(selectedBoost.id, streak)) {
+            multiplier *= getBoostMultiplier(selectedBoost.id)
+        }
+        if (helpingHandContext.helpingHandReceived) {
+            multiplier *= getHelpingHandMultiplier()
+        }
+        return multiplier
+    }
+
+    const computePointsToGain = () => {
+        const multiplier = getTotalPowerUpMultipliers()
+        const points = graspleQuestionData.pointsToGain * multiplier
+        return Math.floor(points)
+    }
+
     return (
         <>
              {props.theme === "Train" ? (
@@ -591,7 +609,7 @@ function Game(props: Props) {
                                     easyQuestionsOnCooldown={easyQuestionsOnCooldown}
                                     difficultyName={graspleQuestionData.questionData.difficulty}
                                     difficultyEmoji={getEmojiForDifficulty(graspleQuestionData.questionData.difficulty)}
-                                    pointsToGain={Math.floor(applyBoostToScore(selectedBoost.id, graspleQuestionData.pointsToGain, streak))}
+                                    pointsToGain={computePointsToGain()}
                                 />  
                         </QuestionStatusContext.Provider>
                     </BoostPowerUpContext.Provider>

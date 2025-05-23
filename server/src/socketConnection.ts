@@ -374,12 +374,16 @@ module.exports = {
                 }
             })
 
-            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string) => {
+            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string, multipliers?: number) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
-                    const score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
+                    let score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
+
+                    if (multipliers !== undefined) {
+                        score = score * multipliers
+                    }
 
                     const user = game.users.get(socket.data.userId)
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)

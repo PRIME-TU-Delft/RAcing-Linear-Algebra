@@ -144,7 +144,7 @@ export default function  DifficultyCard(props: Props) {
                                     <div className="row justify-content-center card-points-text">
                                         {Math.floor(props.totalPoints)}
                                         {helpingHandContext.helpingHandReceived && (
-                                            <HelpingHandHoverElement></HelpingHandHoverElement>
+                                            <HelpingHandHoverElement open={true}></HelpingHandHoverElement>
                                         )}
                                     </div>)
                                 }
