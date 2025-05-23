@@ -8,8 +8,10 @@ import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 import { BoostPowerUpContext } from "../../../contexts/PowerUps/BoostPowerUpContext"
-import { getBoostMultiplier, getBoostStreakRequirement, isBoostActive, wasBoostPowerupUsed } from "../../Game/PowerUps/PowerUpFunctions"
+import { getBoostMultiplier, getBoostStreakRequirement, getHelpingHandMultiplier, isBoostActive, wasBoostPowerupUsed } from "../../Game/PowerUps/PowerUpFunctions"
 import { get } from "http"
+import HelpingHandHoverElement from "../../Game/PowerUps/HelpingHand/HelpingHandHoverElement"
+import { HelpingHandPowerUpContext } from "../../../contexts/PowerUps/HelpingHandPowerUpContext"
 interface Props {
     difficulty: string
     emoji: string
@@ -30,7 +32,8 @@ interface Props {
  */
 export default function  DifficultyCard(props: Props) {
     const powerUps = useContext(BoostPowerUpContext)
-    
+    const helpingHandContext = useContext(HelpingHandPowerUpContext)
+
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
 
@@ -81,6 +84,11 @@ export default function  DifficultyCard(props: Props) {
         if (boostActive) {
             const boostMultiplier = getBoostMultiplier(powerUps.boost.id)
             initialText += " * " + boostMultiplier.toString()
+        }
+
+        if (helpingHandContext.helpingHandReceived) {
+            const helpingHandMultiplier = getHelpingHandMultiplier()
+            initialText += " * " + helpingHandMultiplier.toString()
         }
         
         const res = Math.floor(props.totalPoints).toString()
@@ -135,6 +143,9 @@ export default function  DifficultyCard(props: Props) {
                                     : (
                                     <div className="row justify-content-center card-points-text">
                                         {Math.floor(props.totalPoints)}
+                                        {helpingHandContext.helpingHandReceived && (
+                                            <HelpingHandHoverElement></HelpingHandHoverElement>
+                                        )}
                                     </div>)
                                 }
                                         

@@ -7,10 +7,10 @@ import { v4 as uuidv4, validate as validateUuid } from 'uuid';
  * @returns {string} The persistent user ID.
  */
 export function getOrCreateUserId() {
-  let userId = localStorage.getItem("userId");
+  let userId = sessionStorage.getItem("userId");
   if (!userId || !validateUuid(userId)) {
     userId = uuidv4();
-    localStorage.setItem("userId", userId);
+    sessionStorage.setItem("userId", userId);
   }
   return userId;
 }

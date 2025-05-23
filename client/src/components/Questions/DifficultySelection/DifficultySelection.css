@@ -105,6 +105,7 @@
     font-size: 30px;
     font-family: 'Chicle-Regular', sans-serif;
     color: #FB8500;
+    position: relative;
 }
 
 .active-boost-points {

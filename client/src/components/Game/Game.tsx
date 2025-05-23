@@ -29,7 +29,7 @@ import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
 import { HelpingHand, IPowerUp } from "./PowerUps/PowerUpUtils";
 import BoostPowerUpSelection from "./PowerUps/BoostPowerUpSelection/BoostPowerUpSelection";
-import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, getBoostValue, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
+import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, applyBoostToScore, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
 import { BoostPowerUpContext } from "../../contexts/PowerUps/BoostPowerUpContext";
 import { HelpingHandPowerUpContext } from "../../contexts/PowerUps/HelpingHandPowerUpContext";
 import HelpingHandNotification from "./PowerUps/HelpingHand/HelpingHandNotification";
@@ -591,7 +591,7 @@ function Game(props: Props) {
                                     easyQuestionsOnCooldown={easyQuestionsOnCooldown}
                                     difficultyName={graspleQuestionData.questionData.difficulty}
                                     difficultyEmoji={getEmojiForDifficulty(graspleQuestionData.questionData.difficulty)}
-                                    pointsToGain={Math.floor(getBoostValue(selectedBoost.id, graspleQuestionData.pointsToGain, streak))}
+                                    pointsToGain={Math.floor(applyBoostToScore(selectedBoost.id, graspleQuestionData.pointsToGain, streak))}
                                 />  
                         </QuestionStatusContext.Provider>
                     </BoostPowerUpContext.Provider>

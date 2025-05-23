@@ -18,7 +18,7 @@ const recklessBoostFunction: BoostPowerUpFunction = (score: number, streak: numb
     return score
 }
 
-const getBoostValue: (boostId: number, score: number, streak: number) => number = (boostId: number, score: number, streak: number) => {
+const applyBoostToScore: (boostId: number, score: number, streak: number) => number = (boostId: number, score: number, streak: number) => {
     switch (boostId) {
         case 1:
             return steadyBoostFunction(score, streak)
@@ -74,6 +74,10 @@ const getBoostMultiplier: (boostId: number) => number = (boostId: number) => {
     }
 }
 
+const getHelpingHandMultiplier: () => number = () => {
+    return 1.5
+}
+
 export {
     type BoostPowerUpFunction,
     defaultBoostFunction,
@@ -83,6 +87,7 @@ export {
     isBoostActive,
     getBoostMultiplier,
     getBoostStreakRequirement,
-    getBoostValue,
-    wasBoostPowerupUsed
+    applyBoostToScore,
+    wasBoostPowerupUsed,
+    getHelpingHandMultiplier
 }

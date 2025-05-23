@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faQuestion } from "@fortawesome/free-solid-svg-icons"
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext"
 import { ChoosingDifficultyContext } from "../../contexts/ChoosingDifficultyContext"
+import HelpingHandHoverElement from "../Game/PowerUps/HelpingHand/HelpingHandHoverElement"
 
 interface Props {
     hideQuestion: boolean,
@@ -250,7 +251,7 @@ function Question(props: Props) {
 
                 {!showDifficulty && !disableButton && !props.hideQuestion ? 
                     <div style={{height: "100%"}}>
-                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
+                        <iframe height="100%" src={"https://embed.grasple.com/exercises/71b1fb36-e35f-4aaf-9a47-0d227c4337e2?id=77896"} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
                     </div>
                     // <div>
                     //     {questionData.iQuestion !== null && (

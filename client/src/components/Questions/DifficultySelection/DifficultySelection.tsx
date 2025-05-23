@@ -13,7 +13,8 @@ import { StreakContext } from "../../../contexts/StreakContext"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../contexts/DifficultyAvailabilityContext"
 import { BoostPowerUpContext } from "../../../contexts/PowerUps/BoostPowerUpContext"
-import { defaultBoostFunction, getBoostValue } from "../../Game/PowerUps/PowerUpFunctions"
+import { defaultBoostFunction, applyBoostToScore, getHelpingHandMultiplier } from "../../Game/PowerUps/PowerUpFunctions"
+import { HelpingHandPowerUpContext } from "../../../contexts/PowerUps/HelpingHandPowerUpContext"
 
 /**
  * @interface CardInfo - interface used due to the animations, has info related to the difficulty card
@@ -42,6 +43,7 @@ interface Props {
 export default function DifficultySelection(props: Props) {
     const powerUps = useContext(BoostPowerUpContext)
     const streaks = useContext(StreakContext)    
+    const helpingHandContext = useContext(HelpingHandPowerUpContext)
     const difficultyAvailability = useContext(DifficultyAvailabilityContext)    
     const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)
 
@@ -217,7 +219,13 @@ export default function DifficultySelection(props: Props) {
     const calculateTotalPoints = (item: CardInfo) => {
         const streakPoints = item.points * getStreakForDifficulty(item.difficulty).streakMultiplier
         
-        const powerUpPoints = getBoostValue(powerUps.boost.id, streakPoints, getStreakForDifficulty(item.difficulty).streakValue)
+        var powerUpPoints = applyBoostToScore(powerUps.boost.id, streakPoints, getStreakForDifficulty(item.difficulty).streakValue)
+
+        if (helpingHandContext.helpingHandReceived) {
+            const multiplier = getHelpingHandMultiplier()
+            powerUpPoints = powerUpPoints * multiplier
+        }
+        
         return powerUpPoints
     }
 
