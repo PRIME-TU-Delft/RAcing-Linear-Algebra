@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./PowerUpsContainer.css"
 import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
-import { BaseBoost, IPowerUp, TemplatePowerUp } from "../PowerUpUtils";
+import { BaseBoost, HelpingHand, IPowerUp, TemplatePowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
 import { BoostPowerUpContext } from "../../../../contexts/PowerUps/BoostPowerUpContext";
 
@@ -84,7 +84,7 @@ function PowerUpsContainer(props: Props) {
       <div className="power-ups-container d-flex">
         <div className="container d-flex col testing-container">
           <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(BaseBoost)}>Add Boost</div>
-          <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(TemplatePowerUp)}>Add Default</div>
+          <div className="btn btn-primary testing-btn"  onClick={() => addNewPowerUp(HelpingHand)}>Add HelpingHand</div>
         </div>
           <div className="container d-flex justify-content-end align-items-center">
               <AnimatePresence>

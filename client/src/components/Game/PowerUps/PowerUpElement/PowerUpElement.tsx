@@ -51,6 +51,7 @@ function PowerUpElement(props: Props) {
         }
         style={{ position: "relative", boxShadow: "0 0 10px rgb(255, 255, 255)" }}
       >
+        <div className="power-up-background"></div>
         <img
           src={props.powerUp.imageSrc}
           alt={props.powerUp.name}
