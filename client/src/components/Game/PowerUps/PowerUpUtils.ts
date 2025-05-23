@@ -2,6 +2,7 @@ import BaseBoostIcon from '../../../img/Powerups/boost-base.png'
 import SteadyBoostIcon from '../../../img/Powerups/boost-steady.png'
 import DaringBoostIcon from '../../../img/Powerups/boost-daring.png'
 import RecklessBoostIcon from '../../../img/Powerups/boost-reckless.png'
+import HelpingHandGif from '../../../img/Powerups/helping-hand.gif'
 
 type PowerUpType = 'boost' | 'helping-hand'
 interface IPowerUp {
@@ -65,7 +66,7 @@ const HelpingHand: IPowerUp = {
     name: "Helping Hand",
     description: "Give a boost to a random teammate!",
     type: 'helping-hand',
-    imageSrc: BaseBoostIcon
+    imageSrc: HelpingHandGif
 }
 
 export {
@@ -76,5 +77,6 @@ export {
     DaringBoost,
     RecklessBoost,
     HelpingHand,
-    TemplatePowerUp
+    TemplatePowerUp,
+    HelpingHandGif
 }

@@ -7,7 +7,7 @@ import FlameAnimation from "../Streak/Flame/Flame"
 import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
-import { PowerUpContext } from "../../../contexts/PowerUpContext"
+import { BoostPowerUpContext } from "../../../contexts/PowerUps/BoostPowerUpContext"
 import { getBoostMultiplier, getBoostStreakRequirement, isBoostActive, wasBoostPowerupUsed } from "../../Game/PowerUps/PowerUpFunctions"
 import { get } from "http"
 interface Props {
@@ -29,7 +29,7 @@ interface Props {
  * This contains the difficulty and the emoji for that difficulty
  */
 export default function  DifficultyCard(props: Props) {
-    const powerUps = useContext(PowerUpContext)
+    const powerUps = useContext(BoostPowerUpContext)
     
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)

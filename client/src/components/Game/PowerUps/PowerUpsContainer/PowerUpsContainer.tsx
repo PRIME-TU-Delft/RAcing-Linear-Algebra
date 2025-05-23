@@ -4,7 +4,7 @@ import PowerupsContainerIcon from "../../../../img/powerups-container-icon.png"
 import PowerUpElement from "../PowerUpElement/PowerUpElement";
 import { BaseBoost, IPowerUp, TemplatePowerUp } from "../PowerUpUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import { PowerUpContext } from "../../../../contexts/PowerUpContext";
+import { BoostPowerUpContext } from "../../../../contexts/PowerUps/BoostPowerUpContext";
 
 interface Props {
   onGenericBoostPowerUpUsed: () => void
@@ -13,7 +13,7 @@ interface Props {
 }
 
 function PowerUpsContainer(props: Props) {
-  const powerupContext = useContext(PowerUpContext)
+  const powerupContext = useContext(BoostPowerUpContext)
   const [powerUps, setPowerUps] = useState<IPowerUp[]>([]);
   const [genericBoostRef, setGenericBoostRef] = useState<IPowerUp | null>(null);
   const [showNotification, setShowNotification] = useState(false);

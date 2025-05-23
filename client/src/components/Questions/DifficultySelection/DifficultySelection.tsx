@@ -12,7 +12,7 @@ import DifficultyCard from "./DifficultyCard"
 import { StreakContext } from "../../../contexts/StreakContext"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "../../../contexts/DifficultyAvailabilityContext"
-import { PowerUpContext } from "../../../contexts/PowerUpContext"
+import { BoostPowerUpContext } from "../../../contexts/PowerUps/BoostPowerUpContext"
 import { defaultBoostFunction, getBoostValue } from "../../Game/PowerUps/PowerUpFunctions"
 
 /**
@@ -40,7 +40,7 @@ interface Props {
  * Component that displays the difficulty selection modal
  */
 export default function DifficultySelection(props: Props) {
-    const powerUps = useContext(PowerUpContext)
+    const powerUps = useContext(BoostPowerUpContext)
     const streaks = useContext(StreakContext)    
     const difficultyAvailability = useContext(DifficultyAvailabilityContext)    
     const [showFlameAnimation, setShowFlameAnimation] = useState<boolean>(false)

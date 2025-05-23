@@ -410,6 +410,24 @@ module.exports = {
                 }
             })
 
+            socket.on("useHelpingHandPowerUp", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)
+                if (lobbyId == undefined) return
+
+                const room = io.sockets.adapter.rooms.get(`players${lobbyId}`)
+                if (room == undefined) return
+
+                const otherPlayers = Array.from(room).filter(socketId => socketId !== socket.id)
+                
+                // One player room, return
+                if (otherPlayers.length == 0) return
+
+                const randomIndex = Math.floor(Math.random() * otherPlayers.length)
+                const randomSocketId = otherPlayers[randomIndex]
+
+                io.to(randomSocketId).emit("received-helping-hand")
+            })
+
 
             /**
              * DEPRECATED

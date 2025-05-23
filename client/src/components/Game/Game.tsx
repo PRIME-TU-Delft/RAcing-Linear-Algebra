@@ -27,10 +27,12 @@ import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
 import PowerUpsContainer from "./PowerUps/PowerUpsContainer/PowerUpsContainer";
-import { IPowerUp } from "./PowerUps/PowerUpUtils";
+import { HelpingHand, IPowerUp } from "./PowerUps/PowerUpUtils";
 import BoostPowerUpSelection from "./PowerUps/BoostPowerUpSelection/BoostPowerUpSelection";
 import { BoostPowerUpFunction, daringBoostFunction, defaultBoostFunction, getBoostValue, recklessBoostFunction, steadyBoostFunction } from "./PowerUps/PowerUpFunctions";
-import { PowerUpContext } from "../../contexts/PowerUpContext";
+import { BoostPowerUpContext } from "../../contexts/PowerUps/BoostPowerUpContext";
+import { HelpingHandPowerUpContext } from "../../contexts/PowerUps/HelpingHandPowerUpContext";
+import HelpingHandNotification from "./PowerUps/HelpingHand/HelpingHandNotification";
 
 interface Props {
     theme: string
@@ -56,7 +58,8 @@ function Game(props: Props) {
     const raceData = useContext(RaceDataContext)
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
-    const powerupContext = useContext(PowerUpContext)
+    const powerupContext = useContext(BoostPowerUpContext)
+    const helpingHandContext = useContext(HelpingHandPowerUpContext)
     const [currentNumberOfAttempts, setCurrentNumberOfAttempts] = useState<number>(0)
     const [updatedNumberOfAttempts, setUpdatedNumberOfAttempts] = useState<boolean>(false);
 
@@ -158,6 +161,12 @@ function Game(props: Props) {
         }
     }
 
+    function applyHelpingHandIfActive() {
+        if (helpingHandContext.helpingHandReceived) {
+            helpingHandContext.onHelpingHandBoostApplied()
+        }
+    }
+
     function onQuestionAnsweredCorrectly(score: number) {
         // What happens if the answer is correct
         // setModalText(["✔️ Your answer is correct!"])
@@ -168,12 +177,14 @@ function Game(props: Props) {
         // setShowInfoModal(true)
         correctAnswerToast()
 
+
         if (graspleQuestionData.questionData.difficulty.toLowerCase() === "easy")
             easyQuestionAnswered(true)
 
         if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) {
             socket.emit("getNewQuestion")
         }
+        applyHelpingHandIfActive()
     }
 
     function onQuestionAnsweredIncorrectly(triesLeft: number) {
@@ -190,6 +201,7 @@ function Game(props: Props) {
             // setShowInfoModal(true)
             setQuestionFinished(curr => true)
             incorrectAnswerToast()
+            applyHelpingHandIfActive()
         } else {
             wrongAnswerToast(triesLeft)
             setCurrentNumberOfAttempts(curr => Math.max(0, curr - 1))
@@ -569,7 +581,7 @@ function Game(props: Props) {
                         boostSelected={selectedBoost.id > 0}
                         onPowerUpActivated={props.onPowerUpActivated}/>
                     <TimeBar roundDuration={props.roundDuration}></TimeBar>
-                    <PowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: powerupContext.playerUnlockedBoost}}>
+                    <BoostPowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: powerupContext.playerUnlockedBoost}}>
                         <QuestionStatusContext.Provider value={{questionStarted, questionFinished, remainingAttempts: currentNumberOfAttempts, newQuestionEvent: onPlayerReadyForNewQuestion}}>
                             <Question 
                                     hideQuestion={hideQuestion}
@@ -582,7 +594,7 @@ function Game(props: Props) {
                                     pointsToGain={Math.floor(getBoostValue(selectedBoost.id, graspleQuestionData.pointsToGain, streak))}
                                 />  
                         </QuestionStatusContext.Provider>
-                    </PowerUpContext.Provider>
+                    </BoostPowerUpContext.Provider>
                 </div>
                  <div className="game-right-container">
                     <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
@@ -593,7 +605,7 @@ function Game(props: Props) {
                     {showBoostPowerUpSelection && (
                     <BoostPowerUpSelection onSelectionComplete={boostSelectionCompletedHandler} onSelectionCancelled={boostSelectionCancelledHandler}></BoostPowerUpSelection>
                     )}
-                    
+                    <HelpingHandNotification></HelpingHandNotification>
                  </div>
             </div>
                    

@@ -37,7 +37,8 @@ import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
 import { IPowerUp } from "./components/Game/PowerUps/PowerUpUtils"
-import { PowerUpContext } from "./contexts/PowerUpContext"
+import { BoostPowerUpContext } from "./contexts/PowerUps/BoostPowerUpContext"
+import { HelpingHandPowerUpContext } from "./contexts/PowerUps/HelpingHandPowerUpContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -98,6 +99,8 @@ function App() {
 
     const [selectedBoost, setSelectedBoost] = useState<IPowerUp>({} as IPowerUp)
     const [unlockedBoost, setUnlockedBoost] = useState<boolean>(false)
+
+    const [helpingHandReceived, setHelpingHandReceived] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -279,6 +282,10 @@ function App() {
         }
     }
 
+    const helpingHandBoostAppliedHandler = () => {
+        setHelpingHandReceived(curr => false)
+    }
+
     useEffect(() => {
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
@@ -450,6 +457,10 @@ function App() {
                 }
             });
         }
+
+        function onReceivedHelpingHand() {
+            setHelpingHandReceived(curr => true)
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -478,6 +489,7 @@ function App() {
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
         socket.on("blocked-user-reconnection", onBlockedUserReconnection)
         socket.on("already-in-room", onPlayerAlreadyInLobby)
+        socket.on("received-helping-hand", onReceivedHelpingHand)
     }, [])
 
     // useEffect(() => {
@@ -594,40 +606,42 @@ function App() {
                 ></Route>
                 <Route path="/Game" element={
                     <TimeContext.Provider value={totalSeconds}>
-                        <PowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: unlockedBoost}}>
-                            <RaceDataContext.Provider value={{
-                                theme: theme,
-                                ghostTeams: ghostTeams,
-                                checkpoints: [],
-                                selectedMap: trainMaps[0]
-                            }}>
-                                <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
-                                    <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
-                                        <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
-                                            <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
-                                                <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
-                                                    <StreakContext.Provider value={streaks}>
-                                                        <RaceProgressContext.Provider value={stopShowingRace}>
-                                                            <Game 
-                                                                theme={theme} 
-                                                                roundDuration={roundDuration} 
-                                                                roundStarted={roundstarted} 
-                                                                isFirstRound={isFirstRound} 
-                                                                onRoundEnded={leaderboardNavigationHandler} 
-                                                                playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
-                                                                onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}
-                                                                onBoostSelected={(boost: IPowerUp) => setSelectedBoost(curr => boost)}
-                                                                onPowerUpActivated={powerUpActivationHandler}/>
-                                                        </RaceProgressContext.Provider>
-                                                    </StreakContext.Provider>
-                                                </GraspleQuestionContext.Provider>
-                                            </QuestionContext.Provider>
-                                        </ScoreContext.Provider>
-                                    </DifficultyAvailabilityContext.Provider>
-                                </ChoosingDifficultyContext.Provider>
-                                
-                            </RaceDataContext.Provider>
-                        </PowerUpContext.Provider>
+                        <BoostPowerUpContext.Provider value={{boost: selectedBoost, playerUnlockedBoost: unlockedBoost}}>
+                            <HelpingHandPowerUpContext.Provider value={{helpingHandReceived: helpingHandReceived, onHelpingHandBoostApplied: helpingHandBoostAppliedHandler}}>
+                                <RaceDataContext.Provider value={{
+                                    theme: theme,
+                                    ghostTeams: ghostTeams,
+                                    checkpoints: [],
+                                    selectedMap: trainMaps[0]
+                                }}>
+                                    <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
+                                        <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
+                                            <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
+                                                <QuestionContext.Provider value={{iQuestion: currentQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions}}>
+                                                    <GraspleQuestionContext.Provider value={{questionData: currentGraspleQuestion, questionNumber: currentQuestionNumber, numberOfMandatory: numberOfMandatoryQuestions, pointsToGain: pointsToGainForCurrentQuestion}}>
+                                                        <StreakContext.Provider value={streaks}>
+                                                            <RaceProgressContext.Provider value={stopShowingRace}>
+                                                                <Game 
+                                                                    theme={theme} 
+                                                                    roundDuration={roundDuration} 
+                                                                    roundStarted={roundstarted} 
+                                                                    isFirstRound={isFirstRound} 
+                                                                    onRoundEnded={leaderboardNavigationHandler} 
+                                                                    playerScoreBeforeReconnecting={playerScoreBeforeReconnecting}
+                                                                    onUpdatePlayerScore={(score) => setCurrentIndividualScore(curr => score)}
+                                                                    onBoostSelected={(boost: IPowerUp) => setSelectedBoost(curr => boost)}
+                                                                    onPowerUpActivated={powerUpActivationHandler}/>
+                                                            </RaceProgressContext.Provider>
+                                                        </StreakContext.Provider>
+                                                    </GraspleQuestionContext.Provider>
+                                                </QuestionContext.Provider>
+                                            </ScoreContext.Provider>
+                                        </DifficultyAvailabilityContext.Provider>
+                                    </ChoosingDifficultyContext.Provider>
+                                    
+                                </RaceDataContext.Provider>
+                            </HelpingHandPowerUpContext.Provider>
+                        </BoostPowerUpContext.Provider>
                     </TimeContext.Provider>
                 } />
                 <Route
