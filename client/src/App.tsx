@@ -182,7 +182,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 30) // CHANGE
+        setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
