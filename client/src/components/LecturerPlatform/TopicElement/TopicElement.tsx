@@ -116,7 +116,7 @@ function TopicElement(props: Props) {
             message: message,
             type: "warning",
             insert: "top",
-            container: "bottom-right",
+            container: "top-right",
             dismiss: {
                 duration: 5000,
                 onScreen: true
@@ -204,7 +204,7 @@ function TopicElement(props: Props) {
             message: message,
             type: "success",
             insert: "top",
-            container: "bottom-right",
+            container: "top-right",
             dismiss: {
                 duration: 5000,
                 onScreen: true
@@ -219,7 +219,7 @@ function TopicElement(props: Props) {
                 message: "You must save changes before editing a different exercise",
                 type: "warning",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -244,7 +244,7 @@ function TopicElement(props: Props) {
                 message: "This exercise already exists in the topic",
                 type: "warning",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -267,7 +267,7 @@ function TopicElement(props: Props) {
             message: "You must complete the current exercise before adding a new one",
             type: "warning",
             insert: "top",
-            container: "bottom-right",
+            container: "top-right",
             dismiss: {
                 duration: 5000,
                 onScreen: true
@@ -298,7 +298,7 @@ function TopicElement(props: Props) {
                 message: "You must complete the current exercise before adding a new one",
                 type: "warning",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -684,7 +684,7 @@ function TopicElement(props: Props) {
                     There are currently {props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0} {maxDefaultTeamsCountReached ? "(max)" : ""} fake teams in the database for this topic.
                     </Typography>
                     }
-                    {changingTeams && (
+                    {changingTeams && props._id != "" && (
                         <div style={{ marginTop: "1rem" }}>
                             {!maxDefaultTeamsCountReached && 
                                 <Button 

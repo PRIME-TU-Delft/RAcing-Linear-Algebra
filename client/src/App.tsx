@@ -143,6 +143,7 @@ function App() {
     }
 
     const addDefaultTeamsHandler = (topicId: string, teamsToAddCount: number, avgTimePerQuestion: number) => {
+        console.log("Adding default teams for topic: " + topicId)
         socket.emit("addDefaultTeams", topicId, teamsToAddCount, avgTimePerQuestion)
     }
 

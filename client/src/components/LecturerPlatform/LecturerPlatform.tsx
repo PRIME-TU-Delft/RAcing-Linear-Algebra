@@ -144,7 +144,7 @@ function LecturerPlatform(props: Props) {
                 message: `Linked exercise #${exercise.exerciseId} to the topic`,
                 type: "success",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -156,7 +156,7 @@ function LecturerPlatform(props: Props) {
                 message: "The topic already contains this exercise",
                 type: "warning",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
