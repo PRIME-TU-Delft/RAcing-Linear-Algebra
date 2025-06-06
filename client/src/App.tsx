@@ -95,6 +95,7 @@ function App() {
     const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
     const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
     const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
+    const [noGhostTeamsPresent, setNoGhostTeamsPresent] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -280,6 +281,7 @@ function App() {
         function onGhostTeamsReceived(data: ServerGhost[]) {
             const intializedGhosts: Ghost[] = initializeFrontendGhostObjects(data)
             setGhostTeams((curr) => [...intializedGhosts])
+            setNoGhostTeamsPresent(curr => intializedGhosts.length === 0)
         }
 
         function onRoundStarted(roundDuration: number) {
@@ -577,6 +579,7 @@ function App() {
                                 topic={topic} 
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
+                                noGhostTeamsPresent={noGhostTeamsPresent}
                                 onStartGame={() => {
                                     if (!isPlayer)  {
                                         socket.emit("beginRace")
