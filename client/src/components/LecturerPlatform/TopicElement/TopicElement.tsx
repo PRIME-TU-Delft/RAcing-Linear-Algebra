@@ -447,7 +447,7 @@ function TopicElement(props: Props) {
     }, [props.exercises])
 
     useEffect(() => {
-        setNewFakeTeamsCount(curr => 30 -  (props.defaultTeamsData == undefined ? 0 :props.defaultTeamsData.fakeTeamsCount))
+        setNewFakeTeamsCount(curr => 31 -  (props.defaultTeamsData == undefined ? 0 :props.defaultTeamsData.fakeTeamsCount))
     }, [props.defaultTeamsData])
 
     useEffect(() => {
@@ -556,6 +556,9 @@ function TopicElement(props: Props) {
     function saveTopicChangesHandler(): void {
         setSaveChanges(curr => ({name: true, studies: true, exercises: true}))
     }
+    
+    const someDefaultTeamsExist = props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0
+    const maxDefaultTeamsCountReached = props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount >= 31
 
     return (
         <div className="topic-element">
@@ -575,9 +578,9 @@ function TopicElement(props: Props) {
                         </div>
                         <div className="number-of-exercises">Exercises: {exercises.length}</div>
                         {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ? 
-                            <div className="number-of-default-teams">Warning! There are no teams for this topic yet. Consider adding default teams.</div>
+                            <div className="number-of-default-teams">Warning! There are no teams for this topic yet. Consider adding fake teams.</div>
                         : props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0 ?
-                            <div className="number-of-default-teams">{props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0}/{props.defaultTeamsData != undefined ? props.defaultTeamsData.totalTeamsCount : 0} default teams</div>
+                            <div className="number-of-default-teams">{props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0}/{props.defaultTeamsData != undefined ? props.defaultTeamsData.totalTeamsCount : 0} fake teams</div>
                         : null
                         }
 
@@ -655,43 +658,58 @@ function TopicElement(props: Props) {
                 <AccordionDetails>
                 <div className="fake-teams-section">
                     <div className="fake-teams-header topic-header">
-                    Default teams 
-                    {changingTeams ? (<>
+                    Fake teams
+                    {changingTeams ? (
+                        <>
                         <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}/>
                         <FontAwesomeIcon
                                     icon={faCircleInfo}
                                     style={{ color: "#1976D2", marginLeft: "0.5rem" }}
                                     data-tooltip-id="info-tooltip"
                                     data-tooltip-place="right"
-                                    data-tooltip-html="Add new default teams by pressing the + button.<br /> Remove the default teams from the database by pressing the trash icon."
+                                    data-tooltip-html="Fake teams are artificially created teams that can be used when there aren't enough real teams (classes) that have played with this topic. This makes the race more interesting."
                         />
-                        <FontAwesomeIcon 
-                            icon={faPlus} 
-                            className="fake-teams-add-icon" 
-                            onClick={() => setIsFakeTeamsDialogOpen(true)}
-                            style={{ marginLeft: "1rem", cursor: "pointer" }}
-                        />
-                        <FontAwesomeIcon 
-                        icon={faTrash} 
-                        className="fake-teams-remove-icon" 
-                        onClick={() => setIsDeleteFakeTeamsDialogOpen(true)}
-                        style={{ marginLeft: "1rem", cursor: "pointer" }}
-                        />
-                    </>)
+                        </>
+                    )
                     :
                     <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingTeams(curr => true)}/>
                     }
-                    
                     </div>
-                    {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ? 
+                    {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ?
                         <Typography variant="body2" color="textSecondary" style={{ marginTop: "0.5rem" }}>
                             There are currently no teams in the database for this topic. This will mean the race won't have any competing racers other than the team who's playing.
                         </Typography>
                     :
-                    <Typography variant="body2" style={{ marginTop: "0.5rem",  }}>
-                    There are currently {props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0} fake teams in the database for this topic.
+                    <Typography variant="body2" style={{ marginTop: "0.5rem" }}>
+                    There are currently {props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0} {maxDefaultTeamsCountReached ? "(max)" : ""} fake teams in the database for this topic.
                     </Typography>
                     }
+                    {changingTeams && (
+                        <div style={{ marginTop: "1rem" }}>
+                            {!maxDefaultTeamsCountReached && 
+                                <Button 
+                                    variant="outlined" 
+                                    size="small" 
+                                    onClick={() => setIsFakeTeamsDialogOpen(true)} 
+                                    startIcon={<FontAwesomeIcon icon={faPlus} />}
+                                    style={{ marginRight: "0.5rem" }}
+                                >
+                                    Add Teams
+                                </Button>
+                            }
+                            {someDefaultTeamsExist && 
+                                <Button 
+                                    variant="outlined" 
+                                    size="small" 
+                                    color="error" 
+                                    onClick={() => setIsDeleteFakeTeamsDialogOpen(true)} 
+                                    startIcon={<FontAwesomeIcon icon={faTrash} />}
+                                >
+                                    Delete Teams
+                                </Button>
+                            }
+                        </div>
+                    )}
                 </div>
                 </AccordionDetails>
 
@@ -939,23 +957,23 @@ function TopicElement(props: Props) {
             </Dialog>
             
             <Dialog open={isFakeTeamsDialogOpen} onClose={() => setIsFakeTeamsDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle>Create Default Teams</DialogTitle>
+                <DialogTitle>Create Fake Teams</DialogTitle>
                 <DialogContent>
                     <Typography variant="body2" color="textSecondary" style={{ marginBottom: "1.5rem" }}>
-                        There can be a maximum of 30 default teams in the database. You can add {props.defaultTeamsData != undefined ? 30 - props.defaultTeamsData.fakeTeamsCount : 30} more
+                        There can be a maximum of 31 fake teams in the database. You can add {props.defaultTeamsData != undefined ? 31 - props.defaultTeamsData.fakeTeamsCount : 31} more
                     </Typography>
                     <TextField
                     label="Number of Teams"
                     type="number"
                     fullWidth
                     margin="dense"
-                    defaultValue={30 - (props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0)}
+                    defaultValue={31 - (props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0)}
                     inputProps={{
                         min: 1,
-                        max: props.defaultTeamsData != undefined ? 30 - props.defaultTeamsData.fakeTeamsCount : 30
+                        max: props.defaultTeamsData != undefined ? 31 - props.defaultTeamsData.fakeTeamsCount : 31
                     }}
                     value={newFakeTeamsCount}
-                    onChange={e => setNewFakeTeamsCount(Math.min(Number(e.target.value), props.defaultTeamsData != undefined ? 30 - props.defaultTeamsData.fakeTeamsCount : 30))}
+                    onChange={e => setNewFakeTeamsCount(Math.min(Number(e.target.value), props.defaultTeamsData != undefined ? 31 - props.defaultTeamsData.fakeTeamsCount : 31))}
                     />
                     <TextField
                     label="Average Time (seconds per question)"
@@ -974,10 +992,10 @@ function TopicElement(props: Props) {
             </Dialog>
 
             <Dialog open={isDeleteFakeTeamsDialogOpen} onClose={() => setIsDeleteFakeTeamsDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle>Delete Default Teams</DialogTitle>
+                <DialogTitle>Delete Fake Teams</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                    Are you sure you want to delete the default teams from the database? This will leave <b>{props.defaultTeamsData ? props.defaultTeamsData.totalTeamsCount - props.defaultTeamsData.fakeTeamsCount : 0}</b> teams for this topic.
+                    Are you sure you want to delete the fake teams from the database? This will leave <b>{props.defaultTeamsData ? props.defaultTeamsData.totalTeamsCount - props.defaultTeamsData.fakeTeamsCount : 0}</b> teams for this topic.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
