@@ -32,7 +32,7 @@ import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
 import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
-import { TopicDataContext } from "./contexts/TopicDataContext"
+import { DefaultTeamsData, TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
@@ -61,6 +61,7 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
@@ -94,6 +95,7 @@ function App() {
     const [pointsToGainForCurrentQuestion, setPointsToGainForCurrentQuestion] = useState<number>(0)
     const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
     const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
+    const [noGhostTeamsPresent, setNoGhostTeamsPresent] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -139,6 +141,16 @@ function App() {
 
     const topicHandler = (topic: string) => {
         setTopic((current) => topic)
+    }
+
+    const addDefaultTeamsHandler = (topicId: string, teamsToAddCount: number, avgTimePerQuestion: number) => {
+        console.log("Adding default teams for topic: " + topicId)
+        socket.emit("addDefaultTeams", topicId, teamsToAddCount, avgTimePerQuestion)
+    }
+
+    const deleteDefaultTeamsHandler = (topicId: string) => {
+
+        socket.emit("deleteDefaultTeams", topicId)
     }
 
     const resetValues = () => {
@@ -269,6 +281,7 @@ function App() {
         function onGhostTeamsReceived(data: ServerGhost[]) {
             const intializedGhosts: Ghost[] = initializeFrontendGhostObjects(data)
             setGhostTeams((curr) => [...intializedGhosts])
+            setNoGhostTeamsPresent(curr => intializedGhosts.length === 0)
         }
 
         function onRoundStarted(roundDuration: number) {
@@ -304,8 +317,7 @@ function App() {
         }
 
         function onRaceStarted() {
-            socket.emit("getNewQuestion")
-            socket.emit("getMandatoryNum")
+            socket.emit("checkForDisabledDifficulties")
             gameStartHandler()
         }
 
@@ -352,7 +364,13 @@ function App() {
         }
 
         function onGetAllTopics(allTopics: Topic[]) {
+            console.log(allTopics)
             setAllTopics(curr => [...allTopics])
+        }
+
+        function onGetAllDefaultTeamData(defaultTeams: DefaultTeamsData[]) {
+            console.log(defaultTeams)
+            setAllDefaultTeamData(curr => [...defaultTeams])
         }
 
         function onGetAllExercises(allExercises: Exercise[]) {
@@ -365,7 +383,7 @@ function App() {
 
         function onDisableDifficulty(difficulty: string) {
             setDifficultyAvailability(curr => {
-                switch(difficulty) {
+                switch(difficulty.toLowerCase()) {
                     case "easy":
                         return { ...curr, easy: false }
                     case "medium":
@@ -395,12 +413,11 @@ function App() {
             setAllRoundsFinished(curr => false)
             setStopShowingRace(false)
 
+            socket.emit("checkForDisabledDifficulties")
+
             const newExpiry = new Date();
             newExpiry.setSeconds(newExpiry.getSeconds() + remainingTime);
             restart(newExpiry);
-            
-            socket.emit("getMandatoryNum")
-            socket.emit("getNewQuestion")
             
             if (isPlayer) {
                 navigate("/Game")
@@ -430,6 +447,11 @@ function App() {
                 }
             });
         }
+
+        function onReadyForQuestionRequest() {
+            socket.emit("getMandatoryNum")
+            socket.emit("getNewQuestion")
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -449,6 +471,7 @@ function App() {
         socket.on("all-studies", onGetAllStudies)
         socket.on("all-topics", onGetAllTopics)
         socket.on("all-exercises", onGetAllExercises)
+        socket.on("all-default-teams", onGetAllDefaultTeamData)	
         socket.on("updated-exercise", onGetUpdatedExercise)
         socket.on("updated-topic", onGetUpdatedTopic)
         socket.on("lobby-data", onGetLobbyData)
@@ -458,6 +481,7 @@ function App() {
         socket.on("joined-game-in-progress", onJoinedGameInProgress)
         socket.on("blocked-user-reconnection", onBlockedUserReconnection)
         socket.on("already-in-room", onPlayerAlreadyInLobby)
+        socket.on("ready-for-question-request", onReadyForQuestionRequest)
     }, [])
 
     // useEffect(() => {
@@ -490,6 +514,7 @@ function App() {
             socket.emit("getAllTopics")
             socket.emit("getAllStudies")	
             socket.emit("getAllExercises")
+            socket.emit("getAllDefaultTeams")
             navigate("/LecturerPlatform")
             setLoggedIn(false)
         }
@@ -554,6 +579,7 @@ function App() {
                                 topic={topic} 
                                 ghostTeams={ghostTeams}
                                 mainTeamName={teamName}
+                                noGhostTeamsPresent={noGhostTeamsPresent}
                                 onStartGame={() => {
                                     if (!isPlayer)  {
                                         socket.emit("beginRace")
@@ -644,6 +670,7 @@ function App() {
                             teamScore={currentScore}
                             teamStudy={study}
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
+                            fullLapScoreValue={fullLapScoreValue}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
                             playerScore={currentIndividualScore}
@@ -654,11 +681,13 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics}}>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData}}>
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                 onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
+                                onAddDefaultTeamsForTopic={addDefaultTeamsHandler}
+                                onDeleteDefaultTeamsForTopic={deleteDefaultTeamsHandler}
                                 />
                         </TopicDataContext.Provider>
                     }

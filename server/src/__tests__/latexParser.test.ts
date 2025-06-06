@@ -1,6 +1,6 @@
 import sinon from "sinon"
 import mongoose from "mongoose"
-import { checkAnswerEqual } from "../latexParser"
+import { checkAnswerEqual } from "../utils/latexParser"
 describe("Test latex", () => {
     let mcQuestion, commaQuestion, mathQuestion, infiniteQuestion, infiniteQuestionNoRule
     let plusQuestion, minusQuestionWithVariable, plusQuestionWithVariable

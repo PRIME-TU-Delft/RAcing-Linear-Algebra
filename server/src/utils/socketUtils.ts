@@ -1,5 +1,5 @@
-import { getBestTeamFinalScore, getGhostTeams } from "./controllers/scoreDBController";
-import type { Game, GameGhostTeam } from "./objects/gameObject";
+import { getBestTeamFinalScore, getGhostTeams } from "../controllers/scoreDBController";
+import type { Game, GameGhostTeam } from "../objects/gameObject";
 
 export async function getInterpolatedGhostTeams(game: Game) {
     const topic = game.topics[game.currentTopicIndex]

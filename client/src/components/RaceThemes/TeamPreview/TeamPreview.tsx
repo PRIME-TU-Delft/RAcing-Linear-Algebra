@@ -16,6 +16,7 @@ interface Props {
     theme: string,
     ghostTeams: Ghost[],
     mainTeamName: string,
+    noGhostTeamsPresent: boolean,
     onStartGame: () => void
 }
 
@@ -88,8 +89,8 @@ function TeamPreview(props: Props) {
     }, [showMainTeam])
 
     useEffect(() => {
-        if (numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) setShowMainTeam(curr => true)
-    }, [numberOfGhostTeamAnimationsCompleted])
+        if ((numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) || props.noGhostTeamsPresent) setShowMainTeam(curr => true)
+    }, [numberOfGhostTeamAnimationsCompleted, props.noGhostTeamsPresent])
 
     useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.15], 10000)
 
@@ -102,7 +103,7 @@ function TeamPreview(props: Props) {
                         {props.topic}
                     </a.div>
                 </a.div>
-                <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>
+                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>}
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (
                             <a.div style={style} key={i}>

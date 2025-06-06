@@ -9,6 +9,9 @@ import {
     getGhostTrainScores,
     getGhostTeams,
     getBestTeamFinalScore,
+    getAllDefaultTeams,
+    saveMultipleScores,
+    deleteDefaultTeamsForTopic,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -19,7 +22,8 @@ import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
-import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./socketUtils"
+import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
+import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -167,6 +171,19 @@ module.exports = {
                                 user.questions = new Map()
                             }
                         }              
+
+                        const difficulties = ["Easy", "Medium", "Hard"]
+                        for (const difficulty of difficulties) {
+                                const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                            if (usedUpAllQuestionsForDifficulty) {
+                                const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                                socket.emit("disable-difficulty", difficulty)
+        
+                                if (answeredAllQuestions) {
+                                    socket.emit("answered-all-questions")
+                                }
+                            }
+                        }
                         
                         game.totalScore += user?.score as number
                         game.avgScore = game.totalScore / game.getNumberOfActiveUsers()
@@ -186,6 +203,23 @@ module.exports = {
                     const elapsedTimeInSeconds = (Date.now() - game.roundStartTime) / 1000;
                     const remainingTimeInSeconds = Math.max(0, roundDuration - elapsedTimeInSeconds);
                     const user = game.users.get(userId);
+
+                    // Also make sure a difficulty is disabled if no questions are available for a specific difficulty
+                    const difficulties = ["Easy", "Medium", "Hard"]
+                    for (const difficulty of difficulties) {
+                        const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                        
+                        console.log("Used up all questions for difficulty: " + difficulty + " " + usedUpAllQuestionsForDifficulty.toString())
+                        if (usedUpAllQuestionsForDifficulty) {
+                            const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                            socket.emit("disable-difficulty", difficulty)
+
+                            if (answeredAllQuestions) {
+                                socket.emit("answered-all-questions")
+                            }
+                        }
+                    }
+
                     let attempts =  user?.questions.size
                     if (offsetQuestionNumber) attempts = attempts != undefined ? attempts - 1 : 0
 
@@ -202,8 +236,8 @@ module.exports = {
                     socket.emit("score", teamScoreData)
                     socket.emit("currentStreaks", user?.streaks)
                     socket.emit("joined-game-in-progress", roundDuration, remainingTimeInSeconds, attempts, user?.score)
-                }
-
+                }                
+                
                 const players: number = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
                 io.to(`lecturer${lobbyId}`).emit("new-player-joined", players)
             })
@@ -527,7 +561,8 @@ module.exports = {
 
                     const game = getGame(lobbyId)
                     const interpolatedGhostTeams = await getInterpolatedGhostTeams(game)
-
+                    console.log("INTERPOLATED GHOSTS")
+                    console.log(interpolatedGhostTeams)
                     io.to(`players${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                     io.to(`lecturer${lobbyId}`).emit("ghost-teams", interpolatedGhostTeams)
                 } catch (error) {
@@ -661,6 +696,29 @@ module.exports = {
                 }
             })
 
+            socket.on("checkForDisabledDifficulties", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                const game = getGame(lobbyId)
+
+                // Also make sure a difficulty is disabled if no questions are available for a specific difficulty
+                const difficulties = ["Easy", "Medium", "Hard"]
+                for (const difficulty of difficulties) {
+                    const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
+                    
+                    console.log("Used up all questions for difficulty: " + difficulty + " " + usedUpAllQuestionsForDifficulty.toString())
+                    if (usedUpAllQuestionsForDifficulty) {
+                        const answeredAllQuestions = game.checkIfUserAnsweredAllQuestions(socket.data.userId)
+                        socket.emit("disable-difficulty", difficulty)
+
+                        if (answeredAllQuestions) {
+                            socket.emit("answered-all-questions")
+                        }
+                    }
+                }
+
+                socket.emit("ready-for-question-request")
+            })
+
             /**
              * This function changes the theme for all users in the game, when the lecturers chooses a different one
              */
@@ -742,6 +800,49 @@ module.exports = {
                 try {
                     const exercises = await getAllExercises();
                     socket.emit("all-exercises", exercises);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**
+             * Returns a list of all default teams (fake teams) stored in the database
+             */
+            socket.on("getAllDefaultTeams", async() => {
+                try {
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("addDefaultTeams", async (topicId: string, teamsToAddCount: number, avgTimePerQuestion: number) => {
+                try {
+                    const opts: GeneratorOptions = {
+                        studies: ['CSE', 'AE', 'MCH', 'MAR', 'CE'],
+                        topicId: topicId,
+                        numTeams: teamsToAddCount,
+                        avgExpectedTime: avgTimePerQuestion,
+                    }
+                    
+                    const newTeams = generateFakeScores(opts)
+                    await saveMultipleScores(newTeams)
+
+                    // Update values on frontend
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("deleteDefaultTeams", async (topicId: string) => {
+                try {
+                    await deleteDefaultTeamsForTopic(topicId);
+                    // Update values on frontend
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
                 } catch (error) {
                     socket.emit("error", error.message);
                 }

@@ -16,6 +16,7 @@ interface Props {
     lapsCompleted: number
     isLecturer: boolean
     isLastRound: boolean
+    fullLapScoreValue: number
 }
 
 interface LeaderboardItem {
@@ -43,7 +44,7 @@ function Leaderboard(props: Props) {
 
         const ghosts = props.ghosts.map(x => ({
             teamname: x.teamName,
-            lapsCompleted: x.lapsCompleted,
+            lapsCompleted: Math.floor(Math.floor(x.timeScores[x.timeScores.length - 1].score) / props.fullLapScoreValue),
             score: Math.floor(x.timeScores[x.timeScores.length - 1].score),
             study: x.study,
             isMainTeam: false

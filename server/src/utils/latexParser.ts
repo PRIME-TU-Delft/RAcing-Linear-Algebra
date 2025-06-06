@@ -1,6 +1,6 @@
 const _ = require("lodash")
 import mtr from "matrmath"
-import type { IQuestion } from "./models/questionModel"
+import type { IQuestion } from "../models/questionModel"
 import { evaluateTex } from "tex-math-parser"
 
 /**

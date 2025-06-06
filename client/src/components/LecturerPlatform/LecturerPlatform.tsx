@@ -13,7 +13,7 @@ import TopicElement from "./TopicElement/TopicElement"
 import { Button, InputAdornment, TextField } from "@mui/material"
 import ExerciseElement from "./ExerciseElement/ExerciseElement"
 import { Exercise, Study, Topic } from "./SharedUtils"
-import { TopicDataContext } from "../../contexts/TopicDataContext"
+import { DefaultTeamsData, TopicDataContext } from "../../contexts/TopicDataContext"
 import { ExistingExercisesContext } from "./ExistingExercisesContext"
 import socket from "../../socket"
 import Pagination from '@mui/material/Pagination'
@@ -23,6 +23,8 @@ interface Props {
     loggedIn: boolean,
     onUpdateExercise: (exerciseData: Exercise) => void
     onUpdateTopic: (topicData: Topic) => void
+    onAddDefaultTeamsForTopic: (topicId: string, fakeTeamsToAddCount: number, avgTimePerQuestion: number) => void
+    onDeleteDefaultTeamsForTopic: (topicId: string) => void
 }
 
 function LecturerPlatform(props: Props) {
@@ -143,7 +145,7 @@ function LecturerPlatform(props: Props) {
                 message: `Linked exercise #${exercise.exerciseId} to the topic`,
                 type: "success",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -155,7 +157,7 @@ function LecturerPlatform(props: Props) {
                 message: "The topic already contains this exercise",
                 type: "warning",
                 insert: "top",
-                container: "bottom-right",
+                container: "top-right",
                 dismiss: {
                     duration: 5000,
                     onScreen: true
@@ -242,6 +244,9 @@ function LecturerPlatform(props: Props) {
                                     discardNewTopic={() => discardNewTopicHandler(topic._id)}
                                     availableGraspleIds={exerciseGraspleIds}
                                     onLinkExercise={(graspleId: number) => linkExerciseHandler(topic._id, graspleId)}
+                                    defaultTeamsData={topicData.defaultTeams.filter((data: DefaultTeamsData) => data.topicId === topic._id)[0]}
+                                    onAddDefaultTeams={(fakeTeamsToAddCount: number, avgTimePerQuestion: number) => props.onAddDefaultTeamsForTopic(topic._id, fakeTeamsToAddCount, avgTimePerQuestion)}
+                                    onDeleteDefaultTeams={() => props.onDeleteDefaultTeamsForTopic(topic._id)}
                                 />
                             ))}
                         </div>
@@ -293,6 +298,7 @@ function LecturerPlatform(props: Props) {
                                     onExerciseAlreadyExists={() => {}}
                                     isIndependentElement={true}
                                     isMandatory={false}
+                                    currentTopicExerciseIds={[]}
                                 />
                             ))}
                         </div>

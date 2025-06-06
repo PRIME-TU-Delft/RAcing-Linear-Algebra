@@ -85,9 +85,9 @@ function GhostVehicle(props: Props) {
 
             const currentGhostPreviousScore = props.ghost.timeScores[Math.max(currentTimeScoreIndex - 1, 0)].score
             const previousProgress = (currentGhostPreviousScore/ props.totalPoints) * 100 
-
+            
             // Prevent possible bug of team going backwards due to miscalculations / incorrect score storing
-            if (progress >= previousProgress) {
+            if (progress >= previousProgress && progress > 0) {
                 animationControls.start({  
                     offsetDistance: progress.toString() + "%",
                     transition: {duration: 2}
