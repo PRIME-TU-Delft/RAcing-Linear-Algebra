@@ -147,6 +147,11 @@ function App() {
         socket.emit("addDefaultTeams", topicId, teamsToAddCount, avgTimePerQuestion)
     }
 
+    const deleteDefaultTeamsHandler = (topicId: string) => {
+
+        socket.emit("deleteDefaultTeams", topicId)
+    }
+
     const resetValues = () => {
         setCurrentScore(curr => 0)
         setCurrentAccuracy(curr => 0)
@@ -678,6 +683,7 @@ function App() {
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
                                 onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
                                 onAddDefaultTeamsForTopic={addDefaultTeamsHandler}
+                                onDeleteDefaultTeamsForTopic={deleteDefaultTeamsHandler}
                                 />
                         </TopicDataContext.Provider>
                     }

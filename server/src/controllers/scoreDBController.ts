@@ -66,6 +66,15 @@ export async function getAllDefaultTeams(): Promise<DefaultTeamsData[]> {
     }
 }
 
+export async function deleteDefaultTeamsForTopic(topicId: string) {
+    try {
+        const result = await Score.deleteMany({ topicId: new ObjectId(topicId), isFakeTeam: true })
+        return result
+    } catch (error) {
+        throw error
+    }
+}
+
 /**
  * This function gets all the checkpoint for a certain round at a certain checkpoint
  * @param topicId the id of the round that is being played
@@ -270,6 +279,8 @@ export async function getGhostTrainScores(topicId: string) {
 
 export async function saveMultipleScores(scoresArray: IScore[]) {
     try {
+        console.log("Saving multiple scores to the database")
+        console.log(scoresArray)
       await Score.insertMany(scoresArray)
     }
     catch (error) {

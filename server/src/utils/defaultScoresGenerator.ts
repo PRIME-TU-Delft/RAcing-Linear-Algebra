@@ -19,7 +19,7 @@ const defaultTeamNames = [
 "Inverse Invincibles", "Orthogonal Operators", "Nullity Navigators",
 "Basis Breakthroughs", "Column Clutch", "Determinant Daredevils",
 "Vector Vandals", "Matrix Mavericks", "Eigenvalue Emissaries",
-"Scalar Slingers"
+"Scalar Slingers", "Nullspace Ninjas"
 ]
 
 // const difficultySettings: Record<Difficulty, {
@@ -88,8 +88,8 @@ export function generateFakeScores(
     ): IScore[] {
     const { studies, topicId, numTeams, avgExpectedTime } = options
 
-    if (numTeams < 1 || numTeams > 18) {
-        throw new Error("numTeams must be between 1 and 18")
+    if (numTeams < 0 || numTeams > 31) {
+        throw new Error("numTeams must be between 1 and 31")
     }
     if (!studies.length) {
         throw new Error("You must supply at least one study")

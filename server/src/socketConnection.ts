@@ -11,6 +11,7 @@ import {
     getBestTeamFinalScore,
     getAllDefaultTeams,
     saveMultipleScores,
+    deleteDefaultTeamsForTopic,
 } from "./controllers/scoreDBController"
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
@@ -824,10 +825,21 @@ module.exports = {
                         numTeams: teamsToAddCount,
                         avgExpectedTime: avgTimePerQuestion,
                     }
-
+                    
                     const newTeams = generateFakeScores(opts)
                     await saveMultipleScores(newTeams)
 
+                    // Update values on frontend
+                    const defaultTeams = await getAllDefaultTeams();
+                    socket.emit("all-default-teams", defaultTeams);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            socket.on("deleteDefaultTeams", async (topicId: string) => {
+                try {
+                    await deleteDefaultTeamsForTopic(topicId);
                     // Update values on frontend
                     const defaultTeams = await getAllDefaultTeams();
                     socket.emit("all-default-teams", defaultTeams);

@@ -36,6 +36,7 @@ interface Props {
     onLinkExercise: (graspleId: number) => void,
     defaultTeamsData: DefaultTeamsData
     onAddDefaultTeams: (teamsToAddCount: number, avgTimePerQuestion: number) => void
+    onDeleteDefaultTeams: () => void
 }
 
 function TopicElement(props: Props) {
@@ -385,6 +386,11 @@ function TopicElement(props: Props) {
     const createFakeTeamsHandler = () => {
         props.onAddDefaultTeams(newFakeTeamsCount, avgTimePerQuestion)
         setIsFakeTeamsDialogOpen(false)
+    }
+
+    const deleteFakeTeamsHandler = () => {
+        props.onDeleteDefaultTeams()
+        setIsDeleteFakeTeamsDialogOpen(false)
     }
 
     useEffect(() => {
@@ -1000,7 +1006,7 @@ function TopicElement(props: Props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsDeleteFakeTeamsDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={() => {}} variant="contained" color="primary">Delete</Button>
+                    <Button onClick={deleteFakeTeamsHandler} variant="contained" color="primary">Delete</Button>
                 </DialogActions>
             </Dialog>
 

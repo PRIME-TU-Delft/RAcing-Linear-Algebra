@@ -24,6 +24,7 @@ interface Props {
     onUpdateExercise: (exerciseData: Exercise) => void
     onUpdateTopic: (topicData: Topic) => void
     onAddDefaultTeamsForTopic: (topicId: string, fakeTeamsToAddCount: number, avgTimePerQuestion: number) => void
+    onDeleteDefaultTeamsForTopic: (topicId: string) => void
 }
 
 function LecturerPlatform(props: Props) {
@@ -245,6 +246,7 @@ function LecturerPlatform(props: Props) {
                                     onLinkExercise={(graspleId: number) => linkExerciseHandler(topic._id, graspleId)}
                                     defaultTeamsData={topicData.defaultTeams.filter((data: DefaultTeamsData) => data.topicId === topic._id)[0]}
                                     onAddDefaultTeams={(fakeTeamsToAddCount: number, avgTimePerQuestion: number) => props.onAddDefaultTeamsForTopic(topic._id, fakeTeamsToAddCount, avgTimePerQuestion)}
+                                    onDeleteDefaultTeams={() => props.onDeleteDefaultTeamsForTopic(topic._id)}
                                 />
                             ))}
                         </div>
