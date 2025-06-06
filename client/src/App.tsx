@@ -182,7 +182,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => roundDuration) // CHANGE
+        setRoundDuration(curr => 30) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
@@ -670,6 +670,7 @@ function App() {
                             teamScore={currentScore}
                             teamStudy={study}
                             lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
+                            fullLapScoreValue={fullLapScoreValue}
                             isLecturer={!isPlayer}
                             isLastRound={allRoundsFinished}
                             playerScore={currentIndividualScore}
