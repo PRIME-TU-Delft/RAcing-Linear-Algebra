@@ -19,6 +19,11 @@ import CreateTeamsButtonImage from '../../../img/instructions/create-teams-butto
 import CreateTeams from '../../../img/instructions/create-teams.png';
 import DeleteTeamsButtonImage from '../../../img/instructions/delete-teams-button.png';
 import DeleteTeamsImage from '../../../img/instructions/delete-teams.png';
+import AddingExerciseImage from "../../../img/instructions/adding-exercise.png"
+import ExerciseUrlImage from "../../../img/instructions/exercise-url.png"
+import ExerciseExistsImage from "../../../img/instructions/exercise-exists.png"
+import ExerciseAddedImage from "../../../img/instructions/exercise-added.png"
+import ExercisesTabImage from "../../../img/instructions/exercises-tab.png"
 import { Alert } from '@mui/material';
 import { set } from 'react-hook-form';
 
@@ -310,10 +315,10 @@ const creatingFakeTeamsSubsection: Section =  {
                 You can then click the <i>Create Fake Teams</i> button, which will allow you to configure the teams you are creating. Namely, you can specify:
             </Typography>
             <List>
-                <ListItem>
+                <ListItem className='instructions-list-item'>
                     1. The number of teams to create (up to 31).
                 </ListItem>
-                <ListItem>
+                <ListItem className='instructions-list-item'>
                     2. The average (expected) time it takes to solv an exercise in this topic (in seconds). This is used to balance the distribution of teams, according to the estimated difficulty of the topic based on the selected time.
                 </ListItem>
             </List>
@@ -352,7 +357,6 @@ const deletingFakeTeamsSubsection: Section =  {
     )
 }
 
-
 // ** 7th subsection: Fake teams **
 const fakeTeamsSubsection: Section =  {
     id: "fake-teams",
@@ -382,6 +386,99 @@ const fakeTeamsSubsection: Section =  {
         deletingFakeTeamsSubsection
     ]
 }
+// _____________________________________________________________________________________________________________________________________________________________________________________________--
+
+// *** SUBSECTIONS FOR EXERCISES SECTION ***
+
+// ** 1.1st (sub)subsection: Creating In Topic **
+const inTopicExerciseSubsection: Section =  {
+    id: "creating-exercises-in-topic",
+    title: "3.1 In the topic",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                To create a new exercise directly in a topic, open the <i>Topics</i> tab, navigate to the topic of choice and click the <i>edit icon</i> next to the Exercises subsection. You can then click the "+" icon to create a new exercise, which will result in a blank exercise object:
+            </Typography>
+            <img src={AddingExerciseImage} alt="Adding exercise" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 17: Creating new exercise in a topic directly
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can now paste the embedding snippet you copied from Grasple into the URL field:
+            </Typography>
+            <img src={ExerciseUrlImage} alt="URL exercise" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 18: Exercise after pasting the Grasple snippet into the URL field.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                The platform will check the URL is valid and whether the exercise already exists in the system. If it does, you will see the following:
+            </Typography>
+            <img src={ExerciseExistsImage} alt="Exercise exists" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 19: Exercise already exists, so you can import its metadata instead of recreating it.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Next, you should select the difficulty for the new exercise (default is Easy). This can be done via the dropdown below the URL field.
+            </Typography>
+            <Alert severity='info' className='instructions-section-text'>
+                You also have the option to choose a name for the exercise, but this is not required. By default, an exercises name is set to "Exercise #ID", where ID is the exercise's Grasple ID.
+            </Alert>
+            <Typography variant='body2' className='instructions-section-text'>
+                When you are happy with the execise informatio, click save and it will automatically be saved both in the system and in the topic's list of exercises:
+            </Typography>
+            <img src={ExerciseAddedImage} alt="Exercise added" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 20: Exercise successfully saved to the topic.
+            </Typography>
+        </>
+    )
+}
+
+// ** 1.2nd (sub)subsection: Creating In Exercises Tab **
+const inExercisesTabSubsection: Section =  {
+    id: "creating-exercises-in-tab",
+    title: "3.2 In the Exercises tab",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                An alternate way of creating an exercise can be achieved by navigating to the <i>Exercises</i> tab. You can then click the <i>Create New Exercise</i> button located in the top left, which will create a new empty exercise object:
+            </Typography>
+            <img src={ExercisesTabImage} alt="Exercise tab" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 21: Creating an exercise in the exercises tab.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                From here, the steps are the same as before. Once you are happy, click save and you are done!
+            </Typography>
+        </>
+    )
+}
+
+// ** 1st subsection: Creating a new exercise **
+const creatingExerciseSubsection: Section =  {
+    id: "creating-exercises",
+    title: "3.1 Creating a new Exercise",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                In order to create a new exercise, you will need to copy the corresponding exercise Grasple embedding. With this ready, you have two ways of creating an exercise:
+            </Typography>
+            <List>
+                <ListItem className='instructions-list-item'>
+                    1. In the topic directly: this is convenient when creating a new exercise specifically for a given topic. It automatically both registers the exercise within the platform and links it to the topic.
+                </ListItem>
+                <ListItem className='instructions-list-item'>
+                    2. In the exercises tab: here you can make new exercises in a vacuum; When you create an exercise here it isn't linked to any topic to start off with. You can easily link it to a topic later, as we'll see.
+                </ListItem>
+            </List>
+        </>
+    ),
+    subsections: [
+        inTopicExerciseSubsection,
+        inExercisesTabSubsection
+    ]
+}
+
 // _____________________________________________________________________________________________________________________________________________________________________________________________--
 
 // *** INSTRUCTION SECTIONS ***
@@ -440,17 +537,15 @@ const topicsSection: Section = {
 const exercisesSection: Section = {
     id: "exercises",
     title: "3. Exercises",
-    content: "This section covers the creation and management of exercises.",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                In this section we explain how exercises are handled in the platfom. This includes creating new exercises, linking an existing exercise to a topic and importing a batch of exercises at once for convenience.
+            </Typography>
+        </>
+    ),
     subsections: [
-        {
-            id: "creating-a-new-exercise", title: "3.1. Creating a new exercise", content: "Placeholder for creating a new exercise.",
-            subsections: [
-                { id: "in-the-topic", title: "3.1.1. In the topic", content: "Placeholder for creating an exercise in the topic." },
-                { id: "in-the-exercises-tab", title: "3.1.2. In the exercises tab", content: "Placeholder for creating an exercise in the exercises tab." }
-            ]
-        },
-        { id: "linking-an-existing-exercise", title: "3.2. Linking an existing exercise", content: "Placeholder for linking an existing exercise." },
-        { id: "creating-a-batch-of-exercises", title: "3.3. Creating a batch of exercises", content: "Placeholder for creating a batch of exercises." }
+        creatingExerciseSubsection
     ]
 };
 
