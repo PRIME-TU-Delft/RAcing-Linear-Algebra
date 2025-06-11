@@ -478,10 +478,10 @@ const creatingExerciseSubsection: Section =  {
             </Typography>
             <List>
                 <ListItem className='instructions-list-item'>
-                    1. <Link href="#creating-exercises-in-topic">In the topic directly</Link>: this is convenient when creating a new exercise specifically for a given topic. It automatically both registers the exercise within the platform and links it to the topic.
+                    1. In the topic directly: this is convenient when creating a new exercise specifically for a given topic. It automatically both registers the exercise within the platform and links it to the topic.
                 </ListItem>
                 <ListItem className='instructions-list-item'>
-                    2. <Link href="#creating-exercises-in-tab">In the exercises tab</Link>: here you can make new exercises in a vacuum; When you create an exercise here it isn't linked to any topic to start off with. You can easily <Link href="#linking-exercises">link it to a topic later, as we'll see</Link>.
+                    2. In the exercises tab: here you can make new exercises in a vacuum; When you create an exercise here it isn't linked to any topic to start off with. You can easily link it to a topic later, as we'll see.
                 </ListItem>
             </List>
         </>
