@@ -7,7 +7,20 @@ import NewTopicImage from '../../../img/instructions/new-topic.png'
 import GraspleExerciseImage from '../../../img/instructions/grasple-exercise.png'
 import EnableEmbeddingImage from '../../../img/instructions/enable-embedding.png'
 import ToggleEmbedImage from '../../../img/instructions/toggle-embed.png'
+import EditStudyProgrammesImage from '../../../img/instructions/edit-study-programmes.png'
+import TopicExercisesImage from '../../../img/instructions/topic-exercises.png'
+import EditingExercisesImage from '../../../img/instructions/editing-exercises.png'
+import RemovingMandatoryImage from '../../../img/instructions/removing-mandatory.png'
+import NewMandatoryImage from '../../../img/instructions/new-mandatory.png'
+import ReorderIconImage from '../../../img/instructions/reorder-icon.png'
+import ReorderVideo from '../../../img/instructions/reorder-video.gif'
+import FakeTeamsWarningImage from '../../../img/instructions/fake-teams-warning.png'
+import CreateTeamsButtonImage from '../../../img/instructions/create-teams-button.png'
+import CreateTeams from '../../../img/instructions/create-teams.png';
+import DeleteTeamsButtonImage from '../../../img/instructions/delete-teams-button.png';
+import DeleteTeamsImage from '../../../img/instructions/delete-teams.png';
 import { Alert } from '@mui/material';
+import { set } from 'react-hook-form';
 
 export interface Section {
     id: string
@@ -17,8 +30,9 @@ export interface Section {
 }
 
 // *** SUBSECTIONS FOR GRASPLE EMBEDDING SECTION ***
+// _____________________________________________________________________________________________________________________________________________________________________________________________--
 
-// ** First subsection: Accessing an exercise **
+// ** 1st subsection: Accessing an exercise **
 const accessExerciseSubsection: Section =  {
     id: "accessing-an-exercise",
     title: "1.1. Accessing an exercise",
@@ -37,7 +51,7 @@ const accessExerciseSubsection: Section =  {
         </>
     )
 }
-
+// ** 2nd subsection: Enablig embedding **
 const enableEmbeddingSubsection: Section = {
     id: "enabling-embedding",
     title: "1.2. Enabling embedding",
@@ -67,13 +81,14 @@ const enableEmbeddingSubsection: Section = {
     )
 }
 
+// ** 3rd subsection: Copying an embedding **
 const copyEmbeddingSubsection: Section =  {
     id: "copying-an-embedding",
     title: "1.1. Copying the embedding",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                Finally we can go ahead and copy the snippet presented by Grasple and use it in the platform. You can either manually copy the snippet, or you can click the <i>copy embed code</i> button on the top-right of the text-box.
+                Finally, you can go ahead and copy the snippet presented by Grasple and use it in the platform. You can either manually copy the snippet, or you can click the <i>copy embed code</i> button on the top-right of the text-box.
             </Typography>
             <Alert severity="info" className='instructions-section-text'>
                 While we only need the URL of the exercise (the <i>src</i> attribute of the iframe), you can copy the entire snippet as the platform can automatically extract the URL from it.
@@ -81,6 +96,295 @@ const copyEmbeddingSubsection: Section =  {
         </>
     )
 }
+// _____________________________________________________________________________________________________________________________________________________________________________________________--
+
+// *** SUBSECTIONS FOR TOPICS SECTION ***
+
+// ** 1st subsection: Creating a new topic **
+const createNewTopicSubsection: Section =  {
+    id: "creating-new-topic",
+    title: "2.1. Creating a new topic",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can begin creating a new topic by clicking the <i>Create New Topic</i> button in the top-left corner of the <i>Topics</i> tab. This will result in a blank new topic object being created, as can be seen below:
+            </Typography>
+            <img src={NewTopicImage} alt="New Topic" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 5: Creating a new topic
+            </Typography>
+        </>
+    )
+}
+
+
+// ** 2nd subsection: Creating a new topic **
+const settingTopicNameSubsection: Section =  {
+    id: "setting-topic-name",
+    title: "2.2. Setting topic name",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Every topic needs to have a name, indicating the piece of content it covers. For Linear Algebra, for example, we can have topics such as <i>Eigenvalues & Eigenvectors</i>, <i>Diagonalization</i> and <i>Determinants</i>.
+            </Typography>
+            <Alert severity="warning" className='instructions-section-text'>
+                Please don't create duplicate topic names, as it may cause confusion. You can use the search bar to check if a topic already exists. Creating multiple variants of the same topic is currently not supported, but may be possible in the future.
+            </Alert>
+        </>
+    )
+}
+
+// ** 3rd subsection: Adjusting study programmes **
+const adjustingStudyProgrammesSubsection: Section =  {
+    id: "adjusting-study-programmes",
+    title: "2.3. (Adjusting) Study programmes",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Each topic can define a list of study programmes that it is relevant for. This can be useful for filtering topics by study programme when creating a game. By default, all available study programmes are selected, and it is recommended to keep it that way unless you have a specific reason to limit the topic to a subset of study programmes.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                In case you do decide to edit the topic's study programmes, you can click the edit icon. You can then click on a selected study programme to remove it, as can be seen below:
+            </Typography>
+            <img src={EditStudyProgrammesImage} alt="Edit Studies" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 6: Edit study programmes
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Clicking <i>Select All</i> will automatically select all available study programmes that aren't already selected. You can also drag and drop individual study programmes from the available list to the selected list.
+            </Typography>
+            <Alert severity="info" className='instructions-section-text'>
+                Note that removing a study programme from a topic won't mean the topic is innacessible for that study programme. We don't impose such restrictions, and the study programmes simply serve as a way to filter topics more easily, which will become relevant once many topics become available in the platform.
+            </Alert>
+        </>
+    )
+}
+
+// ** 4th subsection: Topic Exercises **
+const topicExercisesSubsection: Section =  {
+    id: "topic-exercises",
+    title: "2.4. Topic exercises",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Each topic contains a set of exercises which will be available to students playing the game. These exercises are sorted by difficulty, namely Easy, Medium and Hard:
+            </Typography>
+            <img src={TopicExercisesImage} alt="Topic Exercises" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 7: Topic exercises
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You may notice that at the top, several mandatory exercises are listed. We will discuss those next.
+            </Typography>
+        </>
+    )
+}
+
+// ** 5.1st (sub)subsection: Making Exercises Mandatory **
+const makingExercisesMandatorySubsection: Section =  {
+    id: "making-exercises-mandatory",
+    title: "2.4.1. Making exercises mandatory",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                In order to make an exercise mandatory for a given topic, you will need to edit the exercises. You can do this by clicking the <i>edit icon</i> next to the exercises subsection, which will result in the following view:
+            </Typography>
+            <img src={EditingExercisesImage} alt="Editing Exercises" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 8: Editing exercises
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can now edit the exercise you want to make mandatory (or remove the mandatory status from an existing mandatory exercise) by clicking the <i>edit icon</i> next to the exercise. This will show the following view:
+            </Typography>
+            <img src={RemovingMandatoryImage} alt="Removing Mandatory" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 9: Editing an exercise from the list that currently isn't mandatory
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Toggling the mandatory option and saving the exercise will make the exercise appear as mandatory in the topic:
+            </Typography>
+            <img src={NewMandatoryImage} alt="New Mandatory" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 10: Exercise #77872 is now a mandatory exercise for the topic
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                The same logic applies when removing the mandatory status from an exercise. You can click the <i>edit icon</i> next to the mandatory exercise, and then toggle the mandatory option off. This will remove the exercise from the mandatory exercises list after saving.
+            </Typography>
+        </>
+    )
+}
+
+// ** 5.2nd (sub)subsection: Ordering Mandatory Exercises **
+const reorderingMandatoryExercisesSubsection: Section =  {
+    id: "reordering-mandatory-exercises",
+    title: "2.4.2. Reordering mandatory exercises",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                As previously mentioned, mandatory exercises are presented to the students in the order they are listed in the topic. This means that you can reorder the mandatory exercises by dragging and dropping them in the list.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Again, start by editing the topic exercises by clicking the <i>edit icon</i> next to the exercises subsection. You can then select the third icon from the left, as can be seen below:
+            </Typography>
+            <img src={ReorderIconImage} alt="Reorder Icon" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 11: Reorder icon in the editing menu
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                After clicking the icon you will be able to drag and drop the mandatory exercises in the list in the preferred order, as can be seen below:
+            </Typography>
+            <img src={ReorderVideo} alt="Reordering Mandatory Exercises" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 12: Reordering mandatory exercises
+            </Typography>
+        </>
+    )
+}
+
+// ** 5th subsection: Mandatory Exercises **
+const mandatoryExercisesSubsection: Section =  {
+    id: "mandatory-exercises",
+    title: "2.5. Mandatory exercises",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Mandatory exercises are exercises which are considered the entry-level exercises for the topic, which any student should be able to solve. A topic isn't required to have any mandatory exercises, <i>but it is recommended to have 2-3 mandatory exercises per topic</i>.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                The difference between a mandatory exercise and a regular exercise is in how they are presented to the students in the game. The game loop is as follows:
+            </Typography>
+            <List>
+                <ListItem className='instructions-list-item'>
+                    1. At the start of the game, all students are presented with the topic's mandatory exercises, in the same order as they are listed in the topic.
+                </ListItem>
+                <ListItem className='instructions-list-item'>
+                    2. Once all mandatory exercises are solved, the game will allow students to choose a difficulty of their next question (selection reoccurs after each new question).
+                </ListItem>
+                <ListItem className='instructions-list-item'>
+                    3. Students will continue getting random questions from the selected difficulties until the game ends, or they run out of questions in the topic.
+                </ListItem>
+            </List>
+        </>
+    ),
+    subsections: [
+        makingExercisesMandatorySubsection,
+        reorderingMandatoryExercisesSubsection
+    ]
+}
+
+// ** 6th subsection: Mandatory Exercises **
+const savingTopicSection: Section =  {
+    id: "saving-topic",
+    title: "2.6. Saving the topic",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Once you are happy with the contents of the topic, you can go ahead and save it. There are two ways of doing this:
+            </Typography>
+            <List>
+                <ListItem className='instructions-list-item'>
+                    1. Save all unsaved changes at once by clicking the Save button in the bottom-right corner of the page. (Recommended)
+                </ListItem>
+                <ListItem className='instructions-list-item'>
+                    2. Click the Save button for each individual section you edited (i.e. name, study programmes, exercises, etc.)
+                </ListItem>
+            </List>
+        </>
+    )
+}
+
+// ** 7.1st (sub)subsection: Creating Fake Teams **
+const creatingFakeTeamsSubsection: Section =  {
+    id: "creating-fake-teams",
+    title: "2.7.1. Creating fake teams",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can create fake teams by clicking the <i>edit icon</i> next to the Fake Teams subsection. This will show the following view:
+            </Typography>
+            <img src={CreateTeamsButtonImage} alt="Create Teams Button" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 13: Create teams button
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can then click the <i>Create Fake Teams</i> button, which will allow you to configure the teams you are creating. Namely, you can specify:
+            </Typography>
+            <List>
+                <ListItem>
+                    1. The number of teams to create (up to 31).
+                </ListItem>
+                <ListItem>
+                    2. The average (expected) time it takes to solv an exercise in this topic (in seconds). This is used to balance the distribution of teams, according to the estimated difficulty of the topic based on the selected time.
+                </ListItem>
+            </List>
+            <img src={CreateTeams} alt="Create Teams" className='instructions-image image-medium' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 14: Creating fake teams
+            </Typography>
+        </>
+    )
+}
+
+// ** 7.2nd (sub)subsection: Deleting Fake Teams **
+const deletingFakeTeamsSubsection: Section =  {
+    id: "deleting-fake-teams",
+    title: "2.7.2. Deleting fake teams",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Similaly, you can delete fake teams by clicking the <i>edit icon</i> next to the Fake Teams subsection. This will show the following view:
+            </Typography>
+            <img src={DeleteTeamsButtonImage} alt="Delete Teams Button" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 15: Delete teams button
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Clicking this button will show you a confirmation dialog, indicating how many real teams will remain if the fake teams are deleted.
+            </Typography>
+            <img src={DeleteTeamsImage} alt="Delete Teams" className='instructions-image image-medium' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 16: Delete teams confirmation dialog
+            </Typography>
+             <Typography variant='body2' className='instructions-section-text'>
+                If you confirm the deletion, all fake teams will be automatically deleted, and the topic will no longer have any fake teams associated with it.
+            </Typography>
+        </>
+    )
+}
+
+
+// ** 7th subsection: Fake teams **
+const fakeTeamsSubsection: Section =  {
+    id: "fake-teams",
+    title: "2.7. Fake teams",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Considering the game is a race, it would be quite underwhelming if there were no teams to race against. For this reason, it is possible to generate fake (artifically generated) teams, which will populate the race and make things more interesting.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                These teams only serve as placeholers until the topic has been played enough by real classes, at which point the fake teams can easily be deleted from the database.
+            </Typography>
+            <Alert severity="info" className='instructions-section-text'>
+                You can create up to 31 fake teams for a topic. Fake team cannot be created until after you have saved the topic, so this is a post-creation step!
+            </Alert>
+            <Typography variant='body2' className='instructions-section-text'>
+                If no students have played the topic yet, you will see a warning in the topic overview, as can be seen below:
+            </Typography>
+            <img src={FakeTeamsWarningImage} alt="Fake Teams Warning" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 13: Fake teams warning
+            </Typography>
+        </>
+    ),
+    subsections: [
+        creatingFakeTeamsSubsection,
+        deletingFakeTeamsSubsection
+    ]
+}
+// _____________________________________________________________________________________________________________________________________________________________________________________________--
+
+// *** INSTRUCTION SECTIONS ***
 
 const embeddingGraspleExercisesSection: Section = {
     id: "embedding-grasple-exercises",
@@ -102,21 +406,34 @@ const embeddingGraspleExercisesSection: Section = {
 const topicsSection: Section = {
     id: "topics",
     title: "2. Topics",
-    content: "This section explains how to create and manage topics.",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                In this section we explain how the topics are constructed and created in the platform. Topics correspond to rounds in the game, and they consist of a set of exercises that are presented to the students during the race. Solving the exercises gives points, thus increasing the progress of the team in the race.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Navigate to the <i>Topics</i> tab to see the list of topics currently available in the platform:
+            </Typography>
+            <img src={TopicsImage} alt="Topics" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 4: Topics tab
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can inspect an individual topic by clicking on it, which will expand it and give you more information. In the collapsed form, you can see the most important overview information, such as its name and the number of exercises it contains.
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                You can either create a new topic or edit an existing one. We will only cover creating a new topic here, as editing an existing topic follows suit in terms of steps.
+            </Typography>
+        </>
+    ),
     subsections: [
-        { id: "creating-a-new-topic", title: "2.1. Creating a new topic", content: "Placeholder for creating a new topic." },
-        { id: "setting-a-name", title: "2.2. Setting a name", content: "Placeholder for setting a topic name." },
-        { id: "adjusting-study-programmes", title: "2.3. Study programmes", content: "Placeholder for adjusting study programmes." },
-        { id: "fake-teams", title: "2.4. Fake teams", content: "Placeholder for fake teams." },
-        { id: "topic-exercises", title: "2.5. Topic Exercises", content: "Placeholder for topic exercises." },
-        {
-            id: "mandatory-exercises", title: "2.6. Mandatory Exercises", content: "Placeholder for mandatory exercises.",
-            subsections: [
-                { id: "making-exercises-mandatory", title: "2.6.1. Marking exercises", content: "Placeholder for making exercises mandatory." },
-                { id: "reordering-mandatory-exercises", title: "2.6.2. Reordering", content: "Placeholder for reordering mandatory exercises." }
-            ]
-        },
-        { id: "saving-the-topic", title: "2.7. Saving the topic", content: "Placeholder for saving the topic." }
+        createNewTopicSubsection,
+        settingTopicNameSubsection,
+        adjustingStudyProgrammesSubsection,
+        topicExercisesSubsection,
+        mandatoryExercisesSubsection,
+        savingTopicSection,
+        fakeTeamsSubsection
     ]
 };
 

@@ -1,7 +1,7 @@
 .instructions-container {
     display: flex;
     flex-direction: column;
-    padding: 1rem 2rem;
+    padding-right: 2rem !important;
 }
 
 .instructions-text {
@@ -30,8 +30,7 @@
 }
 
 .instructions-list-item {
-    margin-top: 0.5rem !important;
-    text-align: left;
+    font-size: 0.875rem !important;
 }
 
 .instructions-subsection-title {
@@ -42,6 +41,10 @@
 .instructions-subsection {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+}
+
+.image-medium {
+    width: 40rem;
 }
 
 .image-small {
