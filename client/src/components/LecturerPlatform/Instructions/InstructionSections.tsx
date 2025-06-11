@@ -24,6 +24,9 @@ import ExerciseUrlImage from "../../../img/instructions/exercise-url.png"
 import ExerciseExistsImage from "../../../img/instructions/exercise-exists.png"
 import ExerciseAddedImage from "../../../img/instructions/exercise-added.png"
 import ExercisesTabImage from "../../../img/instructions/exercises-tab.png"
+import LinkingExerciseVideo from '../../../img/instructions/linking-exercise.gif';
+import BatchImage from "../../../img/instructions/batch.png";
+import PastedImage from "../../../img/instructions/pasted.png";
 import { Alert } from '@mui/material';
 import { set } from 'react-hook-form';
 
@@ -479,6 +482,56 @@ const creatingExerciseSubsection: Section =  {
     ]
 }
 
+// ** 2nd subsection: Linking an exercise **
+const linkingExerciseSubsection: Section =  {
+    id: "linking-exercises",
+    title: "3.2 Linking an existing exercise",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                If an exercise already exists in the system, you can link it to a topic by clicking the <i>link</i> icon next to the <i>Exercises</i> subsection in the topic view. This will show you a list of all exercises currently available in the system, as can be seen below:
+            </Typography>
+            <img src={LinkingExerciseVideo} alt="Linking exercise" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 22: Linking an existing exercise to a topic
+            </Typography>
+        </>
+    )
+}
+
+// ** 3rd subsection: Create a batch **
+const batchExercisesSubsection: Section =  {
+    id: "batch-exercises",
+    title: "3.3 Creating a batch of exercises",
+    content: (
+        <>
+            <Typography variant='body2' className='instructions-section-text'>
+                Finally, for convenience, there is an option to create multiple exercises at once (i.e. a batch of exercises). First copy multiple Grasple embeddings into your notepad, and then copy them all at once. Now select the <i>batch import</i> icon (fourth):
+            </Typography>
+            <img src={BatchImage} alt="Batch import" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 23: Batch import icon
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                As you can see, you are prompted with a dialogue that asks you to select the difficulty of the batch of exercises you are creating as well as a textbox where you can paste the Grasple snippets.
+            </Typography>
+            <Alert severity='info' className='instructions-section-text'>
+                Note that the batch import will only work if all the exercises you are importing have the same difficulty. If you want to import exercises of different difficulties, you will need to do it one by one.
+            </Alert>
+            <Typography variant='body2' className='instructions-section-text'>
+                Go ahead and paste in the snippets you copied from Grasple:
+            </Typography>
+            <img src={PastedImage} alt="Pasted exercises" className='instructions-image' />
+            <Typography variant='caption' className='instructions-image-caption'>
+                Figure 24: Pasted exercises in the batch import dialogue
+            </Typography>
+            <Typography variant='body2' className='instructions-section-text'>
+                Once you paste the snippets, click the <i>Create</i> button. The exercises will be autmatically created and added to the topic.
+            </Typography>
+        </>
+    )
+}
+
 // _____________________________________________________________________________________________________________________________________________________________________________________________--
 
 // *** INSTRUCTION SECTIONS ***
@@ -545,7 +598,9 @@ const exercisesSection: Section = {
         </>
     ),
     subsections: [
-        creatingExerciseSubsection
+        creatingExerciseSubsection,
+        linkingExerciseSubsection,
+        batchExercisesSubsection
     ]
 };
 
