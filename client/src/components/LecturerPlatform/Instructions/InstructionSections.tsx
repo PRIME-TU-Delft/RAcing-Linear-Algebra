@@ -27,7 +27,7 @@ import ExercisesTabImage from "../../../img/instructions/exercises-tab.png"
 import LinkingExerciseVideo from '../../../img/instructions/linking-exercise.gif';
 import BatchImage from "../../../img/instructions/batch.png";
 import PastedImage from "../../../img/instructions/pasted.png";
-import { Alert } from '@mui/material';
+import { Alert, Link } from '@mui/material';
 import { set } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsStaggered, faFileImport, faLink, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -56,7 +56,7 @@ const accessExerciseSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                The first step to creating a new topic or registering a new exercise in the platform is to access the Grasple exercise you want to add. Assuming you have prepared an exercise, or you have access to an existing exercise, you can go ahead and accss it on <a href='https://www.grasple.com/' target='blank'>Grasple</a>.
+                The first step to <Link href="#creating-new-topic">creating a new topic</Link> or <Link href="#creating-exercises">registering a new exercise</Link> in the platform is to access the Grasple exercise you want to add. Assuming you have prepared an exercise, or you have access to an existing exercise, you can go ahead and accss it on <a href='https://www.grasple.com/' target='blank'>Grasple</a>.
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
                 Go ahead and navigate to the exercise of interest:
@@ -105,7 +105,7 @@ const copyEmbeddingSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                Finally, you can go ahead and copy the snippet presented by Grasple and use it in the platform. You can either manually copy the snippet, or you can click the <i>copy embed code</i> button on the top-right of the text-box.
+                Finally, you can go ahead and copy the snippet presented by Grasple and use it in the platform (e.g., when <Link href="#creating-exercises-in-topic">creating an exercise</Link> or <Link href="#batch-exercises">importing a batch</Link>). You can either manually copy the snippet, or you can click the <i>copy embed code</i> button on the top-right of the text-box.
             </Typography>
             <Alert severity="info" className='instructions-section-text'>
                 While we only need the URL of the exercise (the <i>src</i> attribute of the iframe), you can copy the entire snippet as the platform can automatically extract the URL from it.
@@ -192,7 +192,7 @@ const topicExercisesSubsection: Section =  {
                 Figure 7: Topic exercises
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                You may notice that at the top, several mandatory exercises are listed. We will discuss those next.
+                You may notice that at the top, several mandatory exercises are listed. We will discuss <Link href="#mandatory-exercises">those next</Link>.
             </Typography>
         </>
     )
@@ -380,7 +380,7 @@ const fakeTeamsSubsection: Section =  {
                 Considering the game is a race, it would be quite underwhelming if there were no teams to race against. For this reason, it is possible to generate fake (artifically generated) teams, which will populate the race and make things more interesting.
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                These teams only serve as placeholers until the topic has been played enough by real classes, at which point the fake teams can easily be deleted from the database.
+                These teams only serve as placeholers until the topic has been played enough by real classes, at which point the fake teams can easily be <Link href="#deleting-fake-teams">deleted from the database</Link>.
             </Typography>
             <Alert severity="info" className='instructions-section-text'>
                 You can create up to 31 fake teams for a topic. Fake team cannot be created until after you have saved the topic, so this is a post-creation step!
@@ -461,7 +461,7 @@ const inExercisesTabSubsection: Section =  {
                 Figure 21: Creating an exercise in the exercises tab.
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                From here, the steps are the same as before. Once you are happy, click save and you are done!
+                From here, the steps are the same as <Link href="#creating-exercises-in-topic">before</Link>. Once you are happy, click save and you are done!
             </Typography>
         </>
     )
@@ -473,15 +473,15 @@ const creatingExerciseSubsection: Section =  {
     title: "3.1 Creating a new Exercise",
     content: (
         <>
-            <Typography variant='body2' className='instructions-section-text'>
+           <Typography variant='body2' className='instructions-section-text'>
                 In order to create a new exercise, you will need to copy the corresponding exercise Grasple embedding. With this ready, you have two ways of creating an exercise:
             </Typography>
             <List>
                 <ListItem className='instructions-list-item'>
-                    1. In the topic directly: this is convenient when creating a new exercise specifically for a given topic. It automatically both registers the exercise within the platform and links it to the topic.
+                    1. <Link href="#creating-exercises-in-topic">In the topic directly</Link>: this is convenient when creating a new exercise specifically for a given topic. It automatically both registers the exercise within the platform and links it to the topic.
                 </ListItem>
                 <ListItem className='instructions-list-item'>
-                    2. In the exercises tab: here you can make new exercises in a vacuum; When you create an exercise here it isn't linked to any topic to start off with. You can easily link it to a topic later, as we'll see.
+                    2. <Link href="#creating-exercises-in-tab">In the exercises tab</Link>: here you can make new exercises in a vacuum; When you create an exercise here it isn't linked to any topic to start off with. You can easily <Link href="#linking-exercises">link it to a topic later, as we'll see</Link>.
                 </ListItem>
             </List>
         </>
