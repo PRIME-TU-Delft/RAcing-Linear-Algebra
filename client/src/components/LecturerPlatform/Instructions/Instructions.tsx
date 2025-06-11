@@ -32,7 +32,7 @@ function Instructions() {
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrollThreshold = 80
+            const scrollThreshold = 100
             let newActiveId: string | null = null
 
             // Iterate from bottom-most section upwards
