@@ -18,6 +18,7 @@ import { ExistingExercisesContext } from "./ExistingExercisesContext"
 import socket from "../../socket"
 import Pagination from '@mui/material/Pagination'
 import { Store } from "react-notifications-component"
+import Instructions from "./Instructions/Instructions"
 
 interface Props {
     loggedIn: boolean,
@@ -205,6 +206,7 @@ function LecturerPlatform(props: Props) {
                     >
                         <Tab value="topics" label="Topics"/>
                         <Tab value="exercises" label="Exercises"/>
+                        <Tab value="instructions" label="Instructions"/>
                     </Tabs>
                     <IconButton color="inherit" onClick={() => navigate("/")} style={{marginLeft: "auto"}}>
                         <FontAwesomeIcon icon={faHome} />
@@ -311,6 +313,10 @@ function LecturerPlatform(props: Props) {
                             />
                         )}
                     </>
+                )}
+
+                {activeTab === "instructions" && (
+                    <Instructions />
                 )}
             </ExistingExercisesContext.Provider>
         </div>
