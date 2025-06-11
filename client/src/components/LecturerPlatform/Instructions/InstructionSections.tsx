@@ -29,6 +29,8 @@ import BatchImage from "../../../img/instructions/batch.png";
 import PastedImage from "../../../img/instructions/pasted.png";
 import { Alert } from '@mui/material';
 import { set } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsStaggered, faFileImport, faLink, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export interface Section {
     id: string
@@ -36,6 +38,13 @@ export interface Section {
     content?: React.ReactNode
     subsections?: Section[]
 }
+
+const editIcon = <FontAwesomeIcon icon={faPen} size="xs"/>
+const addIcon = <FontAwesomeIcon icon={faPlus} />
+const linkIcon = <FontAwesomeIcon icon={faLink} size="xs" />
+const reorderIcon = <FontAwesomeIcon icon={faBarsStaggered} size="xs" style={{ marginLeft: "0.1rem"}} />
+const batchIcon = <FontAwesomeIcon icon={faFileImport} size="xs" />
+
 
 // *** SUBSECTIONS FOR GRASPLE EMBEDDING SECTION ***
 // _____________________________________________________________________________________________________________________________________________________________________________________________--
@@ -152,7 +161,8 @@ const adjustingStudyProgrammesSubsection: Section =  {
                 Each topic can define a list of study programmes that it is relevant for. This can be useful for filtering topics by study programme when creating a game. By default, all available study programmes are selected, and it is recommended to keep it that way unless you have a specific reason to limit the topic to a subset of study programmes.
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                In case you do decide to edit the topic's study programmes, you can click the edit icon. You can then click on a selected study programme to remove it, as can be seen below:
+                In case you do decide to edit the topic's study programmes, you can click the <i>edit icon {editIcon}</i>.
+                You can then click on a selected study programme to remove it, as can be seen below:
             </Typography>
             <img src={EditStudyProgrammesImage} alt="Edit Studies" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -195,14 +205,14 @@ const makingExercisesMandatorySubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                In order to make an exercise mandatory for a given topic, you will need to edit the exercises. You can do this by clicking the <i>edit icon</i> next to the exercises subsection, which will result in the following view:
+                In order to make an exercise mandatory for a given topic, you will need to edit the exercises. You can do this by clicking the <i>edit icon {editIcon}</i> next to the exercises subsection, which will result in the following view:
             </Typography>
             <img src={EditingExercisesImage} alt="Editing Exercises" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
                 Figure 8: Editing exercises
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                You can now edit the exercise you want to make mandatory (or remove the mandatory status from an existing mandatory exercise) by clicking the <i>edit icon</i> next to the exercise. This will show the following view:
+                You can now edit the exercise you want to make mandatory (or remove the mandatory status from an existing mandatory exercise) by clicking the <i>edit icon {editIcon}</i> next to the exercise. This will show the following view:
             </Typography>
             <img src={RemovingMandatoryImage} alt="Removing Mandatory" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -216,7 +226,7 @@ const makingExercisesMandatorySubsection: Section =  {
                 Figure 10: Exercise #77872 is now a mandatory exercise for the topic
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                The same logic applies when removing the mandatory status from an exercise. You can click the <i>edit icon</i> next to the mandatory exercise, and then toggle the mandatory option off. This will remove the exercise from the mandatory exercises list after saving.
+                The same logic applies when removing the mandatory status from an exercise. You can click the <i>edit icon {editIcon}</i> next to the mandatory exercise, and then toggle the mandatory option off. This will remove the exercise from the mandatory exercises list after saving.
             </Typography>
         </>
     )
@@ -232,7 +242,7 @@ const reorderingMandatoryExercisesSubsection: Section =  {
                 As previously mentioned, mandatory exercises are presented to the students in the order they are listed in the topic. This means that you can reorder the mandatory exercises by dragging and dropping them in the list.
             </Typography>
             <Typography variant='body2' className='instructions-section-text'>
-                Again, start by editing the topic exercises by clicking the <i>edit icon</i> next to the exercises subsection. You can then select the third icon from the left, as can be seen below:
+                Again, start by editing the topic exercises by clicking the <i>edit icon {editIcon}</i> next to the exercises subsection. You can then select the <i>reorder icon {reorderIcon}</i>, as can be seen below:
             </Typography>
             <img src={ReorderIconImage} alt="Reorder Icon" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -308,7 +318,7 @@ const creatingFakeTeamsSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                You can create fake teams by clicking the <i>edit icon</i> next to the Fake Teams subsection. This will show the following view:
+                You can create fake teams by clicking the <i>edit icon {editIcon}</i> next to the Fake Teams subsection. This will show the following view:
             </Typography>
             <img src={CreateTeamsButtonImage} alt="Create Teams Button" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -340,7 +350,7 @@ const deletingFakeTeamsSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                Similaly, you can delete fake teams by clicking the <i>edit icon</i> next to the Fake Teams subsection. This will show the following view:
+                Similaly, you can delete fake teams by clicking the <i>edit icon {editIcon}</i> next to the Fake Teams subsection. This will show the following view:
             </Typography>
             <img src={DeleteTeamsButtonImage} alt="Delete Teams Button" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -400,7 +410,7 @@ const inTopicExerciseSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                To create a new exercise directly in a topic, open the <i>Topics</i> tab, navigate to the topic of choice and click the <i>edit icon</i> next to the Exercises subsection. You can then click the "+" icon to create a new exercise, which will result in a blank exercise object:
+                To create a new exercise directly in a topic, open the <i>Topics</i> tab, navigate to the topic of choice and click the <i>edit icon {editIcon}</i> next to the Exercises subsection. You can then click the <i>"+" icon {addIcon}</i> to create a new exercise, which will result in a blank exercise object:
             </Typography>
             <img src={AddingExerciseImage} alt="Adding exercise" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -489,7 +499,7 @@ const linkingExerciseSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                If an exercise already exists in the system, you can link it to a topic by clicking the <i>link</i> icon next to the <i>Exercises</i> subsection in the topic view. This will show you a list of all exercises currently available in the system, as can be seen below:
+                If an exercise already exists in the system, you can link it to a topic by clicking the <i>link icon {linkIcon}</i> next to the <i>Exercises</i> subsection in the topic view. This will show you a list of all exercises currently available in the system, as can be seen below:
             </Typography>
             <img src={LinkingExerciseVideo} alt="Linking exercise" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
@@ -506,7 +516,7 @@ const batchExercisesSubsection: Section =  {
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
-                Finally, for convenience, there is an option to create multiple exercises at once (i.e. a batch of exercises). First copy multiple Grasple embeddings into your notepad, and then copy them all at once. Now select the <i>batch import</i> icon (fourth):
+                Finally, for convenience, there is an option to create multiple exercises at once (i.e. a batch of exercises). First copy multiple Grasple embeddings into your notepad, and then copy them all at once. Now select the <i>batch import icon {batchIcon}</i>:
             </Typography>
             <img src={BatchImage} alt="Batch import" className='instructions-image' />
             <Typography variant='caption' className='instructions-image-caption'>
