@@ -108,6 +108,12 @@ function Question(props: Props) {
         };
     }, [questionStartTime]);
 
+    useEffect(() => {
+        console.log("--------------------Question data:", graspleQuestionData);
+
+    }, [graspleQuestionData])
+
+
     const nextQuestionHandler = () => {
         setSkipQuestionAvailable(false)
         questionStatusContext.newQuestionEvent()
