@@ -95,6 +95,17 @@ function Instructions() {
         };
     };
 
+    const getSectionNumber = (section: number, subsection?: number, subSubsection?: number) => {
+        let sectionNumber = (section + 1).toString();
+        if (subsection != null) {
+            sectionNumber += `.${subsection + 1}`;
+        }
+        if (subSubsection != null) {
+            sectionNumber += `.${subSubsection + 1}`;
+        }
+        return sectionNumber + '. ';
+    }
+
     return (
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} className='instructions-container'>
             <Grid container spacing={3}>
@@ -102,28 +113,28 @@ function Instructions() {
                     <Paper elevation={1} sx={{ p: 2, position: 'sticky', top: '20px', maxHeight: 'calc(100vh - 40px)', overflowY: 'auto' }}>
                         <Typography variant="h6" gutterBottom sx={{ pl: 1}}>Contents</Typography>
                         <List component="nav" dense>
-                            {sections.map((section) => (
+                            {sections.map((section, i) => (
                                 <React.Fragment key={section.id}>
                                     <ListItem sx={getNavItemStyles(section.id, 1)}>
                                         <MuiLink href={`#${section.id}`} sx={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
-                                            <Typography variant="subtitle1" sx={getNavTextStyles(section.id)}>{section.title}</Typography>
+                                            <Typography variant="subtitle1" sx={getNavTextStyles(section.id)}>{getSectionNumber(i)}{section.title}</Typography>
                                         </MuiLink>
                                     </ListItem>
                                     {section.subsections && (
                                         <List component="div" disablePadding dense>
-                                            {section.subsections.map((subsection) => (
+                                            {section.subsections.map((subsection, j) => (
                                                 <React.Fragment key={subsection.id}>
                                                     <ListItem sx={getNavItemStyles(subsection.id, 3)}>
                                                         <MuiLink href={`#${subsection.id}`} sx={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
-                                                            <Typography variant="body2" sx={getNavTextStyles(subsection.id)}>{subsection.title}</Typography>
+                                                            <Typography variant="body2" sx={getNavTextStyles(subsection.id)}>{getSectionNumber(i, j)}{subsection.title}</Typography>
                                                         </MuiLink>
                                                     </ListItem>
                                                     {subsection.subsections && (
                                                         <List component="div" disablePadding dense>
-                                                            {subsection.subsections.map((subSub) => (
+                                                            {subsection.subsections.map((subSub, k) => (
                                                                 <ListItem key={subSub.id} sx={getNavItemStyles(subSub.id, 5)}>
                                                                     <MuiLink href={`#${subSub.id}`} sx={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
-                                                                        <Typography variant="caption" sx={getNavTextStyles(subSub.id)}>{subSub.title}</Typography>
+                                                                        <Typography variant="caption" sx={getNavTextStyles(subSub.id)}>{getSectionNumber(i, j, k)}{subSub.title}</Typography>
                                                                     </MuiLink>
                                                                 </ListItem>
                                                             ))}

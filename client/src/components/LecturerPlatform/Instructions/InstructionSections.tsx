@@ -52,7 +52,7 @@ const batchIcon = <FontAwesomeIcon icon={faFileImport} size="xs" />
 // ** 1st subsection: Accessing an exercise **
 const accessExerciseSubsection: Section =  {
     id: "accessing-an-exercise",
-    title: "1.1. Accessing an exercise",
+    title: "Accessing an exercise",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -71,7 +71,7 @@ const accessExerciseSubsection: Section =  {
 // ** 2nd subsection: Enablig embedding **
 const enableEmbeddingSubsection: Section = {
     id: "enabling-embedding",
-    title: "1.2. Enabling embedding",
+    title: "Enabling embedding",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -101,7 +101,7 @@ const enableEmbeddingSubsection: Section = {
 // ** 3rd subsection: Copying an embedding **
 const copyEmbeddingSubsection: Section =  {
     id: "copying-an-embedding",
-    title: "1.1. Copying the embedding",
+    title: "Copying the embedding",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -120,7 +120,7 @@ const copyEmbeddingSubsection: Section =  {
 // ** 1st subsection: Creating a new topic **
 const createNewTopicSubsection: Section =  {
     id: "creating-new-topic",
-    title: "2.1. Creating a new topic",
+    title: "Creating a new topic",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -138,7 +138,7 @@ const createNewTopicSubsection: Section =  {
 // ** 2nd subsection: Creating a new topic **
 const settingTopicNameSubsection: Section =  {
     id: "setting-topic-name",
-    title: "2.2. Setting topic name",
+    title: "Setting topic name",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -154,7 +154,7 @@ const settingTopicNameSubsection: Section =  {
 // ** 3rd subsection: Adjusting study programmes **
 const adjustingStudyProgrammesSubsection: Section =  {
     id: "adjusting-study-programmes",
-    title: "2.3. (Adjusting) Study programmes",
+    title: "(Adjusting) Study programmes",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -181,7 +181,7 @@ const adjustingStudyProgrammesSubsection: Section =  {
 // ** 4th subsection: Topic Exercises **
 const topicExercisesSubsection: Section =  {
     id: "topic-exercises",
-    title: "2.4. Topic exercises",
+    title: "Topic exercises",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -201,7 +201,7 @@ const topicExercisesSubsection: Section =  {
 // ** 5.1st (sub)subsection: Making Exercises Mandatory **
 const makingExercisesMandatorySubsection: Section =  {
     id: "making-exercises-mandatory",
-    title: "2.4.1. Making exercises mandatory",
+    title: "Making exercises mandatory",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -235,7 +235,7 @@ const makingExercisesMandatorySubsection: Section =  {
 // ** 5.2nd (sub)subsection: Ordering Mandatory Exercises **
 const reorderingMandatoryExercisesSubsection: Section =  {
     id: "reordering-mandatory-exercises",
-    title: "2.4.2. Reordering mandatory exercises",
+    title: "Reordering mandatory exercises",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -262,7 +262,7 @@ const reorderingMandatoryExercisesSubsection: Section =  {
 // ** 5th subsection: Mandatory Exercises **
 const mandatoryExercisesSubsection: Section =  {
     id: "mandatory-exercises",
-    title: "2.5. Mandatory exercises",
+    title: "Mandatory exercises",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -293,7 +293,7 @@ const mandatoryExercisesSubsection: Section =  {
 // ** 6th subsection: Mandatory Exercises **
 const savingTopicSection: Section =  {
     id: "saving-topic",
-    title: "2.6. Saving the topic",
+    title: "Saving the topic",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -314,7 +314,7 @@ const savingTopicSection: Section =  {
 // ** 7.1st (sub)subsection: Creating Fake Teams **
 const creatingFakeTeamsSubsection: Section =  {
     id: "creating-fake-teams",
-    title: "2.7.1. Creating fake teams",
+    title: "Creating fake teams",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -346,7 +346,7 @@ const creatingFakeTeamsSubsection: Section =  {
 // ** 7.2nd (sub)subsection: Deleting Fake Teams **
 const deletingFakeTeamsSubsection: Section =  {
     id: "deleting-fake-teams",
-    title: "2.7.2. Deleting fake teams",
+    title: "Deleting fake teams",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -373,7 +373,7 @@ const deletingFakeTeamsSubsection: Section =  {
 // ** 7th subsection: Fake teams **
 const fakeTeamsSubsection: Section =  {
     id: "fake-teams",
-    title: "2.7. Fake teams",
+    title: "Fake teams",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -406,7 +406,7 @@ const fakeTeamsSubsection: Section =  {
 // ** 1.1st (sub)subsection: Creating In Topic **
 const inTopicExerciseSubsection: Section =  {
     id: "creating-exercises-in-topic",
-    title: "3.1 In the topic",
+    title: "In the topic",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -450,7 +450,7 @@ const inTopicExerciseSubsection: Section =  {
 // ** 1.2nd (sub)subsection: Creating In Exercises Tab **
 const inExercisesTabSubsection: Section =  {
     id: "creating-exercises-in-tab",
-    title: "3.2 In the Exercises tab",
+    title: "In the Exercises tab",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -470,7 +470,7 @@ const inExercisesTabSubsection: Section =  {
 // ** 1st subsection: Creating a new exercise **
 const creatingExerciseSubsection: Section =  {
     id: "creating-exercises",
-    title: "3.1 Creating a new Exercise",
+    title: "Creating a new Exercise",
     content: (
         <>
            <Typography variant='body2' className='instructions-section-text'>
@@ -495,7 +495,7 @@ const creatingExerciseSubsection: Section =  {
 // ** 2nd subsection: Linking an exercise **
 const linkingExerciseSubsection: Section =  {
     id: "linking-exercises",
-    title: "3.2 Linking an existing exercise",
+    title: "Linking an existing exercise",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -512,7 +512,7 @@ const linkingExerciseSubsection: Section =  {
 // ** 3rd subsection: Create a batch **
 const batchExercisesSubsection: Section =  {
     id: "batch-exercises",
-    title: "3.3 Creating a batch of exercises",
+    title: "Creating a batch of exercises",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -548,7 +548,7 @@ const batchExercisesSubsection: Section =  {
 
 const embeddingGraspleExercisesSection: Section = {
     id: "embedding-grasple-exercises",
-    title: "1. Grasple embedding",
+    title: "Grasple embedding",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -565,7 +565,7 @@ const embeddingGraspleExercisesSection: Section = {
 
 const topicsSection: Section = {
     id: "topics",
-    title: "2. Topics",
+    title: "Topics",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
@@ -599,7 +599,7 @@ const topicsSection: Section = {
 
 const exercisesSection: Section = {
     id: "exercises",
-    title: "3. Exercises",
+    title: "Exercises",
     content: (
         <>
             <Typography variant='body2' className='instructions-section-text'>
