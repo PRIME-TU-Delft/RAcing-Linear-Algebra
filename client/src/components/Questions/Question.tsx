@@ -106,13 +106,7 @@ function Question(props: Props) {
                 clearTimeout(skipTimeoutRef.current);
             }
         };
-    }, [questionStartTime]);
-
-    useEffect(() => {
-        console.log("--------------------Question data:", graspleQuestionData);
-
-    }, [graspleQuestionData])
-
+    }, [questionStartTime, graspleQuestionData]);
 
     const nextQuestionHandler = () => {
         setSkipQuestionAvailable(false)
@@ -192,11 +186,6 @@ function Question(props: Props) {
         setShowDifficultySelectionDescription(curr => false)
         setQuestionStartTime(Date.now())
     }
-
-    const overlayContent1 = (<div>HELLO</div>)
-    const overlayContent2 = (<div>
-        <FontAwesomeIcon icon={faQuestion} />
-    </div>)
 
     return (
            <animated.div
