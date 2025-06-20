@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogA
 import "./TopicElement.css"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
@@ -849,6 +849,7 @@ function TopicElement(props: Props) {
                                                                         isIndependentElement={false}
                                                                         isMandatory={exerciseElement.exercise.isMandatory}
                                                                         currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
+                                                                        reordering={true}
                                                                     />
                                                                 </div>
                                                             )}
