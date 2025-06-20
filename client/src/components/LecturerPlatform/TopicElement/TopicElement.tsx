@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogA
 import "./TopicElement.css"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
@@ -583,12 +583,12 @@ function TopicElement(props: Props) {
                             {(newTopicData.name == "" ? "" : newTopicData.name)}
                         </div>
                         <div className="number-of-exercises">Exercises: {exercises.length}</div>
-                        {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ? 
+                        {props._id !== "" && (props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ? 
                             <div className="number-of-default-teams">Warning! There are no teams for this topic yet. Consider adding fake teams.</div>
-                        : props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0 ?
+                        :props._id !== "" && props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0 ?
                             <div className="number-of-default-teams">{props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0}/{props.defaultTeamsData != undefined ? props.defaultTeamsData.totalTeamsCount : 0} fake teams</div>
                         : null
-                        }
+                        )}
 
                     </div>
                 </AccordionSummary>
@@ -661,63 +661,66 @@ function TopicElement(props: Props) {
                 </AccordionActions>)}
 
                 <Divider/>
+
+                { props._id != "" &&
                 <AccordionDetails>
-                <div className="fake-teams-section">
-                    <div className="fake-teams-header topic-header">
-                    Fake teams
-                    {changingTeams ? (
-                        <>
-                        <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}/>
-                        <FontAwesomeIcon
-                                    icon={faCircleInfo}
-                                    style={{ color: "#1976D2", marginLeft: "0.5rem" }}
-                                    data-tooltip-id="info-tooltip"
-                                    data-tooltip-place="right"
-                                    data-tooltip-html="Fake teams are artificially created teams that can be used when there aren't enough real teams (classes) that have played with this topic. This makes the race more interesting."
-                        />
-                        </>
-                    )
-                    :
-                    <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingTeams(curr => true)}/>
-                    }
-                    </div>
-                    {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ?
-                        <Typography variant="body2" color="textSecondary" style={{ marginTop: "0.5rem" }}>
-                            There are currently no teams in the database for this topic. This will mean the race won't have any competing racers other than the team who's playing.
-                        </Typography>
-                    :
-                    <Typography variant="body2" style={{ marginTop: "0.5rem" }}>
-                    There are currently {props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0} {maxDefaultTeamsCountReached ? "(max)" : ""} fake teams in the database for this topic.
-                    </Typography>
-                    }
-                    {changingTeams && props._id != "" && (
-                        <div style={{ marginTop: "1rem" }}>
-                            {!maxDefaultTeamsCountReached && 
-                                <Button 
-                                    variant="outlined" 
-                                    size="small" 
-                                    onClick={() => setIsFakeTeamsDialogOpen(true)} 
-                                    startIcon={<FontAwesomeIcon icon={faPlus} />}
-                                    style={{ marginRight: "0.5rem" }}
-                                >
-                                    Add Teams
-                                </Button>
-                            }
-                            {someDefaultTeamsExist && 
-                                <Button 
-                                    variant="outlined" 
-                                    size="small" 
-                                    color="error" 
-                                    onClick={() => setIsDeleteFakeTeamsDialogOpen(true)} 
-                                    startIcon={<FontAwesomeIcon icon={faTrash} />}
-                                >
-                                    Delete Teams
-                                </Button>
-                            }
+                    <div className="fake-teams-section">
+                        <div className="fake-teams-header topic-header">
+                        Fake teams
+                        {changingTeams ? (
+                            <>
+                            <Tooltip id="info-tooltip" place="top" style={{zIndex: "9999"}}/>
+                            <FontAwesomeIcon
+                                        icon={faCircleInfo}
+                                        style={{ color: "#1976D2", marginLeft: "0.5rem" }}
+                                        data-tooltip-id="info-tooltip"
+                                        data-tooltip-place="right"
+                                        data-tooltip-html="Fake teams are artificially created teams that can be used when there aren't enough real teams (classes) that have played with this topic. This makes the race more interesting."
+                            />
+                            </>
+                        )
+                        :
+                        <FontAwesomeIcon icon={faPen} size="xs" className="edit-studies-icon" onClick={() => setChangingTeams(curr => true)}/>
+                        }
                         </div>
-                    )}
-                </div>
+                        {props.defaultTeamsData == undefined || props.defaultTeamsData.totalTeamsCount == 0 ?
+                            <Typography variant="body2" color="textSecondary" style={{ marginTop: "0.5rem" }}>
+                                There are currently no teams in the database for this topic. This will mean the race won't have any competing racers other than the team who's playing.
+                            </Typography>
+                        :
+                        <Typography variant="body2" style={{ marginTop: "0.5rem" }}>
+                        There are currently {props.defaultTeamsData != undefined ? props.defaultTeamsData.fakeTeamsCount : 0} {maxDefaultTeamsCountReached ? "(max)" : ""} fake teams in the database for this topic.
+                        </Typography>
+                        }
+                        {changingTeams && props._id != "" && (
+                            <div style={{ marginTop: "1rem" }}>
+                                {!maxDefaultTeamsCountReached && 
+                                    <Button 
+                                        variant="outlined" 
+                                        size="small" 
+                                        onClick={() => setIsFakeTeamsDialogOpen(true)} 
+                                        startIcon={<FontAwesomeIcon icon={faPlus} />}
+                                        style={{ marginRight: "0.5rem" }}
+                                    >
+                                        Add Teams
+                                    </Button>
+                                }
+                                {someDefaultTeamsExist && 
+                                    <Button 
+                                        variant="outlined" 
+                                        size="small" 
+                                        color="error" 
+                                        onClick={() => setIsDeleteFakeTeamsDialogOpen(true)} 
+                                        startIcon={<FontAwesomeIcon icon={faTrash} />}
+                                    >
+                                        Delete Teams
+                                    </Button>
+                                }
+                            </div>
+                        )}
+                    </div>
                 </AccordionDetails>
+                }
 
                 <Divider/>
                 <AccordionDetails>
@@ -846,6 +849,7 @@ function TopicElement(props: Props) {
                                                                         isIndependentElement={false}
                                                                         isMandatory={exerciseElement.exercise.isMandatory}
                                                                         currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
+                                                                        reordering={true}
                                                                     />
                                                                 </div>
                                                             )}

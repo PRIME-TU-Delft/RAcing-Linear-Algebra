@@ -1,0 +1,58 @@
+.instructions-container {
+    display: flex;
+    flex-direction: column;
+    padding-right: 2rem !important;
+}
+
+.instructions-text {
+    width: 50%;
+    margin: auto !important;
+    margin-top: 0.5rem !important;
+    text-align: justify;
+}
+
+.instructions-section-title {
+    text-align: left;
+    margin-top: 1rem !important;
+}
+
+.instructions-section-text {
+    margin-top: 0.5rem !important;
+    text-align: justify;
+}
+
+.instructions-image {
+    width: 65rem;
+    height: auto;
+    margin: auto;
+    margin-top: 1rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.instructions-list-item {
+    font-size: 0.875rem !important;
+}
+
+.instructions-subsection-title {
+    text-align: left;
+    margin-top: 1rem !important;
+}
+
+.instructions-subsection {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.image-medium {
+    width: 40rem;
+}
+
+.image-small {
+    width: 20rem;
+}
+
+.instructions-image-caption {
+    display: block !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}

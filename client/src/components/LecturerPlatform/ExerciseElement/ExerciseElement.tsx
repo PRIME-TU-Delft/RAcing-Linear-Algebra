@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField, Switch } from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faGrip, faPen } from "@fortawesome/free-solid-svg-icons";
 import "./ExerciseElement.css";
 import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
 import { url } from "inspector";
@@ -25,6 +25,7 @@ interface Props {
     isIndependentElement: boolean
     isMandatory: boolean
     currentTopicExerciseIds: number[]
+    reordering?: boolean
 }
 
 function ExerciseElement(props: Props) {
@@ -122,7 +123,7 @@ function ExerciseElement(props: Props) {
     }
 
     return (
-        <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "")} 
+        <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "") + (props.reordering ? " reordering-exercise" : "")} 
             style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: props.isIndependentElement ? "1rem" : "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
             <Accordion 
                 sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
@@ -133,7 +134,15 @@ function ExerciseElement(props: Props) {
                     aria-controls={`panel-content-${props._id}`}    
                     id={`panel-header-${props._id}`}
                     sx={{ height: '2rem'}}
+                    className={(props.reordering ? " reordering-exercise" : "")}
                 >
+                    {props.reordering && 
+                    <span
+                        style={{ display: "flex", alignItems: "center", marginRight: "1rem" }}
+                    >
+                        <FontAwesomeIcon icon={faGrip} />
+                    </span>
+                    }
                     {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
                             <div className="d-flex col col-10 align-items-center">

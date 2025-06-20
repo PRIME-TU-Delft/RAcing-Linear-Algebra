@@ -42,3 +42,7 @@
 .edit-icon:hover {
     cursor: pointer;
 }
+
+.reordering-exercise {
+    cursor: grab !important;
+}

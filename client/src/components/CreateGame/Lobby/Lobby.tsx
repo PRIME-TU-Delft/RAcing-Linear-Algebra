@@ -90,7 +90,7 @@ function Lobby(props: Props) {
     }, [socket])
 
     return (
-        <a.div style={spring}>
+        <a.div style={spring} className="lobby-container">
             {/* TITLE CONTAINING THE LOBBY CODE */}
             <div className="title row align-items-center">
                 <div className="lobby-code col">
