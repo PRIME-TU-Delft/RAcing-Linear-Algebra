@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import "./SelectName.css"
 
+const maxInputLength = 25
+
 interface Props {
     teamNameSelected: (name: string) => void
     onStepCompleted: () => void
@@ -28,6 +30,7 @@ function SelectName(props: Props) {
                 onKeyDown={(e) => {
                     if (e.key == "Enter") completeStep()
                 }}
+                maxLength={maxInputLength}
             />
             <button
                 type="button"
