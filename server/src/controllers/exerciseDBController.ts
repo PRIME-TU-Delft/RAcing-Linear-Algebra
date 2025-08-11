@@ -3,6 +3,16 @@ import { ExerciseGroup } from "../models/exerciseGroupModel";
 import type { IExercise } from "../models/exerciseModel";
 import { Exercise } from "../models/exerciseModel"
 
+export interface IExerciseWithVariants {
+    _id: string;
+    exerciseId: number;
+    name: string;
+    variants: {
+        _id: string;
+        exerciseId: number;
+    }[];
+}
+
 export async function addNewExercise(
     exerciseId: number,
     url: string,
@@ -32,7 +42,7 @@ export async function addNewExercise(
     return newExercise
 }
 
-async function addVariant(
+export async function addVariant(
     originalExerciseId: mongoose.Types.ObjectId, 
     variantData: {
         exerciseId: number,
@@ -136,4 +146,52 @@ export async function getAllExercises(): Promise<IExercise[]> {
     } catch (error) {
         throw error;
     }
+}
+
+export async function getAllExercisesWithVariants(): Promise<IExerciseWithVariants[]> {
+    const exercises = await Exercise.aggregate([
+        {
+            $lookup: {
+                from: 'exercisegroups',
+                localField: 'groupId',
+                foreignField: '_id',
+                as: 'group'
+            }
+        },
+
+        { $unwind: '$group' },
+
+        {
+            $lookup: {
+                from: 'exercises',
+                localField: 'group.variants.exercise',
+                foreignField: '_id',
+                as: 'variantDetails'
+            }
+        },
+
+        {
+            $project: {
+                _id: 1,
+                exerciseId: 1,
+                name: 1,
+                url: 1,
+                difficulty: 1,
+                numOfAttempts: 1,
+                groupId: 1,
+                variants: {
+                    $map: {
+                        input: '$variantDetails',
+                        as: 'variant',
+                        in: {
+                            _id: '$$variant._id',
+                            exerciseId: '$$variant.exerciseId'
+                        }
+                    }
+                }
+            }
+        }
+    ]);
+
+    return exercises;
 }
