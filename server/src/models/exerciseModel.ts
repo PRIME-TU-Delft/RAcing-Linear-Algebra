@@ -1,9 +1,8 @@
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 
 export interface IExercise extends mongoose.Document {
     exerciseId: number
-    sharedExerciseId: number
-    variantId: number
+    groupId: mongoose.Types.ObjectId // used for grouping variants of the same exercise
     url: string
     difficulty: string
     numOfAttempts: number
@@ -18,17 +17,9 @@ export const exerciseSchema: mongoose.Schema = new mongoose.Schema({
         unique: true
     },
 
-    // Shared (internally used) exercise id
-    // Used to group together variants of the same exercise
-    // Variants are essentially identical copies with different parameters
-    sharedExerciseId: {
-        type: Number,
-        required: true
-    },
-
-    // Variant id for that particular shared exercise id (so 1, 2, 3, 4...)
-    variantId: {
-        type: Number,
+    groupId: {
+        type: Schema.Types.ObjectId,
+        ref: "ExerciseGroup",
         required: true
     },
 
@@ -54,6 +45,4 @@ export const exerciseSchema: mongoose.Schema = new mongoose.Schema({
     }
 })
 
-exerciseSchema.index({ sharedExerciseId: 1, variantId: 1 }, { unique: true });
-
-export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercises", exerciseSchema)
+export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercise", exerciseSchema)

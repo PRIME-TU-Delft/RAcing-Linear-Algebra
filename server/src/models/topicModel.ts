@@ -32,7 +32,7 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
         {
             // List of ID's corresponding to the exercises
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Exercises",
+            ref: "Exercise",
             required: true,
             default: undefined
         },
@@ -41,7 +41,7 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
         {
             // List of ID's corresponding to the exercises
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "Exercises",
+            ref: "Exercise",
             required: true,
             default: undefined
         },

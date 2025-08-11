@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import { ExerciseGroup } from "../models/exerciseGroupModel";
 import type { IExercise } from "../models/exerciseModel";
 import { Exercise } from "../models/exerciseModel"
 
@@ -8,51 +10,63 @@ export async function addNewExercise(
     numOfAttempts: number,
     name: string
 ): Promise<IExercise> {
-    const lastExercise = await Exercise.findOne().sort({ sharedExerciseId: -1 });
-    const newSharedId = lastExercise ? lastExercise.sharedExerciseId + 1 : 1;
-
-    const newExercise: IExercise = new Exercise({
+    // This is the first exercise so it is a new group, i.e. no variants yet
+    const newGroup = new ExerciseGroup({ variants: [] });
+    const newExercise = new Exercise({
         exerciseId,
-        sharedExerciseId: newSharedId,
-        variantId: 1, // first variant (might also be the only variant)
         url,
         difficulty,
         numOfAttempts,
-        name
-    });
+        name,
+        groupId: newGroup._id
+    })
 
-    const createdExercise = await Exercise.create(newExercise);
-    return createdExercise;
+    newGroup.variants.push({
+        variantId: 1,
+        exercise: newExercise._id
+    })
+
+    await newGroup.save()
+    await newExercise.save()
+
+    return newExercise
 }
 
-export async function addNewVariant(
-    existingSharedId: number,
-    exerciseId: number,
-    url: string,
-    difficulty: string,
-    numOfAttempts: number,
-    name: string
-): Promise<IExercise> {
-    const lastVariant = await Exercise.findOne({ sharedExerciseId: existingSharedId })
-                                      .sort({ variantId: -1 });
-    if (!lastVariant) {
-        throw new Error(`Cannot create variant. No exercise found with sharedExerciseId: ${existingSharedId}`);
-    }
+async function addVariant(
+    originalExerciseId: mongoose.Types.ObjectId, 
+    variantData: {
+        exerciseId: number,
+        url: string,
+        difficulty: string,
+        numOfAttempts: number,
+        name: string 
+    }) {
+    const originalExercise = await Exercise.findById(originalExerciseId);
+    if (!originalExercise) throw new Error("Original exercise not found");
 
-    const newVariantId = lastVariant.variantId + 1;
+    const newVariant = await Exercise.create({
+        ...variantData,
+        groupId: originalExercise.groupId
+    })
 
-    const variant = new Exercise({
-        exerciseId,
-        url,
-        difficulty,
-        numOfAttempts,
-        name,   
-        sharedExerciseId: existingSharedId, // Use the existing shared ID
-        variantId: newVariantId             // Increment the variant ID
-    });
+    const group = await ExerciseGroup.findById(originalExercise.groupId);
+    if (!group) throw new Error("Exercise group not found");
 
-    const createdVariant = await Exercise.create(variant);
-    return createdVariant;
+    const newVariantId = group.variants.length + 1;
+
+    await ExerciseGroup.updateOne(
+        { _id: originalExercise.groupId },
+        {
+            $push: {
+                variants: {
+                    variantId: newVariantId,
+                    exercise: newVariant._id
+                }
+            }
+        }
+    )
+
+    return newVariant
 }
 
 export async function exerciseExists(exerciseId: number): Promise<boolean> {
