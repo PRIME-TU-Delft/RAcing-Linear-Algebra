@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogA
 import "./TopicElement.css"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faBarsStaggered, faCircleInfo, faFileImport, faFloppyDisk, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBarsStaggered, faCircleInfo, faDice, faFileImport, faFloppyDisk, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
@@ -259,6 +259,10 @@ function TopicElement(props: Props) {
 
     const reorderMandatoryExercisesHandler = () => {
         setExercisesMode(curr => "reorder")
+    }
+
+    const editExerciseVariantsHandler = () => {
+        setExercisesMode(curr => "variants")
     }
 
     const addNewExerciseHandler = () => {
@@ -737,6 +741,8 @@ function TopicElement(props: Props) {
                                 </Tooltip>
                                 <Tooltip id="reorder-tooltip" place="top" style={{zIndex: "9999"}}>
                                 </Tooltip>
+                                <Tooltip id="variant-tooltip" place="top" style={{zIndex: "9999"}}>
+                                </Tooltip>
                                 <Tooltip id="batch-tooltip" place="top" style={{ zIndex: "9999" }} />
                                 <FontAwesomeIcon
                                     icon={faCircleInfo}
@@ -768,6 +774,13 @@ function TopicElement(props: Props) {
                                     data-tooltip-place="top"
                                     data-tooltip-html="Reorder mandatory exercises"/>
                                 <FontAwesomeIcon 
+                                    icon={faDice} 
+                                    className="variant-exercises-icon" 
+                                    onClick={() => editExerciseVariantsHandler()}
+                                    data-tooltip-id="variant-tooltip"
+                                    data-tooltip-place="top"
+                                    data-tooltip-html="Edit exercise variants"/>
+                                <FontAwesomeIcon 
                                     icon={faFileImport} 
                                     className="batch-exercise-icon" 
                                     onClick={() => setIsBatchDialogOpen(true)}
@@ -782,86 +795,123 @@ function TopicElement(props: Props) {
                             )}
                         </div>
                         <div className="exercises-list">
-                            {exercisesMode !== "reorder" ? sortedExercises.map((exerciseElement, index) => (
-                                <div className="d-flex row" key={index}>
-                                    <ExerciseElement 
-                                        _id={exerciseElement.exercise._id} 
-                                        name={exerciseElement.exercise.name} 
-                                        exerciseId={exerciseElement.exercise.exerciseId} 
-                                        difficulty={exerciseElement.exercise.difficulty} 
-                                        url={exerciseElement.exercise.url} 
-                                        numOfAttempts={exerciseElement.exercise.numOfAttempts}
-                                        beingEdited={editingExerciseIndex == index}
-                                        closeNotEditing={editingExerciseIndex > -1}
-                                        parentSaveChanges={saveChanges.exercises}
-                                        onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
-                                        onDiscardEditingExercise={() => discardEditingExerciseHandler()}
-                                        onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
-                                        isIndependentElement={false}
-                                        isMandatory={exerciseElement.exercise.isMandatory}
-                                        currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
-                                    ></ExerciseElement>
-                                    {exercisesMode === "edit" && (
-                                        <div className="d-flex col  m-auto">
-                                            <div className="d-flex row">
-                                                <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
-                                                <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )) : (<>
-                                <div className="reorder-exercises-instructions">
-                                    Drag and drop the mandatory exercises in the preferred order you want them to appear in during the game.
-                                </div>
-                                <DragDropContext onDragEnd={onDragEnd}>
-                                    <Droppable droppableId="exercises-list">
-                                        {(provided) => (
-                                            <div
-                                                className="exercises-list"
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                            >
-                                                {exercises
-                                                    .filter(exerciseElement => exerciseElement.exercise.isMandatory)
-                                                    .map((exerciseElement, index) => (
-                                                        <Draggable key={exerciseElement.exercise.exerciseId} draggableId={exerciseElement.exercise._id} index={index}>
-                                                            {(provided) => (
-                                                                <div
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    className="d-flex row"
-                                                                >
-                                                                    <ExerciseElement
-                                                                        _id={exerciseElement.exercise._id} 
-                                                                        name={exerciseElement.exercise.name} 
-                                                                        exerciseId={exerciseElement.exercise.exerciseId} 
-                                                                        difficulty={exerciseElement.exercise.difficulty} 
-                                                                        url={exerciseElement.exercise.url} 
-                                                                        numOfAttempts={exerciseElement.exercise.numOfAttempts}
-                                                                        beingEdited={editingExerciseIndex == index}
-                                                                        closeNotEditing={editingExerciseIndex > -1}
-                                                                        parentSaveChanges={saveChanges.exercises}
-                                                                        onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
-                                                                        onDiscardEditingExercise={() => discardEditingExerciseHandler()}
-                                                                        onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
-                                                                        isIndependentElement={false}
-                                                                        isMandatory={exerciseElement.exercise.isMandatory}
-                                                                        currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
-                                                                        reordering={true}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </Draggable>
-                                                    ))}
-                                                {provided.placeholder}
+                            {/* First case: Default view*/}
+                            {exercisesMode !== "reorder" && exercisesMode !== "variants" ? sortedExercises.map((exerciseElement, index) => 
+                                (
+                                    <div className="d-flex row" key={index}>
+                                        <ExerciseElement 
+                                            _id={exerciseElement.exercise._id} 
+                                            name={exerciseElement.exercise.name} 
+                                            exerciseId={exerciseElement.exercise.exerciseId} 
+                                            difficulty={exerciseElement.exercise.difficulty} 
+                                            url={exerciseElement.exercise.url} 
+                                            numOfAttempts={exerciseElement.exercise.numOfAttempts}
+                                            beingEdited={editingExerciseIndex == index}
+                                            closeNotEditing={editingExerciseIndex > -1}
+                                            parentSaveChanges={saveChanges.exercises}
+                                            onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
+                                            onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                            onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
+                                            isIndependentElement={false}
+                                            isMandatory={exerciseElement.exercise.isMandatory}
+                                            currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
+                                        ></ExerciseElement>
+                                        
+                                        {/* If edit exercises mode active, sjow the edit and delete icons next to each exercise in the list */}
+                                        {exercisesMode === "edit" && (
+                                            <div className="d-flex col  m-auto">
+                                                <div className="d-flex row">
+                                                    <FontAwesomeIcon icon={faPen} size="sm" className="exercise-edit-icon d-flex col m-auto" onClick={() => editingExerciseHandler(index)}/>
+                                                    <FontAwesomeIcon icon={faTrash} size="sm" className="exercise-remove-icon d-flex col m-auto" onClick={() => handleDeleteExercise(index)}/>
+                                                </div>
                                             </div>
                                         )}
-                                    </Droppable>
-                                </DragDropContext>
+                                    </div>
+                                )) : null
+                            }
+                            
+                            {/* Second case: Reorder mandatory exercises mode */}
+                            {exercisesMode === "reorder" ? sortedExercises.map((exerciseElement, index) => 
+                             (
+                                <>
+                                    <div className="reorder-exercises-instructions">
+                                        Drag and drop the mandatory exercises in the preferred order you want them to appear in during the game.
+                                    </div>
+                                    <DragDropContext onDragEnd={onDragEnd}>
+                                        <Droppable droppableId="exercises-list">
+                                            {(provided) => (
+                                                <div
+                                                    className="exercises-list"
+                                                    {...provided.droppableProps}
+                                                    ref={provided.innerRef}
+                                                >
+                                                    {exercises
+                                                        .filter(exerciseElement => exerciseElement.exercise.isMandatory)
+                                                        .map((exerciseElement, index) => (
+                                                            <Draggable key={exerciseElement.exercise.exerciseId} draggableId={exerciseElement.exercise._id} index={index}>
+                                                                {(provided) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        className="d-flex row"
+                                                                    >
+                                                                        <ExerciseElement
+                                                                            _id={exerciseElement.exercise._id} 
+                                                                            name={exerciseElement.exercise.name} 
+                                                                            exerciseId={exerciseElement.exercise.exerciseId} 
+                                                                            difficulty={exerciseElement.exercise.difficulty} 
+                                                                            url={exerciseElement.exercise.url} 
+                                                                            numOfAttempts={exerciseElement.exercise.numOfAttempts}
+                                                                            beingEdited={editingExerciseIndex == index}
+                                                                            closeNotEditing={editingExerciseIndex > -1}
+                                                                            parentSaveChanges={saveChanges.exercises}
+                                                                            onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
+                                                                            onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                                                            onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
+                                                                            isIndependentElement={false}
+                                                                            isMandatory={exerciseElement.exercise.isMandatory}
+                                                                            currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
+                                                                            reordering={true}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        ))}
+                                                    {provided.placeholder}
+                                                </div>
+                                            )}
+                                        </Droppable>
+                                    </DragDropContext>
                                 </>
-                            )}
+                            )) : null
+                        }
+
+                        {/* Third case: Edit exercise variants mode */}
+                        {exercisesMode === "variants" ? sortedExercises.map((exerciseElement, index) => 
+                                (
+                                    <div className="d-flex row" key={index}>
+                                        <ExerciseElement 
+                                            _id={exerciseElement.exercise._id} 
+                                            name={exerciseElement.exercise.name} 
+                                            exerciseId={exerciseElement.exercise.exerciseId} 
+                                            difficulty={exerciseElement.exercise.difficulty} 
+                                            url={exerciseElement.exercise.url} 
+                                            numOfAttempts={exerciseElement.exercise.numOfAttempts}
+                                            beingEdited={editingExerciseIndex == index}
+                                            closeNotEditing={editingExerciseIndex > -1}
+                                            parentSaveChanges={saveChanges.exercises}
+                                            onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
+                                            onDiscardEditingExercise={() => discardEditingExerciseHandler()}
+                                            onExerciseAlreadyExists={(exerciseId: number) => exerciseAlreadyExistsHandler(exerciseId)}
+                                            isIndependentElement={false}
+                                            isMandatory={exerciseElement.exercise.isMandatory}
+                                            currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
+                                            numberOfVariants={exerciseElement.exercise.variants ? exerciseElement.exercise.variants.length : 0}
+                                        ></ExerciseElement>    
+                                    </div>
+                                )) : null
+                            }
                         </div>
                     </div>
                 </AccordionDetails>

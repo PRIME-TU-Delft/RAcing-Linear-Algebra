@@ -301,6 +301,7 @@ function LecturerPlatform(props: Props) {
                                     isIndependentElement={true}
                                     isMandatory={false}
                                     currentTopicExerciseIds={[]}
+                                    numberOfVariants={exercise.variants ? exercise.variants.length : 1}
                                 />
                             ))}
                         </div>

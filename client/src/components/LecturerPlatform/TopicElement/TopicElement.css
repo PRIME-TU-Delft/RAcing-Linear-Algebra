@@ -57,11 +57,11 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover, .variant-exercises-icon:hover {
     cursor: pointer;
 }
 
-.add-exercise-icon, .link-exercise-icon, .reorder-exercises-icon, .batch-exercise-icon {
+.add-exercise-icon, .link-exercise-icon, .reorder-exercises-icon, .batch-exercise-icon, .variant-exercises-icon {
     margin-left: 1rem;
 }
 
