@@ -28,6 +28,7 @@ interface Study {
 }
 
 export {
+    type ExerciseVariant,
     type Exercise,
     type Topic,
     type Study

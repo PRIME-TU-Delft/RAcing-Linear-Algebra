@@ -2,16 +2,17 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogA
 import "./TopicElement.css"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faBarsStaggered, faCircleInfo, faDice, faFileImport, faFloppyDisk, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faBars, faBarsStaggered, faCircleInfo, faDice, faFileImport, faFloppyDisk, faGear, faGrip, faLink, faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
 import { Tooltip } from "react-tooltip"
-import { Exercise, Study, Topic } from "../SharedUtils"
+import { Exercise, ExerciseVariant, Study, Topic } from "../SharedUtils"
 import socket from "../../../socket"
 import { DefaultTeamsData, TopicDataContext } from "../../../contexts/TopicDataContext"
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
 import { ExistingExercisesContext } from "../ExistingExercisesContext"
+import ExerciseURLInput from "../ExerciseElement/ExerciseURLInput/ExerciseURLInput"
 
 
 interface ExerciseListElement {
@@ -50,6 +51,9 @@ function TopicElement(props: Props) {
     const [newName, setNewName] = useState<string>("")
     const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1)
+
+    const [isManageVariantsDialogOpen, setIsManageVariantsDialogOpen] = useState(false)
+    const [selectedVariantExerciseIndex, setSelectedVariantExerciseIndex] = useState<number | null>(null)
 
     const existingExerciseIds = useContext(ExistingExercisesContext);
     
@@ -91,6 +95,27 @@ function TopicElement(props: Props) {
     const [newFakeTeamsCount, setNewFakeTeamsCount] = useState(1)
     const [avgTimePerQuestion, setAvgTimePerQuestion] = useState(60)
     const [isDeleteFakeTeamsDialogOpen, setIsDeleteFakeTeamsDialogOpen] = useState(false)
+
+    const [isAddingVariant, setIsAddingVariant] = useState<boolean>(false)
+
+    const handleAddNewVariant = (newUrl: string, newId: number) => {
+        if (selectedVariantExerciseIndex === null) return;
+
+        const newVariant: ExerciseVariant = {
+            _id: "",
+            exerciseId: newId
+        };
+
+        setExercises(currentExercises => {
+            const updatedExercises = [...currentExercises];
+            const exerciseToUpdate = updatedExercises[selectedVariantExerciseIndex];
+            const updatedVariants = [...(exerciseToUpdate.exercise.variants || []), newVariant];
+            exerciseToUpdate.exercise.variants = updatedVariants;
+            return updatedExercises;
+        });
+
+        setIsAddingVariant(false); // Hide the input field after adding
+    };
 
     const showUnsavedChangesWarningNotification = (incorrectTopicField: string) => {
         // only add a notification if it hasn't already been shown
@@ -214,6 +239,11 @@ function TopicElement(props: Props) {
     }
 
     const editingExerciseHandler = (index: number) => {
+        const selectedExerciseId = sortedExercises[index].exercise.exerciseId
+        const originalIndex = exercises.findIndex(ex => ex.exercise.exerciseId === selectedExerciseId)
+
+        if (originalIndex === -1) return
+
         if (editingExerciseIndex > -1) {
             Store.addNotification({
                 title: "Warning",
@@ -227,8 +257,17 @@ function TopicElement(props: Props) {
                 }
             })
         } else {
-            setEditingExerciseIndex(curr => index)
+            setEditingExerciseIndex(curr => originalIndex)
         }
+    }
+    
+    const manageVariantsHandler = (index: number) => {
+        const selectedExerciseId = sortedExercises[index].exercise.exerciseId
+        const originalIndex = exercises.findIndex(ex => ex.exercise.exerciseId === selectedExerciseId)
+
+        if (originalIndex === -1) return
+
+        setSelectedVariantExerciseIndex(originalIndex)
     }
 
     const exerciseFinishEditingHandler = (exerciseData: Exercise) => {
@@ -806,7 +845,7 @@ function TopicElement(props: Props) {
                                             difficulty={exerciseElement.exercise.difficulty} 
                                             url={exerciseElement.exercise.url} 
                                             numOfAttempts={exerciseElement.exercise.numOfAttempts}
-                                            beingEdited={editingExerciseIndex == index}
+                                            beingEdited={editingExerciseIndex == exercises.findIndex(e => e.exercise.exerciseId === exerciseElement.exercise.exerciseId)}
                                             closeNotEditing={editingExerciseIndex > -1}
                                             parentSaveChanges={saveChanges.exercises}
                                             onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
@@ -863,7 +902,7 @@ function TopicElement(props: Props) {
                                                                             difficulty={exerciseElement.exercise.difficulty} 
                                                                             url={exerciseElement.exercise.url} 
                                                                             numOfAttempts={exerciseElement.exercise.numOfAttempts}
-                                                                            beingEdited={editingExerciseIndex == index}
+                                                                            beingEdited={editingExerciseIndex == exercises.findIndex(e => e.exercise.exerciseId === exerciseElement.exercise.exerciseId)}
                                                                             closeNotEditing={editingExerciseIndex > -1}
                                                                             parentSaveChanges={saveChanges.exercises}
                                                                             onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
@@ -898,7 +937,7 @@ function TopicElement(props: Props) {
                                             difficulty={exerciseElement.exercise.difficulty} 
                                             url={exerciseElement.exercise.url} 
                                             numOfAttempts={exerciseElement.exercise.numOfAttempts}
-                                            beingEdited={editingExerciseIndex == index}
+                                            beingEdited={editingExerciseIndex == exercises.findIndex(e => e.exercise.exerciseId === exerciseElement.exercise.exerciseId)}
                                             closeNotEditing={editingExerciseIndex > -1}
                                             parentSaveChanges={saveChanges.exercises}
                                             onFinishEditingExercise={(exerciseData: Exercise) => exerciseFinishEditingHandler(exerciseData)}
@@ -909,6 +948,23 @@ function TopicElement(props: Props) {
                                             currentTopicExerciseIds={exercises.map(exercise => exercise.exercise.exerciseId)}
                                             numberOfVariants={exerciseElement.exercise.variants ? exerciseElement.exercise.variants.length : 0}
                                         ></ExerciseElement>    
+                                        
+                                        <div 
+                                            className="d-flex col  m-auto manage-variants-button"
+                                            onClick={() => {
+                                                manageVariantsHandler(index)
+                                                setIsManageVariantsDialogOpen(true)
+                                            }}
+                                            >
+                                            <div className="d-flex row align-items-center">
+                                                 <div className="d-flex col col-1">
+                                                    <FontAwesomeIcon icon={faGear} />
+                                                 </div>
+                                                 <div className="d-flex col">
+                                                    Manage
+                                                 </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 )) : null
                             }
@@ -1061,6 +1117,88 @@ function TopicElement(props: Props) {
                 <DialogActions>
                     <Button onClick={() => setIsDeleteFakeTeamsDialogOpen(false)}>Cancel</Button>
                     <Button onClick={deleteFakeTeamsHandler} variant="contained" color="primary">Delete</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={isManageVariantsDialogOpen}
+                onClose={() => {
+                    setIsManageVariantsDialogOpen(false)
+                    setIsAddingVariant(false)
+                }}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle>Manage Variants</DialogTitle>
+                <DialogContent>
+                    {selectedVariantExerciseIndex !== null && (
+                        <>
+                            <Typography variant="subtitle1" gutterBottom>
+                                {exercises[selectedVariantExerciseIndex]?.exercise.name} (#{exercises[selectedVariantExerciseIndex]?.exercise.exerciseId})
+                            </Typography>
+                            <List>
+                                {(exercises[selectedVariantExerciseIndex]?.exercise.variants ?? []).length === 0 && !isAddingVariant && (
+                                    <Typography variant="body2" color="textSecondary">No variants yet.</Typography>
+                                )}
+                                {(exercises[selectedVariantExerciseIndex]?.exercise.variants ?? []).map((variant: any, vIdx: number) => (
+                                    <ListItem
+                                        key={vIdx}
+                                        secondaryAction={
+                                            <Button
+                                                color="error"
+                                                size="small"
+                                                onClick={() => {
+                                                    // Remove variant
+                                                    setExercises(curr => {
+                                                        const updated = [...curr]
+                                                        if (selectedVariantExerciseIndex === null) return updated;
+                                                        const variants = [...(updated[selectedVariantExerciseIndex].exercise.variants ?? [])]
+                                                        variants.splice(vIdx, 1)
+                                                        updated[selectedVariantExerciseIndex].exercise.variants = variants
+                                                        return updated
+                                                    })
+                                                }}
+                                            >
+                                                Delete
+                                            </Button>
+                                        }
+                                    >
+                                        <ListItemText primary={`${vIdx + 1}: #${variant.exerciseId}`}/>
+                                    </ListItem>
+                                ))}
+                            </List>
+
+                            {isAddingVariant ? (
+                                <div style={{ padding: "8px 16px" }}>
+                                     <ExerciseURLInput
+                                        url=""
+                                        onURLValueChange={handleAddNewVariant}
+                                        onExerciseAlreadyExists={exerciseAlreadyExistsHandler}
+                                        currentTopicExerciseIds={exercises.flatMap(ex => [
+                                            ex.exercise.exerciseId,
+                                            ...(ex.exercise.variants?.map(v => v.exerciseId) || [])
+                                        ])}
+                                    />
+                                </div>
+                            ) : (
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ mt: 0.5, ml: "16px" }}
+                                    onClick={() => setIsAddingVariant(true)}
+                                >
+                                    <FontAwesomeIcon icon={faPlus} style={{marginRight: "0.5rem"}}/>
+                                    Add Variant
+                                </Button>
+                            )}
+                        </>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" onClick={() => {
+                        setIsManageVariantsDialogOpen(false)
+                        setIsAddingVariant(false)
+                    }}>Close</Button>
                 </DialogActions>
             </Dialog>
 
