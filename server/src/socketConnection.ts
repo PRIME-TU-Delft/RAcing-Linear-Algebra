@@ -16,14 +16,15 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
+import { addNewExercise, exerciseExists, findExercise, getAllExercisesWithVariants, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
+import { getAllTopicData } from "./controllers/topicVariantsDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -798,7 +799,7 @@ module.exports = {
              */
             socket.on("getAllExercises", async() => {
                 try {
-                    const exercises = await getAllExercises();
+                    const exercises = await getAllExercisesWithVariants();
                     socket.emit("all-exercises", exercises);
                 } catch (error) {
                     socket.emit("error", error.message);

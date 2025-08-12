@@ -13,6 +13,10 @@ export interface ITopicDataWithVariants extends ITopicData {
     exercises: IExerciseDataWithVariants[];
 }
 
+// Here we defined functions just like in topicDBController but with the Exercise Variant system included
+// If Grasple changes to where variants no longer need to be stored internally, can be switched back to the original functions
+// which were kept in topicDBController instead
+
 export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic> = {}): Promise<ITopicDataWithVariants[]> {
     const topics = await Topic.aggregate([
         // Find the topics that match the filter (e.g., by ID or name)
