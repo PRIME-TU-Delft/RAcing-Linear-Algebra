@@ -860,7 +860,7 @@ module.exports = {
                     exerciseId: number, 
                     updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
                     isMandatory: boolean,
-                    variants: { _id: string, exerciseId: number }[]
+                    variants: { _id: string, exerciseId: number, url: string }[]
                 }[], 
                 studyIds: string[]) => {
                     try {
@@ -875,7 +875,7 @@ module.exports = {
                                 if (variant._id === "") {
                                     await addVariant(updatedExercise._id, {
                                         exerciseId: variant.exerciseId,
-                                        url: exercise.updateData.url,
+                                        url: variant.url,
                                         difficulty: exercise.updateData.difficulty,
                                         numOfAttempts: exercise.updateData.numOfAttempts,
                                         name: `Variant of #${exercise.exerciseId}`

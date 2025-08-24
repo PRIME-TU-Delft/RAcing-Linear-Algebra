@@ -119,3 +119,7 @@
     font-style: italic;
     color: #2e2e2e;
 }
+
+.variant-item:hover {
+    cursor: pointer;
+}

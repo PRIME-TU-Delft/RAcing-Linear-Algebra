@@ -1,6 +1,7 @@
 interface ExerciseVariant {
     _id: string,
-    exerciseId: number
+    exerciseId: number,
+    url: string
 }
 
 interface Exercise {

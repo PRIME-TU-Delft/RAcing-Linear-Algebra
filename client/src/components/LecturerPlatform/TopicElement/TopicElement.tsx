@@ -104,7 +104,8 @@ function TopicElement(props: Props) {
 
         const newVariant: ExerciseVariant = {
             _id: "",
-            exerciseId: newId
+            exerciseId: newId,
+            url: newUrl
         };
 
         setExercises(currentExercises => {
@@ -1143,12 +1144,18 @@ function TopicElement(props: Props) {
                                 )}
                                 {(exercises[selectedVariantExerciseIndex]?.exercise.variants ?? []).map((variant: any, vIdx: number) => (
                                     <ListItem
+                                        button
+                                        component="a"
+                                        href={variant.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         key={vIdx}
                                         secondaryAction={
                                             <Button
                                                 color="error"
                                                 size="small"
-                                                onClick={() => {
+                                                onClick={(e) => {
+                                                    e.preventDefault();
                                                     // Remove variant
                                                     setExercises(curr => {
                                                         const updated = [...curr]

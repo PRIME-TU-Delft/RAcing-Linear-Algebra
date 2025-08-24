@@ -6,6 +6,7 @@ export interface IExerciseDataWithVariants extends IExerciseData {
     variants: {
         _id: string;
         exerciseId: number;
+        url: string;
     }[];
 }
 
@@ -97,7 +98,8 @@ export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic>
                                     as: 'variant',
                                     in: {
                                         _id: '$$variant._id',
-                                        exerciseId: '$$variant.exerciseId'
+                                        exerciseId: '$$variant.exerciseId',
+                                        url: '$$variant.url'
                                     }
                                 }
                             }
