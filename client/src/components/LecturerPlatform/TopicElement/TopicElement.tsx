@@ -1127,7 +1127,7 @@ function TopicElement(props: Props) {
                     setIsAddingVariant(false)
                 }}
                 fullWidth
-                maxWidth="sm"
+                maxWidth="lg"
             >
                 <DialogTitle>Manage Variants</DialogTitle>
                 <DialogContent>

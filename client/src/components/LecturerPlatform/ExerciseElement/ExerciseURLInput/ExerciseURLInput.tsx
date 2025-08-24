@@ -63,10 +63,10 @@ function ExerciseURLInput(props: Props) {
     };
 
     useEffect(() => {
-        if (checked && graspleId !== -1) {
+        if (checked && graspleId !== -1 && !loading) {
             props.onURLValueChange(urlValue, graspleId);
         }
-    }, [checked, graspleId, props, urlValue]);
+    }, [checked, graspleId, props, urlValue, loading]);
 
     useEffect(() => {
         setUrlValue(props.url);
@@ -88,7 +88,6 @@ function ExerciseURLInput(props: Props) {
         } else if (correctDomain && correctId) {
             setChecked(false);
             props.onExerciseAlreadyExists(graspleId);
-            setUrlValue("")
         } else {
             setChecked(false);
         }
@@ -118,7 +117,7 @@ function ExerciseURLInput(props: Props) {
                     </div>
                 ) : (
                     <div>
-                        <FontAwesomeIcon icon={faTimesCircle} color={"#4CAF50"} />
+                        <FontAwesomeIcon icon={faTimesCircle} color={"#c93737ff"} />
                         <span style={{ marginLeft: "0.5rem" }}>{urlErrorMessage}</span>
                     </div>
                 )}
