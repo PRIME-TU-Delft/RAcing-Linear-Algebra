@@ -24,7 +24,7 @@ import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
-import { getAllTopicData, updateTopic } from "./controllers/topicVariantsDBController"
+import { getAllTopicData, getSelectedITopicsWithVariants, updateTopic } from "./controllers/topicVariantsDBController"
 import mongoose, { Mongoose } from "mongoose"
 
 const socketToLobbyId = new Map<string, number>()
@@ -312,7 +312,7 @@ module.exports = {
                 "startGame",
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     try {
-                        const selectedTopics = await getSelectedITopics(topics)
+                        const selectedTopics = await getSelectedITopicsWithVariants(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const room = io.sockets.adapter.rooms.get(`players${lobbyId}`) as Set<string> | undefined
                         if (!room || room.size === 0) return
@@ -385,6 +385,10 @@ module.exports = {
                         if (exercise !== undefined && user !== undefined) {
                             scoreToGain = game.calculateScore(exercise, user);
                         }
+                        
+
+                        // Variant Step
+
 
                         // socket.emit("get-next-question", question)
                         socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)

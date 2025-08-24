@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { addNewTopic, getAllStudiesFromTopic, IExerciseData, ITopicData } from "./topicDBController";
 import { ITopic, Topic } from "../models/topicModel";
+import { IExercise } from "../models/exerciseModel";
+import { ExerciseGroup } from "../models/exerciseGroupModel";
 
 export interface IExerciseDataWithVariants extends IExerciseData {
     variants: {
@@ -12,6 +14,15 @@ export interface IExerciseDataWithVariants extends IExerciseData {
 
 export interface ITopicDataWithVariants extends ITopicData {
     exercises: IExerciseDataWithVariants[];
+}
+
+export interface IExerciseWithPopulatedVariants extends IExercise {
+    variants: IExercise[];
+}
+
+export interface ITopicWithPopulatedVariants extends ITopic {
+    mandatoryExercises: IExerciseWithPopulatedVariants[];
+    difficultyExercises: IExerciseWithPopulatedVariants[];
 }
 
 // Here we defined functions just like in topicDBController but with the Exercise Variant system included
@@ -135,13 +146,54 @@ export async function getAllExercisesFromTopic(topicId: string): Promise<IExerci
     }
 }
 
-export async function getSelectedTopics(topicNames: string[]): Promise<ITopicDataWithVariants[]> {
+const processExercises = async (exercises: IExercise[]): Promise<IExerciseWithPopulatedVariants[]> => {
+    const exercisesWithVariants: IExerciseWithPopulatedVariants[] = [];
+    for (const exercise of exercises) {
+        const group = await ExerciseGroup.findById(exercise.groupId)
+            .populate<{ variants: { exercise: IExercise }[] }>('variants.exercise');
+        
+        const populatedVariants = group 
+            ? group.variants
+                .map(v => v.exercise)
+            : [];
+
+        exercisesWithVariants.push({
+            ...exercise.toObject(),
+            variants: populatedVariants
+        } as IExerciseWithPopulatedVariants);
+    }
+    return exercisesWithVariants;
+};
+
+export async function getSelectedITopicsWithVariants(topicNames: string[]): Promise<ITopicWithPopulatedVariants[]> {
     try {
-        if (topicNames.length === 0) return []
-        return await getTopicsWithVariants({ name: { $in: topicNames } })
+        if (topicNames.length === 0) return [];
+
+        const topics = await Topic.find({ name: { $in: topicNames } })
+            .populate("studies")
+            .populate("difficultyExercises")
+            .populate("mandatoryExercises");
+
+        if (!topics) {
+            throw new Error("The selected topics were not found.");
+        }
+        
+        const topicsWithVariants: ITopicWithPopulatedVariants[] = [];
+        for (const topic of topics) {
+            const mandatoryWithVariants = await processExercises(topic.mandatoryExercises as IExercise[]);
+            const difficultyWithVariants = await processExercises(topic.difficultyExercises as IExercise[]);
+
+            topicsWithVariants.push({
+                ...topic.toObject(),
+                mandatoryExercises: mandatoryWithVariants,
+                difficultyExercises: difficultyWithVariants,
+            } as ITopicWithPopulatedVariants);
+        }
+
+        return topicsWithVariants;
     } catch (error) {
-        console.error("Error retrieving selected topics:", error)
-        throw error
+        console.error("Error retrieving selected topics with variants:", error);
+        throw error;
     }
 }
 

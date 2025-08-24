@@ -1,10 +1,10 @@
 import type { IRound } from "../models/roundModel"
-import { ITopic } from "../models/topicModel"
 import { Game } from "../objects/gameObject"
 import { User } from "../objects/userObject"
 
 import type { Request, Response } from "express"
 import { Router } from "express"
+import { ITopicWithPopulatedVariants } from "./topicVariantsDBController"
 
 //number as key did not work for some reason
 export const games: Map<string, Game> = new Map()
@@ -19,7 +19,7 @@ export const gameRouter = Router()
  * @param lobbyId the id of the lobby
  */
 export function addGame(
-    topics: ITopic[],
+    topics: ITopicWithPopulatedVariants[],
     roundDurations: number[],
     teamName: string,
     userIds: string[],

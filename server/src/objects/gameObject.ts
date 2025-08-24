@@ -4,8 +4,8 @@ import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../utils/latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
-import type { ITopic } from "../models/topicModel"
 import type { IExercise } from "../models/exerciseModel"
+import { ITopicWithPopulatedVariants } from "../controllers/topicVariantsDBController"
 
 export interface GameGhostTeam {
     teamName: string
@@ -20,7 +20,7 @@ export class Game {
     timeScores: number[]
     teamName: string //The name of the team
     currentTopicIndex: number //Number of the current round that is being played
-    topics: ITopic[] //The selected rounds
+    topics: ITopicWithPopulatedVariants[] //The selected rounds
     roundDurations: number[] // The durations of the rounds
     users: Map<string, User> //The map of users in the game
     checkpoints: number[] //The amount of seconds taken to reach each checkpoint
@@ -39,7 +39,7 @@ export class Game {
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(topics: ITopic[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
+    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
         this.currentTopicIndex = 0
         this.topics = topics
         this.roundDurations = roundDurations
@@ -113,7 +113,7 @@ export class Game {
      * @param user the user object that needs a question
      * @returns a new question
      */
-    getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
+    getMandatoryQuestion(topic: ITopicWithPopulatedVariants, user: User): IExercise | undefined {
         console.log("Answered: " + user.getQuestionIds().length.toString())
         console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
 
@@ -169,7 +169,7 @@ export class Game {
      * @returns a new exercise
      */
     getDifficultyExercise(
-        topic: ITopic,
+        topic: ITopicWithPopulatedVariants,
         user: User,
         difficulty: string
     ): IExercise | undefined {
