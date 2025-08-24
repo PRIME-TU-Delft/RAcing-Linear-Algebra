@@ -1,4 +1,6 @@
 import { getBestTeamFinalScore, getGhostTeams } from "../controllers/scoreDBController";
+import { IExerciseWithPopulatedVariants } from "../controllers/topicVariantsDBController";
+import { IExercise } from "../models/exerciseModel";
 import type { Game, GameGhostTeam } from "../objects/gameObject";
 
 export async function getInterpolatedGhostTeams(game: Game) {
@@ -53,4 +55,15 @@ export function getTeamScoreData(game: Game, numberOfPlayers: number) {
         accuracy: Math.floor(accuracy),
         averageTeamScore: Math.floor(game.totalScore / numberOfPlayers)
     }
+}
+
+export function getRandomVariant(exercise: IExerciseWithPopulatedVariants): IExercise | null {
+    const variants = exercise.variants;
+
+    if (!variants || variants.length === 0) {
+        return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * variants.length);
+    return variants[randomIndex];
 }

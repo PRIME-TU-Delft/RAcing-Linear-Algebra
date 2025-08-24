@@ -22,9 +22,9 @@ import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
-import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
+import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getRandomVariant, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
-import { getAllTopicData, getSelectedITopicsWithVariants, updateTopic } from "./controllers/topicVariantsDBController"
+import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulatedVariants, updateTopic } from "./controllers/topicVariantsDBController"
 import mongoose, { Mongoose } from "mongoose"
 
 const socketToLobbyId = new Map<string, number>()
@@ -371,18 +371,24 @@ module.exports = {
                                 && user.isOnMandatory)
                         )) 
                     {
-                        let exercise: IExercise | undefined = undefined
+                        let populatedExercise: IExerciseWithPopulatedVariants | undefined = undefined
+                        let exercise: IExercise | null = null
 
                         if (user.getQuestionIds().length > 0 && !user.usedUpAttemptsOnLastQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
-                            exercise = user.currentQuestion
-                            game.initializeUserAttempts(exercise, user)
+                            populatedExercise = user.currentQuestion
+                            exercise = getRandomVariant(populatedExercise)
+                            game.initializeUserAttempts(populatedExercise, user)
                         } else{
-                            exercise = game.getNewExercise(socket.data.userId, difficulty)
-                            user.usedUpAttemptsOnLastQuestion = false
+                            populatedExercise = game.getNewExercise(socket.data.userId, difficulty)
+
+                            if (populatedExercise != undefined) {
+                                exercise = getRandomVariant(populatedExercise)
+                                user.usedUpAttemptsOnLastQuestion = false
+                            }
                         }
 
                         let scoreToGain = 0;
-                        if (exercise !== undefined && user !== undefined) {
+                        if (exercise !== null && user !== undefined) {
                             scoreToGain = game.calculateScore(exercise, user);
                         }
                         

@@ -5,7 +5,7 @@ import type { User } from "./userObject"
 import { checkAnswerEqual } from "../utils/latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
 import type { IExercise } from "../models/exerciseModel"
-import { ITopicWithPopulatedVariants } from "../controllers/topicVariantsDBController"
+import { IExerciseWithPopulatedVariants, ITopicWithPopulatedVariants } from "../controllers/topicVariantsDBController"
 
 export interface GameGhostTeam {
     teamName: string
@@ -70,7 +70,7 @@ export class Game {
      * @param lobbyId the lobby that the player is in
      * @returns the new question
      */
-    getNewExercise(userId: string, difficulty?: string): IExercise | undefined {
+    getNewExercise(userId: string, difficulty?: string): IExerciseWithPopulatedVariants | undefined {
         const topic = this.topics[this.currentTopicIndex]
         const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
@@ -113,7 +113,7 @@ export class Game {
      * @param user the user object that needs a question
      * @returns a new question
      */
-    getMandatoryQuestion(topic: ITopicWithPopulatedVariants, user: User): IExercise | undefined {
+    getMandatoryQuestion(topic: ITopicWithPopulatedVariants, user: User): IExerciseWithPopulatedVariants | undefined {
         console.log("Answered: " + user.getQuestionIds().length.toString())
         console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
 
@@ -172,7 +172,7 @@ export class Game {
         topic: ITopicWithPopulatedVariants,
         user: User,
         difficulty: string
-    ): IExercise | undefined {
+    ): IExerciseWithPopulatedVariants | undefined {
         try {
             const exerciseIds = topic.difficultyExercises
                 .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
@@ -243,7 +243,7 @@ export class Game {
         user.resetUserQuestionsAnswered()
     }
 
-    initializeUserAttempts(exericse: IExercise, user: User) {
+    initializeUserAttempts(exericse: IExerciseWithPopulatedVariants, user: User) {
         user.currentQuestion = exericse
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
     }
