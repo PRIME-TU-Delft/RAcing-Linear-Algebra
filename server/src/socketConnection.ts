@@ -16,7 +16,7 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, updateExercise } from "./controllers/exerciseDBController"
+import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, removeVariant, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
 import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
@@ -25,6 +25,7 @@ import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 import { getAllTopicData, updateTopic } from "./controllers/topicVariantsDBController"
+import mongoose, { Mongoose } from "mongoose"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -849,7 +850,15 @@ module.exports = {
                 }
             })
 
-            /**
+            socket.on("deleteExerciseVariant", async (original_id: mongoose.Types.ObjectId, variantExerciseid: number) => {
+                try {
+                    await removeVariant(original_id, variantExerciseid);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**`
              * Updates the topic with the given topic id, or if it does not exist, creates a new one
              * Notably, this function updates the mandatory status of each exercise associated with the topic
              */
@@ -872,6 +881,7 @@ module.exports = {
                             }
 
                             for (const variant of exercise.variants) {
+                                console.log(variant)
                                 if (variant._id === "") {
                                     await addVariant(updatedExercise._id, {
                                         exerciseId: variant.exerciseId,

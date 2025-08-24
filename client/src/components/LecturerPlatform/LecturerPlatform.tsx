@@ -26,6 +26,7 @@ interface Props {
     onUpdateTopic: (topicData: Topic) => void
     onAddDefaultTeamsForTopic: (topicId: string, fakeTeamsToAddCount: number, avgTimePerQuestion: number) => void
     onDeleteDefaultTeamsForTopic: (topicId: string) => void
+    onDeleteVariant: (original_id: string, variantExerciseid: number) => void
 }
 
 function LecturerPlatform(props: Props) {
@@ -249,6 +250,7 @@ function LecturerPlatform(props: Props) {
                                     defaultTeamsData={topicData.defaultTeams.filter((data: DefaultTeamsData) => data.topicId === topic._id)[0]}
                                     onAddDefaultTeams={(fakeTeamsToAddCount: number, avgTimePerQuestion: number) => props.onAddDefaultTeamsForTopic(topic._id, fakeTeamsToAddCount, avgTimePerQuestion)}
                                     onDeleteDefaultTeams={() => props.onDeleteDefaultTeamsForTopic(topic._id)}
+                                    onDeleteVariant={(original_id: string, variantExerciseid: number) => props.onDeleteVariant(original_id, variantExerciseid)}
                                 />
                             ))}
                         </div>

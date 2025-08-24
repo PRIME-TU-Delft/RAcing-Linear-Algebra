@@ -39,6 +39,7 @@ interface Props {
     defaultTeamsData: DefaultTeamsData
     onAddDefaultTeams: (teamsToAddCount: number, avgTimePerQuestion: number) => void
     onDeleteDefaultTeams: () => void
+    onDeleteVariant: (original_id: string, variantExerciseid: number) => void
 }
 
 function TopicElement(props: Props) {
@@ -1150,7 +1151,7 @@ function TopicElement(props: Props) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         key={vIdx}
-                                        secondaryAction={
+                                        secondaryAction={vIdx > 0 && (
                                             <Button
                                                 color="error"
                                                 size="small"
@@ -1165,10 +1166,11 @@ function TopicElement(props: Props) {
                                                         updated[selectedVariantExerciseIndex].exercise.variants = variants
                                                         return updated
                                                     })
+                                                    props.onDeleteVariant(exercises[selectedVariantExerciseIndex]?.exercise._id || "", variant.exerciseId);
                                                 }}
                                             >
                                                 Delete
-                                            </Button>
+                                            </Button>)
                                         }
                                     >
                                         <ListItemText primary={`${vIdx + 1}: #${variant.exerciseId}`}/>

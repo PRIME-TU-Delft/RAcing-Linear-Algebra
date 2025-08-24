@@ -51,7 +51,7 @@ export async function addVariant(
         numOfAttempts: number,
         name: string 
     }) {
-        
+
     const originalExercise = await Exercise.findById(originalExerciseId);
     if (!originalExercise) {
         console.error("Original exercise not found.");
@@ -62,6 +62,8 @@ export async function addVariant(
         ...variantData,
         groupId: originalExercise.groupId
     });
+
+    console.log("New variant to be added:", newVariant);
 
     try {
         await newVariant.save();
