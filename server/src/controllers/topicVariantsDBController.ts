@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IExerciseData, ITopicData } from "./topicDBController";
+import { addNewTopic, getAllStudiesFromTopic, IExerciseData, ITopicData } from "./topicDBController";
 import { ITopic, Topic } from "../models/topicModel";
 
 export interface IExerciseDataWithVariants extends IExerciseData {
@@ -140,5 +140,59 @@ export async function getSelectedTopics(topicNames: string[]): Promise<ITopicDat
     } catch (error) {
         console.error("Error retrieving selected topics:", error)
         throw error
+    }
+}
+
+export async function updateTopic(
+    topicId: string,
+    name: string,
+    exercises: { _id: string, isMandatory: boolean }[],
+    studyIds: string[]
+): Promise<ITopicDataWithVariants> {
+    try {
+       const updateData: any = {};
+
+        updateData.name = name;
+
+        const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
+        const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);
+        updateData.mandatoryExercises = mandatoryExercises;
+        updateData.difficultyExercises = difficultyExercises;
+
+        updateData.studies = studyIds;
+
+        // Find and update the topic, or create a new one if topicId is empty
+        let updatedTopic = topicId !== "" ? 
+            await Topic.findByIdAndUpdate(
+                topicId,
+                { $set: updateData },
+                { new: true }
+            ) : null;
+
+        if (updatedTopic == null) {
+            const newTopic = await addNewTopic(name, [], [], []);
+            updatedTopic = await Topic.findByIdAndUpdate(
+                newTopic._id,
+                { $set: updateData },
+                { new: true }
+            );
+        }
+
+        if (!updatedTopic) {
+            throw new Error('Error creating or updating topic');
+        }
+
+        const newExercisesWithVariants = await getAllExercisesFromTopic(updatedTopic._id.toString());
+        const studies = await getAllStudiesFromTopic(updatedTopic._id.toString());
+
+        return {
+            _id: updatedTopic._id.toString(),
+            name: updatedTopic.name,
+            exercises: newExercisesWithVariants,
+            studies
+        };
+    } catch (error) {
+        console.error("Error updating topic with variants:", error);
+        throw error;
     }
 }

@@ -8,6 +8,7 @@ import { url } from "inspector";
 import { Store } from 'react-notifications-component';
 import { Exercise } from "../SharedUtils";
 import { set } from "react-hook-form";
+import { getVariantNumberColor } from "../FunctionUtils";
 
 interface Props {
     _id: string,
@@ -27,18 +28,6 @@ interface Props {
     currentTopicExerciseIds: number[]
     reordering?: boolean
     numberOfVariants?: number
-}
-
-interface VariantCountColor {
-    low: string,
-    medium: string,
-    high: string
-}
-
-const variantColors: VariantCountColor = {
-    low: "#D17019",
-    medium: "#F0ED62",
-    high: "#19D1CC"
 }
 
 function ExerciseElement(props: Props) {
@@ -138,13 +127,7 @@ function ExerciseElement(props: Props) {
     const getVariantCountBackgroundColor = () => {
         if (!props.numberOfVariants) return ""
 
-        if (props.numberOfVariants <= 1) {
-            return variantColors.low
-        } else if (props.numberOfVariants <= 2) {
-            return variantColors.medium
-        } else {
-            return variantColors.high
-        }
+        return getVariantNumberColor(props.numberOfVariants)
     }
 
     return (

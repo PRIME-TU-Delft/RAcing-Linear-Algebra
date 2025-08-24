@@ -16,15 +16,15 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, exerciseExists, findExercise, getAllExercisesWithVariants, updateExercise } from "./controllers/exerciseDBController"
+import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
-import { getAllTopicData } from "./controllers/topicVariantsDBController"
+import { getAllTopicData, updateTopic } from "./controllers/topicVariantsDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -859,12 +859,30 @@ module.exports = {
                 exercises: {
                     exerciseId: number, 
                     updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
-                    isMandatory: boolean
+                    isMandatory: boolean,
+                    variants: { _id: string, exerciseId: number }[]
                 }[], 
                 studyIds: string[]) => {
                     try {
                         const updatedExercises = await Promise.all(exercises.map(async exercise => {
                             const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
+                            
+                            if (!updatedExercise) {
+                                throw new Error(`Failed to update or create exercise with ID ${exercise.exerciseId}`);
+                            }
+
+                            for (const variant of exercise.variants) {
+                                if (variant._id === "") {
+                                    await addVariant(updatedExercise._id, {
+                                        exerciseId: variant.exerciseId,
+                                        url: exercise.updateData.url,
+                                        difficulty: exercise.updateData.difficulty,
+                                        numOfAttempts: exercise.updateData.numOfAttempts,
+                                        name: `Variant of #${exercise.exerciseId}`
+                                    });
+                                }
+                            }
+
                             return {
                                 _id: updatedExercise?._id,
                                 isMandatory: exercise.isMandatory

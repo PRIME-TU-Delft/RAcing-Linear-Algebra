@@ -221,7 +221,8 @@ function App() {
         const exerciseData = topicData.exercises.map(exercise => ({
             exerciseId: exercise.exerciseId,
             updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
-            isMandatory: exercise.isMandatory
+            isMandatory: exercise.isMandatory,
+            variants: exercise.variants ? exercise.variants : []
         }))
         const studyIds = topicData.studies.map(study => study._id)
 

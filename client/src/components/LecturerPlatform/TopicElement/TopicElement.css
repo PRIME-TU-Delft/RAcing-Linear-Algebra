@@ -114,3 +114,8 @@
 .manage-variants-button:hover {
     cursor: pointer;
 }
+
+.manage-variants-text {
+    font-style: italic;
+    color: #2e2e2e;
+}

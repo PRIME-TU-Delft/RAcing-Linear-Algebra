@@ -13,6 +13,7 @@ import { DefaultTeamsData, TopicDataContext } from "../../../contexts/TopicDataC
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
 import { ExistingExercisesContext } from "../ExistingExercisesContext"
 import ExerciseURLInput from "../ExerciseElement/ExerciseURLInput/ExerciseURLInput"
+import { getVariantNumberColor } from "../FunctionUtils"
 
 
 interface ExerciseListElement {
@@ -958,9 +959,9 @@ function TopicElement(props: Props) {
                                             >
                                             <div className="d-flex row align-items-center">
                                                  <div className="d-flex col col-1">
-                                                    <FontAwesomeIcon icon={faGear} />
+                                                    <FontAwesomeIcon icon={faGear} color={getVariantNumberColor(exerciseElement.exercise.variants ? exerciseElement.exercise.variants.length : 0)} />
                                                  </div>
-                                                 <div className="d-flex col">
+                                                 <div className="d-flex col manage-variants-text">
                                                     Manage
                                                  </div>
                                             </div>

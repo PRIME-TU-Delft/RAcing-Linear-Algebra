@@ -51,19 +51,31 @@ export async function addVariant(
         numOfAttempts: number,
         name: string 
     }) {
+        
     const originalExercise = await Exercise.findById(originalExerciseId);
-    if (!originalExercise) throw new Error("Original exercise not found");
+    if (!originalExercise) {
+        console.error("Original exercise not found.");
+        throw new Error("Original exercise not found");
+    }
 
-    const newVariant = await Exercise.create({
+    const newVariant = new Exercise({
         ...variantData,
         groupId: originalExercise.groupId
-    })
+    });
+
+    try {
+        await newVariant.save();
+    } catch (error) {
+        console.error("Error saving new variant exercise:", error);
+        throw error;
+    }
 
     const group = await ExerciseGroup.findById(originalExercise.groupId);
-    if (!group) throw new Error("Exercise group not found");
+    if (!group) {
+        throw new Error("Exercise group not found");
+    }
 
     const newVariantId = group.variants.length + 1;
-
     await ExerciseGroup.updateOne(
         { _id: originalExercise.groupId },
         {
@@ -74,9 +86,43 @@ export async function addVariant(
                 }
             }
         }
-    )
+    );
 
-    return newVariant
+    return newVariant;
+}
+
+export async function removeVariant(
+    originalExerciseObjectId: mongoose.Types.ObjectId,
+    variantExerciseIdToRemove: number
+): Promise<void> {
+    const originalExercise = await Exercise.findById(originalExerciseObjectId);
+    if (!originalExercise) {
+        throw new Error("Original exercise not found");
+    }
+
+    // Prevent deleting the original exercise itself via this function
+    if (originalExercise.exerciseId === variantExerciseIdToRemove) {
+        throw new Error("Cannot remove the main exercise using this function.");
+    }
+
+    const variantToRemove = await Exercise.findOne({ 
+        exerciseId: variantExerciseIdToRemove,
+        groupId: originalExercise.groupId 
+    });
+
+    if (!variantToRemove) {
+        // The variant doesn't exist in this group, so there's nothing to do.
+        return;
+    }
+
+    // Remove the variant reference from the group
+    await ExerciseGroup.updateOne(
+        { _id: originalExercise.groupId },
+        { $pull: { variants: { exercise: variantToRemove._id } } }
+    );
+
+    // Delete the variant exercise document
+    await Exercise.findByIdAndDelete(variantToRemove._id);
 }
 
 export async function exerciseExists(exerciseId: number): Promise<boolean> {
