@@ -89,6 +89,7 @@ function ExerciseURLInput(props: Props) {
         } else if (correctDomain && correctId) {
             setChecked(false);
             props.onExerciseAlreadyExists(graspleId);
+            setUrlValue("");
         } else {
             setChecked(false);
         }

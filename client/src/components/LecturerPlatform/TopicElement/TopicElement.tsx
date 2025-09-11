@@ -299,6 +299,21 @@ function TopicElement(props: Props) {
         }
     }
 
+    const variantAlreadyExistsHandler = (variantExerciseId: number) => {
+        if (selectedVariantExerciseIndex === null) return
+        Store.addNotification({
+                title: "Warning",
+                message: "This variant already exists in the topic",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                dismiss: {
+                    duration: 5000,
+                    onScreen: true
+                }
+        })
+    }
+
     const reorderMandatoryExercisesHandler = () => {
         setExercisesMode(curr => "reorder")
     }
@@ -1184,7 +1199,7 @@ function TopicElement(props: Props) {
                                         autoFocus={true}
                                         url=""
                                         onURLValueChange={handleAddNewVariant}
-                                        onExerciseAlreadyExists={exerciseAlreadyExistsHandler}
+                                        onExerciseAlreadyExists={variantAlreadyExistsHandler}
                                         currentTopicExerciseIds={exercises.flatMap(ex => [
                                             ex.exercise.exerciseId,
                                             ...(ex.exercise.variants?.map(v => v.exerciseId) || [])
