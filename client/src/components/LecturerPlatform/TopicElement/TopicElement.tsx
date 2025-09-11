@@ -1181,6 +1181,7 @@ function TopicElement(props: Props) {
                             {isAddingVariant ? (
                                 <div style={{ padding: "8px 16px" }}>
                                      <ExerciseURLInput
+                                        autoFocus={true}
                                         url=""
                                         onURLValueChange={handleAddNewVariant}
                                         onExerciseAlreadyExists={exerciseAlreadyExistsHandler}

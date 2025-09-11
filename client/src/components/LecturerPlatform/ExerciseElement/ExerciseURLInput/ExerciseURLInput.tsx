@@ -11,6 +11,7 @@ interface Props {
     onURLValueChange: (url: string, grasple_id: number) => void;
     onExerciseAlreadyExists: (exerciseId: number) => void;
     currentTopicExerciseIds: number[]
+    autoFocus?: boolean
 }
 
 function ExerciseURLInput(props: Props) {
@@ -100,6 +101,7 @@ function ExerciseURLInput(props: Props) {
     return (
         <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
             <TextField
+                autoFocus={props.autoFocus}
                 variant="outlined"
                 size="small"
                 value={urlValue}
