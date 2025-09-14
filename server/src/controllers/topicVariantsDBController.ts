@@ -180,8 +180,8 @@ export async function getSelectedITopicsWithVariants(topicNames: string[]): Prom
         
         const topicsWithVariants: ITopicWithPopulatedVariants[] = [];
         for (const topic of topics) {
-            const mandatoryWithVariants = await processExercises(topic.mandatoryExercises as IExercise[]);
-            const difficultyWithVariants = await processExercises(topic.difficultyExercises as IExercise[]);
+            const mandatoryWithVariants = await processExercises(topic.mandatoryExercises);
+            const difficultyWithVariants = await processExercises(topic.difficultyExercises );
 
             topicsWithVariants.push({
                 ...topic.toObject(),
@@ -216,7 +216,8 @@ export async function updateTopic(
         updateData.studies = studyIds;
 
         // Find and update the topic, or create a new one if topicId is empty
-        let updatedTopic = topicId !== "" ? 
+        const isNewTopic = topicId === "" || topicId.includes("new-topic");
+        let updatedTopic = !isNewTopic ? 
             await Topic.findByIdAndUpdate(
                 topicId,
                 { $set: updateData },
