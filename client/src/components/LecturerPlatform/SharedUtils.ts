@@ -1,3 +1,9 @@
+interface ExerciseVariant {
+    _id: string,
+    exerciseId: number,
+    url: string
+}
+
 interface Exercise {
     _id: string,
     name: string,
@@ -6,6 +12,7 @@ interface Exercise {
     url: string,
     numOfAttempts: number   
     isMandatory: boolean
+    variants?: ExerciseVariant[]
 }
 
 interface Topic {
@@ -22,6 +29,7 @@ interface Study {
 }
 
 export {
+    type ExerciseVariant,
     type Exercise,
     type Topic,
     type Study

@@ -26,6 +26,7 @@ interface Props {
     onUpdateTopic: (topicData: Topic) => void
     onAddDefaultTeamsForTopic: (topicId: string, fakeTeamsToAddCount: number, avgTimePerQuestion: number) => void
     onDeleteDefaultTeamsForTopic: (topicId: string) => void
+    onDeleteVariant: (original_id: string, variantExerciseid: number) => void
 }
 
 function LecturerPlatform(props: Props) {
@@ -92,7 +93,7 @@ function LecturerPlatform(props: Props) {
 
     const createNewTopic = () => {
         const newTopic = {
-            _id: "",
+            _id: `new-topic-${Date.now()}`,
             name: "",
             studies: topicData.allStudies,
             exercises: []
@@ -237,7 +238,7 @@ function LecturerPlatform(props: Props) {
                         <div style={{marginTop: "1.5rem"}}>
                             {paginatedTopics.map((topic, index) => (
                                 <TopicElement 
-                                    key={index} 
+                                    key={topic._id} 
                                     _id={topic._id} 
                                     name={topic.name} 
                                     studies={topic.studies} 
@@ -249,6 +250,7 @@ function LecturerPlatform(props: Props) {
                                     defaultTeamsData={topicData.defaultTeams.filter((data: DefaultTeamsData) => data.topicId === topic._id)[0]}
                                     onAddDefaultTeams={(fakeTeamsToAddCount: number, avgTimePerQuestion: number) => props.onAddDefaultTeamsForTopic(topic._id, fakeTeamsToAddCount, avgTimePerQuestion)}
                                     onDeleteDefaultTeams={() => props.onDeleteDefaultTeamsForTopic(topic._id)}
+                                    onDeleteVariant={(original_id: string, variantExerciseid: number) => props.onDeleteVariant(original_id, variantExerciseid)}
                                 />
                             ))}
                         </div>
@@ -301,6 +303,7 @@ function LecturerPlatform(props: Props) {
                                     isIndependentElement={true}
                                     isMandatory={false}
                                     currentTopicExerciseIds={[]}
+                                    numberOfVariants={exercise.variants ? exercise.variants.length : 1}
                                 />
                             ))}
                         </div>

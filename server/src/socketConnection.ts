@@ -16,14 +16,16 @@ import {
 import type { Game } from "./objects/gameObject"
 import { Statistic } from "./objects/statisticObject"
 import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
-import { addNewExercise, exerciseExists, findExercise, getAllExercises, updateExercise } from "./controllers/exerciseDBController"
+import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, removeVariant, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicData, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopic, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
-import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getTeamScoreData } from "./utils/socketUtils"
+import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getRandomVariant, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
+import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulatedVariants, updateTopic } from "./controllers/topicVariantsDBController"
+import mongoose, { Mongoose } from "mongoose"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -310,7 +312,7 @@ module.exports = {
                 "startGame",
                 async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
                     try {
-                        const selectedTopics = await getSelectedITopics(topics)
+                        const selectedTopics = await getSelectedITopicsWithVariants(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
                         const room = io.sockets.adapter.rooms.get(`players${lobbyId}`) as Set<string> | undefined
                         if (!room || room.size === 0) return
@@ -369,20 +371,30 @@ module.exports = {
                                 && user.isOnMandatory)
                         )) 
                     {
-                        let exercise: IExercise | undefined = undefined
+                        let populatedExercise: IExerciseWithPopulatedVariants | undefined = undefined
+                        let exercise: IExercise | null = null
 
                         if (user.getQuestionIds().length > 0 && !user.usedUpAttemptsOnLastQuestion && (difficulty == undefined || user.currentQuestion.difficulty === difficulty)) {
-                            exercise = user.currentQuestion
-                            game.initializeUserAttempts(exercise, user)
+                            populatedExercise = user.currentQuestion
+                            exercise = getRandomVariant(populatedExercise)
+                            game.initializeUserAttempts(populatedExercise, user)
                         } else{
-                            exercise = game.getNewExercise(socket.data.userId, difficulty)
-                            user.usedUpAttemptsOnLastQuestion = false
+                            populatedExercise = game.getNewExercise(socket.data.userId, difficulty)
+
+                            if (populatedExercise != undefined) {
+                                exercise = getRandomVariant(populatedExercise)
+                                user.usedUpAttemptsOnLastQuestion = false
+                            }
                         }
 
                         let scoreToGain = 0;
-                        if (exercise !== undefined && user !== undefined) {
+                        if (exercise !== null && user !== undefined) {
                             scoreToGain = game.calculateScore(exercise, user);
                         }
+                        
+
+                        // Variant Step
+
 
                         // socket.emit("get-next-question", question)
                         socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)
@@ -798,7 +810,7 @@ module.exports = {
              */
             socket.on("getAllExercises", async() => {
                 try {
-                    const exercises = await getAllExercises();
+                    const exercises = await getAllExercisesWithVariants();
                     socket.emit("all-exercises", exercises);
                 } catch (error) {
                     socket.emit("error", error.message);
@@ -848,7 +860,15 @@ module.exports = {
                 }
             })
 
-            /**
+            socket.on("deleteExerciseVariant", async (original_id: mongoose.Types.ObjectId, variantExerciseid: number) => {
+                try {
+                    await removeVariant(original_id, variantExerciseid);
+                } catch (error) {
+                    socket.emit("error", error.message);
+                }
+            })
+
+            /**`
              * Updates the topic with the given topic id, or if it does not exist, creates a new one
              * Notably, this function updates the mandatory status of each exercise associated with the topic
              */
@@ -858,12 +878,31 @@ module.exports = {
                 exercises: {
                     exerciseId: number, 
                     updateData: { url: string, difficulty: string, numOfAttempts: number, name: string },
-                    isMandatory: boolean
+                    isMandatory: boolean,
+                    variants: { _id: string, exerciseId: number, url: string }[]
                 }[], 
                 studyIds: string[]) => {
                     try {
                         const updatedExercises = await Promise.all(exercises.map(async exercise => {
                             const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
+                            
+                            if (!updatedExercise) {
+                                throw new Error(`Failed to update or create exercise with ID ${exercise.exerciseId}`);
+                            }
+
+                            for (const variant of exercise.variants) {
+                                console.log(variant)
+                                if (variant._id === "") {
+                                    await addVariant(updatedExercise._id, {
+                                        exerciseId: variant.exerciseId,
+                                        url: variant.url,
+                                        difficulty: exercise.updateData.difficulty,
+                                        numOfAttempts: exercise.updateData.numOfAttempts,
+                                        name: `Variant of #${exercise.exerciseId}`
+                                    });
+                                }
+                            }
+
                             return {
                                 _id: updatedExercise?._id,
                                 isMandatory: exercise.isMandatory

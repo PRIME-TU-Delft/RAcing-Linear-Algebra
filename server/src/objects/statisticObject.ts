@@ -1,7 +1,8 @@
+import { IExerciseWithPopulatedVariants } from "../controllers/topicVariantsDBController"
 import { IExercise } from "../models/exerciseModel"
 
 export class Statistic {
-    question: IExercise
+    question: IExerciseWithPopulatedVariants
     difficulty: string
     correctlyAnswered: number
     incorrectlyAnswered: number

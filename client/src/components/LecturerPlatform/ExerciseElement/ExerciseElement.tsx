@@ -8,6 +8,7 @@ import { url } from "inspector";
 import { Store } from 'react-notifications-component';
 import { Exercise } from "../SharedUtils";
 import { set } from "react-hook-form";
+import { getVariantNumberColor } from "../FunctionUtils";
 
 interface Props {
     _id: string,
@@ -26,6 +27,7 @@ interface Props {
     isMandatory: boolean
     currentTopicExerciseIds: number[]
     reordering?: boolean
+    numberOfVariants?: number
 }
 
 function ExerciseElement(props: Props) {
@@ -122,6 +124,12 @@ function ExerciseElement(props: Props) {
         setNewExerciseData({ ...newExerciseData, name: e.target.value })
     }
 
+    const getVariantCountBackgroundColor = () => {
+        if (!props.numberOfVariants) return ""
+
+        return getVariantNumberColor(props.numberOfVariants)
+    }
+
     return (
         <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "") + (props.reordering ? " reordering-exercise" : "")} 
             style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: props.isIndependentElement ? "1rem" : "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
@@ -145,10 +153,20 @@ function ExerciseElement(props: Props) {
                     }
                     {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
-                            <div className="d-flex col col-10 align-items-center">
+                            <div className={"d-flex col align-items-center " + (props.numberOfVariants ? "col-9" : "col-10")}>
                                 {props.name} 
                                 <span className="exercise-header-id">(#{newExerciseData.exerciseId})</span>
                             </div>
+
+                            {props.numberOfVariants && (
+                                <div 
+                                    className="d-flex col-1 variant-number-badge justify-content-center"
+                                    style={{backgroundColor: getVariantCountBackgroundColor()}}
+                                    >
+                                    {props.numberOfVariants} {props.numberOfVariants == 1 ? "Variant" : "Variants"}
+                                </div>
+                            )}
+
                             {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
                                 <div className="d-flex col-2 exercise-difficulty-label justify-content-end">
                                     {(props.isMandatory ? "Mandatory  |  " + props.difficulty : props.difficulty)}
