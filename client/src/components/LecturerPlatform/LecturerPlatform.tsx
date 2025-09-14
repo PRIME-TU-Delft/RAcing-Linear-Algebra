@@ -93,7 +93,7 @@ function LecturerPlatform(props: Props) {
 
     const createNewTopic = () => {
         const newTopic = {
-            _id: "",
+            _id: `new-topic-${Date.now()}`,
             name: "",
             studies: topicData.allStudies,
             exercises: []
@@ -238,7 +238,7 @@ function LecturerPlatform(props: Props) {
                         <div style={{marginTop: "1.5rem"}}>
                             {paginatedTopics.map((topic, index) => (
                                 <TopicElement 
-                                    key={index} 
+                                    key={topic._id} 
                                     _id={topic._id} 
                                     name={topic.name} 
                                     studies={topic.studies} 
