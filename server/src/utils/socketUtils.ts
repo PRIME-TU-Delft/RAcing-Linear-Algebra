@@ -1,6 +1,6 @@
 import { getBestTeamFinalScore, getGhostTeams } from "../controllers/scoreDBController";
-import { IExerciseWithPopulatedVariants } from "../controllers/topicVariantsDBController";
-import { IExercise } from "../models/exerciseModel";
+import type { IExerciseWithPopulatedVariants } from "../controllers/topicVariantsDBController";
+import type { IExercise } from "../models/exerciseModel";
 import type { Game, GameGhostTeam } from "../objects/gameObject";
 
 export async function getInterpolatedGhostTeams(game: Game) {

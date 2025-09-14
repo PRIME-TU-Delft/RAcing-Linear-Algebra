@@ -345,15 +345,21 @@ export class Game {
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
 
-        const result = timePoints.map(x => ({
-            timePoint: x,
-            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
-        }))
+        const result = timePoints.map(x => {
+            const interpolatedNormalizedScore = interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1];
+            const score = Math.max(0, interpolatedNormalizedScore) * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers();
+            return {
+                timePoint: x,
+                score: score
+            };
+        });
 
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
-        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
-        result[result.length - 1] = lastElement
+        if (lastElement !== undefined) {
+            lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
+            result[result.length - 1] = lastElement
+        }
 
         return result
     }

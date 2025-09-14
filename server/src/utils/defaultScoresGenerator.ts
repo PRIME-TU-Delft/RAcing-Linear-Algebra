@@ -64,7 +64,7 @@ const generateScores = (
         const variation = (Math.random() - 0.5) * 0.8 * base;
         cumulative += base + variation;
       }
-      raw.push(cumulative);
+      raw.push(Math.max(0, cumulative));
     }
   
     const timepoints = Math.floor(roundDuration / 30);
