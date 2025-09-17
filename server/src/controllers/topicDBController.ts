@@ -44,32 +44,21 @@ export async function addNewTopic(
 
 export async function addExercisesToTopic(topicId: string, exercises: {exerciseId: string, isMandatory: boolean}[]): Promise<ITopic> {
     try {
-        const topic = await Topic.findById(topicId);
-        if (!topic) {
+        const mandatoryIds = exercises.filter(e => e.isMandatory).map(e => e.exerciseId);
+        const difficultyIds = exercises.filter(e => !e.isMandatory).map(e => e.exerciseId);
+
+        const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+            $addToSet: {
+                mandatoryExercises: { $each: mandatoryIds },
+                difficultyExercises: { $each: difficultyIds }
+            }
+        }, { new: true });
+
+        if (!updatedTopic) {
             throw new Error('Topic not found');
         }
-
-        const mandatoryExercises: IExercise[] = []
-        const difficultyExercises: IExercise[] = []
-
-        for (let i = 0; i < exercises.length; i++) {
-            const exercise = await Exercise.findById(exercises[i].exerciseId);
-            if (!exercise) {
-                throw new Error('Exercise not found');
-            }
-
-            if (exercises[i].isMandatory) {
-                mandatoryExercises.push(exercise);
-            } else {
-                difficultyExercises.push(exercise);
-            }
-        }
-
-        topic.difficultyExercises.push(...difficultyExercises);
-        topic.mandatoryExercises.push(...mandatoryExercises);
-
-        const updatedTopic = await topic.save();
         return updatedTopic;
+
     } catch (error) {
         console.error("Error adding exercise to topic:", error);
         throw error;

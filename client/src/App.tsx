@@ -217,11 +217,16 @@ function App() {
         socket.emit("updateExercise", exerciseData.exerciseId, updateData)
     }
 
+    const exerciseVariantDeletionHandler = (_id: string, variant_exercise_id: number) => {
+        socket.emit("deleteExerciseVariant", _id, variant_exercise_id)
+    }
+
     const updateTopicHandler = (topicData: Topic) => {
         const exerciseData = topicData.exercises.map(exercise => ({
             exerciseId: exercise.exerciseId,
             updateData: {url: exercise.url, difficulty: exercise.difficulty, numOfAttempts: exercise.numOfAttempts, name: exercise.name},
-            isMandatory: exercise.isMandatory
+            isMandatory: exercise.isMandatory,
+            variants: exercise.variants ? exercise.variants : []
         }))
         const studyIds = topicData.studies.map(study => study._id)
 
@@ -688,6 +693,7 @@ function App() {
                                 onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData)}
                                 onAddDefaultTeamsForTopic={addDefaultTeamsHandler}
                                 onDeleteDefaultTeamsForTopic={deleteDefaultTeamsHandler}
+                                onDeleteVariant={exerciseVariantDeletionHandler}
                                 />
                         </TopicDataContext.Provider>
                     }

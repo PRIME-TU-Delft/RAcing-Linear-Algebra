@@ -4,8 +4,8 @@ import { Statistic } from "./statisticObject"
 import type { User } from "./userObject"
 import { checkAnswerEqual } from "../utils/latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
-import type { ITopic } from "../models/topicModel"
 import type { IExercise } from "../models/exerciseModel"
+import { IExerciseWithPopulatedVariants, ITopicWithPopulatedVariants } from "../controllers/topicVariantsDBController"
 
 export interface GameGhostTeam {
     teamName: string
@@ -20,7 +20,7 @@ export class Game {
     timeScores: number[]
     teamName: string //The name of the team
     currentTopicIndex: number //Number of the current round that is being played
-    topics: ITopic[] //The selected rounds
+    topics: ITopicWithPopulatedVariants[] //The selected rounds
     roundDurations: number[] // The durations of the rounds
     users: Map<string, User> //The map of users in the game
     checkpoints: number[] //The amount of seconds taken to reach each checkpoint
@@ -39,7 +39,7 @@ export class Game {
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(topics: ITopic[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
+    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
         this.currentTopicIndex = 0
         this.topics = topics
         this.roundDurations = roundDurations
@@ -70,7 +70,7 @@ export class Game {
      * @param lobbyId the lobby that the player is in
      * @returns the new question
      */
-    getNewExercise(userId: string, difficulty?: string): IExercise | undefined {
+    getNewExercise(userId: string, difficulty?: string): IExerciseWithPopulatedVariants | undefined {
         const topic = this.topics[this.currentTopicIndex]
         const user = this.users.get(userId)
         if (user === undefined) throw Error("This user is not in this game")
@@ -113,7 +113,7 @@ export class Game {
      * @param user the user object that needs a question
      * @returns a new question
      */
-    getMandatoryQuestion(topic: ITopic, user: User): IExercise | undefined {
+    getMandatoryQuestion(topic: ITopicWithPopulatedVariants, user: User): IExerciseWithPopulatedVariants | undefined {
         console.log("Answered: " + user.getQuestionIds().length.toString())
         console.log("Mandatories: " + topic.mandatoryExercises.length.toString())
 
@@ -169,10 +169,10 @@ export class Game {
      * @returns a new exercise
      */
     getDifficultyExercise(
-        topic: ITopic,
+        topic: ITopicWithPopulatedVariants,
         user: User,
         difficulty: string
-    ): IExercise | undefined {
+    ): IExerciseWithPopulatedVariants | undefined {
         try {
             const exerciseIds = topic.difficultyExercises
                 .filter((x) => x.difficulty.toLowerCase() === difficulty.toLowerCase())
@@ -243,7 +243,7 @@ export class Game {
         user.resetUserQuestionsAnswered()
     }
 
-    initializeUserAttempts(exericse: IExercise, user: User) {
+    initializeUserAttempts(exericse: IExerciseWithPopulatedVariants, user: User) {
         user.currentQuestion = exericse
         user.questions = user.questions.set(exericse, { attempts: 0, correct: 0 })
     }
@@ -345,15 +345,21 @@ export class Game {
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
 
-        const result = timePoints.map(x => ({
-            timePoint: x,
-            score: interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
-        }))
+        const result = timePoints.map(x => {
+            const interpolatedNormalizedScore = interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1];
+            const score = Math.max(0, interpolatedNormalizedScore) * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers();
+            return {
+                timePoint: x,
+                score: score
+            };
+        });
 
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
-        lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
-        result[result.length - 1] = lastElement
+        if (lastElement !== undefined) {
+            lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
+            result[result.length - 1] = lastElement
+        }
 
         return result
     }

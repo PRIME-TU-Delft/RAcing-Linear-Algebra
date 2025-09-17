@@ -35,7 +35,7 @@ function TimeBar(props: Props) {
     }
 
     const getTimeBarStyling = () => {
-        if (timeLeft / props.roundDuration >= 0.25) return "time-bar"
+        if (timeLeft >= 10) return "time-bar"
         else return "time-bar pulsing-time-bar"
     }
 

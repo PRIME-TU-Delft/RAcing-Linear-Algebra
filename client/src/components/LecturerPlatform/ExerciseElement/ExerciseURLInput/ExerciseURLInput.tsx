@@ -11,6 +11,7 @@ interface Props {
     onURLValueChange: (url: string, grasple_id: number) => void;
     onExerciseAlreadyExists: (exerciseId: number) => void;
     currentTopicExerciseIds: number[]
+    autoFocus?: boolean
 }
 
 function ExerciseURLInput(props: Props) {
@@ -63,10 +64,10 @@ function ExerciseURLInput(props: Props) {
     };
 
     useEffect(() => {
-        if (checked && graspleId !== -1) {
+        if (checked && graspleId !== -1 && !loading) {
             props.onURLValueChange(urlValue, graspleId);
         }
-    }, [checked, graspleId, props, urlValue]);
+    }, [checked, graspleId, props, urlValue, loading]);
 
     useEffect(() => {
         setUrlValue(props.url);
@@ -88,7 +89,7 @@ function ExerciseURLInput(props: Props) {
         } else if (correctDomain && correctId) {
             setChecked(false);
             props.onExerciseAlreadyExists(graspleId);
-            setUrlValue("")
+            setUrlValue("");
         } else {
             setChecked(false);
         }
@@ -101,6 +102,7 @@ function ExerciseURLInput(props: Props) {
     return (
         <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
             <TextField
+                autoFocus={props.autoFocus}
                 variant="outlined"
                 size="small"
                 value={urlValue}
@@ -118,7 +120,7 @@ function ExerciseURLInput(props: Props) {
                     </div>
                 ) : (
                     <div>
-                        <FontAwesomeIcon icon={faTimesCircle} color={"#4CAF50"} />
+                        <FontAwesomeIcon icon={faTimesCircle} color={"#c93737ff"} />
                         <span style={{ marginLeft: "0.5rem" }}>{urlErrorMessage}</span>
                     </div>
                 )}

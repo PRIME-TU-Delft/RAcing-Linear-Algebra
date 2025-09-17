@@ -46,3 +46,10 @@
 .reordering-exercise {
     cursor: grab !important;
 }
+
+.variant-number-badge {
+    border-radius: 0.8rem;
+    font-weight: 400;
+    color: white;
+    font-size: 15px;
+}

@@ -1,7 +1,8 @@
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 
 export interface IExercise extends mongoose.Document {
     exerciseId: number
+    groupId: mongoose.Types.ObjectId // used for grouping variants of the same exercise
     url: string
     difficulty: string
     numOfAttempts: number
@@ -13,7 +14,15 @@ export const exerciseSchema: mongoose.Schema = new mongoose.Schema({
     exerciseId: {
         type: Number,
         required: true,
+        unique: true
     },
+
+    groupId: {
+        type: Schema.Types.ObjectId,
+        ref: "ExerciseGroup",
+        required: true
+    },
+
     // The exercise URL
     url: {
         type: String,
@@ -36,4 +45,4 @@ export const exerciseSchema: mongoose.Schema = new mongoose.Schema({
     }
 })
 
-export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercises", exerciseSchema)
+export const Exercise: mongoose.Model<IExercise> = mongoose.model<IExercise>("Exercise", exerciseSchema)
