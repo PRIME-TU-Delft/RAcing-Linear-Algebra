@@ -37,7 +37,7 @@ import Skyscraper from "../../../img/maps/train/skyscraper.png"
 import Skyscraper2 from "../../../img/maps/train/skyscraper2.png"
 
 // The Hague
-import ThePier from "../../../img/maps/train/the_pier.png"
+import ThePier from "../../../img/maps/train/the_pier.gif"
 import Seagull from "../../../img/maps/train/seagull.png"
 import SeagullFly from "../../../img/maps/train/seagull_fly.gif"
 import SeaTop from "../../../img/maps/train/sea/sea_top.png"
