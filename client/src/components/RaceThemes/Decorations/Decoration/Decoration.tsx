@@ -64,6 +64,10 @@ function Decoration(props: Props) {
             case "rotterdamBridge":
                 setDecorationHeight(curr => widthRatio * 200)
                 break
+
+            case "bridgeRiver":
+                setDecorationHeight(curr => widthRatio * 200)
+                break
             
             case "thePier":
                 setDecorationHeight(curr => widthRatio * 120)
@@ -107,7 +111,7 @@ function Decoration(props: Props) {
             {props.points.map((coordinate) => (
                 <div
                     key={props.points.indexOf(coordinate)}
-                    style={{...getPositionStyle(coordinate)}}
+                    style={{...getPositionStyle(coordinate), position: "absolute"}}
                     className={props.class + " decoration"}
                 >
                     <img src={props.sprite} 

@@ -2,6 +2,7 @@ import Sprites from "../Sprites/TrainThemeSprites"
 import { PercentCoordinate, RaceMap } from "../SharedUtils"
 import BeachSea from "./SpecialDecorationComponents/BeachSea/BeachSea"
 import Seagull from "./SpecialDecorationComponents/Seagull/Seagull"
+import BridgeRiver from "./SpecialDecorationComponents/RiverBridge/BridgeRiver"
 
 const mapOne: RaceMap = {
             backgroundColor: "#fff6e4",
@@ -310,7 +311,7 @@ const netherlandsMap2: RaceMap = {
             sprite: Sprites.cheese,
         },
     ],
-    components: [BeachSea(), Seagull()],
+    components: [BeachSea(), Seagull(), BridgeRiver()],
     path: [
         { xPercent: 0.235, yPercent: 0.5 },
         { xPercent: 0.1, yPercent: 0.5 },

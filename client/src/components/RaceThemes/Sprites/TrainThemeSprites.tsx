@@ -31,6 +31,7 @@ import OudeKerk from "../../../img/maps/train/oude_kerk.png"
 
 // Rotterdam
 import RotterdamBridge from "../../../img/maps/train/bridge.png"
+import BridgeRiver from "../../../img/maps/train/bridge_river.png"
 import CruiseShip from "../../../img/maps/train/cruise/cruise.gif"
 
 // The Hague
@@ -81,6 +82,7 @@ export default {
     // Rotterdam
     rotterdamBridge: RotterdamBridge,
     cruiseShip: CruiseShip,
+    bridgeRiver: BridgeRiver,
     // The Hague
     thePier: ThePier,
     seagull: Seagull,
