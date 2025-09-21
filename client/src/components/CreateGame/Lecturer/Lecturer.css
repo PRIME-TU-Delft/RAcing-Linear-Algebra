@@ -12,7 +12,8 @@
 
 .lecturer-header {
     height: 100px;
-    background-color: #00a6d6;
+    /* background-color: #00a6d6; */
+    background-color: #0c2340;
     position: relative;
     z-index: 9999;
     color: white;

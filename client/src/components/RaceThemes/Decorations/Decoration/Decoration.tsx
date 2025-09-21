@@ -81,6 +81,14 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 40)
                 break
 
+            case "skyscraper":
+                setDecorationHeight(curr => widthRatio * 180)
+                break
+
+            case "cheeseShop":
+                setDecorationHeight(curr => widthRatio * 80)
+                break
+
             default:
                 setDecorationHeight(curr => 100)
         }

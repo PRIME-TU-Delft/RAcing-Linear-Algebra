@@ -33,6 +33,8 @@ import OudeKerk from "../../../img/maps/train/oude_kerk.png"
 import RotterdamBridge from "../../../img/maps/train/bridge.png"
 import BridgeRiver from "../../../img/maps/train/bridge_river.png"
 import CruiseShip from "../../../img/maps/train/cruise/cruise.gif"
+import Skyscraper from "../../../img/maps/train/skyscraper.png"
+import Skyscraper2 from "../../../img/maps/train/skyscraper2.png"
 
 // The Hague
 import ThePier from "../../../img/maps/train/the_pier.png"
@@ -48,6 +50,7 @@ import GoudaKerk from "../../../img/maps/train/gouda_kerk.png"
 import Cheese from "../../../img/maps/train/cheese.png"
 import CheesePie from "../../../img/maps/train/cheese_pie.png"
 import CheesePiece from "../../../img/maps/train/cheese_piece.png"
+import CheeseShop from "../../../img/maps/train/cheese-shop.png"
 
 export default {
     train: Train,
@@ -84,6 +87,8 @@ export default {
     rotterdamBridge: RotterdamBridge,
     cruiseShip: CruiseShip,
     bridgeRiver: BridgeRiver,
+    skyscraper: Skyscraper,
+    skyscraper2: Skyscraper2,
     // The Hague
     thePier: ThePier,
     seagull: Seagull,
@@ -96,5 +101,6 @@ export default {
     goudaKerk: GoudaKerk,
     cheese: Cheese,
     cheesePie: CheesePie,
-    cheesePiece: CheesePiece
+    cheesePiece: CheesePiece,
+    cheeseShop: CheeseShop
 }
