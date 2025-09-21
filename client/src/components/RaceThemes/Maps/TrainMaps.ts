@@ -256,7 +256,8 @@ const netherlandsMap1 = {
 }
 
 const netherlandsMap2: RaceMap = {
-    backgroundColor: "#ffeecbff",
+    // backgroundColor: "#ffeecbff",
+    backgroundColor: "#76a277ff",
     decorations: [
         {
             points: [

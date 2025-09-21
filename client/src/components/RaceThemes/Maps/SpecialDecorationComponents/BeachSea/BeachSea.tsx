@@ -13,6 +13,10 @@ function BeachSea() {
             <div className="seaTrail">
                 <img src={TrainThemeSprites.seaTrail} alt="Sea Trail" />
             </div>
+
+            <div className="sand">
+                <img src={TrainThemeSprites.sand} alt="Sand" />
+            </div>
         </div>
     )
 }

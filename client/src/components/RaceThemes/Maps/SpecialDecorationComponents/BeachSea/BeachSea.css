@@ -30,6 +30,11 @@
     animation: seaTrailMove 6s linear 1s infinite;
 }
 
+.sand img {
+    position: relative;
+    transform: translate(12%, 5%);
+}
+
 @keyframes seaTopMove {
     0% {
         transform: translate(0, 0);

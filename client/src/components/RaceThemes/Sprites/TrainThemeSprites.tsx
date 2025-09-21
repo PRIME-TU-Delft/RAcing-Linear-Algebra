@@ -41,6 +41,7 @@ import SeagullFly from "../../../img/maps/train/seagull_fly.gif"
 import SeaTop from "../../../img/maps/train/sea/sea_top.png"
 import SeaBottom from "../../../img/maps/train/sea/sea_bottom.png"
 import SeaTrail from "../../../img/maps/train/sea/sea_trail.png"
+import Sand from "../../../img/maps/train/sand.png"
 
 // Gouda
 import GoudaKerk from "../../../img/maps/train/gouda_kerk.png"
@@ -90,6 +91,7 @@ export default {
     seaTop: SeaTop,
     seaBottom: SeaBottom,
     seaTrail: SeaTrail,
+    sand: Sand,
     // Gouda
     goudaKerk: GoudaKerk,
     cheese: Cheese,
