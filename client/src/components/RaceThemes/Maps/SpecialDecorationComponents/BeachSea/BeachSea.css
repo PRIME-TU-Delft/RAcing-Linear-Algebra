@@ -1,0 +1,78 @@
+.beachSeaContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30%;
+    width: 30%;
+    transform: translate(-30%, -42%);
+}
+
+
+.beachSeaContainer img {
+    height: 100%;
+    width: 100%;
+}
+
+
+.seaTop {
+    z-index: 1000;
+    animation: seaTopMove 4s ease-in-out infinite;
+}
+
+.seaBottom {
+    z-index: 900;
+    animation: seaBottomMove 6s ease-in-out infinite;
+}
+
+.seaTrail {
+    z-index: 800;
+    transform: translate(5%, 0);
+    animation: seaTrailMove 6s linear 1s infinite;
+}
+
+@keyframes seaTopMove {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(-10%, -10%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes seaBottomMove {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(-30%, -5%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes seaTrailMove {
+    0% {
+    transform: translate(5%, 0);
+    opacity: 1;
+    }
+    50% {
+        transform: translate(-10%, -5%);
+        opacity: 0;
+    }
+
+    90% {
+        transform: translate(0%, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(5%, 0);
+        opacity: 1;
+    }
+}

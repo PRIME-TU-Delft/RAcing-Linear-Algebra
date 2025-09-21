@@ -1,5 +1,7 @@
 import Sprites from "../Sprites/TrainThemeSprites"
 import { PercentCoordinate, RaceMap } from "../SharedUtils"
+import BeachSea from "./SpecialDecorationComponents/BeachSea/BeachSea"
+import Seagull from "./SpecialDecorationComponents/Seagull/Seagull"
 
 const mapOne: RaceMap = {
             backgroundColor: "#fff6e4",
@@ -265,7 +267,7 @@ const netherlandsMap2: RaceMap = {
         },
         {
             points: [
-            {xPercent: 0.24253075571177501, yPercent: 0.5558823529411765},
+            {xPercent: 0.24253075571177501, yPercent: 0.5658823529411765},
             ],
             class: "oudeKerk",
             sprite: Sprites.oudeKerk,
@@ -288,34 +290,27 @@ const netherlandsMap2: RaceMap = {
         },
         {
             points: [
-            {xPercent: 0.0422026947861746, yPercent: 0.8088235294117647},
+            {xPercent: 0.102026947861746, yPercent: 0.8088235294117647},
             ],
             class: "thePier",
             sprite: Sprites.thePier,
         },
         {
             points: [
-            {xPercent: 0.126496777973052, yPercent: 0.8529411764705882},
-            {xPercent: 0.05272407732864675, yPercent: 0.733529411764705},
-            ],
-            class: "seagull",
-            sprite: Sprites.seagull,
-        },
-        {
-            points: [
-            {xPercent: 0.8056707674282366, yPercent: 0.5658823529411764},
+            {xPercent: 0.8256707674282366, yPercent: 0.5658823529411764},
             ],
             class: "goudaKerk",
             sprite: Sprites.goudaKerk,
         },
         {
             points: [
-            {xPercent: 0.7605213825424721, yPercent: 0.5658823529411764},
+            {xPercent: 0.7805213825424721, yPercent: 0.5658823529411764},
             ],
             class: "cheese",
             sprite: Sprites.cheese,
         },
     ],
+    components: [BeachSea(), Seagull()],
     path: [
         { xPercent: 0.235, yPercent: 0.5 },
         { xPercent: 0.1, yPercent: 0.5 },

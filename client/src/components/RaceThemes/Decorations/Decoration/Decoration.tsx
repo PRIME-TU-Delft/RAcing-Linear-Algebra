@@ -76,9 +76,6 @@ function Decoration(props: Props) {
             case "cruiseShip":
                 setDecorationHeight(curr => widthRatio * 40)
                 break
-            
-            
-            
 
             default:
                 setDecorationHeight(curr => 100)

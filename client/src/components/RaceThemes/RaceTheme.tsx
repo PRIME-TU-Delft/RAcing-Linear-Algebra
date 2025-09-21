@@ -97,6 +97,10 @@ function RaceTheme(props: Props) {
                 ></Decorations>
             </a.div>
 
+            {raceData.selectedMap.components?.map((Comp, index) => {
+                return React.cloneElement(Comp, { key: index })
+            })}
+
 {/*             
             <StationDisplay
                         fullRacePoints={averageFinalTeamScore}
