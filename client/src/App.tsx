@@ -610,7 +610,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[0]
+                                selectedMap: trainMaps[1]
                             }}>
                                 <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
                                     <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
@@ -648,7 +648,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[0]
+                                selectedMap: trainMaps[1]
                                 }}>
                                     <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                     <RaceProgressContext.Provider value={stopShowingRace}>

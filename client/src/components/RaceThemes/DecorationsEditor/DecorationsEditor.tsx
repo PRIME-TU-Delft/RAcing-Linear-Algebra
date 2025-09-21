@@ -129,6 +129,8 @@ function DecorationsEditor(props: Props) {
                 )
 
             result += "]"
+            console.log(result)
+
         }
     }
 
@@ -164,7 +166,7 @@ function DecorationsEditor(props: Props) {
                 ))}
 
                 <div
-                    className="save-btn"
+                    className="save-btn btn"
                     onClick={() => printPointsToConsole()}
                 >
                     PRINT DECORATION POSITIONS TO CONSOLE

@@ -16,8 +16,6 @@ import { ScoreContext } from "../../contexts/ScoreContext"
 import { getRacePathObject } from "./RaceService"
 import { RacePathContext } from "../../contexts/RacePathContext"
 import RaceStatus from "./RaceStatus/RaceStatus"
-import TrainThemeSprites from "./Sprites/TrainThemeSprites"
-import DecorationsEditor from "./DecorationsEditor/DecorationsEditor"
 
 interface Props {
     mapDimensions: {
@@ -88,15 +86,15 @@ function RaceTheme(props: Props) {
                 className="map-content"
                 style={{ ...fadeSection }}
             >
-                {/* <RacePathContext.Provider value={racePath}>
+                <RacePathContext.Provider value={racePath}>
                     <Tracks/>
                     <RaceStatus keepClosed={false} roundDuration={props.roundDuration}/>
-                </RacePathContext.Provider> */}
+                </RacePathContext.Provider>
 
-                {/* <Decorations
+                <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={raceData.selectedMap.decorations}
-                ></Decorations> */}
+                ></Decorations>
             </a.div>
 
 {/*             
@@ -115,7 +113,7 @@ function RaceTheme(props: Props) {
             <ThemeBackground theme={raceData.theme}></ThemeBackground>
 
             {/* NOTE: Uncomment the following component to enable the map editor; an interactive tool for designing new maps. Make sure to comment out the <Decorations> component above, to have an empty map to work with.*/}
-            <DecorationsEditor 
+            {/* <DecorationsEditor 
             mapDimensions={props.mapDimensions}
             decorationsList={[
                 {class: "tree", sprite: TrainThemeSprites.treeOne, dimensions: {height: 80, width: 100}},
@@ -124,7 +122,7 @@ function RaceTheme(props: Props) {
                 {class: "lake", sprite: TrainThemeSprites.lakeOne, dimensions: {height: 100, width: 100}},
                 {class: "lake", sprite: TrainThemeSprites.lakeTwo, dimensions: {height: 100, width: 71} },
                 {class: "windmill", sprite: TrainThemeSprites.windmill, dimensions: {height: 250, width: 250}}
-            ]}></DecorationsEditor>
+            ]}></DecorationsEditor> */}
         </a.div>
     )
 }

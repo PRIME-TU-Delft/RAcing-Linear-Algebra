@@ -251,7 +251,17 @@ const netherlandsMap1 = {
         {xPercent: 0.5, yPercent: 0.1},
     ]
 }
-    
-const trainMaps: RaceMap[] = [netherlandsMap1]
+
+const netherlandsMap2: RaceMap = {
+    backgroundColor: "#fff6e4",
+    decorations: [
+    ],
+    path: [
+        { xPercent: 0.5, yPercent: 0.1 },
+        { xPercent: 0.9, yPercent: 0.1 },
+    ]
+}
+
+const trainMaps: RaceMap[] = [netherlandsMap1, netherlandsMap2]
 
 export { trainMaps }

@@ -23,6 +23,30 @@ import TrainStation from "../../../img/train_station_icon_180119.png"
 import FinishLineHorizontal from "../../../img/finish-line-horizontal.png"
 import FinishLineVertical from "../../../img/finish-line-vertical.png"
 
+// The new sprites
+// Delft
+import DelftsBlauw from "../../../img/maps/train/blauw.png"
+import NieuweKerk from "../../../img/maps/train/nieuwe_kerk.png"
+import OudeKerk from "../../../img/maps/train/oude_kerk.png"
+
+// Rotterdam
+import RotterdamBridge from "../../../img/maps/train/bridge.png"
+import CruiseShip from "../../../img/maps/train/cruise/cruise.gif"
+
+// The Hague
+import ThePier from "../../../img/maps/train/the_pier.png"
+import Seagull from "../../../img/maps/train/seagull.png"
+import SeagullFly from "../../../img/maps/train/seagull_fly.gif"
+import SeaTop from "../../../img/maps/train/sea/sea_top.png"
+import SeaBottom from "../../../img/maps/train/sea/sea_bottom.png"
+import SeaTrail from "../../../img/maps/train/sea/sea_trail.png"
+
+// Gouda
+import GoudaKerk from "../../../img/maps/train/gouda_kerk.png"
+import Cheese from "../../../img/maps/train/cheese.png"
+import CheesePie from "../../../img/maps/train/cheese_pie.png"
+import CheesePiece from "../../../img/maps/train/cheese_piece.png"
+
 export default {
     train: Train,
     trackVertical: TrackVertical,
@@ -47,5 +71,26 @@ export default {
     swampRock: SwampRock,
     trainStation: TrainStation,
     finishLineHorizontal: FinishLineHorizontal,
-    finishLineVertical: FinishLineVertical
+    finishLineVertical: FinishLineVertical,
+
+    // New sprites
+    // Delft
+    delftsBlauw: DelftsBlauw,
+    nieuweKerk: NieuweKerk,
+    oudeKerk: OudeKerk,
+    // Rotterdam
+    rotterdamBridge: RotterdamBridge,
+    cruiseShip: CruiseShip,
+    // The Hague
+    thePier: ThePier,
+    seagull: Seagull,
+    seagullFly: SeagullFly,
+    seaTop: SeaTop,
+    seaBottom: SeaBottom,
+    seaTrail: SeaTrail,
+    // Gouda
+    goudaKerk: GoudaKerk,
+    cheese: Cheese,
+    cheesePie: CheesePie,
+    cheesePiece: CheesePiece
 }
