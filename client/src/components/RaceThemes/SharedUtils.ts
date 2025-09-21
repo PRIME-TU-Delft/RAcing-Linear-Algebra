@@ -85,6 +85,7 @@ interface DecorationElement {
     points: PercentCoordinate[]
     class: string
     sprite: string
+    zIndex?: number
 }
 
 interface RaceMap {
@@ -144,6 +145,7 @@ export {
     type RaceObject,
     type Ghost,
     type Dimensions,
+    type DecorationElement,
     type RaceMap,
     type ServerGhost,
     type RacePathObject,

@@ -7,6 +7,7 @@ interface Props {
     sprite: string
     class: string
     screenDimensions: Dimensions
+    zIndex?: number
 }
 
 function Decoration(props: Props) {
@@ -15,6 +16,7 @@ function Decoration(props: Props) {
     useEffect(() => {
         const widthRatio = props.screenDimensions.width / 1536
         switch(props.class) {
+            // Old sprites
             case "tree":
                 setDecorationHeight(curr => widthRatio * 80)
                 break
@@ -42,6 +44,42 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 50)
                 break
 
+            // New sprites (TRAIN THEME)
+            case "goudaKerk":
+                setDecorationHeight(curr => widthRatio * 200)
+                break
+            
+            case "cheese":
+                setDecorationHeight(curr => widthRatio * 40)
+                break
+            
+            case "nieuweKerk":
+                setDecorationHeight(curr => widthRatio * 170)
+                break
+            
+            case "oudeKerk":
+                setDecorationHeight(curr => widthRatio * 110)
+                break
+            
+            case "rotterdamBridge":
+                setDecorationHeight(curr => widthRatio * 200)
+                break
+            
+            case "thePier":
+                setDecorationHeight(curr => widthRatio * 120)
+                break
+            
+            case "seagull":
+                setDecorationHeight(curr => widthRatio * 40)
+                break
+            
+            case "cruiseShip":
+                setDecorationHeight(curr => widthRatio * 40)
+                break
+            
+            
+            
+
             default:
                 setDecorationHeight(curr => 100)
         }
@@ -51,13 +89,15 @@ function Decoration(props: Props) {
     const getPositionStyle = (coordinates: PercentCoordinate) => {
         const x = coordinates.xPercent * props.screenDimensions.width
         const y = coordinates.yPercent * props.screenDimensions.height
-        
+
+        const baseZIndex = props.zIndex || 0
 
         const style = {
             left: `${x}px`,
             bottom: `${y}px`,
             zIndex: `${Math.floor(
-                    	(1 - coordinates.yPercent) * (getZIndexValues().decoration / 2)     
+                        baseZIndex
+                    	+ (1 - coordinates.yPercent) * (getZIndexValues().decoration / 2)     
                         + (getZIndexValues().decoration / 2))   // assigning values between x/2 and x for layering purposes
                     }`
         }
@@ -70,7 +110,7 @@ function Decoration(props: Props) {
             {props.points.map((coordinate) => (
                 <div
                     key={props.points.indexOf(coordinate)}
-                    style={getPositionStyle(coordinate)}
+                    style={{...getPositionStyle(coordinate)}}
                     className={props.class + " decoration"}
                 >
                     <img src={props.sprite} 

@@ -1,13 +1,7 @@
 import React from "react"
 import "./Decorations.css"
 import Decoration from "./Decoration/Decoration"
-import { PercentCoordinate } from "../SharedUtils"
-
-interface DecorationElement {
-    class: string
-    sprite: string
-    points: PercentCoordinate[]
-}
+import { DecorationElement, PercentCoordinate } from "../SharedUtils"
 
 interface Props {
     mapDimensions: { width: number; height: number } // the width and height of the map in px
@@ -23,6 +17,7 @@ function Decorations(props: Props) {
                     points={decoration.points}
                     sprite={decoration.sprite}
                     class={decoration.class}
+                    zIndex={decoration.zIndex}
                     screenDimensions={props.mapDimensions}
                 ></Decoration>
             ))}

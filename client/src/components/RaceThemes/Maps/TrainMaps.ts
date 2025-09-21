@@ -253,12 +253,83 @@ const netherlandsMap1 = {
 }
 
 const netherlandsMap2: RaceMap = {
-    backgroundColor: "#fff6e4",
+    backgroundColor: "#ffeecbff",
     decorations: [
+        {
+            points: [
+            {xPercent: 0.18629173989455186, yPercent: 0.4329411764705883},
+            ],
+            class: "nieuweKerk",
+            sprite: Sprites.nieuweKerk,
+        },
+        {
+            points: [
+            {xPercent: 0.24253075571177501, yPercent: 0.5558823529411765},
+            ],
+            class: "oudeKerk",
+            sprite: Sprites.oudeKerk,
+        },
+        {
+            points: [
+            {xPercent: 0.274862331575864, yPercent: 0.045882352941178},
+            ],
+            class: "cruiseShip",
+            sprite: Sprites.cruiseShip,
+            zIndex: 1000
+        },
+        {
+            points: [
+            {xPercent: 0.2119449326303456, yPercent: 0.00129411764705827},
+            ],
+            class: "rotterdamBridge",
+            sprite: Sprites.rotterdamBridge,
+        },
+        {
+            points: [
+            {xPercent: 0.0422026947861746, yPercent: 0.8088235294117647},
+            ],
+            class: "thePier",
+            sprite: Sprites.thePier,
+        },
+        {
+            points: [
+            {xPercent: 0.126496777973052, yPercent: 0.8529411764705882},
+            {xPercent: 0.05272407732864675, yPercent: 0.733529411764705},
+            ],
+            class: "seagull",
+            sprite: Sprites.seagull,
+        },
+        {
+            points: [
+            {xPercent: 0.8056707674282366, yPercent: 0.5658823529411764},
+            ],
+            class: "goudaKerk",
+            sprite: Sprites.goudaKerk,
+        },
+        {
+            points: [
+            {xPercent: 0.7605213825424721, yPercent: 0.5658823529411764},
+            ],
+            class: "cheese",
+            sprite: Sprites.cheese,
+        },
     ],
     path: [
-        { xPercent: 0.5, yPercent: 0.1 },
-        { xPercent: 0.9, yPercent: 0.1 },
+        { xPercent: 0.235, yPercent: 0.5 },
+        { xPercent: 0.1, yPercent: 0.5 },
+        { xPercent: 0.1, yPercent: 0.75 },
+        { xPercent: 0.18, yPercent: 0.75 },
+        { xPercent: 0.18, yPercent: 0.9 },
+        { xPercent: 0.9, yPercent: 0.9 },
+        { xPercent: 0.9, yPercent: 0.5 },
+        { xPercent: 0.74, yPercent: 0.5 },   
+        { xPercent: 0.74, yPercent: 0.05 },
+        { xPercent: 0.57, yPercent: 0.05 },
+        { xPercent: 0.57, yPercent: 0.17 },
+        { xPercent: 0.33, yPercent: 0.17 },
+        { xPercent: 0.33, yPercent: 0.5 },
+        { xPercent: 0.235, yPercent: 0.5 },
+
     ]
 }
 
