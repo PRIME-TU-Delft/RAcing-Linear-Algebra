@@ -20,6 +20,7 @@ function RacePath(props: Props) {
                                 component.start,
                                 component.end,
                                 index == 0,
+                                index == props.components.length - 1
                             )}
                         ></div>
                         <div

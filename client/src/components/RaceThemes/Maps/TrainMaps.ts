@@ -261,6 +261,7 @@ const netherlandsMap2: RaceMap = {
             ],
             class: "nieuweKerk",
             sprite: Sprites.nieuweKerk,
+            zIndex: 9999
         },
         {
             points: [
@@ -275,7 +276,7 @@ const netherlandsMap2: RaceMap = {
             ],
             class: "cruiseShip",
             sprite: Sprites.cruiseShip,
-            zIndex: 1000
+            zIndex: 9999
         },
         {
             points: [
@@ -283,6 +284,7 @@ const netherlandsMap2: RaceMap = {
             ],
             class: "rotterdamBridge",
             sprite: Sprites.rotterdamBridge,
+            zIndex: 8888
         },
         {
             points: [
