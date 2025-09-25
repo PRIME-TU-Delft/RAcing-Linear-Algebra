@@ -16,28 +16,14 @@
 
 @keyframes water-distort {
     0% {
-        transform: scale(1.01, 1) skewX(-0.4deg) skewY(0.3deg);
-        filter: brightness(1);
-    }
-
-    20% {
-        filter: brightness(1.1);
-    }
-
-    30% {
-        filter: brightness(1);
+        transform: scale(1.01, 1) skewX(-0.1deg) skewY(0.1deg);
     }
 
     50% {
-        transform: scale(0.9, 1.15) skewX(0.3deg) skewY(-0.3deg);
-    }
-
-    90% {
-        filter: brightness(1.1);
+        transform: scale(0.99, 1.1) skewX(0.1deg) skewY(-0.1deg);
     }
 
     100% {
-        transform: scale(1.01, 1) skewX(-0.4deg) skewY(0.3deg);
-        filter: brightness(1);
+        transform: scale(1.01, 1) skewX(-0.1deg) skewY(0.1deg);
     }
 }

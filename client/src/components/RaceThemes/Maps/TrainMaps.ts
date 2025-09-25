@@ -445,7 +445,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.6588541666666666, yPercent: 0.3821465428276574},
             {xPercent: 0.698333333333333, yPercent: 0.3821465428276574},
 
-            {xPercent: 0.4984375, yPercent: 0.2621465428276574},
             {xPercent: 0.5385416666666666, yPercent: 0.2621465428276574},
             {xPercent: 0.5786458333333333, yPercent: 0.2621465428276574},
             {xPercent: 0.61875, yPercent: 0.2621465428276574},
