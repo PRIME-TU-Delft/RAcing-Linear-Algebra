@@ -7,3 +7,13 @@
     height: 100%;
     width: auto;
 }
+
+.normal-orientation {
+    transition-duration: 0.3s;
+    transform: scaleX(1);
+}
+
+.flip-horizontal {
+    transition-duration: 0.3s;
+    transform: scaleX(-1);
+}
