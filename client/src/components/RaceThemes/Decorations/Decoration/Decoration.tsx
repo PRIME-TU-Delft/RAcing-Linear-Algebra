@@ -90,6 +90,10 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 80)
                 break
 
+            case "grass":
+                setDecorationHeight(curr => widthRatio * 16)
+                break
+
             default:
                 setDecorationHeight(curr => 100)
         }

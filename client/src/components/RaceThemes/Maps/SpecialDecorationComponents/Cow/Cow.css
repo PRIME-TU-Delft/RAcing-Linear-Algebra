@@ -1,0 +1,9 @@
+.cow-container {
+    position: absolute;
+    height: 7.5%;
+}
+
+.cow-container img {
+    height: 100%;
+    width: auto;
+}

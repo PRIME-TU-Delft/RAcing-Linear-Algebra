@@ -22,6 +22,20 @@ import SwampRock from "../../../img/swamp-rock.png"
 import TrainStation from "../../../img/train_station_icon_180119.png"
 import FinishLineHorizontal from "../../../img/finish-line-horizontal.png"
 import FinishLineVertical from "../../../img/finish-line-vertical.png"
+import Grass1 from "../../../img/maps/train/grass/1.png"
+import Grass2 from "../../../img/maps/train/grass/2.png"
+import Grass3 from "../../../img/maps/train/grass/3.png"
+import Grass4 from "../../../img/maps/train/grass/4.png"
+import Grass5 from "../../../img/maps/train/grass/5.png"
+import Grass6 from "../../../img/maps/train/grass/6.png"
+import Grass7 from "../../../img/maps/train/grass/7.png"
+import Grass8 from "../../../img/maps/train/grass/8.png"
+import Grass9 from "../../../img/maps/train/grass/9.png"
+import Grass10 from "../../../img/maps/train/grass/10.png"
+import CowStatic from "../../../img/maps/train/cow/transition_to_walk/1.png"
+import CowTransition from "../../../img/maps/train/cow/transition_to_walk/2.png"
+import CowWalk from "../../../img/maps/train/cow/walk.gif"
+import CowEat from "../../../img/maps/train/cow/eat.gif"
 
 // The new sprites
 // Delft
@@ -102,5 +116,23 @@ export default {
     cheese: Cheese,
     cheesePie: CheesePie,
     cheesePiece: CheesePiece,
-    cheeseShop: CheeseShop
+    cheeseShop: CheeseShop,
+
+    // Grass
+    grass1: Grass1,
+    grass2: Grass2,
+    grass3: Grass3,
+    grass4: Grass4,
+    grass5: Grass5,
+    grass6: Grass6,
+    grass7: Grass7,
+    grass8: Grass8,
+    grass9: Grass9,
+    grass10: Grass10,
+
+    // Cow (with different states)
+    cowStatic: CowStatic,
+    cowTransition: CowTransition,
+    cowWalk: CowWalk,
+    cowEat: CowEat,
 }

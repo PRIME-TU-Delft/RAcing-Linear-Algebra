@@ -18,6 +18,7 @@ function Decorations(props: Props) {
                     sprite={decoration.sprite}
                     class={decoration.class}
                     zIndex={decoration.zIndex}
+                    randomSprites={decoration.randomSprites}
                     screenDimensions={props.mapDimensions}
                 ></Decoration>
             ))}

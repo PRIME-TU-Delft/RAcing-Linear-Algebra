@@ -3,6 +3,7 @@ import { PercentCoordinate, RaceMap } from "../SharedUtils"
 import BeachSea from "./SpecialDecorationComponents/BeachSea/BeachSea"
 import Seagull from "./SpecialDecorationComponents/Seagull/Seagull"
 import BridgeRiver from "./SpecialDecorationComponents/RiverBridge/BridgeRiver"
+import Cow from "./SpecialDecorationComponents/Cow/Cow"
 
 const mapOne: RaceMap = {
             backgroundColor: "#fff6e4",
@@ -313,6 +314,13 @@ const netherlandsMap2: RaceMap = {
         },
         {
             points: [
+            {xPercent: 0.0156707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.0556707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.0956707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.1356707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.2556707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.2956707674282366, yPercent: 0.4558823529411764},
+
             {xPercent: -0.008854166666666666, yPercent: 0.3591331269349845},
             {xPercent: 0.023958333333333335, yPercent: 0.3591331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.3591331269349845},
@@ -337,19 +345,34 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.10989583333333332, yPercent: 0.1191331269349845},
             {xPercent: 0.1453125, yPercent: 0.1191331269349845},
             {xPercent: 0.189541666666666667, yPercent: 0.1191331269349845},
+            {xPercent: 0.2328125, yPercent: 0.1191331269349845},
+            {xPercent: 0.26979166666666665, yPercent: 0.1191331269349845},  
 
             {xPercent: -0.008854166666666666, yPercent: -0.0008668730650154995},
             {xPercent: 0.025958333333333335, yPercent: -0.0008668730650154995},
             {xPercent: 0.06770833333333333, yPercent: -0.0008668730650154995},
             {xPercent: 0.10989583333333332, yPercent: -0.0008668730650154995},
             {xPercent: 0.1453125, yPercent: -0.0008668730650154995},
+            {xPercent: 0.189541666666666667, yPercent: -0.0008668730650154995},
             ].map(p => ({
-                xPercent: p.xPercent + (Math.random() - 0.5) * 0.018,
-                yPercent: p.yPercent + (Math.random() - 0.5) * 0.018
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.04
             })),
-            class: "tree",
-            sprite: Sprites.treeTwo,
-            zIndex: 9999
+            class: "grass",
+            sprite: Sprites.grass1,
+            zIndex: 9999,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
         },
 
         {
@@ -392,6 +415,73 @@ const netherlandsMap2: RaceMap = {
 
         {
             points: [
+            {xPercent: 0.7682291666666667, yPercent: 0.4189886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.4189886480908152},
+            {xPercent: 0.8484375, yPercent: 0.4189886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.4189886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.4189886480908152},
+            {xPercent: 0.96875, yPercent: 0.4189886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.2989886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.2989886480908152},
+            {xPercent: 0.8484375, yPercent: 0.2989886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.2989886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.2989886480908152},
+            {xPercent: 0.96875, yPercent: 0.2989886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.1789886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.1789886480908152},
+            {xPercent: 0.8484375, yPercent: 0.1789886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.1789886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.1789886480908152},
+            {xPercent: 0.96875, yPercent: 0.1789886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.0589886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.0589886480908152},
+            {xPercent: 0.8484375, yPercent: 0.0589886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.0589886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.0589886480908152},
+            {xPercent: 0.96875, yPercent: 0.0589886480908152},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.02,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
+            })),
+            class: "grass",
+            sprite: Sprites.grass1,
+            zIndex: 8888,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
+        },
+
+        {
+            points: [
+            {xPercent: 0.458333333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.4984375, yPercent: 0.8421465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.61875, yPercent: 0.8421465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.7384375, yPercent: 0.8421465428276574},
+            {xPercent: 0.7783541666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.81875, yPercent: 0.8421465428276574},
+            {xPercent: 0.86, yPercent: 0.8421465428276574},
+
+            {xPercent: 0.2183333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.2583333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.2983333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.3683333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.4183333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.4583333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.4984375, yPercent: 0.7421465428276574},
             {xPercent: 0.5385416666666666, yPercent: 0.7421465428276574},
@@ -400,23 +490,47 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.6588541666666666, yPercent: 0.7421465428276574},
             {xPercent: 0.698333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.7384375, yPercent: 0.7421465428276574},
+            {xPercent: 0.7783541666666666, yPercent: 0.7421465428276574},
+            {xPercent: 0.81875, yPercent: 0.7421465428276574},
+            {xPercent: 0.86, yPercent: 0.7421465428276574},
 
+            {xPercent: 0.1383333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.1783333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.2183333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.3383333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.3783333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.4183333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.4583333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.4984375, yPercent: 0.6221465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.6221465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.61875, yPercent: 0.6221465428276574},
             {xPercent: 0.6488541666666666, yPercent: 0.6221465428276574},
             {xPercent: 0.688333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.7284375, yPercent: 0.6221465428276574},
-            ],
-            class: "tree",
-            sprite: Sprites.treeThree,
-            zIndex: 100
+            {xPercent: 0.7683541666666666, yPercent: 0.6221465428276574},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.07
+            })),
+            class: "grass",
+            sprite: Sprites.grass1,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
         },
 
         {
             points: [
-            {xPercent: 0.49427083333333327, yPercent: 0.5181320949432404},
             {xPercent: 0.27427083333333327, yPercent: 0.6981320949432404},
             ],
             class: "windmill",
@@ -455,12 +569,24 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.6388541666666666, yPercent: 0.1421465428276574},
             {xPercent: 0.6789583333333334, yPercent: 0.1421465428276574},
             ].map(p => ({
-                xPercent: p.xPercent + (Math.random() - 0.5) * 0.004,
-                yPercent: p.yPercent + (Math.random() - 0.5) * 0.004
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.03
             })),
-            class: "tree",
-            sprite: Sprites.treeThree,
-            zIndex: 8887
+            class: "grass",
+            sprite: Sprites.grass1,
+            zIndex: 8887,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
         },
         {
             points: [
@@ -480,7 +606,11 @@ const netherlandsMap2: RaceMap = {
             zIndex: 8888
         }
     ],
-    components: [BeachSea(), Seagull(), BridgeRiver()],
+    components: [
+        { component: BeachSea, props: {} },
+        { component: Seagull, props: {} },
+        { component: BridgeRiver, props: {} },
+    ],
     path: [
         { xPercent: 0.235, yPercent: 0.5 },
         { xPercent: 0.1, yPercent: 0.5 },
@@ -498,6 +628,15 @@ const netherlandsMap2: RaceMap = {
         { xPercent: 0.235, yPercent: 0.5 },
 
     ]
+}
+
+const map2Grass = netherlandsMap2.decorations.filter(d => d.class === "grass")
+const cow1Position = { xPercent: 0.05, yPercent: 0.55 }
+if (map2Grass && netherlandsMap2.components) {
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow1Position },
+    })
 }
 
 const trainMaps: RaceMap[] = [netherlandsMap1, netherlandsMap2]
