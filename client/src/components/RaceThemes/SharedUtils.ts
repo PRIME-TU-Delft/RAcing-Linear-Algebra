@@ -86,6 +86,7 @@ interface DecorationElement {
     class: string
     sprite: string
     zIndex?: number
+    randomSprites?: string[]
 }
 
 interface RaceMap {

@@ -8,6 +8,7 @@ interface Props {
     class: string
     screenDimensions: Dimensions
     zIndex?: number
+    randomSprites?: string[]
 }
 
 function Decoration(props: Props) {
@@ -114,6 +115,15 @@ function Decoration(props: Props) {
         return style
     }
 
+    const getSprite = () => {
+        if (props.randomSprites && props.randomSprites.length > 0) {
+            const randomIndex = Math.floor(Math.random() * props.randomSprites.length)
+            return props.randomSprites[randomIndex]
+        } else {
+            return props.sprite
+        }
+    }
+
     return (
         <div>
             {props.points.map((coordinate) => (
@@ -122,7 +132,7 @@ function Decoration(props: Props) {
                     style={{...getPositionStyle(coordinate), position: "absolute"}}
                     className={props.class + " decoration"}
                 >
-                    <img src={props.sprite} 
+                    <img src={getSprite()} 
                     style={{
                         height: `${decorationHeight}px`,
                         width: `auto`,
