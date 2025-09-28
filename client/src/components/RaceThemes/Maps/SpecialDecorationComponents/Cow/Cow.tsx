@@ -1,32 +1,70 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import TrainThemeSprites from "../../../Sprites/TrainThemeSprites"
 import "./Cow.css"
 import { DecorationElement, PercentCoordinate } from "../../../SharedUtils"
 import { Button } from "react-bootstrap"
+import { MapDimensionsContext } from "../../../../../contexts/MapDimensionsContext"
 
 interface Props {
     decorations: DecorationElement[],
-    position: PercentCoordinate
+    position: PercentCoordinate,
+    id: number
 }
 
 const TRANSITION_FRAME_DURATION = 0.15
 const NEARBY_GRASS_COUNT = 3
 const MOVE_SPEED = 0.0005
 const EAT_DURATION = 4200
+const MAX_INITIAL_DELAY = 2000
 
 function Cow(props: Props) {
     const [currentPosition, setCurrentPosition] = React.useState<PercentCoordinate>(props.position)
-
     const [targetGrassPosition, setTargetGrassPosition] = React.useState<PercentCoordinate | null>(null)
     const [nearbyGrassPositions, setNearbyGrassPositions] = React.useState<PercentCoordinate[]>([])
     const [animationState, setAnimationState] = React.useState<"walking" | "eating" | "idle">("idle")
     const [transitionedToWalking, setTransitionedToWalking] = React.useState(false)
+    const [animationCycleId, setAnimationCycleId] = React.useState(0)
+    const [spriteSize, setSpriteSize] = React.useState({ width: 0, height: 0 });
+
+    const [initialDelayPassed, setInitialDelayPassed] = React.useState(false)
+    const [flipSpriteClass, setFlipSpriteClass] = React.useState<"normal-orientation" | "flip-horizontal">("normal-orientation")
+    
+    const mapDimensions = useContext(MapDimensionsContext)
+
+    const handleSpriteLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+        const { naturalWidth, naturalHeight } = event.currentTarget;
+        setSpriteSize({ width: naturalWidth, height: naturalHeight });
+    };
 
     useEffect(() => {
-        findNearbyGrass()
+        const delay = Math.random() * MAX_INITIAL_DELAY
+        const timer = setTimeout(() => {
+            setInitialDelayPassed(true)
+        }, delay)
+
+        return () => clearTimeout(timer)
     }, [props.decorations])
 
     useEffect(() => {
+        if (animationState === "walking" && targetGrassPosition) {
+            setFlipSpriteClass(targetGrassPosition.xPercent >= currentPosition.xPercent ? "flip-horizontal" : "normal-orientation")
+        }
+    }, [animationState, targetGrassPosition])
+
+    useEffect(() => {
+
+        if (animationState === "eating") {
+            const timer = setTimeout(() => {
+                setAnimationState("idle")
+            }, EAT_DURATION)
+            return () => clearTimeout(timer)
+        }
+
+        if (animationState == "idle" && initialDelayPassed) {
+            findNearbyGrass()
+            return
+        }
+
         if (animationState === "walking" && targetGrassPosition) {
             const interval = setInterval(() => {
             setCurrentPosition((prevPosition) => {
@@ -37,13 +75,8 @@ function Cow(props: Props) {
                 if (distance < MOVE_SPEED) {
                         clearInterval(interval)
                         setAnimationState("eating")
-                        
-                        setTimeout(() => {
-                            setAnimationState("idle")
-                            setTimeout(() => {
-                                findNearbyGrass()
-                            }, 1000)
-                        }, EAT_DURATION)
+                        setAnimationCycleId(prevId => prevId + 1)
+                        setTargetGrassPosition(null)
 
                         return targetGrassPosition
                     }
@@ -60,12 +93,21 @@ function Cow(props: Props) {
 
             return () => clearInterval(interval)
         }
-    }, [animationState, targetGrassPosition])
+    }, [animationState, targetGrassPosition, initialDelayPassed])
 
     useEffect(() => {
         const randomIndex = Math.floor(Math.random() * nearbyGrassPositions.length)
         if (nearbyGrassPositions.length > 0) {
-            setTargetGrassPosition(nearbyGrassPositions[randomIndex])
+            const position = {
+                xPercent: nearbyGrassPositions[randomIndex].xPercent,
+                yPercent: nearbyGrassPositions[randomIndex].yPercent
+            }
+
+            if (position.xPercent > currentPosition.xPercent) {
+                position.xPercent = position.xPercent - (spriteSize.width / mapDimensions.width) * 0.5
+            }
+
+            setTargetGrassPosition(position)
             setAnimationState("walking")
             setTransitionedToWalking(false)
         }
@@ -96,10 +138,10 @@ function Cow(props: Props) {
                     }, TRANSITION_FRAME_DURATION * 1000)
                     return TrainThemeSprites.cowTransition
                 } else {
-                    return TrainThemeSprites.cowWalk
+                    return `${TrainThemeSprites.cowWalk}?id=${props.id}&cycle=${animationCycleId}`
                 }
             case "eating":
-                return TrainThemeSprites.cowEat
+                return `${TrainThemeSprites.cowEat}?id=${props.id}&cycle=${animationCycleId}`
             case "idle":
                 return TrainThemeSprites.cowStatic
             default:
@@ -107,20 +149,21 @@ function Cow(props: Props) {
         }
     }
 
-    const flipBasedOnDirection = () => {
-        if (animationState === "walking" && targetGrassPosition) {
-            return targetGrassPosition.xPercent >= currentPosition.xPercent ? "flip-horizontal" : "normal-orientation"
-        }
+    const getPositionStyle = () => {
+        const x = currentPosition.xPercent * mapDimensions.width;
+        const y = currentPosition.yPercent * mapDimensions.height;
+        return { left: `${x}px`, bottom: `${y}px` }
     }
 
     return (
         <div 
             className="cow-container" 
-            style={{ left: `${currentPosition.xPercent * 100}%`, top: `${currentPosition.yPercent * 100}%` }}>
+            style={getPositionStyle()}>
                 <img
+                    onLoad={handleSpriteLoad}
                     src={getSpriteForState()}
                     alt="Cow"
-                    className={flipBasedOnDirection()}
+                    className={flipSpriteClass}
                 />
         </div>
     )

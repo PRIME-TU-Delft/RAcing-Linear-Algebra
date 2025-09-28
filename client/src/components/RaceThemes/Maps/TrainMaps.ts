@@ -319,7 +319,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.0956707674282366, yPercent: 0.4558823529411764},
             {xPercent: 0.1356707674282366, yPercent: 0.4558823529411764},
             {xPercent: 0.2556707674282366, yPercent: 0.4558823529411764},
-            {xPercent: 0.2956707674282366, yPercent: 0.4558823529411764},
 
             {xPercent: -0.008854166666666666, yPercent: 0.3591331269349845},
             {xPercent: 0.023958333333333335, yPercent: 0.3591331269349845},
@@ -540,7 +539,6 @@ const netherlandsMap2: RaceMap = {
 
         {
             points: [
-            {xPercent: 0.3783333333333333, yPercent: 0.5021465428276574},
             {xPercent: 0.4183333333333333, yPercent: 0.5021465428276574},
             {xPercent: 0.4583333333333333, yPercent: 0.5021465428276574},
             {xPercent: 0.4984375, yPercent: 0.5021465428276574},
@@ -631,11 +629,30 @@ const netherlandsMap2: RaceMap = {
 }
 
 const map2Grass = netherlandsMap2.decorations.filter(d => d.class === "grass")
-const cow1Position = { xPercent: 0.05, yPercent: 0.55 }
+const cow1Position = { xPercent: 0.1, yPercent: 0.2 }
+const cow2Position = { xPercent: 0.4, yPercent: 0.5 }
+const cow3Position = { xPercent: 0.6, yPercent: 0.6 }
+const cow4Position = { xPercent: 0.7, yPercent: 0.7 }
+
 if (map2Grass && netherlandsMap2.components) {
     netherlandsMap2.components.push({
         component: Cow,
-        props: { decorations: map2Grass, position: cow1Position },
+        props: { decorations: map2Grass, position: cow1Position, id: 1 },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow2Position, id: 2 },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow3Position, id: 3  },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow4Position, id: 4 },
     })
 }
 
