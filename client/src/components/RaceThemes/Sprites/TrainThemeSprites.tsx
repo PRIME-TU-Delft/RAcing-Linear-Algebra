@@ -36,6 +36,7 @@ import CowStatic from "../../../img/maps/train/cow/transition_to_walk/1.png"
 import CowTransition from "../../../img/maps/train/cow/transition_to_walk/2.png"
 import CowWalk from "../../../img/maps/train/cow/walk.gif"
 import CowEat from "../../../img/maps/train/cow/eat.gif"
+import CowIdle from "../../../img/maps/train/cow/idle.gif"
 
 // The new sprites
 // Delft
@@ -135,4 +136,5 @@ export default {
     cowTransition: CowTransition,
     cowWalk: CowWalk,
     cowEat: CowEat,
+    cowIdle: CowIdle,
 }

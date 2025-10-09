@@ -12,10 +12,11 @@ interface Props {
 }
 
 const TRANSITION_FRAME_DURATION = 0.15
-const NEARBY_GRASS_COUNT = 3
+const NEARBY_GRASS_COUNT = 4
 const MOVE_SPEED = 0.0005
 const EAT_DURATION = 4200
-const MAX_INITIAL_DELAY = 2000
+const IDLE_ANIMATION_DURATION = 1000
+const MAX_IDLE_CYCLES = 3
 
 function Cow(props: Props) {
     const [currentPosition, setCurrentPosition] = React.useState<PercentCoordinate>(props.position)
@@ -37,7 +38,7 @@ function Cow(props: Props) {
     };
 
     useEffect(() => {
-        const delay = Math.random() * MAX_INITIAL_DELAY
+        const delay = Math.random() * MAX_IDLE_CYCLES * IDLE_ANIMATION_DURATION
         const timer = setTimeout(() => {
             setInitialDelayPassed(true)
         }, delay)
@@ -47,7 +48,7 @@ function Cow(props: Props) {
 
     useEffect(() => {
         if (animationState === "walking" && targetGrassPosition) {
-            setFlipSpriteClass(targetGrassPosition.xPercent >= currentPosition.xPercent ? "flip-horizontal" : "normal-orientation")
+            setFlipSpriteClass(targetGrassPosition.xPercent > currentPosition.xPercent ? "flip-horizontal" : "normal-orientation")
         }
     }, [animationState, targetGrassPosition])
 
@@ -61,8 +62,11 @@ function Cow(props: Props) {
         }
 
         if (animationState == "idle" && initialDelayPassed) {
-            findNearbyGrass()
-            return
+            const idleDuration = Math.random() * MAX_IDLE_CYCLES * IDLE_ANIMATION_DURATION
+            const timer = setTimeout(() => {
+                findNearbyGrass()
+            }, idleDuration)
+            return () => clearTimeout(timer)
         }
 
         if (animationState === "walking" && targetGrassPosition) {
@@ -103,7 +107,7 @@ function Cow(props: Props) {
                 yPercent: nearbyGrassPositions[randomIndex].yPercent
             }
 
-            if (position.xPercent > currentPosition.xPercent) {
+            if (position.xPercent - currentPosition.xPercent > (spriteSize.width / mapDimensions.width) * 0.5) {
                 position.xPercent = position.xPercent - (spriteSize.width / mapDimensions.width) * 0.5
             }
 
@@ -118,10 +122,16 @@ function Cow(props: Props) {
             .filter(deco => deco.class === "grass")
             .flatMap(deco => deco.points)
 
+        let offset = 0
+        if (flipSpriteClass == "flip-horizontal") {
+            console.log("Flipping back to normal orientation")
+            offset = (spriteSize.width / mapDimensions.width) * 0.5
+        }
+
         // Find the closest grass positions to the cow's current position
         const sortedGrass = grassPositions.sort((a, b) => {
-            const distA = Math.hypot(a.xPercent - currentPosition.xPercent, a.yPercent - currentPosition.yPercent)
-            const distB = Math.hypot(b.xPercent - currentPosition.xPercent, b.yPercent - currentPosition.yPercent)
+            const distA = Math.hypot(a.xPercent - currentPosition.xPercent - offset, a.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
+            const distB = Math.hypot(b.xPercent - currentPosition.xPercent - offset, b.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
             return distA - distB
         })
 
@@ -143,9 +153,9 @@ function Cow(props: Props) {
             case "eating":
                 return `${TrainThemeSprites.cowEat}?id=${props.id}&cycle=${animationCycleId}`
             case "idle":
-                return TrainThemeSprites.cowStatic
+                    return `${TrainThemeSprites.cowIdle}?id=${props.id}&cycle=${animationCycleId}`
             default:
-                return TrainThemeSprites.cowStatic
+                    return `${TrainThemeSprites.cowIdle}?id=${props.id}&cycle=${animationCycleId}`
         }
     }
 

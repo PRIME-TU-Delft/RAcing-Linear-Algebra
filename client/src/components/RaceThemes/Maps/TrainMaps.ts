@@ -318,9 +318,7 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.0556707674282366, yPercent: 0.4558823529411764},
             {xPercent: 0.0956707674282366, yPercent: 0.4558823529411764},
             {xPercent: 0.1356707674282366, yPercent: 0.4558823529411764},
-            {xPercent: 0.2556707674282366, yPercent: 0.4558823529411764},
 
-            {xPercent: -0.008854166666666666, yPercent: 0.3591331269349845},
             {xPercent: 0.023958333333333335, yPercent: 0.3591331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.3591331269349845},
             {xPercent: 0.10989583333333332, yPercent: 0.3591331269349845},
@@ -329,7 +327,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.22828125, yPercent: 0.3591331269349845},
             {xPercent: 0.26979166666666665, yPercent: 0.3591331269349845},
 
-            {xPercent: -0.008854166666666666, yPercent: 0.2391331269349845},
             {xPercent: 0.025958333333333335, yPercent: 0.2391331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.2391331269349845},
             {xPercent: 0.10989583333333332, yPercent: 0.2391331269349845},
@@ -338,7 +335,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.2328125, yPercent: 0.2391331269349845},
             {xPercent: 0.26979166666666665, yPercent: 0.2391331269349845},
 
-            {xPercent: -0.008854166666666666, yPercent: 0.1191331269349845},
             {xPercent: 0.025958333333333335, yPercent: 0.1191331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.1191331269349845},
             {xPercent: 0.10989583333333332, yPercent: 0.1191331269349845},
@@ -347,7 +343,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.2328125, yPercent: 0.1191331269349845},
             {xPercent: 0.26979166666666665, yPercent: 0.1191331269349845},  
 
-            {xPercent: -0.008854166666666666, yPercent: -0.0008668730650154995},
             {xPercent: 0.025958333333333335, yPercent: -0.0008668730650154995},
             {xPercent: 0.06770833333333333, yPercent: -0.0008668730650154995},
             {xPercent: 0.10989583333333332, yPercent: -0.0008668730650154995},
@@ -414,28 +409,24 @@ const netherlandsMap2: RaceMap = {
 
         {
             points: [
-            {xPercent: 0.7682291666666667, yPercent: 0.4189886480908152},
             {xPercent: 0.8083333333333333, yPercent: 0.4189886480908152},
             {xPercent: 0.8484375, yPercent: 0.4189886480908152},
             {xPercent: 0.8885416666666667, yPercent: 0.4189886480908152},
             {xPercent: 0.9286458333333333, yPercent: 0.4189886480908152},
             {xPercent: 0.96875, yPercent: 0.4189886480908152},
 
-            {xPercent: 0.7682291666666667, yPercent: 0.2989886480908152},
             {xPercent: 0.8083333333333333, yPercent: 0.2989886480908152},
             {xPercent: 0.8484375, yPercent: 0.2989886480908152},
             {xPercent: 0.8885416666666667, yPercent: 0.2989886480908152},
             {xPercent: 0.9286458333333333, yPercent: 0.2989886480908152},
             {xPercent: 0.96875, yPercent: 0.2989886480908152},
 
-            {xPercent: 0.7682291666666667, yPercent: 0.1789886480908152},
             {xPercent: 0.8083333333333333, yPercent: 0.1789886480908152},
             {xPercent: 0.8484375, yPercent: 0.1789886480908152},
             {xPercent: 0.8885416666666667, yPercent: 0.1789886480908152},
             {xPercent: 0.9286458333333333, yPercent: 0.1789886480908152},
             {xPercent: 0.96875, yPercent: 0.1789886480908152},
 
-            {xPercent: 0.7682291666666667, yPercent: 0.0589886480908152},
             {xPercent: 0.8083333333333333, yPercent: 0.0589886480908152},
             {xPercent: 0.8484375, yPercent: 0.0589886480908152},
             {xPercent: 0.8885416666666667, yPercent: 0.0589886480908152},
@@ -476,10 +467,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.81875, yPercent: 0.8421465428276574},
             {xPercent: 0.86, yPercent: 0.8421465428276574},
 
-            {xPercent: 0.2183333333333333, yPercent: 0.7421465428276574},
-            {xPercent: 0.2583333333333333, yPercent: 0.7421465428276574},
-            {xPercent: 0.2983333333333333, yPercent: 0.7421465428276574},
-            {xPercent: 0.3683333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.4183333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.4583333333333333, yPercent: 0.7421465428276574},
             {xPercent: 0.4984375, yPercent: 0.7421465428276574},
@@ -493,10 +480,6 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.81875, yPercent: 0.7421465428276574},
             {xPercent: 0.86, yPercent: 0.7421465428276574},
 
-            {xPercent: 0.1383333333333333, yPercent: 0.6221465428276574},
-            {xPercent: 0.1783333333333333, yPercent: 0.6221465428276574},
-            {xPercent: 0.2183333333333333, yPercent: 0.6221465428276574},
-            {xPercent: 0.3383333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.3783333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.4183333333333333, yPercent: 0.6221465428276574},
             {xPercent: 0.4583333333333333, yPercent: 0.6221465428276574},
@@ -539,36 +522,32 @@ const netherlandsMap2: RaceMap = {
 
         {
             points: [
-            {xPercent: 0.4183333333333333, yPercent: 0.5021465428276574},
-            {xPercent: 0.4583333333333333, yPercent: 0.5021465428276574},
-            {xPercent: 0.4984375, yPercent: 0.5021465428276574},
-            {xPercent: 0.5385416666666666, yPercent: 0.5021465428276574},
-            {xPercent: 0.5786458333333333, yPercent: 0.5021465428276574},
-            {xPercent: 0.61875, yPercent: 0.5021465428276574},
-            {xPercent: 0.6588541666666666, yPercent: 0.5021465428276574},
-            {xPercent: 0.698333333333333, yPercent: 0.5021465428276574},
+            {xPercent: 0.4183333333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.4583333333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.4984375, yPercent: 0.5221465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.5221465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.61875, yPercent: 0.5221465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.5221465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.5221465428276574},
 
-            {xPercent: 0.4183333333333333, yPercent: 0.3821465428276574},
-            {xPercent: 0.4583333333333333, yPercent: 0.3821465428276574},
-            {xPercent: 0.4984375, yPercent: 0.3821465428276574},
-            {xPercent: 0.5385416666666666, yPercent: 0.3821465428276574},
-            {xPercent: 0.5786458333333333, yPercent: 0.3821465428276574},
-            {xPercent: 0.61875, yPercent: 0.3821465428276574},
-            {xPercent: 0.6588541666666666, yPercent: 0.3821465428276574},
-            {xPercent: 0.698333333333333, yPercent: 0.3821465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.4021465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.4021465428276574},
+            {xPercent: 0.61875, yPercent: 0.4021465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.4021465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.4021465428276574},
 
-            {xPercent: 0.5385416666666666, yPercent: 0.2621465428276574},
-            {xPercent: 0.5786458333333333, yPercent: 0.2621465428276574},
-            {xPercent: 0.61875, yPercent: 0.2621465428276574},
-            {xPercent: 0.6588541666666666, yPercent: 0.2621465428276574},
-            {xPercent: 0.698333333333333, yPercent: 0.2621465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.2821465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.2821465428276574},
+            {xPercent: 0.61875, yPercent: 0.2821465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.2821465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.2821465428276574},
 
-            {xPercent: 0.59875, yPercent: 0.1421465428276574},
-            {xPercent: 0.6388541666666666, yPercent: 0.1421465428276574},
-            {xPercent: 0.6789583333333334, yPercent: 0.1421465428276574},
+            {xPercent: 0.6388541666666666, yPercent: 0.1621465428276574},
+            {xPercent: 0.6789583333333334, yPercent: 0.1621465428276574},
             ].map(p => ({
-                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
-                yPercent: p.yPercent + (Math.random() - 0.5) * 0.03
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.03,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
             })),
             class: "grass",
             sprite: Sprites.grass1,
