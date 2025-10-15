@@ -12,7 +12,7 @@ import QuestionBoatBackground from "../Questions/Themes/QuestionBoatBackground";
 import "./Game.css"
 import Question from "../Questions/Question";
 import { getRacePathObject } from "../RaceThemes/RaceService";
-import { RacePathObject } from "../RaceThemes/SharedUtils";
+import { Checkpoint, RacePathObject } from "../RaceThemes/SharedUtils";
 import { RaceDataContext } from "../../contexts/RaceDataContext";
 import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
 import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
@@ -90,7 +90,7 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
-    window.addEventListener("load", () => navigate("/"))
+    // window.addEventListener("load", () => navigate("/"))
 
     window.onmessage = function(e) {
         if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
@@ -481,6 +481,10 @@ function Game(props: Props) {
         },
     })
 
+    const checkpointPassedHandler = (checkpoint: Checkpoint) => {
+        console.log("Checkpoint passed: " + checkpoint.name)
+    }
+
     const modalAnimationRef = useSpringRef()
     const modalAnimation = useSpring({
         ref: modalAnimationRef,
@@ -589,7 +593,7 @@ function Game(props: Props) {
                         marginLeft: racePathSizing.offsetX,
                         marginTop: racePathSizing.offsetY
                     }}>
-                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
+                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration} onCheckpointPassed={checkpointPassedHandler}/>
                     </div>
                     <svg className="minimap-svg-path" style={{
                         width: racePathSizing.width,

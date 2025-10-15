@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./RaceStatus.css"
 import { RaceDataContext } from "../../../contexts/RaceDataContext";
 import { ScoreContext } from "../../../contexts/ScoreContext";
-import { RaceObject } from "../SharedUtils";
+import { Checkpoint, RaceObject } from "../SharedUtils";
 import { currentGhostIsOpen } from "../Ghosts/GhostService";
 import { formatRacePositionText, getColorForRaceLap, getNewTimeScoreIndex, getZIndexValues } from "../RaceService";
 import Ghosts from "../Ghosts/Ghosts";
@@ -15,6 +15,7 @@ import { TimeContext } from "../../../contexts/TimeContext";
 interface Props {
     keepClosed: boolean
     roundDuration: number
+    onCheckpointPassed?: (checkpoint: Checkpoint) => void
 }
 
 function RaceStatus(props: Props) {
@@ -27,6 +28,8 @@ function RaceStatus(props: Props) {
     const [mainVehiclePosition, setMainVehiclePosition] = useState(0) // position of the team
     const [racingTeamStats, setRacingTeamStats] = useState<RaceObject[]>([])
     const [sortedRacingTeamStats, setSortedRacingTeamStats] = useState<RaceObject[]>([])
+    const [lastCheckpointPassed, setLastCheckpointPassed] = useState<Checkpoint | null>(null)
+    const [lastKnownProgress, setLastKnownProgress] = useState(0)
 
     useEffect(() => {
         const newRacingTeams: RaceObject[] = []
@@ -72,9 +75,53 @@ function RaceStatus(props: Props) {
 
     // Updates progress percent when points increase
     useEffect(() => {
-        setProgressPercent((current) => (scores.currentPoints % scores.totalPoints) / scores.totalPoints)
+        const newPercentage = (scores.currentPoints % scores.totalPoints) / scores.totalPoints
+        setProgressPercent((current) => newPercentage)
         updateRacingStats(scores.currentPoints)
     }, [scores.currentPoints])
+
+    useEffect(() => {
+        if (!props.onCheckpointPassed || !raceData.selectedMap.checkpoints || raceData.selectedMap.checkpoints.length === 0) {
+            return;
+        }
+
+        // Calculate total progress across all laps
+        const lapsCompleted = Math.floor(scores.currentPoints / scores.totalPoints);
+        const progressInLap = (scores.currentPoints % scores.totalPoints) / scores.totalPoints;
+        const currentTotalProgress = lapsCompleted + progressInLap;
+
+        // Find all checkpoints passed between the last known progress and current progress
+        const newlyPassedCheckpoints = raceData.selectedMap.checkpoints.filter(checkpoint => {
+            const checkpointTotalProgress = lapsCompleted + checkpoint.percentage;
+            // Check if the checkpoint is between the last progress and current progress
+            // ( handles the case where the last progress was in the same lap )
+            if (checkpointTotalProgress > lastKnownProgress && checkpointTotalProgress <= currentTotalProgress) {
+                return true;
+            }
+            // Check for checkpoints passed when completing a lap
+            // e.g., last progress was 0.9, current is 1.1 (lap 1, 10%)
+            const checkpointProgressInPreviousLap = (lapsCompleted - 1) + checkpoint.percentage;
+            if (lapsCompleted > 0 && checkpointProgressInPreviousLap > lastKnownProgress && checkpointProgressInPreviousLap <= currentTotalProgress) {
+                return true;
+            }
+            return false;
+        });
+
+        // If any checkpoints were passed, find the most recent one
+        if (newlyPassedCheckpoints.length > 0) {
+            // The most recent checkpoint is the one with the highest percentage among the newly passed ones
+            const mostRecentCheckpoint = newlyPassedCheckpoints.reduce((prev, current) => 
+                (prev.percentage > current.percentage) ? prev : current
+            );
+            props.onCheckpointPassed(mostRecentCheckpoint);
+            setLastCheckpointPassed(mostRecentCheckpoint);
+        }
+
+        // Update the last known progress for the next check
+        setLastKnownProgress(currentTotalProgress);
+
+    }, [scores.currentPoints, scores.totalPoints, raceData.selectedMap.checkpoints, props.onCheckpointPassed]);
+
 
     const updateRacingStats = (newScore: number, ghostKey?: number) => {
         if (racingTeamStats.length == 0) return
@@ -120,6 +167,22 @@ function RaceStatus(props: Props) {
         return Math.floor(currentPoints / totalPoints)
     }
 
+     useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'd' || event.key === 'D') {
+                setProgressPercent(curr => curr + 0.2);
+                console.log("Debug key pressed, progress increased by 20%");
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []); // Empty dependency array ensures this runs only once
+
     return(
         <div>
             <MainVehicle 
@@ -128,7 +191,6 @@ function RaceStatus(props: Props) {
                 path={racePath.svgPath}
                 isOnMinimap={props.keepClosed}
             ></MainVehicle>
-            
             <TimeContext.Provider value={remainingTime > 0 ? props.roundDuration - remainingTime : 0}>
             <Ghosts
                     data-testid={"ghosts"}

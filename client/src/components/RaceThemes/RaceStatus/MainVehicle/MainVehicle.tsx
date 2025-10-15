@@ -26,7 +26,7 @@ function MainVehicle(props: Props) {
 
     useEffect(() => {
         playAnimation()
-    }, [currentProgress])
+    }, [props.progressPercent])
 
     const playAnimation = () => {
         // Since the team can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
