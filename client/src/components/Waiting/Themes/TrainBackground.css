@@ -112,6 +112,7 @@
     width: 12%;
     top: 18%;
     right: 2%;
+    z-index: -50;
 }
 
 .door-frame {
