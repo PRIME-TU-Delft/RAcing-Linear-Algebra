@@ -37,6 +37,7 @@ import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
 import { StudiesContext } from "./contexts/StudiesContext"
+import { PlayerPlacementContext } from "./contexts/PlayerPlacementContext"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -96,6 +97,8 @@ function App() {
     const [playerScoreBeforeReconnecting, setPlayerScoreBeforeReconnecting] = useState<number>(0)
     const [userReconnectionAvailableTime, setUserReconnectionAvailableTime] = useState<number>(0)
     const [noGhostTeamsPresent, setNoGhostTeamsPresent] = useState<boolean>(false)
+    const [showIndividualPlacements, setShowIndividualPlacements] = useState<boolean>(true)
+    const [playerPlacement, setPlayerPlacement] = useState<number>(0)
 
     const navigate = useNavigate()
 
@@ -182,7 +185,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => roundDuration) // CHANGE
+        setRoundDuration(curr => 5) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)
@@ -203,8 +206,10 @@ function App() {
     }
 
     useEffect(() => {
-        if (stopShowingRace)
+        if (stopShowingRace) {
+            if (isPlayer) socket.emit("getMyPlacement") // Request placement in team before navigating to leaderboard
             navigate("/Leaderboard")
+        }
     }, [stopShowingRace])    
 
     const updateExerciseHandler = (exerciseData: Exercise) => {
@@ -457,6 +462,11 @@ function App() {
             socket.emit("getMandatoryNum")
             socket.emit("getNewQuestion")
         }
+
+        function onYourPlacementReceived(placement: number) {
+            setPlayerPlacement(curr => placement)
+            console.log("Received placement: " + placement)
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -487,6 +497,7 @@ function App() {
         socket.on("blocked-user-reconnection", onBlockedUserReconnection)
         socket.on("already-in-room", onPlayerAlreadyInLobby)
         socket.on("ready-for-question-request", onReadyForQuestionRequest)
+        socket.on("your-placement", onYourPlacementReceived)
     }, [])
 
     // useEffect(() => {
@@ -669,18 +680,20 @@ function App() {
                 <Route
                     path="/Leaderboard"
                     element={
-                        <Leaderboard
-                            ghosts={ghostTeams}
-                            teamname={teamName}
-                            teamScore={currentScore}
-                            teamStudy={study}
-                            lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
-                            fullLapScoreValue={fullLapScoreValue}
-                            isLecturer={!isPlayer}
-                            isLastRound={allRoundsFinished}
-                            playerScore={currentIndividualScore}
-                            averageTeamScore={averageTeamScore}
-                        />
+                        <PlayerPlacementContext.Provider value={{ showIndividualPlacements: showIndividualPlacements, placement: playerPlacement }}>
+                            <Leaderboard
+                                ghosts={ghostTeams}
+                                teamname={teamName}
+                                teamScore={currentScore}
+                                teamStudy={study}
+                                lapsCompleted={Math.floor(currentScore / fullLapScoreValue)}
+                                fullLapScoreValue={fullLapScoreValue}
+                                isLecturer={!isPlayer}
+                                isLastRound={allRoundsFinished}
+                                playerScore={currentIndividualScore}
+                                averageTeamScore={averageTeamScore}
+                            />
+                        </PlayerPlacementContext.Provider>
                     }
                 ></Route>
                 <Route

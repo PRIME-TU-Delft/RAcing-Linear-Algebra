@@ -599,6 +599,49 @@ module.exports = {
                     console.log(error)
                 }
             })
+
+            /**
+             * When a player requests their own placement, this calculates their rank in the game
+             * and sends it back to only them.
+             */
+            socket.on("getMyPlacement", () => {
+                const lobbyId = socketToLobbyId.get(socket.id);
+                const userId = socket.data.userId;
+
+                if (lobbyId === undefined || userId === undefined) {
+                    socket.emit("error", { message: "Could not find lobby or user for this request." });
+                    return;
+                }
+
+                try {
+                    const game = getGame(lobbyId);
+                    
+                    // Convert the users map to an array of objects that include the userId
+                    const players = Array.from(game.users.entries()).map(([id, user]) => ({
+                        userId: id,
+                        score: user.score
+                    }));
+
+                    // Sort players by their score in descending order
+                    players.sort((a, b) => b.score - a.score);
+
+                    // Find the index of the requesting player in the sorted list
+                    const playerIndex = players.findIndex(player => player.userId === userId);
+
+                    // If the player is found, calculate their placement and send it back
+                    if (playerIndex !== -1) {
+                        const placement = playerIndex + 1;
+                        socket.emit("your-placement", placement);
+                    } else {
+                        // Handle case where user might not be in the list for some reason
+                        socket.emit("error", { message: "Could not determine your placement." });
+                    }
+
+                } catch (error) {
+                    console.error("Failed to process player placement:", error);
+                    socket.emit("error", { message: "Failed to process your placement." });
+                }
+            });
         
             /**
              * This function gets the statistics for the lecturer

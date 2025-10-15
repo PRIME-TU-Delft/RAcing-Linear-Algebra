@@ -33,7 +33,7 @@ export default function TrainBackground(props: Props) {
         if (props.closeTrainDoors) {
             setTimeout(() => {
                 props.onDoorsClosed && props.onDoorsClosed();
-            }, 1500);
+            }, 2000);
         }
     }, [props.closeTrainDoors]);
 
