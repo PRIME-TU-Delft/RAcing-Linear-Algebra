@@ -118,7 +118,7 @@ function TeamPreview(props: Props) {
         if ((numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) || props.noGhostTeamsPresent) setShowMainTeam(curr => true)
     }, [numberOfGhostTeamAnimationsCompleted, props.noGhostTeamsPresent])
 
-    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.15], 10000)
+    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.2, 0.25], 10000)
 
     return(
         <div className="team-preview-body">
@@ -132,7 +132,7 @@ function TeamPreview(props: Props) {
             />
             <a.div className="team-preview-title">
                     <a.div style={{...titleAnimation}}>
-                    {"Dear engineers in training, please make your way to platform " + platformNumber}
+                    {"Dear engineers in training, please make your way to platform " + platformNumber + "."}
                 </a.div>
                 </a.div>
             <a.div className="page-content" style={pageContentAnimation}>
