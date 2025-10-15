@@ -26,6 +26,7 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
+import CheckpointNotification from "./CheckpointNotification/CheckpointNotification";
 
 interface Props {
     theme: string
@@ -58,6 +59,7 @@ function Game(props: Props) {
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
+    const [checkpointPassed, setCheckpointPassed] = useState<Checkpoint | null>(null)
 
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth,
@@ -483,6 +485,7 @@ function Game(props: Props) {
 
     const checkpointPassedHandler = (checkpoint: Checkpoint) => {
         console.log("Checkpoint passed: " + checkpoint.name)
+        setCheckpointPassed(checkpoint)
     }
 
     const modalAnimationRef = useSpringRef()
@@ -557,6 +560,7 @@ function Game(props: Props) {
                     </QuestionStatusContext.Provider>    
                 </div>
                  <div className="game-right-container">
+                    {checkpointPassed && <CheckpointNotification checkpointName={checkpointPassed.name} />}
                     <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
                     <div className="coloration-information-element">
                         <ColorationInfo></ColorationInfo>
