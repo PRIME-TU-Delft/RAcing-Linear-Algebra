@@ -185,7 +185,7 @@ function App() {
 
     const initializeRoundValues = (roundDuration: number) => {
         resetValues()
-        setRoundDuration(curr => 5) // CHANGE
+        setRoundDuration(curr => roundDuration) // CHANGE
         setRoundStarted(curr => true)
         setCurrentQuestionNumber(curr => 0)
         setAllRoundsFinished(curr => false)

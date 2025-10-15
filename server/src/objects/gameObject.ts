@@ -31,6 +31,7 @@ export class Game {
     ghostTeams: GameGhostTeam[] //The ghost teams for this game
     lapEndScore: number // Number of points required to complete a single lap
     numberOfPlayersAtStart: number // Number of players at the start of the game
+    allowIndividualPlacements: boolean // Whether individual placements are allowed
 
     /**
      * Constructor for a game object,
@@ -39,7 +40,7 @@ export class Game {
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
      */
-    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string) {
+    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string, allowIndividualPlacements: boolean) {
         this.currentTopicIndex = 0
         this.topics = topics
         this.roundDurations = roundDurations
@@ -52,6 +53,7 @@ export class Game {
         this.study = study
         this.correct = 0
         this.incorrect = 0
+        this.allowIndividualPlacements = allowIndividualPlacements
     }
 
     /**

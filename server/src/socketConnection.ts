@@ -310,7 +310,7 @@ module.exports = {
              */
             socket.on(
                 "startGame",
-                async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
+                async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string, allowIndividualPlacements: boolean) => {
                     try {
                         const selectedTopics = await getSelectedITopicsWithVariants(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
@@ -322,7 +322,7 @@ module.exports = {
                             return socket?.data.userId as string;
                         }).filter(userId => userId !== undefined)
 
-                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study)
+                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study, allowIndividualPlacements)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -615,6 +615,11 @@ module.exports = {
 
                 try {
                     const game = getGame(lobbyId);
+
+                    // If individual placements are not allowed, do not proceed
+                    if (!game.allowIndividualPlacements) {
+                        return;
+                    }
                     
                     // Convert the users map to an array of objects that include the userId
                     const players = Array.from(game.users.entries()).map(([id, user]) => ({
