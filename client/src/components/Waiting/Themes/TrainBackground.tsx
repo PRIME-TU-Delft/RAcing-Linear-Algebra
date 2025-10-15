@@ -46,7 +46,7 @@ export default function TrainBackground(props: Props) {
     }, [props.moveTrain]);
 
     return (
-        <div className={"background-train " + (props.moveTrain ? " move-train" : "")}>
+        <div className={"background-train-screen " + (props.moveTrain ? " move-train" : "")}>
             {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
