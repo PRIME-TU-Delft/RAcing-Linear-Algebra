@@ -609,6 +609,12 @@ const netherlandsMap2: RaceMap = {
         { component: Seagull, props: {} },
         { component: BridgeRiver, props: {} },
     ],
+    checkpoints: [
+        { name: "Delft", percentage: 0.96 },
+        { name: "The Hague", percentage: 0.1 },
+        { name: "Gouda", percentage: 0.5 },
+        { name: "Rotterdam", percentage: 0.81 },
+    ],
     path: [
         { xPercent: 0.235, yPercent: 0.5 },
         { xPercent: 0.1, yPercent: 0.5 },

@@ -95,7 +95,7 @@ function RaceTheme(props: Props) {
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={raceData.selectedMap.decorations}
-                ></Decorations>
+                ></Decorations>                
             </a.div>
 
             <MapDimensionsContext.Provider value={{ width: width, height: height }}>
