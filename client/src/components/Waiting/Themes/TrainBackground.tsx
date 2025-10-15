@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import "./TrainBackground.css"
 
 // Sprites for team preview
@@ -12,11 +12,41 @@ import DoorFrame from "../../../img/team_preview/train/door_frame.png"
 interface Props {
     includeRail: boolean
     isTeamPreview?: boolean
+    closeTrainDoors?: boolean
+    moveTrain?: boolean
+    onDoorsClosed?: () => void
+    onTrainMoved?: () => void
 }
 
 export default function TrainBackground(props: Props) {
+    const [openDoors, setOpenDoors] = React.useState(true);
+
+    useEffect(() => {
+        if (openDoors) {
+            setTimeout(() => {
+                setOpenDoors(false);
+            }, 1500);
+        }
+    }, [openDoors]);
+
+    useEffect(() => {
+        if (props.closeTrainDoors) {
+            setTimeout(() => {
+                props.onDoorsClosed && props.onDoorsClosed();
+            }, 1500);
+        }
+    }, [props.closeTrainDoors]);
+
+    useEffect(() => {
+        if (props.moveTrain) {
+            setTimeout(() => {
+                props.onTrainMoved && props.onTrainMoved();
+            }, 3500);
+        }
+    }, [props.moveTrain]);
+
     return (
-        <div className="background-train">
+        <div className={"background-train " + (props.moveTrain ? " move-train" : "")}>
             {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
@@ -58,11 +88,11 @@ export default function TrainBackground(props: Props) {
             }
 
             {props.isTeamPreview ? 
-                <div className="train-theme-overlay">
+                    <div className={"train-theme-overlay " + (props.closeTrainDoors ? "door-closing" : "") + (openDoors ? " door-opening" : "")} style={{ position: 'fixed' }}>
                     <div className="overlay-background-color"></div>
                     <img src={TrainWindows} className="train-windows" alt="Train windows" />
                     <img src={TrainStripe} className="train-stripe" alt="Train stripe" />
-                    <img src={TrainDoorLeft} className="train-door-left" alt="Left train door" />
+                    <img src={TrainDoorLeft} className={"train-door-left"} alt="Left train door" />
                     <img src={TrainDoorRight} className="train-door-right" alt="Right train door" />
                     <img src={ConductorDoor} className="conductor-door" alt="Conductor door" />
                     <img src={DoorFrame} className="door-frame" alt="Door frame" />

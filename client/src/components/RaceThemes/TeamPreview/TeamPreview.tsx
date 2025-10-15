@@ -36,7 +36,6 @@ const dummyTeam: Ghost = {
 
 const dummyTeams: Ghost[] = Array.from({ length: 18 }, () => ({ ...dummyTeam }))
 
-const titleText = ["Dear engineers in training...", "Please make your way to platform "]
 
 function TeamPreview(props: Props) {
     const dummyTeams = React.useMemo(() => Array.from({ length: 18 }, () => ({ ...dummyTeam })), []);
@@ -44,11 +43,12 @@ function TeamPreview(props: Props) {
     const [showMainTeam, setShowMainTeam] = useState<boolean>(false)
     const [sortedTeams, setSortedTeams] = useState<Ghost[]>(dummyTeams)
     const [numberOfGhostTeamAnimationsCompleted, setNumberOfGhostTeamAnimationsCompleted] = useState(0)
-    const [currentTitleTextIndex, setCurrentTitleTextIndex] = useState(0)
     const [platformNumber, setPlatformNumber] = useState(1)
+    const [showTopicName, setShowTopicName] = useState(false)
+    const [topicShowCompleted, setTopicShowCompleted] = useState(false)
 
     useEffect(() => {
-        const sortedGhosts = dummyTeams.sort((ghostA, ghostB) => {
+        const sortedGhosts = props.ghostTeams.sort((ghostA, ghostB) => {
             const studyA = ghostA.study.toUpperCase(); // Ignore case during sorting
             const studyB = ghostB.study.toUpperCase();
         
@@ -61,15 +61,8 @@ function TeamPreview(props: Props) {
             return 0;
         });
         setSortedTeams(curr => [...sortedGhosts])
-    }, [props.ghostTeams, dummyTeams])
-
-    useEffect(() => {
         setPlatformNumber(Math.floor(Math.random() * 9) + 1);
-        const timer = setTimeout(() => {
-            setCurrentTitleTextIndex(1);
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, []);
+    }, [props.ghostTeams])
 
     const titleAnimationRef = useSpringRef()
     const titleAnimation = useSpring({
@@ -108,11 +101,16 @@ function TeamPreview(props: Props) {
         to: { opacity: showMainTeam ? 1 : 0 },
     })
 
+    const pageContentAnimation = useSpring({
+        opacity: startCountdown ? 0 : 1,
+        config: { duration: 500 }
+    });
+
     useEffect(() => {
         if (showMainTeam) {
             setTimeout(() => {
                 setStartCountdown(curr => true)
-            }, 1000);
+            }, 1500);
         }
     }, [showMainTeam])
 
@@ -124,16 +122,20 @@ function TeamPreview(props: Props) {
 
     return(
         <div className="team-preview-body">
-            <motion.div className="page-content" >
-                <TrainBackground includeRail={false} isTeamPreview={true}/>
-                <a.div className="team-preview-title">
-                    <a.div style={titleAnimation}>
-                    {currentTitleTextIndex === 0 
-                        ? titleText[0] 
-                        : `${titleText[1]}${platformNumber}.`
-                    }
+            <TrainBackground 
+                includeRail={false} 
+                isTeamPreview={true} 
+                closeTrainDoors={startCountdown}
+                moveTrain={topicShowCompleted}
+                onDoorsClosed={() => setShowTopicName(true)}
+                onTrainMoved={() => props.onStartGame()}
+            />
+            <a.div className="team-preview-title">
+                    <a.div style={{...titleAnimation}}>
+                    {"Dear engineers in training, please make your way to platform " + platformNumber}
                 </a.div>
                 </a.div>
+            <a.div className="page-content" style={pageContentAnimation}>
                 {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>}
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (
@@ -175,8 +177,9 @@ function TeamPreview(props: Props) {
                         </div>
                     </a.div>
                 ) : null}
-            </motion.div>
-            {/* {startCountdown ? <PregameCountdown seconds={3} onCountdownComplete={() => props.onStartGame()}/> : null} */}
+            </a.div>
+
+            {showTopicName ? <PregameCountdown topic="Eigenvalues & Eigenvectors" seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
         </div>
     )
 }
