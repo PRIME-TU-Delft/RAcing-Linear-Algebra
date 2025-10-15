@@ -21,6 +21,7 @@ interface Props {
 
 function Lobby(props: Props) {
     const [teamName, setTeamName] = useState("New Team")
+    const [allowIndividualPlacements, setAllowIndividualPlacements] = useState(false)
     const [playerNumber, setPlayerNumber] = useState(0)
 
     // Entrance animation for the lobby screen
@@ -52,7 +53,8 @@ function Lobby(props: Props) {
             selectedRounds.map(x => x.topicName),
             selectedRounds.map(x => x.roundDuration),
             selectedStudy,
-            teamName
+            teamName,
+            allowIndividualPlacements
         )
         socket.emit("getAverageFinalScore")
     }
@@ -111,6 +113,9 @@ function Lobby(props: Props) {
                 onNameSelected={(name: string) => {
                     setTeamName((cur) => name)
                     props.onTeamNameCreated(name)
+                }}
+                onAllowIndividualPlacementsChange={(value: boolean) => {
+                    setAllowIndividualPlacements(value)
                 }}
             ></Steps>
         </a.div>

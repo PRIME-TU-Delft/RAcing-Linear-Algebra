@@ -48,7 +48,7 @@ interface RacePathObject {
 interface Checkpoint {
     name: string
     percentage: number
-    insideTracks: boolean
+    insideTracks?: boolean
 }
 
 interface Dimensions {
@@ -96,7 +96,8 @@ interface RaceMap {
     components?: {
         component: React.ComponentType<any>;
         props: any;
-    }[]; 
+    }[];
+    checkpoints?: Checkpoint[]
 }
 
 interface ServerGhost { 

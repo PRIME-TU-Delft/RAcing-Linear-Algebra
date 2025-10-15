@@ -1,10 +1,11 @@
-import { motion, useAnimationControls } from "framer-motion";
+import { clamp, motion, useAnimationControls } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { formatRacePositionText, getColorForRaceLap, getZIndexValues } from "../../RaceService";
 import { RacePathContext } from "../../../../contexts/RacePathContext";
 import { RaceDataContext } from "../../../../contexts/RaceDataContext";
 import { ScoreContext } from "../../../../contexts/ScoreContext";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     racePosition: number
@@ -63,7 +64,7 @@ function MainVehicle(props: Props) {
                 className="main-vehicle"
                 style={{ 
                     offsetPath: `path("${props.path}")`,
-                    zIndex: getZIndexValues().mainVehicle
+                    zIndex: 999999
                 }}
                 initial={{ offsetDistance: "0%"}}
                 animate={animationControls}

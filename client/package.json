@@ -24,6 +24,7 @@
         "@react-navigation/native": "^6.1.6",
         "@react-navigation/native-stack": "^6.9.12",
         "@react-spring/web": "^9.7.2",
+        "@types/css-modules": "^1.0.5",
         "@types/react-modal": "^3.16.1",
         "animate.css": "^4.1.1",
         "axios": "^0.27.2",
