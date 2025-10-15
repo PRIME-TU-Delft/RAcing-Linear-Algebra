@@ -76,27 +76,49 @@
 .train-stripe {
     width: 141%;
     top: -12.5%;
-    left: -65.2%;
+    left: -64.2%;
+    z-index: -200;
 }
 
-.train-door-left {
+/* .train-door-left {
     transform-origin: right center;
     width: 18%;
     top: 15%;
-    left: 32.1%;
+    left: 33.1%;
 }
 
 .train-door-right {
     transform-origin: left center;
     width: 18%;
     top: 15%;
-    right: 32.1%;
+    right: 31.1%;
+} */
+
+.train-door-left {
+    transform-origin: right center;
+    width: 18%;
+    top: 12%;
+    left: 15.2%;
+}
+
+.train-door-right {
+    transform-origin: left center;
+    width: 18%;
+    top: 12%;
+    right: 13.2%;
 }
 
 .conductor-door {
     width: 12%;
     top: 18%;
     right: 2%;
+}
+
+.door-frame {
+    width: 35.8%;
+    top: 15%;
+    left: 33%;
+    z-index: -100;
 }
 
 @keyframes slide-clouds {

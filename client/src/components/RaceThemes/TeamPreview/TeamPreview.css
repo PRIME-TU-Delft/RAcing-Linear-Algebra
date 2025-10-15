@@ -21,13 +21,17 @@
 }
 
 .team-preview-grid {
-    width: 80%;
+    width: 40%;
     margin: auto;
     margin-top: 1em;
     padding-bottom: 20px;
     text-align: left;
     border-radius: 20px;
     color: black;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;    
 }
 
 .team-preview-grid > div {
@@ -40,7 +44,7 @@
     margin-right: 1.5em;
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .team-preview-name-container {
@@ -124,7 +128,7 @@
 
 @media only screen and (min-width: 768px) {
     .team-preview-grid {
-        width: 90%;
+        width: 60%;
     }
 
     .team-container {
@@ -149,7 +153,7 @@
 
 @media only screen and (min-width: 1024px) {
     .team-preview-grid {
-        width: 95%;
+        width: 60%;
     }
 
     .team-container {
@@ -184,8 +188,8 @@
     }
 
     .team-image-container {
-        width: 75px;
-        height: 75px;
+        width: 60px;
+        height: 60px;
     }
 
     .team-preview-name-container {
@@ -199,7 +203,7 @@
 
 @media only screen and (min-width: 2000px) {
     .team-preview-grid {
-        width: 80%;
+        width: 40%;
     }
 
     .team-container {
@@ -209,8 +213,8 @@
     }
 
     .team-image-container {
-        width: 85px;
-        height: 85px;
+        width: 60px;
+        height: 60px;
     }
 
     .team-preview-name-container {
@@ -218,7 +222,7 @@
     }
 
     .team-preview-name-container > div {
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 

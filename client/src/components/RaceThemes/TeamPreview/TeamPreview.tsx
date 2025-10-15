@@ -20,14 +20,30 @@ interface Props {
     onStartGame: () => void
 }
 
+const dummyTeam: Ghost = {
+    teamName: "Team Name Deset1",
+    key: 0,
+    colors: { mainColor: "#ff0000", highlightColor: "#00ff00" },
+    timeScores: [],
+    checkpoints: [],
+    study: "CSE",
+    accuracy: 100,
+    lapsCompleted: 0,
+    racePosition: 0,
+    isOpen: false,
+    animationStatus: { pathProgress: 0, updateAnimation: false, timeScoreIndex: 0 }
+}
+
+const dummyTeams: Ghost[] = Array.from({ length: 18 }, () => ({ ...dummyTeam }))
+
 function TeamPreview(props: Props) {
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
     const [showMainTeam, setShowMainTeam] = useState<boolean>(false)
-    const [sortedTeams, setSortedTeams] = useState<Ghost[]>([])
+    const [sortedTeams, setSortedTeams] = useState<Ghost[]>(dummyTeams)
     const [numberOfGhostTeamAnimationsCompleted, setNumberOfGhostTeamAnimationsCompleted] = useState(0)
 
     useEffect(() => {
-        const sortedGhosts = props.ghostTeams.sort((ghostA, ghostB) => {
+        const sortedGhosts = dummyTeams.sort((ghostA, ghostB) => {
             const studyA = ghostA.study.toUpperCase(); // Ignore case during sorting
             const studyB = ghostB.study.toUpperCase();
         
@@ -40,7 +56,7 @@ function TeamPreview(props: Props) {
             return 0;
         });
         setSortedTeams(curr => [...sortedGhosts])
-    }, [props.ghostTeams])
+    }, [props.ghostTeams, dummyTeams])
 
     const titleAnimationRef = useSpringRef()
     const titleAnimation = useSpring({
@@ -145,7 +161,7 @@ function TeamPreview(props: Props) {
                     </a.div>
                 ) : null}
             </motion.div>
-            {startCountdown ? <PregameCountdown seconds={3} onCountdownComplete={() => props.onStartGame()}/> : null}
+            {/* {startCountdown ? <PregameCountdown seconds={3} onCountdownComplete={() => props.onStartGame()}/> : null} */}
         </div>
     )
 }
