@@ -354,7 +354,6 @@ const netherlandsMap2: RaceMap = {
             })),
             class: "grass",
             sprite: Sprites.grass1,
-            zIndex: 9999,
             randomSprites: [
                 Sprites.grass1,
                 Sprites.grass2,
@@ -406,53 +405,6 @@ const netherlandsMap2: RaceMap = {
             sprite: Sprites.treeOne,
             zIndex: 9999
         },
-
-        {
-            points: [
-            {xPercent: 0.8083333333333333, yPercent: 0.4189886480908152},
-            {xPercent: 0.8484375, yPercent: 0.4189886480908152},
-            {xPercent: 0.8885416666666667, yPercent: 0.4189886480908152},
-            {xPercent: 0.9286458333333333, yPercent: 0.4189886480908152},
-            {xPercent: 0.96875, yPercent: 0.4189886480908152},
-
-            {xPercent: 0.8083333333333333, yPercent: 0.2989886480908152},
-            {xPercent: 0.8484375, yPercent: 0.2989886480908152},
-            {xPercent: 0.8885416666666667, yPercent: 0.2989886480908152},
-            {xPercent: 0.9286458333333333, yPercent: 0.2989886480908152},
-            {xPercent: 0.96875, yPercent: 0.2989886480908152},
-
-            {xPercent: 0.8083333333333333, yPercent: 0.1789886480908152},
-            {xPercent: 0.8484375, yPercent: 0.1789886480908152},
-            {xPercent: 0.8885416666666667, yPercent: 0.1789886480908152},
-            {xPercent: 0.9286458333333333, yPercent: 0.1789886480908152},
-            {xPercent: 0.96875, yPercent: 0.1789886480908152},
-
-            {xPercent: 0.8083333333333333, yPercent: 0.0589886480908152},
-            {xPercent: 0.8484375, yPercent: 0.0589886480908152},
-            {xPercent: 0.8885416666666667, yPercent: 0.0589886480908152},
-            {xPercent: 0.9286458333333333, yPercent: 0.0589886480908152},
-            {xPercent: 0.96875, yPercent: 0.0589886480908152},
-            ].map(p => ({
-                xPercent: p.xPercent + (Math.random() - 0.5) * 0.02,
-                yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
-            })),
-            class: "grass",
-            sprite: Sprites.grass1,
-            zIndex: 8888,
-            randomSprites: [
-                Sprites.grass1,
-                Sprites.grass2,
-                Sprites.grass3,
-                Sprites.grass4,
-                Sprites.grass5,
-                Sprites.grass6,
-                Sprites.grass7,
-                Sprites.grass8,
-                Sprites.grass9,
-                Sprites.grass10,
-            ]
-        },
-
         {
             points: [
             {xPercent: 0.458333333333333, yPercent: 0.8421465428276574},
@@ -551,7 +503,6 @@ const netherlandsMap2: RaceMap = {
             })),
             class: "grass",
             sprite: Sprites.grass1,
-            zIndex: 8887,
             randomSprites: [
                 Sprites.grass1,
                 Sprites.grass2,

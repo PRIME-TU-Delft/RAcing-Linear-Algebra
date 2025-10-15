@@ -4,6 +4,7 @@ import "./Cow.css"
 import { DecorationElement, PercentCoordinate } from "../../../SharedUtils"
 import { Button } from "react-bootstrap"
 import { MapDimensionsContext } from "../../../../../contexts/MapDimensionsContext"
+import { getZIndexValues } from "../../../RaceService"
 
 interface Props {
     decorations: DecorationElement[],
@@ -17,6 +18,7 @@ const MOVE_SPEED = 0.0005
 const EAT_DURATION = 4200
 const IDLE_ANIMATION_DURATION = 1000
 const MAX_IDLE_CYCLES = 3
+const SPRITE_X_OFFSET_FACTOR = 0.75
 
 function Cow(props: Props) {
     const [currentPosition, setCurrentPosition] = React.useState<PercentCoordinate>(props.position)
@@ -107,8 +109,9 @@ function Cow(props: Props) {
                 yPercent: nearbyGrassPositions[randomIndex].yPercent
             }
 
-            if (position.xPercent - currentPosition.xPercent > (spriteSize.width / mapDimensions.width) * 0.5) {
-                position.xPercent = position.xPercent - (spriteSize.width / mapDimensions.width) * 0.5
+            // If moving right, adjust target to align mouth with grass
+            if (position.xPercent > currentPosition.xPercent) {
+                position.xPercent -= (spriteSize.width / mapDimensions.width) * SPRITE_X_OFFSET_FACTOR
             }
 
             setTargetGrassPosition(position)
@@ -122,16 +125,23 @@ function Cow(props: Props) {
             .filter(deco => deco.class === "grass")
             .flatMap(deco => deco.points)
 
-        let offset = 0
-        if (flipSpriteClass == "flip-horizontal") {
-            console.log("Flipping back to normal orientation")
-            offset = (spriteSize.width / mapDimensions.width) * 0.5
-        }
+        const spriteWidthAsPercent = spriteSize.width / mapDimensions.width
+        const spriteHeightAsPercent = spriteSize.height / mapDimensions.height
+
+        const availableGrass = grassPositions.filter(pos => {
+            const deltaX = Math.abs(pos.xPercent - currentPosition.xPercent)
+            const deltaY = Math.abs(pos.yPercent - currentPosition.yPercent)
+            return deltaX > spriteWidthAsPercent && deltaY > spriteHeightAsPercent
+        })
 
         // Find the closest grass positions to the cow's current position
-        const sortedGrass = grassPositions.sort((a, b) => {
-            const distA = Math.hypot(a.xPercent - currentPosition.xPercent - offset, a.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
-            const distB = Math.hypot(b.xPercent - currentPosition.xPercent - offset, b.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
+        const sortedGrass = availableGrass.sort((a, b) => {
+            // When moving right, the cow's origin shifts. We need to account for this in distance calculation.
+            const offsetA = a.xPercent > currentPosition.xPercent ? spriteWidthAsPercent * SPRITE_X_OFFSET_FACTOR : 0
+            const offsetB = b.xPercent > currentPosition.xPercent ? spriteWidthAsPercent * SPRITE_X_OFFSET_FACTOR : 0
+
+            const distA = Math.hypot(a.xPercent - (currentPosition.xPercent + offsetA), a.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
+            const distB = Math.hypot(b.xPercent - (currentPosition.xPercent + offsetB), b.yPercent - currentPosition.yPercent + (spriteSize.height / mapDimensions.height) * 0.25)
             return distA - distB
         })
 
@@ -168,7 +178,12 @@ function Cow(props: Props) {
     return (
         <div 
             className="cow-container" 
-            style={getPositionStyle()}>
+            style={{...getPositionStyle(), 
+                    zIndex: `${Math.floor(
+                        (1 - currentPosition.yPercent) * (getZIndexValues().decoration / 2)     
+                            + (getZIndexValues().decoration / 2))
+                        - 1   // assigning values between x/2 and x for layering purposes
+                    }`}}>
                 <img
                     onLoad={handleSpriteLoad}
                     src={getSpriteForState()}
