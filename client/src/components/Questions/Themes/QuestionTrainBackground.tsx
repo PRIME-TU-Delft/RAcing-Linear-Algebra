@@ -1,5 +1,6 @@
 import React from "react"
 import "./QuestionBoatBackground.css"
+import "./QuestionTrainBackground.css"
 
 export default function QuestionTrainBackground() {
     return (

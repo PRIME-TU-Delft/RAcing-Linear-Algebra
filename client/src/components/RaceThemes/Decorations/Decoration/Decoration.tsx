@@ -13,6 +13,15 @@ interface Props {
 
 function Decoration(props: Props) {
     const [decorationHeight, setDecorationHeight] = useState(0)
+    const [sprites, setSprites] = useState<string[]>([])
+
+    useEffect(() => {
+        const sprites = []
+        for (let i = 0; i < props.points.length; i++) {
+            sprites.push(getSprite())
+        }
+        setSprites(sprites)
+    }, [])
 
     useEffect(() => {
         const widthRatio = props.screenDimensions.width / 1536
@@ -136,7 +145,7 @@ function Decoration(props: Props) {
                     style={{...getPositionStyle(coordinate), position: "absolute"}}
                     className={props.class + " decoration"}
                 >
-                    <img src={getSprite()} 
+                    <img src={sprites[props.points.indexOf(coordinate)]} 
                     style={{
                         height: `${decorationHeight}px`,
                         width: `auto`,
