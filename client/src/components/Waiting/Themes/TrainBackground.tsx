@@ -1,8 +1,16 @@
 import React from "react"
 import "./TrainBackground.css"
 
+// Sprites for team preview
+import TrainDoorLeft from "../../../img/team_preview/train/door_left.png"
+import TrainDoorRight from "../../../img/team_preview/train/door_right.png"
+import TrainWindows from "../../../img/team_preview/train/train_windows_stripe.png"
+import TrainStripe from "../../../img/team_preview/train/train_stripe.png"
+import ConductorDoor from "../../../img/team_preview/train/conductor_door.png"
+
 interface Props {
     includeRail: boolean
+    isTeamPreview?: boolean
 }
 
 export default function TrainBackground(props: Props) {
@@ -44,7 +52,20 @@ export default function TrainBackground(props: Props) {
                 <div>
                     <div className="sliding-background-clouds"></div>
                     <div className="background-train-track"></div>
-                </div> : null}
+                </div> 
+            : null
+            }
+
+            {props.isTeamPreview ? 
+                <div className="train-theme-overlay">
+                    <div className="overlay-background-color"></div>
+                    <img src={TrainWindows} className="train-windows" alt="Train windows" />
+                    <img src={TrainStripe} className="train-stripe" alt="Train stripe" />
+                    <img src={TrainDoorLeft} className="train-door-left" alt="Left train door" />
+                    <img src={TrainDoorRight} className="train-door-right" alt="Right train door" />
+                    <img src={ConductorDoor} className="conductor-door" alt="Conductor door" />
+                </div> 
+            : null}
         </div>
     )
 }

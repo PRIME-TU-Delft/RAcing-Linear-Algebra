@@ -41,6 +41,9 @@ importers:
       '@react-spring/web':
         specifier: ^9.7.2
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/css-modules':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@types/react-modal':
         specifier: ^3.16.1
         version: 3.16.3
@@ -1922,6 +1925,9 @@ packages:
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
+  '@types/css-modules@1.0.5':
+    resolution: {integrity: sha512-oeKafs/df9lwOvtfiXVliZsocFVOexK9PZtLQWuPeuVCFR7jwiqlg60lu80JTe5NFNtH3tnV6Fs/ySR8BUPHAw==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -10832,6 +10838,8 @@ snapshots:
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 16.18.126
+
+  '@types/css-modules@1.0.5': {}
 
   '@types/eslint-scope@3.7.7':
     dependencies:

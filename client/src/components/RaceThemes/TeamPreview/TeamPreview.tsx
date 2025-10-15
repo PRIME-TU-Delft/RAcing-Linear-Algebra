@@ -97,7 +97,7 @@ function TeamPreview(props: Props) {
     return(
         <div className="team-preview-body">
             <motion.div className="page-content" initial={{ filter: "blur(0px)" }} animate={{ filter: startCountdown ? "blur(2px)" : "blur(0px)"}}>
-                <TrainBackground includeRail={false}/>
+                <TrainBackground includeRail={false} isTeamPreview={true}/>
                 <a.div className="team-preview-title">
                     <a.div style={titleAnimation}>
                         {props.topic}

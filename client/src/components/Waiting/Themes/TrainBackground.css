@@ -11,6 +11,7 @@
     width: 100%;
     height: 100vh;
     z-index: -3;
+    overflow: hidden;
 }
 
 .sliding-background-clouds {
@@ -39,6 +40,63 @@
     z-index: 0;
     animation: slide-bckground 5s linear infinite;
     animation-direction: reverse;
+}
+
+.train-theme-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    transform: translateX(0);
+}
+
+.overlay-background-color {
+    background-color: #F8B700;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 300%;
+    left: -100%;
+    z-index: -1000;
+}
+
+.train-theme-overlay img {
+    position: absolute;
+    height: auto; /* Maintain aspect ratio */
+}
+
+.train-windows {
+    width: 52%;
+    top: 60%;
+    left: -65%;
+}
+
+.train-stripe {
+    width: 141%;
+    top: -12.5%;
+    left: -65.2%;
+}
+
+.train-door-left {
+    transform-origin: right center;
+    width: 18%;
+    top: 15%;
+    left: 32.1%;
+}
+
+.train-door-right {
+    transform-origin: left center;
+    width: 18%;
+    top: 15%;
+    right: 32.1%;
+}
+
+.conductor-door {
+    width: 12%;
+    top: 18%;
+    right: 2%;
 }
 
 @keyframes slide-clouds {
