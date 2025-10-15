@@ -7,6 +7,11 @@ import FlameAnimation from "../Streak/Flame/Flame"
 import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+
+import EasyIcon from "../../../img/icons/train-easy.png"
+import MediumIcon from "../../../img/icons/train-medium.png"
+import HardIcon from "../../../img/icons/train-hard.png"
+
 interface Props {
     difficulty: string
     emoji: string
@@ -55,6 +60,19 @@ export default function  DifficultyCard(props: Props) {
         }
     }
 
+    const getSpriteForDifficulty = (difficulty: string) => {
+        switch(difficulty) {
+            case "Easy":
+                return EasyIcon
+            case "Medium":
+                return MediumIcon
+            case "Hard":
+                return HardIcon
+            default:
+                return EasyIcon
+        }
+    }
+
     return (
         <>
             <div className="card-flexbox">
@@ -78,8 +96,8 @@ export default function  DifficultyCard(props: Props) {
                                 (<div>
                                     👑
                                 </div>) 
-                                : (<div>
-                                    {props.emoji}
+                                : (<div className="card-icon">
+                                    <img src={getSpriteForDifficulty(props.difficulty)} alt={`${props.difficulty} icon`} />
                                 </div>)}
                             </Card.Text>
                             <Card.Text>

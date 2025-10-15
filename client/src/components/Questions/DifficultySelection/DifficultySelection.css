@@ -75,6 +75,22 @@
     text-align: center;
 }
 
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    height: 70%;
+    margin: 0 auto;
+}
+
+.card-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 .difficulty-card-disabled {
     background-color: rgb(239, 239, 239);
     cursor: not-allowed;
