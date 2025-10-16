@@ -324,30 +324,23 @@ const netherlandsMap2: RaceMap = {
             {xPercent: 0.10989583333333332, yPercent: 0.3591331269349845},
             {xPercent: 0.1453125, yPercent: 0.3591331269349845},
             {xPercent: 0.18541666666666667, yPercent: 0.3591331269349845},
-            {xPercent: 0.22828125, yPercent: 0.3591331269349845},
-            {xPercent: 0.26979166666666665, yPercent: 0.3591331269349845},
 
             {xPercent: 0.025958333333333335, yPercent: 0.2391331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.2391331269349845},
             {xPercent: 0.10989583333333332, yPercent: 0.2391331269349845},
             {xPercent: 0.1453125, yPercent: 0.2391331269349845},
             {xPercent: 0.189541666666666667, yPercent: 0.2391331269349845},
-            {xPercent: 0.2328125, yPercent: 0.2391331269349845},
-            {xPercent: 0.26979166666666665, yPercent: 0.2391331269349845},
 
             {xPercent: 0.025958333333333335, yPercent: 0.1191331269349845},
             {xPercent: 0.06770833333333333, yPercent: 0.1191331269349845},
             {xPercent: 0.10989583333333332, yPercent: 0.1191331269349845},
             {xPercent: 0.1453125, yPercent: 0.1191331269349845},
             {xPercent: 0.189541666666666667, yPercent: 0.1191331269349845},
-            {xPercent: 0.2328125, yPercent: 0.1191331269349845},
-            {xPercent: 0.26979166666666665, yPercent: 0.1191331269349845},  
 
             {xPercent: 0.025958333333333335, yPercent: -0.0008668730650154995},
             {xPercent: 0.06770833333333333, yPercent: -0.0008668730650154995},
             {xPercent: 0.10989583333333332, yPercent: -0.0008668730650154995},
             {xPercent: 0.1453125, yPercent: -0.0008668730650154995},
-            {xPercent: 0.189541666666666667, yPercent: -0.0008668730650154995},
             ].map(p => ({
                 xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
                 yPercent: p.yPercent + (Math.random() - 0.5) * 0.04
