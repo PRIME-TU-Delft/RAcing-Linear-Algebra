@@ -1,0 +1,29 @@
+.bridge-river-container {
+    position: absolute;
+    bottom: 0;
+    left: 21%;
+    height: auto;
+    width: 33%;
+
+    animation: water-distort 3s ease-in-out infinite;
+}
+
+
+.bridge-river-container img {
+    height: 100%;
+    width: 100%;
+}
+
+@keyframes water-distort {
+    0% {
+        transform: scale(1.01, 1) skewX(-0.1deg) skewY(0.1deg);
+    }
+
+    50% {
+        transform: scale(0.99, 1.1) skewX(0.1deg) skewY(-0.1deg);
+    }
+
+    100% {
+        transform: scale(1.01, 1) skewX(-0.1deg) skewY(0.1deg);
+    }
+}

@@ -1,10 +1,13 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
     faExclamationTriangle,
     faCheck,
 } from "@fortawesome/free-solid-svg-icons"
 import "./StartGame.css"
+import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel"
+import Switch from "@mui/material/Switch/Switch"
+import Tooltip from "@mui/material/Tooltip"
 
 interface Props {
     completedSteps: boolean[] // boolean list for whether the steps where completed or not
@@ -13,9 +16,16 @@ interface Props {
     selectedRounds: string[] // the rounds that were selected
     playerNumber: number // number of players in the lobby
     onStartGame: () => void // event to start the game
+    allowIndividualPlacements: (value: boolean) => void // event to allow individual placements
 }
 
 function StartGame(props: Props) {
+    const [allowIndividualPlacements, setAllowIndividualPlacements] = useState(true)
+
+    useEffect(() => {
+        props.allowIndividualPlacements(allowIndividualPlacements)
+    }, [allowIndividualPlacements])
+
     // Turns the rounds array to a string representation
     const roundsToString = () => {
         let res = ""
@@ -126,6 +136,25 @@ function StartGame(props: Props) {
                 {props.playerNumber < requiredPlayersNumber 
                     ? notEnoughPlayersText
                     : null}
+            </div>
+
+            <div className="placement-toggle-container">
+                <Tooltip title="If enabled, the top 3 players will be able to see their individual ranking within the team at the end of the game.">
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={allowIndividualPlacements}
+                                onChange={(event) =>
+                                    setAllowIndividualPlacements(event.target.checked)
+                                }
+                                name="allowIndividualPlacements"
+                            />
+                        }
+                        label="Show Top Placements"
+                        labelPlacement="start"
+                        className="placement-toggle"
+                    />
+                </Tooltip>
             </div>
 
             <button

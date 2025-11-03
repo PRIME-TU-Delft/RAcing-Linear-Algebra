@@ -136,7 +136,7 @@ function Lecturer(props: Props) {
     }, [socket])
 
     return (
-        <div>
+        <div className="lecturer-container">
             <div className="lecturer-header row">
                 <div className="col text-start">
                     <div className="t-name">Lobby Code: {props.lobbyId}</div>

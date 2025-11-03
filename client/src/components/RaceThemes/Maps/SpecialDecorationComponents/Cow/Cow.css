@@ -1,0 +1,19 @@
+.cow-container {
+    position: absolute;
+    height: 7.5%;
+}
+
+.cow-container img {
+    height: 100%;
+    width: auto;
+}
+
+.normal-orientation {
+    transition-duration: 0.3s;
+    transform: scaleX(1);
+}
+
+.flip-horizontal {
+    transition-duration: 0.3s;
+    transform: scaleX(-1);
+}

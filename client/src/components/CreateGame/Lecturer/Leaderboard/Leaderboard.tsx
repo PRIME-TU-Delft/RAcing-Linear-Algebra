@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Leaderboard.css"
 import { Ghost } from "../../../RaceThemes/SharedUtils";
 import { getColorForStudy } from "../../../RaceThemes/Ghosts/GhostService";
 import { a, useTrail } from "react-spring";
 import { useNavigate } from "react-router-dom";
 import socket from "../../../../socket";
+import { PlayerPlacementContext } from "../../../../contexts/PlayerPlacementContext";
 
 interface Props {
     teamname: string
@@ -32,6 +33,7 @@ interface LeaderboardItem {
 function Leaderboard(props: Props) {
     const [sortedLeaderboardItems, setSortedLeaderboardItems] = useState<LeaderboardItem[]>([])
     const navigate = useNavigate()
+    const placementContext = useContext(PlayerPlacementContext)
 
     useEffect(() => {
         const team = {
@@ -63,6 +65,20 @@ function Leaderboard(props: Props) {
         from: { opacity: 0, y: -10 },
         to: { opacity: 1, y: 0 },
     })
+
+    const showPlacementEmoji = () => {
+        if (!placementContext.showIndividualPlacements || placementContext.placement <= 0) return ""
+        switch (placementContext.placement) {
+            case 1:
+                return "🥇"
+            case 2:
+                return "🥈"
+            case 3:
+                return "🥉"
+            default:
+                return ""
+        }
+    }
 
     return(
         <div className="leaderboard-background">
@@ -110,7 +126,7 @@ function Leaderboard(props: Props) {
                             </div>
                             {!props.isLecturer && (
                                 <div className="col-1 text-center">
-                                    {sortedLeaderboardItems[index].isMainTeam ? props.playerScore : ""}
+                                    {sortedLeaderboardItems[index].isMainTeam ? props.playerScore + showPlacementEmoji() : ""}
                                 </div>
                             )}
                             <div className="col-1 text-center">

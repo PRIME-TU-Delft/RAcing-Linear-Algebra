@@ -1,0 +1,121 @@
+.seagull-container {
+    position: absolute;
+    left: 2%;
+    top: 20%;
+    width: 5%;
+    height: 5%;
+    animation: seagullMove 15s ease-in-out infinite;
+}
+
+
+.seagull-container img {
+    height: 100%;
+    width: auto;
+}
+
+
+@keyframes seagullMove {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    3% {
+        transform: translate(5%, -10%);
+    }
+
+    4% {
+        transform: translate(10%, 0);
+    }
+
+    10% {
+        transform: translate(10%, 0);
+    }
+
+    11% {
+        transform: translate(15%, -10%);
+    }
+
+    12% {
+        transform: translate(20%, 0);
+    }
+
+    25% {
+        transform: translate(20%, 0);
+    }
+
+    26% {
+        transform: translate(25%, -10%);
+    }
+
+    27% {
+        transform: translate(30%, 0);
+    }
+
+    50% {
+        transform: translate(30%, 0);
+    }
+
+    51% {
+        transform: translate(35%, -10%);
+    }
+
+    52% {
+        transform: translate(40%, 0);
+    }
+
+    60% {
+        transform: translate(40%, 0);
+    }
+
+    61% {
+        transform: translate(45%, -10%);
+    }
+
+    62% {
+        transform: translate(50%, 0);
+    }
+
+    64% {
+        transform: translate(50%, 0) scaleX(-1);
+    }
+
+    70% {
+        transform: translate(50%, 0) scaleX(-1);
+    }
+
+    71% {
+        transform: translate(45%, -10%) scaleX(-1);
+    }
+
+    72% {
+        transform: translate(40%, 0) scaleX(-1);
+    }
+
+    85% {
+        transform: translate(40%, 0) scaleX(-1);
+    }
+
+    86% {
+        transform: translate(35%, -10%) scaleX(-1);
+    }
+
+    87% {
+        transform: translate(25%, 0) scaleX(-1);
+    }
+
+    88% {
+        transform: translate(15%, -10%) scaleX(-1);
+    }
+
+    89% {
+        transform: translate(5%, 0) scaleX(-1);
+    }
+
+    90% {
+        transform: translate(0, 0) scaleX(-1);
+    }
+
+    100% {
+        transform: translate(0, 0) scaleX(-1);
+    }
+}

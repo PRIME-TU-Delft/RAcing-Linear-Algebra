@@ -48,7 +48,7 @@ interface RacePathObject {
 interface Checkpoint {
     name: string
     percentage: number
-    insideTracks: boolean
+    insideTracks?: boolean
 }
 
 interface Dimensions {
@@ -85,12 +85,19 @@ interface DecorationElement {
     points: PercentCoordinate[]
     class: string
     sprite: string
+    zIndex?: number
+    randomSprites?: string[]
 }
 
 interface RaceMap {
     backgroundColor: string // the color of the background for the given theme
     decorations: DecorationElement[] // list of decorations for the map
     path: PercentCoordinate[] // list of corner points for the tracks of the train theme
+    components?: {
+        component: React.ComponentType<any>;
+        props: any;
+    }[];
+    checkpoints?: Checkpoint[]
 }
 
 interface ServerGhost { 
@@ -144,6 +151,7 @@ export {
     type RaceObject,
     type Ghost,
     type Dimensions,
+    type DecorationElement,
     type RaceMap,
     type ServerGhost,
     type RacePathObject,

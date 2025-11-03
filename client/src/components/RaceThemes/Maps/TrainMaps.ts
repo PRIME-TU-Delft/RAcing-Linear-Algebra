@@ -1,5 +1,9 @@
 import Sprites from "../Sprites/TrainThemeSprites"
 import { PercentCoordinate, RaceMap } from "../SharedUtils"
+import BeachSea from "./SpecialDecorationComponents/BeachSea/BeachSea"
+import Seagull from "./SpecialDecorationComponents/Seagull/Seagull"
+import BridgeRiver from "./SpecialDecorationComponents/RiverBridge/BridgeRiver"
+import Cow from "./SpecialDecorationComponents/Cow/Cow"
 
 const mapOne: RaceMap = {
             backgroundColor: "#fff6e4",
@@ -251,7 +255,336 @@ const netherlandsMap1 = {
         {xPercent: 0.5, yPercent: 0.1},
     ]
 }
-    
-const trainMaps: RaceMap[] = [netherlandsMap1]
+
+const netherlandsMap2: RaceMap = {
+    // backgroundColor: "#ffeecbff",
+    backgroundColor: "#9dcd9eff",
+    decorations: [
+        {
+            points: [
+            {xPercent: 0.18629173989455186, yPercent: 0.4329411764705883},
+            ],
+            class: "nieuweKerk",
+            sprite: Sprites.nieuweKerk,
+            zIndex: 9999
+        },
+        {
+            points: [
+            {xPercent: 0.24253075571177501, yPercent: 0.5658823529411765},
+            ],
+            class: "oudeKerk",
+            sprite: Sprites.oudeKerk,
+        },
+        {
+            points: [
+            {xPercent: 0.274862331575864, yPercent: 0.045882352941178},
+            ],
+            class: "cruiseShip",
+            sprite: Sprites.cruiseShip,
+            zIndex: 9999
+        },
+        {
+            points: [
+            {xPercent: 0.2119449326303456, yPercent: 0.00129411764705827},
+            ],
+            class: "rotterdamBridge",
+            sprite: Sprites.rotterdamBridge,
+            zIndex: 8888
+        },
+        {
+            points: [
+            {xPercent: 0.102026947861746, yPercent: 0.8088235294117647},
+            ],
+            class: "thePier",
+            sprite: Sprites.thePier,
+        },
+        {
+            points: [
+            {xPercent: 0.8656707674282366, yPercent: 0.5658823529411764},
+            ],
+            class: "goudaKerk",
+            sprite: Sprites.goudaKerk,
+        },
+        {
+            points: [
+            {xPercent: 0.8005213825424721, yPercent: 0.5678823529411764},
+            ],
+            class: "cheeseShop",
+            sprite: Sprites.cheeseShop,
+        },
+        {
+            points: [
+            {xPercent: 0.0156707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.0556707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.0956707674282366, yPercent: 0.4558823529411764},
+            {xPercent: 0.1356707674282366, yPercent: 0.4558823529411764},
+
+            {xPercent: 0.023958333333333335, yPercent: 0.3591331269349845},
+            {xPercent: 0.06770833333333333, yPercent: 0.3591331269349845},
+            {xPercent: 0.10989583333333332, yPercent: 0.3591331269349845},
+            {xPercent: 0.1453125, yPercent: 0.3591331269349845},
+            {xPercent: 0.18541666666666667, yPercent: 0.3591331269349845},
+
+            {xPercent: 0.025958333333333335, yPercent: 0.2391331269349845},
+            {xPercent: 0.06770833333333333, yPercent: 0.2391331269349845},
+            {xPercent: 0.10989583333333332, yPercent: 0.2391331269349845},
+            {xPercent: 0.1453125, yPercent: 0.2391331269349845},
+            {xPercent: 0.189541666666666667, yPercent: 0.2391331269349845},
+
+            {xPercent: 0.025958333333333335, yPercent: 0.1191331269349845},
+            {xPercent: 0.06770833333333333, yPercent: 0.1191331269349845},
+            {xPercent: 0.10989583333333332, yPercent: 0.1191331269349845},
+            {xPercent: 0.1453125, yPercent: 0.1191331269349845},
+            {xPercent: 0.189541666666666667, yPercent: 0.1191331269349845},
+
+            {xPercent: 0.025958333333333335, yPercent: -0.0008668730650154995},
+            {xPercent: 0.06770833333333333, yPercent: -0.0008668730650154995},
+            {xPercent: 0.10989583333333332, yPercent: -0.0008668730650154995},
+            {xPercent: 0.1453125, yPercent: -0.0008668730650154995},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.04
+            })),
+            class: "grass",
+            sprite: Sprites.grass1,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
+        },
+
+        {
+            points: [
+            {xPercent: 0.7682291666666667, yPercent: 0.4189886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.4189886480908152},
+            {xPercent: 0.8484375, yPercent: 0.4189886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.4189886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.4189886480908152},
+            {xPercent: 0.96875, yPercent: 0.4189886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.2989886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.2989886480908152},
+            {xPercent: 0.8484375, yPercent: 0.2989886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.2989886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.2989886480908152},
+            {xPercent: 0.96875, yPercent: 0.2989886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.1789886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.1789886480908152},
+            {xPercent: 0.8484375, yPercent: 0.1789886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.1789886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.1789886480908152},
+            {xPercent: 0.96875, yPercent: 0.1789886480908152},
+
+            {xPercent: 0.7682291666666667, yPercent: 0.0589886480908152},
+            {xPercent: 0.8083333333333333, yPercent: 0.0589886480908152},
+            {xPercent: 0.8484375, yPercent: 0.0589886480908152},
+            {xPercent: 0.8885416666666667, yPercent: 0.0589886480908152},
+            {xPercent: 0.9286458333333333, yPercent: 0.0589886480908152},
+            {xPercent: 0.96875, yPercent: 0.0589886480908152},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.018,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.018
+            })),
+            class: "tree",
+            sprite: Sprites.treeOne,
+            zIndex: 9999
+        },
+        {
+            points: [
+            {xPercent: 0.458333333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.4984375, yPercent: 0.8421465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.61875, yPercent: 0.8421465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.8421465428276574},
+            {xPercent: 0.7384375, yPercent: 0.8421465428276574},
+            {xPercent: 0.7783541666666666, yPercent: 0.8421465428276574},
+            {xPercent: 0.81875, yPercent: 0.8421465428276574},
+            {xPercent: 0.86, yPercent: 0.8421465428276574},
+
+            {xPercent: 0.4183333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.4583333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.4984375, yPercent: 0.7421465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.7421465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.61875, yPercent: 0.7421465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.7421465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.7421465428276574},
+            {xPercent: 0.7384375, yPercent: 0.7421465428276574},
+            {xPercent: 0.7783541666666666, yPercent: 0.7421465428276574},
+            {xPercent: 0.81875, yPercent: 0.7421465428276574},
+            {xPercent: 0.86, yPercent: 0.7421465428276574},
+
+            {xPercent: 0.3783333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.4183333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.4583333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.4984375, yPercent: 0.6221465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.6221465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.61875, yPercent: 0.6221465428276574},
+            {xPercent: 0.6488541666666666, yPercent: 0.6221465428276574},
+            {xPercent: 0.688333333333333, yPercent: 0.6221465428276574},
+            {xPercent: 0.7284375, yPercent: 0.6221465428276574},
+            {xPercent: 0.7683541666666666, yPercent: 0.6221465428276574},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.01,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.07
+            })),
+            class: "grass",
+            sprite: Sprites.grass1,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
+        },
+
+        {
+            points: [
+            {xPercent: 0.27427083333333327, yPercent: 0.6981320949432404},
+            ],
+            class: "windmill",
+            sprite: Sprites.windmill,
+            zIndex: 8000
+        },
+
+        {
+            points: [
+            {xPercent: 0.4183333333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.4583333333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.4984375, yPercent: 0.5221465428276574},
+            {xPercent: 0.5385416666666666, yPercent: 0.5221465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.5221465428276574},
+            {xPercent: 0.61875, yPercent: 0.5221465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.5221465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.5221465428276574},
+
+            {xPercent: 0.5385416666666666, yPercent: 0.4021465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.4021465428276574},
+            {xPercent: 0.61875, yPercent: 0.4021465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.4021465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.4021465428276574},
+
+            {xPercent: 0.5385416666666666, yPercent: 0.2821465428276574},
+            {xPercent: 0.5786458333333333, yPercent: 0.2821465428276574},
+            {xPercent: 0.61875, yPercent: 0.2821465428276574},
+            {xPercent: 0.6588541666666666, yPercent: 0.2821465428276574},
+            {xPercent: 0.698333333333333, yPercent: 0.2821465428276574},
+
+            {xPercent: 0.6388541666666666, yPercent: 0.1621465428276574},
+            {xPercent: 0.6789583333333334, yPercent: 0.1621465428276574},
+            ].map(p => ({
+                xPercent: p.xPercent + (Math.random() - 0.5) * 0.03,
+                yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
+            })),
+            class: "grass",
+            sprite: Sprites.grass1,
+            randomSprites: [
+                Sprites.grass1,
+                Sprites.grass2,
+                Sprites.grass3,
+                Sprites.grass4,
+                Sprites.grass5,
+                Sprites.grass6,
+                Sprites.grass7,
+                Sprites.grass8,
+                Sprites.grass9,
+                Sprites.grass10,
+            ]
+        },
+        {
+            points: [
+                {xPercent: 0.25, yPercent: 0.11},
+            ],
+            class: "skyscraper",
+            sprite: Sprites.skyscraper,
+            zIndex: 9999
+        },
+        {
+            points: [
+                {xPercent: 0.38, yPercent: 0.235},
+                {xPercent: 0.455, yPercent: 0.235},
+            ],
+            class: "skyscraper",
+            sprite: Sprites.skyscraper2,
+            zIndex: 8888
+        }
+    ],
+    components: [
+        { component: BeachSea, props: {} },
+        { component: Seagull, props: {} },
+        { component: BridgeRiver, props: {} },
+    ],
+    checkpoints: [
+        { name: "Delft", percentage: 0 },
+        { name: "The Hague", percentage: 0.1 },
+        { name: "Gouda", percentage: 0.5 },
+        { name: "Rotterdam", percentage: 0.81 },
+    ],
+    path: [
+        { xPercent: 0.235, yPercent: 0.5 },
+        { xPercent: 0.1, yPercent: 0.5 },
+        { xPercent: 0.1, yPercent: 0.75 },
+        { xPercent: 0.18, yPercent: 0.75 },
+        { xPercent: 0.18, yPercent: 0.9 },
+        { xPercent: 0.93, yPercent: 0.9 },
+        { xPercent: 0.93, yPercent: 0.5 },
+        { xPercent: 0.74, yPercent: 0.5 },   
+        { xPercent: 0.74, yPercent: 0.05 },
+        { xPercent: 0.57, yPercent: 0.05 },
+        { xPercent: 0.57, yPercent: 0.17 },
+        { xPercent: 0.33, yPercent: 0.17 },
+        { xPercent: 0.33, yPercent: 0.5 },
+        { xPercent: 0.235, yPercent: 0.5 },
+
+    ]
+}
+
+const map2Grass = netherlandsMap2.decorations.filter(d => d.class === "grass")
+const cow1Position = { xPercent: 0.1, yPercent: 0.2 }
+const cow2Position = { xPercent: 0.4, yPercent: 0.5 }
+const cow3Position = { xPercent: 0.6, yPercent: 0.6 }
+const cow4Position = { xPercent: 0.7, yPercent: 0.7 }
+
+if (map2Grass && netherlandsMap2.components) {
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow1Position, id: 1 },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow2Position, id: 2 },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow3Position, id: 3  },
+    })
+
+    netherlandsMap2.components.push({
+        component: Cow,
+        props: { decorations: map2Grass, position: cow4Position, id: 4 },
+    })
+}
+
+const trainMaps: RaceMap[] = [netherlandsMap1, netherlandsMap2]
 
 export { trainMaps }
