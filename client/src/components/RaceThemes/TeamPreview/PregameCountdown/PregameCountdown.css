@@ -4,22 +4,15 @@
 }
 
 .topic-display-container {
-    position: fixed;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: transparent;
-    padding: 2em 4em;
-    border-radius: 15px;
-    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); */
+    position: absolute;
+    top: 13.7%;
+    width: 100%;
     text-align: center;
 }
 
 .topic-text {
-    font-family: sans-serif;
-    color: #0c2340;
-    font-size: 8vh;
-    font-weight: 700;
-    font-style: italic;
-    text-shadow: #ffffff 2px 2px 8px, #ffffff 0 0 3em, #ffffff 0 0 1em;
+    width: 100%;
+    font-size: 1.7vw;
+    font-family: "Electrolize", sans-serif;    
+    color: #ff951b;
 }

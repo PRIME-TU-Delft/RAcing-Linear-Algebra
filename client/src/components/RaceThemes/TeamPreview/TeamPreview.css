@@ -32,15 +32,14 @@
     width: 100%;
     font-size: 1.7vw;
     font-family: "Electrolize", sans-serif;    
-    position: absolute;
-    top: -17%;
+    margin-top: 2.7vh;
     color: #ff951b;
 }
 
 .team-preview-grid {
     width: 40vw;
     padding-bottom: 2vh;
-    margin: 15vh auto;
+    margin: 8vh auto;
     margin-bottom: 0;
     padding-left: 3vw;
     padding-right: 3vw;

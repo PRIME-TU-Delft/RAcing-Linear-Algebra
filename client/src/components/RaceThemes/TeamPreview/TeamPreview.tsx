@@ -179,7 +179,8 @@ function TeamPreview(props: Props) {
                 ) : null}
             </a.div>
 
-            {showTopicName ? <PregameCountdown topic="Eigenvalues & Eigenvectors" seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
+            {showTopicName ? <PregameCountdown topic={props.topic} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
+            {/* <PregameCountdown topic={"Eigenvalues & Eigenvectors"} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> */}
         </div>
     )
 }
