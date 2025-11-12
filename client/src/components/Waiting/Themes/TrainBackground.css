@@ -76,7 +76,7 @@
 
 .train-stripe {
     width: 141%;
-    top: -12.7%;
+    top: -2.7%;
     left: -64.2%;
     z-index: -200;
 }
@@ -95,7 +95,7 @@
 .train-door-left {
     transform-origin: right center;
     width: 18%;
-    top: 12%;
+    top: 22%;
     left: 15.2%;
     z-index: 9999;
 }
@@ -103,7 +103,7 @@
 .train-door-right {
     transform-origin: left center;
     width: 18%;
-    top: 12%;
+    top: 22%;
     right: 13.2%;
     z-index: 9999;
 }
@@ -130,16 +130,23 @@
 
 .conductor-door {
     width: 12%;
-    top: 18%;
+    top: 28%;
     right: 2%;
     z-index: -50;
 }
 
 .door-frame {
     width: 35.8%;
-    top: 15%;
+    top: 25%;
     left: 33%;
     z-index: -100;
+}
+
+.train-display {
+    width: 35%;
+    top: 13%;
+    left: 33.5%;
+    z-index: 5000;
 }
 
 @keyframes slide-clouds {

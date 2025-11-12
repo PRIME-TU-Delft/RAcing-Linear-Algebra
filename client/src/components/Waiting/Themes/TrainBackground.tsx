@@ -8,6 +8,7 @@ import TrainWindows from "../../../img/team_preview/train/train_windows_stripe.p
 import TrainStripe from "../../../img/team_preview/train/train_stripe.png"
 import ConductorDoor from "../../../img/team_preview/train/conductor_door.png"
 import DoorFrame from "../../../img/team_preview/train/door_frame.png"
+import TrainDisplay from "../../../img/team_preview/train/screen.png"
 
 interface Props {
     includeRail: boolean
@@ -96,6 +97,7 @@ export default function TrainBackground(props: Props) {
                     <img src={TrainDoorRight} className="train-door-right" alt="Right train door" />
                     <img src={ConductorDoor} className="conductor-door" alt="Conductor door" />
                     <img src={DoorFrame} className="door-frame" alt="Door frame" />
+                    <img src={TrainDisplay} className="train-display" alt="Train display" />
                 </div> 
             : null}
         </div>
