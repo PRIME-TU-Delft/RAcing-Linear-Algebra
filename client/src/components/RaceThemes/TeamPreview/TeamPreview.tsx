@@ -136,7 +136,7 @@ function TeamPreview(props: Props) {
                 </a.div>
                 </a.div>
             <a.div className="page-content" style={pageContentAnimation}>
-                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>}
+                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams</a.div>}
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (
                             <a.div style={style} key={i}>
@@ -179,7 +179,8 @@ function TeamPreview(props: Props) {
                 ) : null}
             </a.div>
 
-            {showTopicName ? <PregameCountdown topic="Eigenvalues & Eigenvectors" seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
+            {showTopicName ? <PregameCountdown topic={props.topic} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
+            {/* <PregameCountdown topic={"Eigenvalues & Eigenvectors"} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> */}
         </div>
     )
 }
