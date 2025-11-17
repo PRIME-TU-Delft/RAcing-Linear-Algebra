@@ -1,18 +1,18 @@
-.team-preview-countdown-text {
-    position: fixed;
-    width: 30em;
-    height: 15em;
-    line-height: 15em;
-    color: #003082;
-    border: 3px solid black;
-    background-color: #F8B700;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@font-face {
+    font-family: "PermanentMarker";
+    src: url("../../../../fonts/PermanentMarker-Regular.ttf");
 }
 
-.team-preview-countdown-text > div {
-    font-size: 90px;
-    font-weight: 800;
+.topic-display-container {
+    position: absolute;
+    top: 13.7%;
+    width: 100%;
+    text-align: center;
+}
+
+.topic-text {
+    width: 100%;
+    font-size: 1.7vw;
+    font-family: "Electrolize", sans-serif;    
+    color: #ff951b;
 }

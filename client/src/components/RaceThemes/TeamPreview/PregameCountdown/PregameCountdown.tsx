@@ -1,43 +1,39 @@
 import React, { useEffect, useState } from "react";
 import "./PregameCountdown.css"
-import { a, useTransition } from "react-spring";
+import { a, useSpring } from "react-spring";
 
 interface Props {
+    topic: string,
     seconds: number,
     onCountdownComplete: () => void
 }
 
 function PregameCountdown(props: Props) {
-    const [countdownTextIndex, setCountdownTextIndex] = useState<number>(0)
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-        if (countdownTextIndex >= props.seconds) {
-            setTimeout(() => props.onCountdownComplete(), 500)
-        }
-    }, [countdownTextIndex])
+        setShow(true);
+        const fadeOutTimer = setTimeout(() => {
+            setShow(false);
+        }, props.seconds * 1000);
 
-    const countdownText = ["Ready.", "Set.", "GO!"]
-    const countdownTransition = useTransition(countdownTextIndex, {
-        config: { duration: 200 },
-        from: { opacity: 0 },
-        enter: { opacity: 1 },
-        leave: { opacity: 0 },
-        exitBeforeEnter: true,
-        delay: 600,
-        onRest: (_springs, _ctrl, item) => {
-            if (countdownTextIndex === item) {
-              setCountdownTextIndex(curr => curr + 1)
+        return () => clearTimeout(fadeOutTimer);
+    }, [props.seconds]);
+
+    const animation = useSpring({
+        opacity: show ? 1 : 0,
+        config: { duration: 500 },
+        onRest: () => {
+            if (!show) {
+                props.onCountdownComplete();
             }
-          },
-    })
+        },
+    });
+
     return(
-        <div>
-            {countdownTransition((style, itemIndex) => (
-                <a.div style={style} className={"team-preview-countdown-text countdown-text-" + itemIndex.toString()}>
-                    <div>{countdownText[itemIndex]}</div>
-                </a.div>
-            ))}
-        </div>
+        <a.div style={animation} className="topic-display-container">
+            <div className="topic-text">{props.topic}</div>
+        </a.div>
     )
 }
 

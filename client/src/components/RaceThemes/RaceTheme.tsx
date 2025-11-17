@@ -16,6 +16,7 @@ import { ScoreContext } from "../../contexts/ScoreContext"
 import { getRacePathObject } from "./RaceService"
 import { RacePathContext } from "../../contexts/RacePathContext"
 import RaceStatus from "./RaceStatus/RaceStatus"
+import { MapDimensionsContext } from "../../contexts/MapDimensionsContext"
 
 interface Props {
     mapDimensions: {
@@ -94,8 +95,16 @@ function RaceTheme(props: Props) {
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={raceData.selectedMap.decorations}
-                ></Decorations>
+                ></Decorations>                
             </a.div>
+
+            <MapDimensionsContext.Provider value={{ width: width, height: height }}>
+                {raceData.selectedMap.components?.map((specialComponent, index) => {
+                    const Component = specialComponent.component;
+                    return <Component key={index} {...specialComponent.props} />;
+                })}
+            </MapDimensionsContext.Provider>
+            
 
 {/*             
             <StationDisplay

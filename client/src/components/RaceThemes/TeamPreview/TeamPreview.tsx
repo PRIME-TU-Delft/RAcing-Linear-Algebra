@@ -20,11 +20,32 @@ interface Props {
     onStartGame: () => void
 }
 
+const dummyTeam: Ghost = {
+    teamName: "Team Name Deset1",
+    key: 0,
+    colors: { mainColor: "#ff0000", highlightColor: "#00ff00" },
+    timeScores: [],
+    checkpoints: [],
+    study: "CSE",
+    accuracy: 100,
+    lapsCompleted: 0,
+    racePosition: 0,
+    isOpen: false,
+    animationStatus: { pathProgress: 0, updateAnimation: false, timeScoreIndex: 0 }
+}
+
+const dummyTeams: Ghost[] = Array.from({ length: 18 }, () => ({ ...dummyTeam }))
+
+
 function TeamPreview(props: Props) {
+    const dummyTeams = React.useMemo(() => Array.from({ length: 18 }, () => ({ ...dummyTeam })), []);
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
     const [showMainTeam, setShowMainTeam] = useState<boolean>(false)
-    const [sortedTeams, setSortedTeams] = useState<Ghost[]>([])
+    const [sortedTeams, setSortedTeams] = useState<Ghost[]>(dummyTeams)
     const [numberOfGhostTeamAnimationsCompleted, setNumberOfGhostTeamAnimationsCompleted] = useState(0)
+    const [platformNumber, setPlatformNumber] = useState(1)
+    const [showTopicName, setShowTopicName] = useState(false)
+    const [topicShowCompleted, setTopicShowCompleted] = useState(false)
 
     useEffect(() => {
         const sortedGhosts = props.ghostTeams.sort((ghostA, ghostB) => {
@@ -40,14 +61,15 @@ function TeamPreview(props: Props) {
             return 0;
         });
         setSortedTeams(curr => [...sortedGhosts])
+        setPlatformNumber(Math.floor(Math.random() * 9) + 1);
     }, [props.ghostTeams])
 
     const titleAnimationRef = useSpringRef()
     const titleAnimation = useSpring({
         ref: titleAnimationRef,
-        from: { opacity: 0 },
-        to: { opacity: 1 },
-        delay: 300,
+        from: { opacity: 0, transform: 'translateY(-10px)' },
+        to: { opacity: 1, transform: 'translateY(0px)' },
+        config: { duration: 500 },
     })
 
     const subtitleAnimationRef = useSpringRef()
@@ -56,7 +78,6 @@ function TeamPreview(props: Props) {
         from: { opacity: 0 },
         to: { opacity: 1 },
     })
-    
     // const teamContainerAnimationRef = useSpringRef()
     // const teamContainerAnimation = useSpring({
     //     ref: teamContainerAnimationRef,
@@ -80,11 +101,16 @@ function TeamPreview(props: Props) {
         to: { opacity: showMainTeam ? 1 : 0 },
     })
 
+    const pageContentAnimation = useSpring({
+        opacity: startCountdown ? 0 : 1,
+        config: { duration: 500 }
+    });
+
     useEffect(() => {
         if (showMainTeam) {
             setTimeout(() => {
                 setStartCountdown(curr => true)
-            }, 1000);
+            }, 1500);
         }
     }, [showMainTeam])
 
@@ -92,18 +118,25 @@ function TeamPreview(props: Props) {
         if ((numberOfGhostTeamAnimationsCompleted >= sortedTeams.length && sortedTeams.length > 0) || props.noGhostTeamsPresent) setShowMainTeam(curr => true)
     }, [numberOfGhostTeamAnimationsCompleted, props.noGhostTeamsPresent])
 
-    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.1, 0.15], 10000)
+    useChain([titleAnimationRef, subtitleAnimationRef, teamsAnimationRef], [0, 0.2, 0.25], 10000)
 
     return(
         <div className="team-preview-body">
-            <motion.div className="page-content" initial={{ filter: "blur(0px)" }} animate={{ filter: startCountdown ? "blur(2px)" : "blur(0px)"}}>
-                <TrainBackground includeRail={false}/>
-                <a.div className="team-preview-title">
-                    <a.div style={titleAnimation}>
-                        {props.topic}
-                    </a.div>
+            <TrainBackground 
+                includeRail={false} 
+                isTeamPreview={true} 
+                closeTrainDoors={startCountdown}
+                moveTrain={topicShowCompleted}
+                onDoorsClosed={() => setShowTopicName(true)}
+                onTrainMoved={() => props.onStartGame()}
+            />
+            <a.div className="team-preview-title">
+                    <a.div style={{...titleAnimation}}>
+                    {"Dear engineers in training, please make your way to platform " + platformNumber + "."}
                 </a.div>
-                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams:</a.div>}
+                </a.div>
+            <a.div className="page-content" style={pageContentAnimation}>
+                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams</a.div>}
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (
                             <a.div style={style} key={i}>
@@ -144,8 +177,10 @@ function TeamPreview(props: Props) {
                         </div>
                     </a.div>
                 ) : null}
-            </motion.div>
-            {startCountdown ? <PregameCountdown seconds={3} onCountdownComplete={() => props.onStartGame()}/> : null}
+            </a.div>
+
+            {showTopicName ? <PregameCountdown topic={props.topic} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> : null}
+            {/* <PregameCountdown topic={"Eigenvalues & Eigenvectors"} seconds={1.5} onCountdownComplete={() => setTopicShowCompleted(true)}/> */}
         </div>
     )
 }

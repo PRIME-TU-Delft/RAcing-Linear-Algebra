@@ -26,6 +26,7 @@ interface Props {
         selectedStudy: string,
         selectedTheme: string
     ) => void // event called when start game button is clicked
+    onAllowIndividualPlacementsChange: (value: boolean) => void // event called when allow individual placements is changed
 }
 
 function Steps(props: Props) {
@@ -199,6 +200,7 @@ function Steps(props: Props) {
                         selectedStudy={selectedStudy}
                         selectedRounds={selectedRounds.map(x => x.topicName)}
                         playerNumber={props.playerNumber}
+                        allowIndividualPlacements={props.onAllowIndividualPlacementsChange}
                         onStartGame={() =>
                             props.startGameHandler(
                                 selectedRounds,

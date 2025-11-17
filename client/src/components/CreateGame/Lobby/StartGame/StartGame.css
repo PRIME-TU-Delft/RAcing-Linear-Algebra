@@ -43,3 +43,17 @@
 .disabled:hover {
     cursor: default;
 }
+
+.placement-toggle .MuiFormControlLabel-label {
+    color: black;
+    margin-left: 0;
+    font-size: 15px !important;
+    font-style: italic;
+}
+
+.placement-toggle-container {
+    width: 100%;
+    display: flex;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}

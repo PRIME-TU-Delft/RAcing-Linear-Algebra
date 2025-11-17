@@ -86,6 +86,7 @@ function createComponentStyle(
     startPoint: Point,
     endPoint: Point,
     isStartingComponent: boolean,
+    isEndingComponent: boolean
 ) {
     const direction = getComponentDirection(startPoint, endPoint)
 
@@ -134,7 +135,13 @@ function createComponentStyle(
         }
 
         // Check if rightwards
-        if (startPoint.x > endPoint.x) {
+
+        if (startPoint.x > endPoint.x && isEndingComponent) {
+            style.width = `${componentWidth - 0}px`
+            style.left = `${endPoint.x + 0}px`
+        }
+
+        else if (startPoint.x > endPoint.x) {
             style.width = `${componentWidth - 40}px`
             style.left = `${endPoint.x + 40}px`
         } 

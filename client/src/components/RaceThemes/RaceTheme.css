@@ -21,7 +21,23 @@
 .swamp-plant,
 .swamp-rock,
 .swamp-lake,
-.crocodile {
+.crocodile,
+.nieuweKerk,
+.oudeKerk,
+.delftsBlauw,
+.rotterdamBridge,
+.cruiseShip,
+.thePier,
+.seagull,
+.seagullFly,
+.seaTop,
+.seaBottom,
+.seaTrail,
+.goudaKerk,
+.cheese,
+.cheesePie,
+.bridgeRiver,
+.cheesePiece {
     position: absolute;
 }
 

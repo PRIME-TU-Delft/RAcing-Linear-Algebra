@@ -310,7 +310,7 @@ module.exports = {
              */
             socket.on(
                 "startGame",
-                async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string) => {
+                async (lobbyId: number, topics: string[], roundDurations: number[], study: string, teamName: string, allowIndividualPlacements: boolean) => {
                     try {
                         const selectedTopics = await getSelectedITopicsWithVariants(topics)
                         if (io.sockets.adapter.rooms.get(`players${lobbyId}`).size == 0) return
@@ -322,7 +322,7 @@ module.exports = {
                             return socket?.data.userId as string;
                         }).filter(userId => userId !== undefined)
 
-                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study)
+                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study, allowIndividualPlacements)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -599,6 +599,54 @@ module.exports = {
                     console.log(error)
                 }
             })
+
+            /**
+             * When a player requests their own placement, this calculates their rank in the game
+             * and sends it back to only them.
+             */
+            socket.on("getMyPlacement", () => {
+                const lobbyId = socketToLobbyId.get(socket.id);
+                const userId = socket.data.userId;
+
+                if (lobbyId === undefined || userId === undefined) {
+                    socket.emit("error", { message: "Could not find lobby or user for this request." });
+                    return;
+                }
+
+                try {
+                    const game = getGame(lobbyId);
+
+                    // If individual placements are not allowed, do not proceed
+                    if (!game.allowIndividualPlacements) {
+                        return;
+                    }
+                    
+                    // Convert the users map to an array of objects that include the userId
+                    const players = Array.from(game.users.entries()).map(([id, user]) => ({
+                        userId: id,
+                        score: user.score
+                    }));
+
+                    // Sort players by their score in descending order
+                    players.sort((a, b) => b.score - a.score);
+
+                    // Find the index of the requesting player in the sorted list
+                    const playerIndex = players.findIndex(player => player.userId === userId);
+
+                    // If the player is found, calculate their placement and send it back
+                    if (playerIndex !== -1) {
+                        const placement = playerIndex + 1;
+                        socket.emit("your-placement", placement);
+                    } else {
+                        // Handle case where user might not be in the list for some reason
+                        socket.emit("error", { message: "Could not determine your placement." });
+                    }
+
+                } catch (error) {
+                    console.error("Failed to process player placement:", error);
+                    socket.emit("error", { message: "Failed to process your placement." });
+                }
+            });
         
             /**
              * This function gets the statistics for the lecturer

@@ -101,6 +101,8 @@ function DecorationsEditor(props: Props) {
         const style = {
             bottom: decoration.position.yPercent * height,
             left: decoration.position.xPercent * width,
+            width: decoration.dimensions.width,
+            height: decoration.dimensions.height,
         }
         return style
     }
@@ -127,6 +129,8 @@ function DecorationsEditor(props: Props) {
                 )
 
             result += "]"
+            console.log(result)
+
         }
     }
 
@@ -162,7 +166,7 @@ function DecorationsEditor(props: Props) {
                 ))}
 
                 <div
-                    className="save-btn"
+                    className="save-btn btn"
                     onClick={() => printPointsToConsole()}
                 >
                     PRINT DECORATION POSITIONS TO CONSOLE
@@ -175,7 +179,7 @@ function DecorationsEditor(props: Props) {
                     style={createStyle(decoration)}
                     onClick={() => removeElement(decoration)}
                 >
-                    <img src={decoration.sprite} alt="" />
+                    <img src={decoration.sprite} alt="" style={{ width: '100%', height: '100%' }} />
                 </div>
             ))}
         </div>

@@ -24,11 +24,12 @@ export function addGame(
     teamName: string,
     userIds: string[],
     lobbyId: number,
-    study: string
+    study: string,
+    allowIndividualPlacements?: boolean
 ) {
     const map: Map<string, User> = new Map()
     for (const userId of userIds) map.set(userId, new User())
-    const game: Game = new Game(topics, roundDurations, teamName, map, study)
+    const game: Game = new Game(topics, roundDurations, teamName, map, study,  allowIndividualPlacements ?? false)
     games.set(`${lobbyId}`, game)
 }
 
