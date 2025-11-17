@@ -139,7 +139,7 @@ function StartGame(props: Props) {
             </div>
 
             <div className="placement-toggle-container">
-                <Tooltip title="If enabled, the top 3 players will be able to see their individual ranking within the team at the end of the game.">
+                <Tooltip title="Warning: If enabled, the top 3 players will be able to see their individual ranking within the team at the end of the game.">
                     <FormControlLabel
                         control={
                             <Switch
