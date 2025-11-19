@@ -7,10 +7,25 @@
     animation: seagullMove 15s ease-in-out infinite;
 }
 
+.boat-seagull-container {
+    position: absolute;
+    left: 13.5%;
+    top: 68%;
+    width: 3%;
+    height: 3%;
+    animation: seagullMove 15s ease-in-out infinite;
+    z-index: 99;
+}
+
 
 .seagull-container img {
     height: 100%;
     width: auto;
+}
+
+.boat-seagull-container > img {
+    height: 100%;
+    width: auto;    
 }
 
 

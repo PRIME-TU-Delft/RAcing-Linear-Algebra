@@ -30,6 +30,7 @@ import ThePier from "../../../img/maps/train/the_pier.gif"
 import RotterdamBridge from "../../../img/maps/train/bridge.png"
 import SkyScraper1 from "../../../img/maps/train/skyscraper.png"
 import SkyScraper2 from "../../../img/maps/train/skyscraper2.png"
+import UtrecthDom from "../../../img/maps/boat/utrecth_dom.png"
 
 export default {
     shark: Shark,
@@ -61,5 +62,6 @@ export default {
     thePier: ThePier,
     rotterdamBridge: RotterdamBridge,
     skyScraper1: SkyScraper1,
-    skyScraper2: SkyScraper2
+    skyScraper2: SkyScraper2,
+    utrecthDom: UtrecthDom
 }
