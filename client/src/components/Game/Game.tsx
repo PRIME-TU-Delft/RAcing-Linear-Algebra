@@ -601,8 +601,8 @@ function Game(props: Props) {
                     </div>
                     <svg 
                         className="minimap-svg-path"
-                        viewBox={`0 0 1920 1080`}
-                        preserveAspectRatio="xMidYMid meet"
+                        viewBox={raceData.theme == 'Boat' ? `0 0 1920 1080`: ''}
+                        preserveAspectRatio={raceData.theme == 'Boat' ? "xMidYMid meet" : ''}
                         style={{
                             width: racePathSizing.width,
                             height: racePathSizing.height,
