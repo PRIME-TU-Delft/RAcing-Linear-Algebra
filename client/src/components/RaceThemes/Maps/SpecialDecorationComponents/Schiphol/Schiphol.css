@@ -1,0 +1,140 @@
+.schiphol-container {
+    position: absolute;
+    left: 27%;
+    top: 63%;
+    width: 4%;
+    height: 4%;
+    z-index: 99999;
+}
+
+.schiphol-plane-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.schiphol-runway {
+    height: 100%;
+    width: auto;
+}
+
+.schiphol-plane {
+    height: 100%;
+    width: auto;
+    position: absolute;
+    top: 90%;
+    left: 120%;
+    
+    animation: smoothFlightCycle 16s linear infinite;
+    animation-delay: 5s;
+    
+    transform-origin: center bottom;
+    will-change: transform, left, top;
+    opacity: 0;
+}
+
+@keyframes smoothFlightCycle {
+    /* --- PHASE 1: DESCENT (Fast but controlled) --- */
+    0% {
+        left: -800%;
+        top: -400%;
+        transform: rotate(15deg); /* Moderate dive */
+        opacity: 1;
+    }
+    
+    /* The Flare: Approaching runway, pulling nose up */
+    15% {
+        left: -50%; 
+        top: 80%; 
+        transform: rotate(5deg);
+    }
+
+    /* --- PHASE 2: TOUCHDOWN & SMOOTH BRAKING --- */
+    /* Touchdown early (at 0%) so we have space to slow down */
+    18% {
+        left: 0%;
+        top: 90%;
+        transform: rotate(0deg); /* Contact */
+    }
+
+    /* Rollout: Still moving fast, but strictly on the ground */
+    25% {
+        left: 60%; 
+        top: 90%;
+        transform: rotate(0deg);
+    }
+
+    /* Final Braking: The last stretch to the gate (slowing down smoothly) */
+    32% {
+        left: 120%; /* Reached Base Class Position */
+        top: 90%;
+        transform: rotate(0deg);
+    }
+
+    /* --- PHASE 3: THE PAUSE (Boarding) --- */
+    /* Plane sits still at the gate */
+    42% {
+        left: 120%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+
+    /* --- PHASE 4: TAKEOFF ROLL --- */
+    /* Engine spool up - moving towards the runway end */
+    48% {
+        left: 180%; 
+        top: 90%;
+        transform: rotate(0deg);
+    }
+
+    /* --- PHASE 5: ROTATE (Before the 250% limit) --- */
+    /* 52% is roughly Left: 220%. 
+       We rotate HERE so by the time we hit 250%, we are in the air. */
+    52% {
+        left: 220%; 
+        top: 90%;       /* Nose lifts, wheels still touching */
+        transform: rotate(-5deg); 
+    }
+    
+    /* Lift off! - Clearing the runway end (250%) */
+    55% {
+        left: 260%; 
+        top: 80%;       /* Airborne */
+        transform: rotate(-12deg);
+    }
+
+    65% {
+        left: 600%;
+        top: -10%;
+        transform: rotate(-12deg); 
+    }
+
+    75% {
+        left: 1000%;
+        top: -180%;
+        transform: rotate(-15deg); 
+    }
+
+
+    /* --- PHASE 6: CLIMB OUT --- */
+    /* Gradual climb to 1900% offscreen. 
+       Reduced rotation to -12deg as requested (realistic climb). */
+    85% {
+        left: 1500%;
+        top: -400%;
+        transform: rotate(-15deg); 
+        opacity: 1;
+    }
+
+    90% {
+        left: 1900%;
+        top: -600%;
+        transform: rotate(-16deg); 
+        opacity: 1;
+    }
+
+    100% {
+        left: 1900%;
+        opacity: 0;
+    }
+}
