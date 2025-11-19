@@ -92,7 +92,7 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
-    window.addEventListener("load", () => navigate("/"))
+    // window.addEventListener("load", () => navigate("/"))
 
     window.onmessage = function(e) {
         if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
@@ -111,7 +111,7 @@ function Game(props: Props) {
     };
 
     const racePathSizing = getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height)
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
 
 
     socket.emit("getMandatoryNum")

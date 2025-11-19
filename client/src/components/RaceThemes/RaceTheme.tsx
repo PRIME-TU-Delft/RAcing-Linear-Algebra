@@ -38,7 +38,7 @@ function RaceTheme(props: Props) {
     const height = props.mapDimensions.height
     const width = props.mapDimensions.width
 
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, width, height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap, width, height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({

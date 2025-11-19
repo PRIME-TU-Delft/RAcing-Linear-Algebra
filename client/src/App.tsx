@@ -20,6 +20,7 @@ import { TimeContext } from "./contexts/TimeContext"
 import { RaceDataContext } from "./contexts/RaceDataContext"
 import LecturerService from "./components/CreateGame/Lecturer/LecturerService"
 import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
+import { boatMaps } from "./components/RaceThemes/Maps/BoatMaps"
 import { ScoreContext } from "./contexts/ScoreContext"
 import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
@@ -43,7 +44,7 @@ function App() {
     const [lobbyId, setLobbyId] = useState(0)
     const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
-    const [theme, setTheme] = useState("Train")
+    const [theme, setTheme] = useState("Boat")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
@@ -621,7 +622,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: boatMaps[0]
                             }}>
                                 <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
                                     <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
@@ -659,7 +660,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: boatMaps[0]
                                 }}>
                                     <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                     <RaceProgressContext.Provider value={stopShowingRace}>

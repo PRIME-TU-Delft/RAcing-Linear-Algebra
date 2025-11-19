@@ -98,6 +98,7 @@ interface RaceMap {
         props: any;
     }[];
     checkpoints?: Checkpoint[]
+    rawPath?: string
 }
 
 interface ServerGhost { 

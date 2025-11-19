@@ -49,13 +49,13 @@ function Tracks() {
                 components={racePath.components}
                 svgPath={racePath.svgPath}></RacePath>
 
-            <Checkpoints
+            {/* <Checkpoints
                 checkpoints={raceData.checkpoints}
                 sprite={getCheckpointSprite()}
                 pathLength={racePath.pathLength}
                 totalPoints={scores.totalPoints}
                 components={racePath.components}
-            ></Checkpoints>
+            ></Checkpoints> */}
         </div>
     )
 }

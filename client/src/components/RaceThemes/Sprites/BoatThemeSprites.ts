@@ -7,6 +7,7 @@ import Lighthouse from "../../../img/Lighthouse.png"
 import IcebergOne from "../../../img/iceberg-1.png"
 import IcebergTwo from "../../../img/iceberg-2.png"
 import IcebergThree from "../../../img/iceberg-3.png"
+import Terrain from "../../../img/maps/boat/terrain.png"
 
 export default {
     shark: Shark,
@@ -18,4 +19,5 @@ export default {
     icebergOne: IcebergOne,
     icebergTwo: IcebergTwo,
     icebergThree: IcebergThree,
+    terrain: Terrain
 }

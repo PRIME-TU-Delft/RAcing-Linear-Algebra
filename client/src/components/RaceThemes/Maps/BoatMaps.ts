@@ -2,7 +2,7 @@ import Sprites from "../Sprites/BoatThemeSprites"
 import { PercentCoordinate, RaceMap } from "../SharedUtils"
 
 const mapOne = {
-            backgroundColor: "#19CDFF",
+            backgroundColor: "#00ccff",
             decorations: [
                 {
                     points: [{ xPercent: 0.45, yPercent: 0.2 }],
@@ -10,38 +10,10 @@ const mapOne = {
                     sprite: Sprites.shark,
                 },
 
-                {
-                    points: [{ xPercent: 0.45, yPercent: 0.5 }],
-                    class: "shark",
-                    sprite: Sprites.sharkReverse,
-                },
-
-                {
-                    points: [{ xPercent: -0.07, yPercent: 0.78 }],
-                    class: "sun",
-                    sprite: Sprites.sun,
-                },
-
-                {
-                    points: [{ xPercent: 0.85, yPercent: 0.45 }],
-                    class: "iceberg-one",
-                    sprite: Sprites.icebergOne,
-                },
-
-                {
-                    points: [{ xPercent: -0.01, yPercent: 0.3 }],
-                    class: "lighthouse",
-                    sprite: Sprites.lighthouse,
-                },
             ],
             path: [
-                { xPercent: 0, yPercent: 0.15 },
-                { xPercent: 0.65, yPercent: 0.15 },
-                { xPercent: 0.65, yPercent: 0.45 },
-                { xPercent: 0.2, yPercent: 0.45 },
-                { xPercent: 0.2, yPercent: 0.75 },
-                { xPercent: 1, yPercent: 0.75 },
             ],
+            rawPath: "M96.67,784.22S2.67,573.33,194.67,498.67s197.33-222.67,197.33-222.67c0,0-50.67-178.67,502.67-60,0,0,114.65,34.96,204,114.67,45.23,40.35,54.01,54.97,55.47,59.91.53,1.79,1.83,3.26,3.5,4.1,6.15,3.09,27.03.78,45.92,6.67,28.7,8.94,61.71,25.14,101.78,16,76-17.33,180-13.33,172,56s65.33,74.67,65.33,74.67c0,0,101.33,20-152,68,0,0-37.33-1.33-60,52s4,72-264,68c0,0-116,0-138.67,18.67s-60-20-60-20c0,0-41.33-18.67-14.67,29.33,0,0,32-2.67-134.67,73.33,0,0-24.72,6.74,3.28,40.07,0,0,23.39,6.6-19.28,43.93,0,0-21.33,24-9.33,42.67s-22.67,12-22.67,12c0,0-29.33-22.67-54.67-13.33,0,0-137.33-8-146.67-13.33,0,0-55.33-31.78-79.33-13.11,0,0-119.33-1.56-140.67-38.89l-25.56-2.89s-.22-9.11,13.11-14c0,0-14.89-6.44-42.89.44,0,0-13.33,0-14.22-11.33,0,0-.22-8.44-55.56-11.56,0,0-24.22-5.56-13.78-27.78,0,0,3.11-14.89-4.89-21.78l-8.89-24.22Z"
 }
 const boatMaps: RaceMap[] = [mapOne]
 
