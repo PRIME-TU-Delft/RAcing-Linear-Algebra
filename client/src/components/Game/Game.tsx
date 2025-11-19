@@ -18,7 +18,7 @@ import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
 import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
 import { RacePathContext } from "../../contexts/RacePathContext";
 import Tracks from "../RaceThemes/Tracks/Tracks";
-import { getRacePathSizeAndOffsetMargins } from "./GameService";
+import { getMinimapPathColorForTheme, getRacePathSizeAndOffsetMargins } from "./GameService";
 import { QuestionContext } from "../../contexts/QuestionContext";
 import ColorationInfo from "../ColorationInfo/ColorationInfo";
 import { ReactNotifications, Store } from 'react-notifications-component'
@@ -599,18 +599,25 @@ function Game(props: Props) {
                     }}>
                         <RaceStatus keepClosed={true} roundDuration={props.roundDuration} onCheckpointPassed={checkpointPassedHandler}/>
                     </div>
-                    <svg className="minimap-svg-path" style={{
-                        width: racePathSizing.width,
-                        height: racePathSizing.height,
-                        marginLeft: racePathSizing.offsetX,
-                        marginTop: racePathSizing.offsetY
-                    }}>
-                            <path
-                                d={racePath.svgPath}
-                                fill={"none"}
-                                strokeWidth={10}
-                                stroke={"#f8b600a2"}
-                            />
+                    <svg 
+                        className="minimap-svg-path"
+                        viewBox={`0 0 1920 1080`}
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{
+                            width: racePathSizing.width,
+                            height: racePathSizing.height,
+                            marginLeft: racePathSizing.offsetX,
+                            marginTop: racePathSizing.offsetY,
+                        }}
+
+                    >
+                        <path
+                            d={racePath.svgPath}
+                            fill={"none"}
+                            strokeWidth={10}
+                            stroke={getMinimapPathColorForTheme(raceData.theme)}
+                            vectorEffect="non-scaling-stroke" 
+                        />
                     </svg>
                 </div>
             </RacePathContext.Provider>
