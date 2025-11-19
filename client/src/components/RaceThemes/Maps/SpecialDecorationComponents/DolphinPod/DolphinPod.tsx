@@ -8,7 +8,7 @@ interface Props {
 
 const GIF_DURATION = 3060;
 const MAX_DELAY = 1500;
-const SAFETY_BUFFER = 50; // Small buffer to ensure the last frame isn't clipped
+const SAFETY_BUFFER = 0; // Small buffer to ensure the last frame isn't clipped
 const TOTAL_CYCLE_TIME = GIF_DURATION + MAX_DELAY + SAFETY_BUFFER;
 
 // --- 1. CHILD COMPONENT ---
