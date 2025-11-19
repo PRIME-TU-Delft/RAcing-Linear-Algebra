@@ -27,7 +27,7 @@
     
     animation: smoothFlightCycle 16s linear infinite;
     animation-delay: 5s;
-    
+
     transform-origin: center bottom;
     will-change: transform, left, top;
     opacity: 0;
@@ -134,6 +134,11 @@
     }
 
     100% {
+        left: 1900%;
+        opacity: 0;
+    }
+
+    120% {
         left: 1900%;
         opacity: 0;
     }
