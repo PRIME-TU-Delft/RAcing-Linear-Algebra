@@ -2,12 +2,20 @@
     position: absolute;
     width: 4.5%;
     height: 4.5%;
-    animation: deerMoveReverse 15s ease-in-out infinite;
+    animation-name: deerMoveReverse;
+    animation-duration: 15s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: calc(var(--deer-delay, 0s));
     z-index: 999;
 }
 
 .deer-container.deer-container.flipped {
-    animation: deerMove 15s ease-in-out infinite;
+    animation-name: deerMove;
+    animation-duration: 15s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: calc(var(--deer-delay, 0s));
 }
 
 .deer-container.not-flipped {

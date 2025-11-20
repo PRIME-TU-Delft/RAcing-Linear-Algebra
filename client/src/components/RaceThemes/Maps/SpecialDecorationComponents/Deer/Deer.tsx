@@ -8,8 +8,17 @@ interface Props {
 }
 
 function Deer(props: Props) {
+    const randomDelay = `${Math.random() * 2}s`;
+
     return (
-        <div className={"deer-container" + (props.flipped ? " flipped" : " not-flipped")} style={{left: `${props.startLeft || 0}%`, top: `${props.startTop || 0}%` }}>
+        <div
+            className={"deer-container" + (props.flipped ? " flipped" : " not-flipped")}
+            style={{
+                left: `${props.startLeft || 0}%`,
+                top: `${props.startTop || 0}%`,
+                ['--deer-delay' as any]: randomDelay
+            }}
+        >
             <img
                 src={BoatThemeSprites.deer}
                 alt="Deer"

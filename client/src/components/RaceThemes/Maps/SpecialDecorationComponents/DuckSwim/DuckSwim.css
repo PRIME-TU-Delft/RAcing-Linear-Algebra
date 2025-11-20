@@ -1,0 +1,35 @@
+.duck-container {
+    position: absolute;
+    width: 4.5%;
+    height: 4.5%;
+    animation: duckFloat 2s ease-in-out infinite;
+    z-index: 999;
+}
+
+.duck-container.not-flipped {
+    transform: scaleX(1);
+}
+
+.duck-container.flipped > img {
+    transform: scaleX(-1);
+}
+
+.duck-container img {
+    height: 100%;
+    width: auto;
+}
+
+
+@keyframes duckFloat {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(0, -4%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}

@@ -140,6 +140,10 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 20)
                 break
 
+            case "duckBoat":
+                setDecorationHeight(curr => widthRatio * 15)
+                break
+
             default:
                 setDecorationHeight(curr => 100)
         }
