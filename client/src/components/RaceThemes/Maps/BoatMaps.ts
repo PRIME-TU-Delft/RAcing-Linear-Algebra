@@ -1,4 +1,5 @@
 import Sprites from "../Sprites/BoatThemeSprites"
+import TrainThemeSprites from "../Sprites/TrainThemeSprites"
 import { PercentCoordinate, RaceMap } from "../SharedUtils"
 import zIndex from "@mui/material/styles/zIndex"
 import Seagull from "./SpecialDecorationComponents/Seagull/Seagull"
@@ -82,6 +83,121 @@ const mapOne = {
                     sprite: Sprites.duck,
                     zIndex: 1000
                 },
+                
+                {
+                    
+                points: [
+                {xPercent: 0.03, yPercent: 0.15},
+                {xPercent: 0.4083333333333333, yPercent: 0.08},
+                {xPercent: 0.3783333333333333, yPercent: 0.12},
+                {xPercent: 0.44333333333333336, yPercent: 0.2},
+                {xPercent: 0.4183333333333333, yPercent: 0.15},
+                {xPercent: 0.49333333333333335, yPercent: 0.14},
+
+                ],
+                class: "grassBoat",
+                sprite: TrainThemeSprites.grass1,
+                zIndex: 1,
+                randomSprites: [
+                    TrainThemeSprites.grass1,
+                    TrainThemeSprites.grass2,
+                    TrainThemeSprites.grass3,
+                    TrainThemeSprites.grass4,
+                    TrainThemeSprites.grass5,
+                    TrainThemeSprites.grass6,
+                    TrainThemeSprites.grass7,
+                    TrainThemeSprites.grass8,
+                    TrainThemeSprites.grass9,
+                    TrainThemeSprites.grass10,
+                ]
+            },
+
+            {
+                points: [
+                {xPercent: 0.5385416666666666, yPercent: 0.1},
+                {xPercent: 0.5786458333333333, yPercent: 0.1},
+                {xPercent: 0.61875, yPercent: 0.1},
+                {xPercent: 0.6588541666666666, yPercent: 0.1},
+                {xPercent: 0.698333333333333, yPercent: 0.1},
+                {xPercent: 0.73, yPercent: 0.1},
+                {xPercent: 0.76875, yPercent: 0.1},
+                {xPercent: 0.8088541666666666, yPercent: 0.1},
+                {xPercent: 0.8489583333333334, yPercent: 0.1},
+                {xPercent: 0.8890625, yPercent: 0.1},
+                {xPercent: 0.9291666666666667, yPercent: 0.1},
+                {xPercent: 0.9692708333333334, yPercent: 0.1},
+    
+                {xPercent: 0.4984375, yPercent: 0.02},
+                {xPercent: 0.5385416666666666, yPercent: 0.02},
+                {xPercent: 0.5786458333333333, yPercent: 0.02},
+                {xPercent: 0.61875, yPercent: 0.02},
+                {xPercent: 0.6588541666666666, yPercent: 0.02},
+                {xPercent: 0.698333333333333, yPercent: 0.02},
+                {xPercent: 0.73, yPercent: 0.02},
+                {xPercent: 0.76875, yPercent: 0.05},
+                {xPercent: 0.8088541666666666, yPercent: 0.02},
+                {xPercent: 0.8489583333333334, yPercent: 0.02},
+                {xPercent: 0.8890625, yPercent: 0.02},
+                {xPercent: 0.9291666666666667, yPercent: 0.02},
+                {xPercent: 0.9692708333333334, yPercent: 0.02},
+
+                ].map(p => ({
+                    xPercent: p.xPercent + (Math.random() - 0.5) * 0.03,
+                    yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
+                })),
+                class: "grassBoat",
+                sprite: TrainThemeSprites.grass1,
+                zIndex: 1,
+                randomSprites: [
+                    TrainThemeSprites.grass1,
+                    TrainThemeSprites.grass2,
+                    TrainThemeSprites.grass3,
+                    TrainThemeSprites.grass4,
+                    TrainThemeSprites.grass5,
+                    TrainThemeSprites.grass6,
+                    TrainThemeSprites.grass7,
+                    TrainThemeSprites.grass8,
+                    TrainThemeSprites.grass9,
+                    TrainThemeSprites.grass10,
+                ]
+            },
+
+            {
+                points: [
+                {xPercent: 0.01, yPercent: 0.08},
+                {xPercent: 0.05833333333333333, yPercent: 0.06},
+                {xPercent: 0.0984375, yPercent: 0.06},
+                {xPercent: 0.13854166666666668, yPercent: 0.06},
+                {xPercent: 0.17864583333333334, yPercent: 0.06},
+                {xPercent: 0.21875, yPercent: 0.06},
+                {xPercent: 0.2588541666666667, yPercent: 0.06},
+                {xPercent: 0.2989583333333333, yPercent: 0.06},
+                
+                {xPercent: 0.04, yPercent: 0.08},
+                {xPercent: 0.09, yPercent: 0.1},
+                {xPercent: 0.13, yPercent: 0.1},
+                {xPercent: 0.17, yPercent: 0.08},
+
+                ].map(p => ({
+                    xPercent: p.xPercent + (Math.random() - 0.5) * 0.03,
+                    yPercent: p.yPercent + (Math.random() - 0.5) * 0.06
+                })),
+                class: "grassBoat",
+                sprite: TrainThemeSprites.grass1,
+                zIndex: 1,
+                randomSprites: [
+                    TrainThemeSprites.grass1,
+                    TrainThemeSprites.grass2,
+                    TrainThemeSprites.grass3,
+                    TrainThemeSprites.grass4,
+                    TrainThemeSprites.grass5,
+                    TrainThemeSprites.grass6,
+                    TrainThemeSprites.grass7,
+                    TrainThemeSprites.grass8,
+                    TrainThemeSprites.grass9,
+                    TrainThemeSprites.grass10,
+                ]
+            },
 
             ],
             path: [

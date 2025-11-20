@@ -1,8 +1,8 @@
 .windmill-park-container {
     position: absolute;
-    left: 45%;
-    top: 6%;
-    width: 10%;
+    left: 40%;
+    top: 5%;
+    width: 13%;
     height: 10%;
     z-index: 99999;
 }
