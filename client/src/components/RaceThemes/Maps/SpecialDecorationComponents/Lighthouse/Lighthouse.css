@@ -35,11 +35,11 @@
     0% {
         opacity: 0;
     }
-    10% {
+    20% {
         opacity: 1;
     }
 
-    20% {
+    40% {
         opacity: 0;
     }
 
@@ -52,6 +52,6 @@
 }
 
 .lighthouse-container > div img:nth-child(2) {
-    animation: lighthouse-beam 8s linear infinite;
+    animation: lighthouse-beam 5s linear infinite;
     animation-delay: 1s;
 }
