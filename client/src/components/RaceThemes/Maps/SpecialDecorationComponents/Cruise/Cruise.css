@@ -1,0 +1,28 @@
+.cruise-container {
+    position: absolute;
+    width: 4.5%;
+    height: 4.5%;
+    animation: cruiseFloat 3s ease-in-out infinite;
+    z-index: 999;
+}
+
+
+.cruise-container img {
+    height: 100%;
+    width: auto;
+}
+
+
+@keyframes cruiseFloat {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(0, -7%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
