@@ -1,0 +1,68 @@
+.windmill-park-container {
+    position: absolute;
+    left: 45%;
+    top: 6%;
+    width: 10%;
+    height: 10%;
+    z-index: 99999;
+}
+
+.windmill-row {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.windmill-park-container > .windmill-row:first-child {
+    transform: translate(30%, -50%) scale(0.8);
+    filter: brightness(0.8);
+}
+
+.windmill-park-container > .windmill-row:nth-child(2) {
+    transform: translate(15%, -25%) scale(0.9);
+    filter: brightness(0.9);
+}
+
+.windmill-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.windmill-pole {
+    height: 100%;
+    width: auto;
+    position: absolute;
+    z-index: 10;
+}
+
+.windmill-spinners {
+    height: 80%;
+    width: auto;
+    position: absolute;
+    transform: translate(-8.8%, -4%) rotate(0deg);
+    animation: spinCycle 5s linear infinite;
+
+    transform-origin: center center;
+    will-change: transform;
+    z-index: 50;
+}
+
+
+.windmill-circle {
+    height: 100%;
+    width: auto;
+    position: absolute;
+    z-index: 100;
+}
+
+@keyframes spinCycle {
+    0% {
+        transform: translate(-8.8%, -4%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-8.8%, -4%) rotate(360deg);
+    }
+}

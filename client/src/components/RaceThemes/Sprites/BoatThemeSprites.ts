@@ -31,6 +31,9 @@ import RotterdamBridge from "../../../img/maps/train/bridge.png"
 import SkyScraper1 from "../../../img/maps/train/skyscraper.png"
 import SkyScraper2 from "../../../img/maps/train/skyscraper2.png"
 import UtrecthDom from "../../../img/maps/boat/utrecth_dom.png"
+import WindmillPole from "../../../img/maps/boat/windmill/pole.png"
+import WindmillSpinners from "../../../img/maps/boat/windmill/spinner.png"
+import WindmillCircle from "../../../img/maps/boat/windmill/circle.png"
 
 export default {
     shark: Shark,
@@ -63,5 +66,8 @@ export default {
     rotterdamBridge: RotterdamBridge,
     skyScraper1: SkyScraper1,
     skyScraper2: SkyScraper2,
-    utrecthDom: UtrecthDom
+    utrecthDom: UtrecthDom,
+    windmillPole: WindmillPole,
+    windmillSpinners: WindmillSpinners,
+    windmillCircle: WindmillCircle,
 }
