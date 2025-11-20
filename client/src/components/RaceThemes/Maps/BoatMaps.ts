@@ -61,7 +61,7 @@ const mapOne = {
                 },
 
                 {
-                    points: [{ xPercent: 0.55, yPercent: 0.53  }],
+                    points: [{ xPercent: 0.55, yPercent: 0.55  }],
                     class: "cheeseBoat",
                     sprite: Sprites.cheese,
                 },

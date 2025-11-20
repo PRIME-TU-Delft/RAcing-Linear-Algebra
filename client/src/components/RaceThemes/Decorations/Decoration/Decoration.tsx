@@ -133,7 +133,7 @@ function Decoration(props: Props) {
                 break
             
             case "cheeseBoat":
-                setDecorationHeight(curr => widthRatio * 30)
+                setDecorationHeight(curr => widthRatio * 23)
                 break
 
             case "seagullBoat":
