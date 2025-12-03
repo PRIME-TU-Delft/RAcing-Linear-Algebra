@@ -158,13 +158,14 @@ function MainVehicle(props: Props) {
                                 zIndex: getZIndexValues().mainVehicle + 20,
                                 // marginTop: `${distinctHeight / 1.5}px`,
                                 // marginLeft: `${distinctWidth / 1.5}px`,
-                                fontSize: `calc(${FONT_SIZE} * ${scaleY})`
+                                fontSize: `calc(${FONT_SIZE} * ${scaleY})`,
+                                transform: `scaleX(${ratio})`
                             }}>{formatRacePositionText(props.racePosition + 1)}</div>
                         <div className={props.isOnMinimap ? "minimap-vehicle-image-container rounded-circle" : "vehicle-image-container rounded-circle"} style={
                             { 
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
-                                width: `calc(${DESIRED_SIZE} * ${ratio * scaleX})`,
-                                height: `calc(${DESIRED_SIZE} * ${ratio * scaleY})`
+                                width: `calc(${DESIRED_SIZE} * ${scaleX})`,
+                                height: `calc(${DESIRED_SIZE} * ${scaleY})`
 
                             }}>
                             <VehicleImage 
@@ -220,7 +221,8 @@ function MainVehicle(props: Props) {
                                 zIndex: getZIndexValues().mainVehicle + 20,
                                 marginTop: `calc(-${desiredMinimapSize})`,
                                 marginLeft: `calc(${desiredMinimapSize} * 2)`,
-                                fontSize: `calc(${FONT_SIZE} * ${scaleY})`
+                                fontSize: `calc(${FONT_SIZE} * ${scaleY})`,
+                                transform: `scaleX(${ratio})`
                             }}>{formatRacePositionText(props.racePosition + 1)}</div>
                         <div className={props.isOnMinimap ? "minimap-vehicle-image-container rounded-circle" : "vehicle-image-container rounded-circle"} style={
                             { 

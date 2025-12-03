@@ -1,22 +1,26 @@
-.vehicle-main-svg {
+.vehicle-main-svg-image {
     position: absolute;
     top: 0;
-    width: 100%;
-    height: auto;
     z-index: 2;
 }
 
-.vehicle-highlight-svg {
+.vehicle-highlight-svg-image {
     position: absolute;
     top: 0;
-    width: 100%;
-    height: auto;
     z-index: 2;
 }
 
-.background-vehicle-image {
+.background-vehicle-overlay-image {
     position: absolute;
     top: 0;
+}
+
+.train-sizing {
     width: 100%;
     height: auto;
+}
+
+.boat-sizing {
+    width: 100%;
+    height: 100%;
 }
