@@ -27,7 +27,7 @@ function MainVehicle(props: Props) {
 
     const [racePathSizing, setRacePathSizing] = useState(getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height));
     const DESIRED_SIZE = "3vw";
-    const desiredMinimapSize = "2.5vw"
+    const desiredMinimapSize = "3vw"
     const FONT_SIZE = "1vw";
     const scaleX = 1920 / (props.isOnMinimap ? racePathSizing.width : dimensions.width);
     const scaleY = 1080 / (props.isOnMinimap ? racePathSizing.height : dimensions.height);
@@ -165,7 +165,7 @@ function MainVehicle(props: Props) {
                             { 
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
                                 width: `calc(${DESIRED_SIZE} * ${scaleX})`,
-                                height: `calc(${DESIRED_SIZE} * ${scaleY})`
+                                height: `calc(${DESIRED_SIZE} * ${scaleY})`, 
 
                             }}>
                             <VehicleImage 
@@ -228,7 +228,7 @@ function MainVehicle(props: Props) {
                             { 
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
                                 width: `calc(${desiredMinimapSize} * ${scaleX})`,
-                                height: `calc(${desiredMinimapSize} * ${scaleY})`,
+                                height: `calc(${desiredMinimapSize} * ${scaleY} * ${ratio})`,
                                 offsetAnchor: 'center center',
                             }}>
                             <VehicleImage 
