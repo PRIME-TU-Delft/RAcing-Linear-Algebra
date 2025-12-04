@@ -22,5 +22,6 @@
 
 .boat-sizing {
     width: 100%;
-    height: 100%;
+    height: 50%;
+    top: 25%
 }

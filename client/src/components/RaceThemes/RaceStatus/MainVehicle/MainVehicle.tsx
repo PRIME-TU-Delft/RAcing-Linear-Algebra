@@ -26,8 +26,8 @@ function MainVehicle(props: Props) {
     });
 
     const [racePathSizing, setRacePathSizing] = useState(getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height));
-    const DESIRED_SIZE = "3vw";
-    const desiredMinimapSize = "3vw"
+    const DESIRED_SIZE = "2.5vw";
+    const desiredMinimapSize = "2.5vw"
     const FONT_SIZE = "1vw";
     const scaleX = 1920 / (props.isOnMinimap ? racePathSizing.width : dimensions.width);
     const scaleY = 1080 / (props.isOnMinimap ? racePathSizing.height : dimensions.height);
@@ -165,7 +165,8 @@ function MainVehicle(props: Props) {
                             { 
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
                                 width: `calc(${DESIRED_SIZE} * ${scaleX})`,
-                                height: `calc(${DESIRED_SIZE} * ${scaleY})`, 
+                                height: `calc(${DESIRED_SIZE} * ${scaleY})`,
+                                backgroundColor: '#f0f0f0ff' 
 
                             }}>
                             <VehicleImage 
@@ -222,14 +223,15 @@ function MainVehicle(props: Props) {
                                 marginTop: `calc(-${desiredMinimapSize})`,
                                 marginLeft: `calc(${desiredMinimapSize} * 2)`,
                                 fontSize: `calc(${FONT_SIZE} * ${scaleY})`,
-                                transform: `scaleX(${ratio})`
+                                transform: `scaleX(${ratio})`,
                             }}>{formatRacePositionText(props.racePosition + 1)}</div>
                         <div className={props.isOnMinimap ? "minimap-vehicle-image-container rounded-circle" : "vehicle-image-container rounded-circle"} style={
                             { 
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
                                 width: `calc(${desiredMinimapSize} * ${scaleX})`,
-                                height: `calc(${desiredMinimapSize} * ${scaleY} * ${ratio})`,
+                                height: `calc(${desiredMinimapSize} * ${scaleY})`,
                                 offsetAnchor: 'center center',
+                                backgroundColor: '#dfdfdfff' 
                             }}>
                             <VehicleImage 
                                 theme={raceData.theme} 

@@ -12,6 +12,7 @@ interface Props {
 
 function VehicleImage(props: Props) {
     const sizingClass = props.theme === "Boat" ? " boat-sizing" : "train-sizing";
+    console.log(getRaceVehicleSprite(props.theme))
 
     const trainSvgOverlay = (
         <>
@@ -30,7 +31,7 @@ function VehicleImage(props: Props) {
                 return trainSvgOverlay
 
             default:
-                return trainSvgOverlay
+                return <div></div>
         }
     }
 

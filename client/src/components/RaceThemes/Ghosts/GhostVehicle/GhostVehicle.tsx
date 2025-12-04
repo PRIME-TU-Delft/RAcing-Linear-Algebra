@@ -24,7 +24,7 @@ interface Props {
 
 const DESIRED_EXPANDED_SIZE = "2vw";
 const DESIRED_CLOSED_SIZE = "1.2vw";
-const DESIRED_MINIMAP_SIZE = "1.5vw";
+const DESIRED_MINIMAP_SIZE = "1vw";
 
 function GhostVehicle(props: Props) {
     const [startAnimation, setStartAnimation] = useState<boolean>(false)
@@ -232,7 +232,6 @@ function GhostVehicle(props: Props) {
                         initial={{ offsetDistance: "0%"}}
                         animate={animationControls}
                     >
-                        {/* Only show position for ghosts that are open (check function description) */}
                         {props.ghost.isOpen && props.startShowingGhosts && !props.keepClosed ? 
                         (<motion.div 
                             className="position-number"
@@ -262,7 +261,7 @@ function GhostVehicle(props: Props) {
                                     getColorForStudy(props.ghost.study).mainColor
                                 ),
                                 width: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleX})`,
-                                height: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleY})`
+                                height: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleY})`,  
                             }}
                             transition={{
                                 duration: 0.5,

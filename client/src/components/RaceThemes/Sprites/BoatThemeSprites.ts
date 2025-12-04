@@ -2,7 +2,7 @@
 import Sun from "../../../img/sun.gif"
 import SharkReverse from "../../../img/shark-fin-reverse.gif"
 import Island from "../../../img/island-icon.png"
-import Boat from "../../../img/boat.png"
+import Boat from "../../../img/maps/boat/main-boat.png"
 // import Lighthouse from "../../../img/Lighthouse.png"
 import IcebergOne from "../../../img/iceberg-1.png"
 import IcebergTwo from "../../../img/iceberg-2.png"

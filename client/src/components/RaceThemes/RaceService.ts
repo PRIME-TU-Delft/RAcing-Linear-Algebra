@@ -19,7 +19,7 @@ export function formatRacePositionText(position: number) {
 }
 
 export function getRaceVehicleSprite(theme: string) {
-    switch(theme) {
+    switch(theme.toLocaleLowerCase()) {
         case "train":
             return TrainThemeSprites.train
         case "boat":
