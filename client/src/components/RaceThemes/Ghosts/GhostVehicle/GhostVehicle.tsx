@@ -10,6 +10,7 @@ import VehicleImage from "../../VehicleImage/VehicleImage";
 import { TimeContext } from "../../../../contexts/TimeContext";
 import { RaceProgressContext } from "../../../../contexts/RaceProgressContext";
 import { getRacePathSizeAndOffsetMargins } from "../../../Game/GameService";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     ghost: Ghost,
@@ -23,8 +24,9 @@ interface Props {
 }
 
 const DESIRED_EXPANDED_SIZE = "2vw";
-const DESIRED_CLOSED_SIZE = "1.2vw";
+const DESIRED_CLOSED_SIZE = "1vw";
 const DESIRED_MINIMAP_SIZE = "1vw";
+const BORDER_WIDTH = "0.2vw";
 
 function GhostVehicle(props: Props) {
     const [startAnimation, setStartAnimation] = useState<boolean>(false)
@@ -211,7 +213,7 @@ function GhostVehicle(props: Props) {
             </motion.div>}
 
             {props.theme === "Boat" && !props.keepClosed &&
-            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9000}}>
                 <path
                     d={props.path}
                     fill={"none"}
@@ -219,7 +221,7 @@ function GhostVehicle(props: Props) {
                 <foreignObject x="0" y="0" 
                     width={1920} 
                     height={1080}
-                    style={{ overflow: 'visible' }}
+                    style={{ overflow: 'visible', zIndex: 9000 }}
                     >
                     <motion.div
                         data-testid={`ghost${props.ghost.key}`}
@@ -237,7 +239,7 @@ function GhostVehicle(props: Props) {
                             className="position-number"
                             style={{
                                 borderColor: getColorForRaceLap(props.ghost.lapsCompleted), 
-                                zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition + 20,  // + 20 to make sure text is always on top of images
+                                zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition,
                                 transform: `scaleX(${ratio})`
                             }}>
                                 <GhostText 
@@ -261,7 +263,8 @@ function GhostVehicle(props: Props) {
                                     getColorForStudy(props.ghost.study).mainColor
                                 ),
                                 width: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleX})`,
-                                height: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleY})`,  
+                                height: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleY})`,
+                                borderWidth: `calc(${BORDER_WIDTH} * ${scaleX})`
                             }}
                             transition={{
                                 duration: 0.5,
@@ -303,7 +306,7 @@ function GhostVehicle(props: Props) {
                         height: racePathSizing.height,
                         marginLeft: racePathSizing.offsetX,
                         marginTop: racePathSizing.offsetY,
-                        zIndex: 99999
+                        zIndex: 9000
                     }}>
                 <path
                     d={props.path}
@@ -312,7 +315,7 @@ function GhostVehicle(props: Props) {
                 <foreignObject x="0" y="0" 
                     width={1920} 
                     height={1080}
-                    style={{ overflow: 'visible', zIndex: 99999 }}
+                    style={{ overflow: 'visible', zIndex: 9000 }}
                     >
                     <motion.div
                         data-testid={`ghost${props.ghost.key}`}

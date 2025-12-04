@@ -155,7 +155,7 @@ function MainVehicle(props: Props) {
                     >
                         <div className={props.isOnMinimap ? "minimap-main-vehicle-text" : "main-vehicle-position-number main-vehicle-text"} style={
                             {
-                                zIndex: getZIndexValues().mainVehicle + 20,
+                                zIndex: getZIndexValues().mainVehicle + 100,
                                 // marginTop: `${distinctHeight / 1.5}px`,
                                 // marginLeft: `${distinctWidth / 1.5}px`,
                                 fontSize: `calc(${FONT_SIZE} * ${scaleY})`,
@@ -166,7 +166,6 @@ function MainVehicle(props: Props) {
                                 borderColor: getColorForRaceLap(getNumberOfRaceLapsCompleted(scores.totalPoints, scores.currentPoints)),
                                 width: `calc(${DESIRED_SIZE} * ${scaleX})`,
                                 height: `calc(${DESIRED_SIZE} * ${scaleY})`,
-                                backgroundColor: '#f0f0f0ff' 
 
                             }}>
                             <VehicleImage 
@@ -231,7 +230,7 @@ function MainVehicle(props: Props) {
                                 width: `calc(${desiredMinimapSize} * ${scaleX})`,
                                 height: `calc(${desiredMinimapSize} * ${scaleY})`,
                                 offsetAnchor: 'center center',
-                                backgroundColor: '#dfdfdfff' 
+                                zIndex: 9999
                             }}>
                             <VehicleImage 
                                 theme={raceData.theme} 
