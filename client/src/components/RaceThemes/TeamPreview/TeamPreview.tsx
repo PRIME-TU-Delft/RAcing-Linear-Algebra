@@ -10,6 +10,7 @@ import TrainBackground from "../../Waiting/Themes/TrainBackground";
 import PregameCountdown from "./PregameCountdown/PregameCountdown";
 import { getColorForStudy } from "../Ghosts/GhostService";
 import { motion } from "framer-motion";
+import BoatBackground from "../../Waiting/Themes/BoatBackground";
 
 interface Props {
     topic: string,
@@ -122,14 +123,18 @@ function TeamPreview(props: Props) {
 
     return(
         <div className="team-preview-body">
-            <TrainBackground 
+            {props.theme.toLowerCase() === "train" && <TrainBackground 
                 includeRail={false} 
                 isTeamPreview={true} 
                 closeTrainDoors={startCountdown}
                 moveTrain={topicShowCompleted}
                 onDoorsClosed={() => setShowTopicName(true)}
                 onTrainMoved={() => props.onStartGame()}
-            />
+            />}
+
+            {props.theme.toLowerCase() === "boat" && 
+            <BoatBackground/>
+            }
             <a.div className="team-preview-title">
                     <a.div style={{...titleAnimation}}>
                     {"Dear engineers in training, please make your way to platform " + platformNumber + "."}
