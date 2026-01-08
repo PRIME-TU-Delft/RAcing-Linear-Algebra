@@ -40,8 +40,6 @@ img, .boat-preview {
 
 .boat-preview-background {
     background-color: #bffff1;
-
-    /* transform: translateY(-60%); */
     overflow: visible;
 }
 
@@ -61,6 +59,10 @@ img, .boat-preview {
     animation-duration: 40s;
 }
 
+.boat-preview-background.play-boat-animation {
+    animation: boat-transition-animation 4s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
 @keyframes wave-animation {
     0% {
         transform: translateX(-50%) translateY(67vh) scaleY(1);
@@ -71,16 +73,99 @@ img, .boat-preview {
     }
 }
 
-@keyframes sun-animation {
+@keyframes boat-transition-animation {
     0% {
-        transform: translateY(0px);
+        transform: translateY(0%);
     }
-
-    50% {
-        transform: translateY(10px);
+    20% {
+        transform: translateY(8%);
     }
-
+    30% {
+        transform: translateY(8%);
+    }
     100% {
-        transform: translateY(0px);
+        transform: translateY(-100vh);
+    }
+}
+
+.preview-bubbles-container {
+    left: -40%;
+    top: 150%;
+    width: 100%;
+    position: absolute;
+}
+
+.preview-bubbles-container-2 {
+    left: 30%;
+    transform: scale(-1.2, -1.2);
+    top: 190%;
+    width: 100%;
+    position: absolute;
+}
+
+.preview-bubbles-container-3 {
+    left: 15%;
+    top: 110%;
+    transform: scale(-0.8, 0.8);
+    width: 100%;
+    position: absolute;
+}
+
+.preview-bubbles-container-4 {
+    left: -10%;
+    top: 130%;
+    transform: scale(1, -1);
+    width: 100%;
+    position: absolute;
+}
+
+.preview-bubble {
+    height: auto;
+    position: absolute;
+}
+
+.preview-bubbles {
+    position: relative;
+}
+
+.preview-bubbles > .bubble-1 {
+    width: 3%;
+    animation: bubble-wobble 2s ease-in-out infinite;
+}
+
+.preview-bubbles > .bubble-2 {
+    width: 2%;
+    transform: translate(200%, 80%);
+    animation: bubble-wobble 1.5s ease-in-out 0.5s infinite;
+}
+
+.preview-bubbles > .bubble-3 {
+    width: 1.5%;
+    transform: translate(100%, 260%);
+    animation: bubble-wobble 1.5s ease-in-out 0.2s infinite;
+}
+
+.rising-bubbles{
+    animation: bubble-rise 3s linear both;    
+    animation-delay: 2s;
+}
+
+@keyframes bubble-wobble {
+    0%, 100% {
+        margin-left: 0px;
+    }
+    50% {
+        margin-left: 15px;
+    }
+}
+
+@keyframes bubble-rise {
+    0% {
+        margin-top: 0;
+        opacity: 1;
+    }
+    100% {
+        margin-top: -120vh;
+        opacity: 0;
     }
 }
