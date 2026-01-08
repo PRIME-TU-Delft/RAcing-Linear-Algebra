@@ -11,6 +11,7 @@ import PregameCountdown from "./PregameCountdown/PregameCountdown";
 import { getColorForStudy } from "../Ghosts/GhostService";
 import { motion } from "framer-motion";
 import BoatBackground from "../../Waiting/Themes/BoatBackground";
+import PreviewBoatBackground from "./PreviewCustomBackgrounds/PreviewBoatBackground";
 
 interface Props {
     topic: string,
@@ -134,7 +135,7 @@ function TeamPreview(props: Props) {
             />}
 
             {props.theme.toLowerCase() === "boat" && 
-            <BoatBackground/>
+            <PreviewBoatBackground/>
             }
 
             {/* Title */}
