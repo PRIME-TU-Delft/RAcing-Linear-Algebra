@@ -123,6 +123,7 @@ function TeamPreview(props: Props) {
 
     return(
         <div className="team-preview-body">
+            {/* Background */}
             {props.theme.toLowerCase() === "train" && <TrainBackground 
                 includeRail={false} 
                 isTeamPreview={true} 
@@ -135,13 +136,28 @@ function TeamPreview(props: Props) {
             {props.theme.toLowerCase() === "boat" && 
             <BoatBackground/>
             }
+
+            {/* Title */}
             <a.div className="team-preview-title">
-                    <a.div style={{...titleAnimation}}>
-                    {"Dear engineers in training, please make your way to platform " + platformNumber + "."}
+                <a.div style={{...titleAnimation}}>
+                    {props.theme.toLocaleLowerCase() === "train" ? 
+                    "Dear engineers in training, please make your way to platform " + platformNumber + "." 
+                    : props.theme.toLocaleLowerCase() === "boat" ? 
+                    "Ahoy, engineers in training! Please head to dock " + platformNumber + "." 
+                    : null}
                 </a.div>
-                </a.div>
+            </a.div>
+
+            
             <a.div className="page-content" style={pageContentAnimation}>
-                {!props.noGhostTeamsPresent && <a.div className="team-preview-subtitle" style={subtitleAnimation}>Participating teams</a.div>}
+                {!props.noGhostTeamsPresent && 
+                    <a.div 
+                        className={"team-preview-subtitle " + (props.theme.toLocaleLowerCase() === "train" ? "train-theme-subtitle" : "boat-theme-subtitle")} 
+                        style={subtitleAnimation}>
+                            Participating teams
+                    </a.div>
+                }
+                
                 <a.div className="team-preview-grid">
                         {teamsAnimation.map((style, i) => (
                             <a.div style={style} key={i}>
