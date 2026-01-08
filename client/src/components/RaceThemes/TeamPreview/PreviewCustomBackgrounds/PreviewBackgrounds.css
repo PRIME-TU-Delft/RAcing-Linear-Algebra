@@ -40,6 +40,9 @@ img, .boat-preview {
 
 .boat-preview-background {
     background-color: #bffff1;
+
+    /* transform: translateY(-60%); */
+    overflow: visible;
 }
 
 .preview-sea-wave-1 {

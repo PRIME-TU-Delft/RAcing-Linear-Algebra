@@ -135,7 +135,11 @@ function TeamPreview(props: Props) {
             />}
 
             {props.theme.toLowerCase() === "boat" && 
-            <PreviewBoatBackground/>
+                <PreviewBoatBackground 
+                    countdownStarted={startCountdown} 
+                    playAnimation={topicShowCompleted}
+                    onShowTopicName={() => setShowTopicName(true)}
+                    onAnimationComplete={() => props.onStartGame()} />
             }
 
             {/* Title */}
