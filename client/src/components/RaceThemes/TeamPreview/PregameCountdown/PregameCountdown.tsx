@@ -5,6 +5,7 @@ import { a, useSpring } from "react-spring";
 interface Props {
     topic: string,
     seconds: number,
+    theme: string,
     onCountdownComplete: () => void
 }
 
@@ -32,7 +33,7 @@ function PregameCountdown(props: Props) {
 
     return(
         <a.div style={animation} className="topic-display-container">
-            <div className="topic-text">{props.topic}</div>
+            <div className={"topic-text " + (props.theme.toLocaleLowerCase() + "-theme")}>{props.topic}</div>
         </a.div>
     )
 }

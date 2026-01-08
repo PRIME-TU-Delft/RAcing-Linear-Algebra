@@ -28,7 +28,7 @@ export default function PreviewBoatBackground(props: Props) {
         if (props.playAnimation) {
             setTimeout(() => {
                 props.onAnimationComplete && props.onAnimationComplete();
-            }, 3500);
+            }, 3300);
         }
     }, [props.playAnimation]);
         

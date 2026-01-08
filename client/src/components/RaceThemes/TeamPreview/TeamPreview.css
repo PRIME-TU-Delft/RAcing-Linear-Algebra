@@ -65,6 +65,10 @@
     justify-content: center;
 }
 
+.boat-theme.team-preview-grid {
+    margin: 4vh auto;
+}
+
 .team-preview-grid > div {
     display: inline-block;
     flex-basis: 25%;
