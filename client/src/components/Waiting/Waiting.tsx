@@ -59,9 +59,9 @@ function Waiting(props: Props) {
             ) : (
                 <>
                     <BoatBackground />
-                    <div className="boat-container">
+                    {/* <div className="boat-container">
                         <Boat />
-                    </div>
+                    </div> */}
                 </>
             )}
             <div className="waiting-title-container">

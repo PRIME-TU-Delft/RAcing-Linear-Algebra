@@ -7,8 +7,7 @@ export default function BoatBackground() {
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
-                width="100vw"
-                height="100vh"
+                // Removed width/height here to let CSS handle scaling
                 preserveAspectRatio="none"
                 viewBox="0 0 1440 560"
                 data-testid="boat-background"
@@ -19,7 +18,7 @@ export default function BoatBackground() {
                         height="560"
                         x="0"
                         y="0"
-                        fill="rgba(85, 199, 231, 1)"
+                        fill="#bffff1"
                         id="b1"
                     ></rect>
                     <path
