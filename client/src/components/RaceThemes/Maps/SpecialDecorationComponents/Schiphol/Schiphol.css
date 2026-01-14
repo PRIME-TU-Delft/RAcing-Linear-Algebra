@@ -24,6 +24,7 @@
     position: absolute;
     top: 90%;
     left: 120%;
+    z-index: 1000;
     
     animation: smoothFlightCycle 21s linear infinite;
     animation-delay: 5s;
