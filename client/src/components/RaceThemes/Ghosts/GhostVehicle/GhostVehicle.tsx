@@ -330,7 +330,7 @@ function GhostVehicle(props: Props) {
                     >
                         <div style={{ transform: `scaleX(${ratio})` }}>
                             <LapCompletedText 
-                                lapsCompleted={props.ghost.lapsCompleted}/>
+                                lapsCompleted={props.ghost.lapsCompleted} fontSize={30}/>
                         </div>
                         <div className="minimap-ghost rounded-circle" style={{
                             borderColor: getColorForRaceLap(props.ghost.lapsCompleted),
