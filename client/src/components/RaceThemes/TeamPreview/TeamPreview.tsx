@@ -175,7 +175,7 @@ function TeamPreview(props: Props) {
                                                 <svg 
                                             className={"vehicle-main-svg-image "}     
                                             viewBox="0 0 450 500"
-                                            style={{ fill: 'red', width: '100%', height: 'auto', top: '5%', left: '30%' }}
+                                            style={{ fill: sortedTeams[i].colors.mainColor, width: '100%', height: 'auto', top: '5%', left: '30%' }}
                                             >
                                             <path d="M169.33,96.17c-13.33-8.87-26.67-11.45-40-10.72-14.89.82-29.78,5.77-44.67,10.72-14.89,4.95-29.78,9.9-44.67,10.72-13.33.73-26.67-1.85-40-10.72V10.84c27.11,18.03,54.22,10.08,81.33,1.11C96,7.09,110.67,1.94,125.33.43c14.67-1.5,29.33.65,44,10.41v85.33Z" />
                                         </svg>

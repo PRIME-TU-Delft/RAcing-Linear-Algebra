@@ -213,7 +213,7 @@ function GhostVehicle(props: Props) {
             </motion.div>}
 
             {props.theme === "Boat" && !props.keepClosed &&
-            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9000}}>
+            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9999}}>
                 <path
                     d={props.path}
                     fill={"none"}
