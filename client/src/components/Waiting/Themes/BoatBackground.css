@@ -15,17 +15,17 @@
 }
 
 #b2 {
-    animation: wave-background 3s infinite ease-in-out alternate;
+    animation: wave-background-move 3s infinite ease-in-out alternate;
     transform-origin: center;
 }
 
 #b3 {
-    animation: wave-background 5s infinite ease-in-out alternate-reverse;
+    animation: wave-background-move 5s infinite ease-in-out alternate-reverse;
     animation-delay: 1s;
     transform-origin: center;
 }
 
-@keyframes wave-background {
+@keyframes wave-background-move {
     0% {
         transform: translateX(-60px);
     }
