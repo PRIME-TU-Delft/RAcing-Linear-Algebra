@@ -18,63 +18,63 @@ const mapOne = {
             backgroundColor: "#00ccff",
             decorations: [
                 {
-                    points: [{ xPercent: 0.4, yPercent: 0.1 }],
+                    points: [{ xPercent: 0.4, yPercent: 0.25 }],
                     class: "utrecthDom",
                     sprite: Sprites.utrecthDom,
                 },
 
                 {
-                    points: [{ xPercent: 0.08, yPercent: 0.22  }],
+                    points: [{ xPercent: 0.08, yPercent: 0.37  }],
                     class: "nieuweKerkBoat",
                     sprite: Sprites.nieuweKerk,
                 },
 
                 {
-                    points: [{ xPercent: 0.105, yPercent: 0.27  }],
+                    points: [{ xPercent: 0.105, yPercent: 0.40  }],
                     class: "thePierBoat",
                     sprite: Sprites.thePier,
                 },
 
                 {
-                    points: [{ xPercent: 0.04, yPercent: 0.09  }],
+                    points: [{ xPercent: 0.04, yPercent: 0.25  }],
                     class: "rotterdamBridgeBoat",
                     sprite: Sprites.rotterdamBridge,
                 },
 
                 {
-                    points: [{ xPercent: 0.21, yPercent: 0.2  }],
+                    points: [{ xPercent: 0.21, yPercent: 0.3  }],
                     class: "skyscraperBoat",
                     sprite: Sprites.skyScraper1,
                 },
 
                 {
-                    points: [{ xPercent: 0.23, yPercent: 0.17  }],
+                    points: [{ xPercent: 0.23, yPercent: 0.27  }],
                     class: "skyscraperBoat",
                     sprite: Sprites.skyScraper2,
                     zIndex: -1
                 },
 
                 {
-                    points: [{ xPercent: 0.43, yPercent: 0.37  }],
+                    points: [{ xPercent: 0.43, yPercent: 0.47  }],
                     class: "amsterdam",
                     sprite: Sprites.amsterdam,
                 },
 
                 {
-                    points: [{ xPercent: 0.55, yPercent: 0.55  }],
+                    points: [{ xPercent: 0.55, yPercent: 0.56  }],
                     class: "cheeseBoat",
                     sprite: Sprites.cheese,
                 },
 
                 {
-                    points: [{ xPercent: 0.155, yPercent: 0.375  }, { xPercent: 0.75, yPercent: 0.34  }],
+                    points: [{ xPercent: 0.155, yPercent: 0.42  }, { xPercent: 0.75, yPercent: 0.38  }],
                     class: "seagullBoat",
                     sprite: Sprites.seagullFly,
                     zIndex: 1000
                 },
 
                 {
-                    points: [{ xPercent: 0.04, yPercent: 0.19  }],
+                    points: [{ xPercent: 0.04, yPercent: 0.2  }],
                     class: "duckBoat",
                     sprite: Sprites.duck,
                     zIndex: 1000
@@ -210,8 +210,8 @@ const mapOne = {
                 { component: Deer, props: { startLeft: 70, startTop: 83, flipped: false } },
                 { component: Deer, props: { startLeft: 90, startTop: 80, flipped: true } },
                 { component: AmsterdamSail, props: {} },
-                { component: DuckSwim, props: { startLeft: 50, startTop: 72.5, flipped: true, scale: 0.4 } },
-                { component: DuckSwim, props: { startLeft: 36, startTop: 90, flipped: false, scale: 0.5 } },
+                { component: DuckSwim, props: { startLeft: 50, startTop: 73.5, flipped: true, scale: 0.4 } },
+                { component: DuckSwim, props: { startLeft: 36, startTop: 93, flipped: false, scale: 0.5 } },
                 { component: WindmillPark, props: {} },
                 { component: SmallShark, props: { startLeft: 45, startTop: 25, flipped: false, scale: 0.3 } },
                 { component: SmallShark, props: { startLeft: 78, startTop: 57, flipped: false, scale: 0.3 } },

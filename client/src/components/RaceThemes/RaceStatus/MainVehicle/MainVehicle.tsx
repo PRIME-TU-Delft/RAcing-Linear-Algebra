@@ -125,7 +125,7 @@ function MainVehicle(props: Props) {
             </motion.div>}
 
             {raceData.theme == "Boat" && !props.isOnMinimap &&
-            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9999}}>
                 <path
                     d={props.path}
                     fill={"none"}

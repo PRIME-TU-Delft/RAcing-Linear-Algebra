@@ -5,6 +5,7 @@ import { getColorForRaceLap } from "../../RaceService";
 
 interface Props {
     lapsCompleted: number,
+    fontSize?: number
 }
 
 function LapCompletedText(props: Props) {
@@ -33,7 +34,7 @@ function LapCompletedText(props: Props) {
     return(
         <div style={{color: color}}>
             {lapCompletedTextAnimation((style, display) => display ?  (
-                <a.div className="lap-completed-text" style={style}>
+                <a.div className="lap-completed-text" style={{...style, fontSize: props.fontSize || 15}}>
                     Lap {props.lapsCompleted} completed!
                 </a.div>
             ) : null)}
