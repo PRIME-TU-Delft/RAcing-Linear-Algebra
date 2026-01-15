@@ -125,14 +125,7 @@ function MainVehicle(props: Props) {
             </motion.div>}
 
             {raceData.theme == "Boat" && !props.isOnMinimap &&
-            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9999}}>
-                <path
-                    d={props.path}
-                    fill={"none"}
-                    strokeWidth={2}
-                    strokeDasharray={"15"}
-                    stroke={"#3d6fadff"}
-                />
+            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 99999}}>
                 <foreignObject x="0" y="0" 
                     width={1920} 
                     height={1080}
