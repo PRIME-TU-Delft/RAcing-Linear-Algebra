@@ -1,0 +1,114 @@
+.schiphol-container {
+    position: absolute;
+    left: 27%;
+    top: 63%;
+    width: 4%;
+    height: 4%;
+    z-index: 99999;
+}
+
+.schiphol-plane-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.schiphol-runway {
+    height: 100%;
+    width: auto;
+}
+
+.schiphol-plane {
+    height: 100%;
+    width: auto;
+    position: absolute;
+    top: 90%;
+    left: 120%;
+    z-index: 1000;
+    
+    animation: smoothFlightCycle 21s linear infinite;
+    animation-delay: 5s;
+
+    transform-origin: center bottom;
+    will-change: transform, left, top;
+    opacity: 0;
+}
+
+@keyframes smoothFlightCycle {
+    0% {
+        left: -800%;
+        top: -400%;
+        transform: rotate(15deg);
+        opacity: 1;
+    }
+    11% {
+        left: -50%;
+        top: 80%;
+        transform: rotate(5deg);
+    }
+    14% {
+        left: 0%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+    19% {
+        left: 60%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+    24% {
+        left: 120%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+    32% {
+        left: 120%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+    37% {
+        left: 180%;
+        top: 90%;
+        transform: rotate(0deg);
+    }
+    40% {
+        left: 220%;
+        top: 90%;
+        transform: rotate(-5deg);
+    }
+    42% {
+        left: 260%;
+        top: 80%;
+        transform: rotate(-12deg);
+    }
+    50% {
+        left: 600%;
+        top: -10%;
+        transform: rotate(-12deg);
+    }
+    57% {
+        left: 1000%;
+        top: -180%;
+        transform: rotate(-15deg);
+    }
+    65% {
+        left: 1500%;
+        top: -400%;
+        transform: rotate(-15deg);
+        opacity: 1;
+    }
+    69% {
+        left: 1900%;
+        top: -600%;
+        transform: rotate(-16deg);
+        opacity: 1;
+    }
+    76% {
+        left: 1900%;
+        opacity: 0;
+    }
+    100% {
+        left: 1900%;
+        opacity: 0;
+    }
+}

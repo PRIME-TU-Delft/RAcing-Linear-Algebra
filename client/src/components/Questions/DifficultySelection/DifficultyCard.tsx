@@ -1,5 +1,5 @@
 import { send } from "process"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Card from "react-bootstrap/Card"
 import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
@@ -8,9 +8,54 @@ import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 
-import EasyIcon from "../../../img/icons/train-easy.png"
-import MediumIcon from "../../../img/icons/train-medium.png"
-import HardIcon from "../../../img/icons/train-hard.png"
+import EasyTrainIcon from "../../../img/icons/train-easy.png"
+import MediumTrainIcon from "../../../img/icons/train-medium.png"
+import HardTrainIcon from "../../../img/icons/train-hard.png"
+
+import EasyBoatIcon from "../../../img/icons/boat-easy.png"
+import MediumBoatIcon from "../../../img/icons/boat-medium.png"
+import HardBoatIcon from "../../../img/icons/boat-hard.png"
+import { RaceDataContext } from "../../../contexts/RaceDataContext"
+
+interface DifficultyIcons {
+    easy: string
+    medium: string
+    hard: string
+}
+
+interface ThemeDifficultyIcons {
+    theme: string
+    icons: DifficultyIcons
+}
+
+const THEME_DIFFICULTY_ICONS: ThemeDifficultyIcons[] = [
+    {
+        theme: "Train",
+        icons: {
+            easy: EasyTrainIcon,
+            medium: MediumTrainIcon,
+            hard: HardTrainIcon
+        }
+    },
+
+    {
+        theme: "Boat",
+        icons: {
+            easy: EasyBoatIcon,
+            medium: MediumBoatIcon,
+            hard: HardBoatIcon
+        }
+    }
+]
+
+const getDifficultyIconsForTheme = (theme: string): DifficultyIcons => {
+    const themeIcons = THEME_DIFFICULTY_ICONS.find(t => t.theme.toLowerCase() === theme.toLowerCase())
+    if (themeIcons) {
+        return themeIcons.icons
+    } else {
+        return THEME_DIFFICULTY_ICONS[0].icons
+    }
+}
 
 interface Props {
     difficulty: string
@@ -31,6 +76,8 @@ interface Props {
  * This contains the difficulty and the emoji for that difficulty
  */
 export default function  DifficultyCard(props: Props) {
+    const raceData = useContext(RaceDataContext)
+    
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
 
@@ -61,15 +108,17 @@ export default function  DifficultyCard(props: Props) {
     }
 
     const getSpriteForDifficulty = (difficulty: string) => {
+        const icons = getDifficultyIconsForTheme(raceData.theme)
+
         switch(difficulty) {
             case "Easy":
-                return EasyIcon
+                return icons.easy
             case "Medium":
-                return MediumIcon
+                return icons.medium
             case "Hard":
-                return HardIcon
+                return icons.hard
             default:
-                return EasyIcon
+                return icons.easy
         }
     }
 

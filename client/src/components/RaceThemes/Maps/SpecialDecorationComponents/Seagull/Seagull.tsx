@@ -1,9 +1,13 @@
 import TrainThemeSprites from "../../../Sprites/TrainThemeSprites"
 import "./Seagull.css"
 
-function Seagull() {
+interface Props {
+    theme?: string
+}
+
+function Seagull(props: Props) {
     return (
-        <div className="seagull-container">
+        <div className={props.theme ? `${props.theme}-seagull-container` : "seagull-container"}>
             <img
                 src={TrainThemeSprites.seagull}
                 alt="Seagull"

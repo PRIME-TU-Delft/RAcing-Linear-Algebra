@@ -4,6 +4,7 @@ import "./QuestionBoatBackground.css"
 export default function QuestionBoatBackground() {
     return (
         <div className="question-background">
+            <div className="boat-background-container"></div>
             <svg
                 id="question-boat-background"
                 xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +18,7 @@ export default function QuestionBoatBackground() {
                 <path
                     id="wave-top"
                     d="M 0,233 C 57.6,208.8 172.8,111.2 288,112 C 403.2,112.8 460.8,254 576,237 C 691.2,220 748.8,34.6 864,27 C 979.2,19.4 1036.8,188 1152,199 C 1267.2,210 1382.4,105.4 1440,82L1440 560L0 560z"
-                    fill="rgba(193, 235, 235, 1)"
+                    fill="#89f6fdff"
                 ></path>
                 <path
                     id="wave-mid"

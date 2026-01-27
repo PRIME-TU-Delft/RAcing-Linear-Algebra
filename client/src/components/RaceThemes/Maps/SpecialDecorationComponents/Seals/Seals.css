@@ -1,0 +1,44 @@
+.seal-pod-container {
+    position: absolute;
+    z-index: 999;
+    width: 30%;
+    height: auto;
+}
+
+.seal-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.seal-container :nth-child(1) {
+    position: absolute;
+    width: 8%;
+    top: 0;
+    left: -7%;
+    transform: scaleX(-1);
+}
+
+.seal-container :nth-child(2) {
+    position: absolute;
+    width: 10%;
+    top: 20;
+    left: 2%;
+}
+
+.seal-container :nth-child(3) {
+    position: absolute;
+    width: 7%;
+    top: 20;
+    left: 7%;
+}
+
+/* In DolphinPod.css */
+.seal-gif {
+    animation: fadePop 0.2s ease-out forwards;
+}
+
+@keyframes fadePop {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+}

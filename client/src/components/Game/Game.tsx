@@ -18,7 +18,7 @@ import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
 import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
 import { RacePathContext } from "../../contexts/RacePathContext";
 import Tracks from "../RaceThemes/Tracks/Tracks";
-import { getRacePathSizeAndOffsetMargins } from "./GameService";
+import { getMinimapPathColorForTheme, getRacePathSizeAndOffsetMargins } from "./GameService";
 import { QuestionContext } from "../../contexts/QuestionContext";
 import ColorationInfo from "../ColorationInfo/ColorationInfo";
 import { ReactNotifications, Store } from 'react-notifications-component'
@@ -92,7 +92,7 @@ function Game(props: Props) {
     window.addEventListener("beforeunload", handleBeforeUnload)
     window.addEventListener("unload", () => socket.disconnect())
     //FIXME: UNCOMMENT THIS LINE, COMMENTED FOR TESTING
-    window.addEventListener("load", () => navigate("/"))
+    // window.addEventListener("load", () => navigate("/"))
 
     window.onmessage = function(e) {
         if (e.data.v === "0.0.2" && e.data.namespace === "standalone" && e.data.event === "checked_answer") {
@@ -111,7 +111,7 @@ function Game(props: Props) {
     };
 
     const racePathSizing = getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height)
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap.path, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap, racePathSizing.width, racePathSizing.height), [raceData.selectedMap, dimensions.height, dimensions.width]) // multiple maps may be used in the future, currently only one exists
 
 
     socket.emit("getMandatoryNum")
@@ -599,18 +599,25 @@ function Game(props: Props) {
                     }}>
                         <RaceStatus keepClosed={true} roundDuration={props.roundDuration} onCheckpointPassed={checkpointPassedHandler}/>
                     </div>
-                    <svg className="minimap-svg-path" style={{
-                        width: racePathSizing.width,
-                        height: racePathSizing.height,
-                        marginLeft: racePathSizing.offsetX,
-                        marginTop: racePathSizing.offsetY
-                    }}>
-                            <path
-                                d={racePath.svgPath}
-                                fill={"none"}
-                                strokeWidth={10}
-                                stroke={"#f8b600a2"}
-                            />
+                    <svg 
+                        className="minimap-svg-path"
+                        viewBox={raceData.theme == 'Boat' ? `0 0 1920 1080`: ''}
+                        preserveAspectRatio={raceData.theme == 'Boat' ? "xMidYMid meet" : ''}
+                        style={{
+                            width: racePathSizing.width,
+                            height: racePathSizing.height,
+                            marginLeft: racePathSizing.offsetX,
+                            marginTop: racePathSizing.offsetY,
+                        }}
+
+                    >
+                        <path
+                            d={racePath.svgPath}
+                            fill={"none"}
+                            strokeWidth={10}
+                            stroke={getMinimapPathColorForTheme(raceData.theme)}
+                            vectorEffect="non-scaling-stroke" 
+                        />
                     </svg>
                 </div>
             </RacePathContext.Provider>

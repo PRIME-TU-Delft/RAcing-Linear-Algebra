@@ -80,13 +80,13 @@
     align-items: center;
     justify-content: center;
     width: 70%;
-    height: 70%;
+    height: 6rem;
     margin: 0 auto;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
-.card-icon img {
-    max-width: 100%;
+.card-icon > img {
+    max-width: 70%;
     max-height: 100%;
     object-fit: contain;
     display: block;

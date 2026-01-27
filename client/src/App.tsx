@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, GraspleExercise, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleExercise, IQuestion, RaceMap, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -20,6 +20,7 @@ import { TimeContext } from "./contexts/TimeContext"
 import { RaceDataContext } from "./contexts/RaceDataContext"
 import LecturerService from "./components/CreateGame/Lecturer/LecturerService"
 import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
+import { boatMaps } from "./components/RaceThemes/Maps/BoatMaps"
 import { ScoreContext } from "./contexts/ScoreContext"
 import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
@@ -43,7 +44,7 @@ function App() {
     const [lobbyId, setLobbyId] = useState(0)
     const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
-    const [theme, setTheme] = useState("Train")
+    const [theme, setTheme] = useState("Boat")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
@@ -65,6 +66,8 @@ function App() {
     const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
+    const [raceMap, setRaceMap] = useState<RaceMap>(trainMaps[1]);
+
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
         easy: true,
         medium: true,
@@ -171,6 +174,14 @@ function App() {
             restart(time)
         }
     }, [roundDuration, startTimer])
+
+    useEffect(() => {
+        if (theme.toLowerCase() === "boat") {
+            setRaceMap(boatMaps[0])
+        } else if (theme.toLowerCase() === "train") {
+            setRaceMap(trainMaps[1])
+        }
+    }, [theme])
 
     const gameStartHandler = () => {
         socket.emit("getAllStudies")
@@ -621,7 +632,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: raceMap
                             }}>
                                 <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
                                     <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
@@ -659,7 +670,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: raceMap
                                 }}>
                                     <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                     <RaceProgressContext.Provider value={stopShowingRace}>

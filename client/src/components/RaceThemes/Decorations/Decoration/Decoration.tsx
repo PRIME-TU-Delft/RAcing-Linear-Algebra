@@ -103,6 +103,51 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 16)
                 break
 
+            // Boat Theme
+            case "utrecthDom":
+                setDecorationHeight(curr => widthRatio * 100)
+                break
+
+            case "nieuweKerkBoat":
+                setDecorationHeight(curr => widthRatio * 100)
+                break
+
+            case "thePierBoat":
+                setDecorationHeight(curr => widthRatio * 80)
+                break
+
+            case "rotterdamBridgeBoat":
+                setDecorationHeight(curr => widthRatio * 120)
+                break
+
+            case "skyscraperBoat":
+                setDecorationHeight(curr => widthRatio * 80)
+                break
+
+            case "cruiseBoat":
+                setDecorationHeight(curr => widthRatio * 50)
+                break
+
+            case "amsterdam":
+                setDecorationHeight(curr => widthRatio * 65)
+                break
+            
+            case "cheeseBoat":
+                setDecorationHeight(curr => widthRatio * 23)
+                break
+
+            case "seagullBoat":
+                setDecorationHeight(curr => widthRatio * 20)
+                break
+
+            case "duckBoat":
+                setDecorationHeight(curr => widthRatio * 15)
+                break
+
+            case "grassBoat":
+                setDecorationHeight(curr => widthRatio * 10)
+                break
+
             default:
                 setDecorationHeight(curr => 100)
         }

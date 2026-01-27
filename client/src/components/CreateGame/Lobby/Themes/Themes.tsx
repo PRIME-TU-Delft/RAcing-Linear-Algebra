@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./Themes.css"
 import Theme from "./Theme/Theme"
 import boatIcon from "../../../../img/boat-icon.svg"
-import trainIcon from "../../../../img/train-icon.png"
+import trainIcon from "../../../../img/train-icon.svg"
 
 interface Props {
     onSelectTheme: (theme: string) => void
@@ -35,13 +35,13 @@ function Themes(props: Props) {
                 icon={trainIcon}
             ></Theme>
 
-            {/* <Theme
+            <Theme
                 title="Boat"
                 description="Head to the sea!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Boat")}
                 icon={boatIcon}
-            ></Theme> */}
+            ></Theme>
         </div>
     )
 }

@@ -167,22 +167,6 @@ function RaceStatus(props: Props) {
         return Math.floor(currentPoints / totalPoints)
     }
 
-     useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'd' || event.key === 'D') {
-                setProgressPercent(curr => curr + 0.2);
-                console.log("Debug key pressed, progress increased by 20%");
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-
-        // Cleanup the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, []); // Empty dependency array ensures this runs only once
-
     return(
         <div>
             <MainVehicle 

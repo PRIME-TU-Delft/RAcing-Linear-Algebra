@@ -29,23 +29,23 @@ function Waiting(props: Props) {
         navigate("/")
     }
 
-    useEffect(() => {
-        // Safety check for if the page is reloaded
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            event.preventDefault()
-            setTimeout(() => socket.disconnect().connect(), 500)
-            event.returnValue = "Are you sure you want to leave this page?"
-            //shows an alert when try to reload or leave
-        }
+    // useEffect(() => {
+    //     // Safety check for if the page is reloaded
+    //     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    //         event.preventDefault()
+    //         setTimeout(() => socket.disconnect().connect(), 500)
+    //         event.returnValue = "Are you sure you want to leave this page?"
+    //         //shows an alert when try to reload or leave
+    //     }
 
-        window.addEventListener("beforeunload", handleBeforeUnload)
-        window.addEventListener("unload", () => socket.disconnect())
-        window.addEventListener("load", () => navigate("/"))
+    //     window.addEventListener("beforeunload", handleBeforeUnload)
+    //     window.addEventListener("unload", () => socket.disconnect())
+    //     window.addEventListener("load", () => navigate("/"))
 
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload)
-        }
-    }, [socket])
+    //     return () => {
+    //         window.removeEventListener("beforeunload", handleBeforeUnload)
+    //     }
+    // }, [socket])
 
     return (
         <div className="waiting">
@@ -59,9 +59,9 @@ function Waiting(props: Props) {
             ) : (
                 <>
                     <BoatBackground />
-                    <div className="boat-container">
+                    {/* <div className="boat-container">
                         <Boat />
-                    </div>
+                    </div> */}
                 </>
             )}
             <div className="waiting-title-container">
