@@ -25,7 +25,7 @@
     animation: slide-clouds 30s linear infinite;
 }
 
-.background-train-track {
+.background-train-track-rail {
     background-image: url("../../../img/track-horizontal.png");
     background-size: auto 150px;
     background-repeat: repeat-x;
@@ -38,7 +38,7 @@
     position: absolute;
     bottom: 50px;
     z-index: 0;
-    animation: slide-bckground 5s linear infinite;
+    animation: slide-bckground 1s linear infinite;
     animation-direction: reverse;
 }
 

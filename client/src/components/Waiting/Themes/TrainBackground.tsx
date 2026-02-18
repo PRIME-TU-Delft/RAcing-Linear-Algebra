@@ -83,7 +83,7 @@ export default function TrainBackground(props: Props) {
             {props.includeRail ? 
                 <div>
                     <div className="sliding-background-clouds"></div>
-                    <div className="background-train-track"></div>
+                    <div className="background-train-track-rail"></div>
                 </div> 
             : null
             }
