@@ -57,7 +57,7 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover, .variant-exercises-icon:hover {
+.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover, .variant-exercises-icon:hover, .edit-subject-icon:hover {
     cursor: pointer;
 }
 
@@ -78,7 +78,7 @@
     font-size: 16px;
 }
 
-.name-header {
+.name-header, .subject-header {
     margin-bottom: 0.5rem;
 }
 

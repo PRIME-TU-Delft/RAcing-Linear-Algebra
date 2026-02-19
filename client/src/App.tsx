@@ -3,7 +3,7 @@ import "./App.css"
 import Home from "./components/Home/Home"
 import CreateGame from "./components/CreateGame/CreateGame"
 import JoinGame from "./components/JoinGame/JoinGame"
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import TestValues from "./utils/testValues"
 import Waiting from "./components/Waiting/Waiting"
 import Login from "./components/CreateGame/Login/Login"
@@ -480,8 +480,8 @@ function App() {
             console.log("Received placement: " + placement)
         }
 
-        function onGetAllSubjects(subjects: Subject) {
-            setAllSubjects(curr => [...curr, subjects])
+        function onGetAllSubjects(subjects: Subject[]) {
+            setAllSubjects(curr => [...subjects])
         }
  
         socket.on("round-duration", onRoundDuration)
