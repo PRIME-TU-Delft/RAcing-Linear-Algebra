@@ -274,7 +274,7 @@ function Rounds(props: Props) {
 
                             return (
                             <React.Fragment key={roundTopic.name}>
-                                {showHeader && <div className="subject-header" style={{ width: '100%', fontWeight: 'bold', padding: '10px 0', borderBottom: '1px solid #ccc', marginBottom: '10px' }}>{roundTopic.subject}</div>}
+                                {showHeader && <div className="subject-header" style={{ width: '100%', padding: '10px 0', borderBottom: '1px solid #ccc', marginBottom: '10px', textAlign: 'left' }}>{roundTopic.subject}</div>}
                                 <Draggable draggableId={roundTopic.name} index={index}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
