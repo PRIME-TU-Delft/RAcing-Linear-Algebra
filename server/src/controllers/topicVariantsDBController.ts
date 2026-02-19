@@ -201,12 +201,14 @@ export async function updateTopic(
     topicId: string,
     name: string,
     exercises: { _id: string, isMandatory: boolean }[],
-    studyIds: string[]
+    studyIds: string[],
+    subjectId: string
 ): Promise<ITopicDataWithVariants> {
     try {
        const updateData: any = {};
 
         updateData.name = name;
+        updateData.subject = subjectId;
 
         const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
         const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);

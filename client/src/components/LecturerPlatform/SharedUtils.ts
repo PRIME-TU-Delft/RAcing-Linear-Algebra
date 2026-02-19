@@ -28,9 +28,15 @@ interface Study {
     abbreviation: string,
 }
 
+interface Subject {
+    _id: string,
+    name: string,
+}
+
 export {
     type ExerciseVariant,
     type Exercise,
     type Topic,
-    type Study
+    type Study,
+    type Subject
 }

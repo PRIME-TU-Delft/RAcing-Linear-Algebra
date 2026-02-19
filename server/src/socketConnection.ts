@@ -942,7 +942,8 @@ module.exports = {
                     isMandatory: boolean,
                     variants: { _id: string, exerciseId: number, url: string }[]
                 }[], 
-                studyIds: string[]) => {
+                studyIds: string[],
+                subjectId: string) => {
                     try {
                         const updatedExercises = await Promise.all(exercises.map(async exercise => {
                             const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
@@ -971,7 +972,7 @@ module.exports = {
                         }))
 
                         
-                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds);
+                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds, subjectId);
                         socket.emit("updated-topic", updatedTopic);
                     } catch (error) {
                         socket.emit("error", { message: error.message });

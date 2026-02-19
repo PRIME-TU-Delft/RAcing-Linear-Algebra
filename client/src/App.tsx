@@ -32,7 +32,7 @@ import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
-import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { Exercise, Study, Subject, Topic } from "./components/LecturerPlatform/SharedUtils"
 import { DefaultTeamsData, TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
@@ -63,6 +63,7 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [allSubjects, setAllSubjects] = useState<Subject[]>([])
     const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
@@ -478,6 +479,10 @@ function App() {
             setPlayerPlacement(curr => placement)
             console.log("Received placement: " + placement)
         }
+
+        function onGetAllSubjects(subjects: Subject) {
+            setAllSubjects(curr => [...curr, subjects])
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -509,6 +514,7 @@ function App() {
         socket.on("already-in-room", onPlayerAlreadyInLobby)
         socket.on("ready-for-question-request", onReadyForQuestionRequest)
         socket.on("your-placement", onYourPlacementReceived)
+        socket.on("all-subjects", onGetAllSubjects)
     }, [])
 
     // useEffect(() => {
@@ -542,6 +548,7 @@ function App() {
             socket.emit("getAllStudies")	
             socket.emit("getAllExercises")
             socket.emit("getAllDefaultTeams")
+            socket.emit("getAllSubjects")
             navigate("/LecturerPlatform")
             setLoggedIn(false)
         }
