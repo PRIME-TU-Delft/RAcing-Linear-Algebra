@@ -1,5 +1,6 @@
 import { Exercise, type IExercise } from "../models/exerciseModel"
 import { Study, type IStudy } from "../models/studyModel"
+import { ISubject } from "../models/subjectModel";
 import type { ITopic} from "../models/topicModel";
 import { Topic } from "../models/topicModel"
 
@@ -18,13 +19,15 @@ export interface ITopicData {
     name: string,
     studies: IStudy[],
     exercises: IExerciseData[]
+    subject?: ISubject
 }
 
 export async function addNewTopic(
     name: string,
     studies: IStudy[],
     difficultyExercises: IExercise[],
-    mandatoryExercises: IExercise[]
+    mandatoryExercises: IExercise[],
+    subject?: ISubject
 ): Promise<ITopic> {
     try {
         const newTopic = new Topic({
@@ -32,6 +35,7 @@ export async function addNewTopic(
             studies: studies.length == 0 ? [] : studies,
             difficultyExercises: difficultyExercises.length == 0 ? [] : difficultyExercises,
             mandatoryExercises: mandatoryExercises.length == 0 ? [] : mandatoryExercises,
+            subject: subject ? subject._id : undefined
         });
         const savedTopic = await newTopic.save();
     
@@ -283,7 +287,8 @@ export async function updateTopic(
     topicId: string,
     name: string,
     exercises: { _id: string, isMandatory: boolean }[],
-    studyIds: string[]
+    studyIds: string[],
+    subject?: ISubject
 ): Promise<ITopicData> {
     try {
         const updateData: any = {};
@@ -296,6 +301,7 @@ export async function updateTopic(
         updateData.difficultyExercises = difficultyExercises;
 
         updateData.studies = studyIds;
+        updateData.subject = subject ? subject._id : undefined;
 
         let updatedTopic = topicId != "" ? 
             await Topic.findByIdAndUpdate(
@@ -305,7 +311,7 @@ export async function updateTopic(
             ) : null
 
         if (updatedTopic == null) {
-            const newTopic = await addNewTopic(name, [], [], [])
+            const newTopic = await addNewTopic(name, [], [], [], subject)
            updatedTopic = await Topic.findByIdAndUpdate(
             newTopic._id,
             { $set: updateData },
