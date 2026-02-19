@@ -43,6 +43,17 @@ export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic>
                 as: 'studies'
             }
         },
+
+        // Populate the subject field
+        {
+            $lookup: {
+                from: 'subjects',
+                localField: 'subject',
+                foreignField: '_id',
+                as: 'subject'
+            }
+        },
+        { $unwind: { path: '$subject', preserveNullAndEmptyArrays: true } },
         
         // Combine mandatory and difficulty exercise IDs into one array for lookup
         {
@@ -88,6 +99,7 @@ export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic>
                 _id: 1,
                 name: 1,
                 studies: 1,
+                subject: 1,
                 exercises: {
                     $map: {
                         input: '$populatedExercises',

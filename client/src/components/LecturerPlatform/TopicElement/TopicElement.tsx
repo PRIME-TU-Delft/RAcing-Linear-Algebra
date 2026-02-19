@@ -531,8 +531,10 @@ function TopicElement(props: Props) {
             subject: props.subject
         }))
         setSelectedSubject(props.subject)
-        
-        if (!props.subject) {
+
+        // Only enforce selection if creating a fresh topic (no ID and no subject)
+        // If it's an existing topic without a subject, let them choose if/when to add one.
+        if (!props.subject && props._id === "") {
             setChangingSubject(true)
         }
     }, [props.subject])
@@ -607,6 +609,7 @@ function TopicElement(props: Props) {
     }, [newTopicData.exercises])
 
     useEffect(() => {
+        console.log("Subject changed:", newTopicData)
         setUnsavedChanges(curr => ({...curr, subject: false}))
         setSaveChanges(curr => ({...curr, subject: false}))
     }, [newTopicData.subject])

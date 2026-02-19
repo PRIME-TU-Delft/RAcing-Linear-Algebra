@@ -247,7 +247,7 @@ function App() {
         }))
         const studyIds = topicData.studies.map(study => study._id)
 
-        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds, topicData.subject? topicData.subject._id : null)
     }
 
     function onGetUpdatedExercise(updatedExercise: Exercise) {
