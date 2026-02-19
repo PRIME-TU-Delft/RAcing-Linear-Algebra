@@ -1,18 +1,16 @@
 import { ISubject, Subject } from "../models/subjectModel"
 
-export async function addNewStudy(
+export async function addNewSubject(
     name: string,
-    abbreviation: string
 ) {
-    const newStudy: ISubject = new Subject({
+    const newSubject: ISubject = new Subject({
         name,
-        abbreviation
     })
 
-    await Subject.create(newStudy)
+    await Subject.create(newSubject)
 }
 
-export async function getAllStudies(): Promise<ISubject[]> {
+export async function getAllSubjects(): Promise<ISubject[]> {
     try {
         const result: ISubject[] = await Subject.find()
         return result

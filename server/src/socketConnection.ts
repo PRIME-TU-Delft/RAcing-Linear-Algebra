@@ -26,6 +26,7 @@ import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, ge
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulatedVariants, updateTopic } from "./controllers/topicVariantsDBController"
 import mongoose, { Mongoose } from "mongoose"
+import { getAllSubjects } from "./controllers/subjectDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -824,6 +825,18 @@ module.exports = {
                 try {
                     const allStudies = await getAllStudies();
                     socket.emit("all-studies", allStudies);
+                } catch (error) {
+                    socket.emit('error', {message: error.message} )
+                }
+            })
+
+            /**
+             * Returns a list of all the subjects (i.e. Calculus, Linear Algebra, etc) stored in the database
+             */
+            socket.on("getAllSubjects", async () => {
+                try {
+                    const allSubjects = await getAllSubjects();
+                    socket.emit("all-subjects", allSubjects);
                 } catch (error) {
                     socket.emit('error', {message: error.message} )
                 }
