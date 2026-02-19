@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Exercise, Study, Topic } from '../components/LecturerPlatform/SharedUtils';
+import { Exercise, Study, Subject, Topic } from '../components/LecturerPlatform/SharedUtils';
 
 export interface DefaultTeamsData {
     fakeTeamsCount: number
@@ -10,7 +10,8 @@ interface TopicData {
     allStudies: Study[],
     allTopics: Topic[],
     allExercises: Exercise[], 
-    defaultTeams: DefaultTeamsData[]
+    defaultTeams: DefaultTeamsData[],
+    allSubjects: Subject[]
 }
 
 export const TopicDataContext = createContext<TopicData>({
@@ -18,4 +19,5 @@ export const TopicDataContext = createContext<TopicData>({
     allTopics: [],
     allExercises: [],
     defaultTeams: [],
+    allSubjects: []
 })

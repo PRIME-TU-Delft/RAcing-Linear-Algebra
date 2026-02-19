@@ -24,7 +24,8 @@ interface ExerciseListElement {
 interface TopicChangesState {
     name: boolean,
     studies: boolean,
-    exercises: boolean
+    exercises: boolean,
+    subject: boolean
 }
 
 interface Props {
@@ -62,20 +63,23 @@ function TopicElement(props: Props) {
     const [saveChanges, setSaveChanges] = useState<TopicChangesState>({
         name: false,
         studies: false,
-        exercises: false
+        exercises: false,
+        subject: false
     })
 
     const [unsavedChanges, setUnsavedChanges] = useState<TopicChangesState>({
         name: true,
         studies: true,
-        exercises: true
+        exercises: true,
+        subject: true
     })
 
     const [newTopicData, setNewTopicData] = useState<Topic>({
         _id: "",
         name: "",
         studies: [],
-        exercises: []
+        exercises: [],
+        subject: undefined
     })
 
     const [studies, setStudies] = useState<Study[]>([])
@@ -584,7 +588,8 @@ function TopicElement(props: Props) {
         const unsavedChangesState: TopicChangesState = {
             name: false,
             studies: false,
-            exercises: false
+            exercises: false,
+            subject: false
         }
 
         if (editName) {
@@ -621,7 +626,7 @@ function TopicElement(props: Props) {
     }
 
     function saveTopicChangesHandler(): void {
-        setSaveChanges(curr => ({name: true, studies: true, exercises: true}))
+        setSaveChanges(curr => ({name: true, studies: true, exercises: true, subject: true}))
     }
     
     const someDefaultTeamsExist = props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0

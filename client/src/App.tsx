@@ -717,7 +717,7 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData}}>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData, allSubjects: allSubjects}}>
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}

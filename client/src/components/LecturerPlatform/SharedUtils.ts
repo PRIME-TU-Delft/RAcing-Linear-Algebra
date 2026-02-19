@@ -19,7 +19,8 @@ interface Topic {
     _id: string,
     name: string,
     studies: Study[],
-    exercises: Exercise[]
+    exercises: Exercise[],
+    subject?: Subject
 }
 
 interface Study {
