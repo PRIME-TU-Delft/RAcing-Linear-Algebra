@@ -19,7 +19,7 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, removeVariant, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName, getAllLobbyTopicData } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getRandomVariant, getTeamScoreData } from "./utils/socketUtils"
@@ -981,10 +981,10 @@ module.exports = {
 
             socket.on("getLobbyData", async (study?: string) => {
                 try {
-                    const topicNames = await getTopicNamesByStudy(study)
+                    const topics = await getAllLobbyTopicData(study)
                     const allStudies = await getAllStudies()
                     const lobbyData = {
-                        topics: topicNames,
+                        topics: topics,
                         studies: allStudies.map(study => ({
                             name: study.name,
                             abbreviation: study.abbreviation

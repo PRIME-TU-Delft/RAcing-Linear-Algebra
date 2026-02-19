@@ -14,6 +14,11 @@ export interface IExerciseData {
     isMandatory: boolean
 }
 
+export interface LobbyTopicData {
+    name: string,
+    subject: string
+}
+
 export interface ITopicData {
     _id: string,
     name: string,
@@ -258,6 +263,37 @@ export async function getTopicNamesByStudy(study?: string): Promise<string[]> {
         return filteredTopics.map(topic => topic.name);
     } catch (error) {
         console.error("Error retrieving topics by study:", error);
+        throw error;
+    }
+}
+
+export async function getAllLobbyTopicData(study?: string): Promise<LobbyTopicData[]> {
+    try {
+        let topics;
+
+        if (study && study !== "") {
+            topics = await Topic.find()
+                .populate("subject")
+                .populate({
+                    path: 'studies',
+                    match: { name: study }
+                });
+
+            topics = topics.filter(topic => topic.studies && topic.studies.length > 0);
+
+            if (topics.length === 0) {
+                throw new Error(`No topics found for study: ${study}`);
+            }
+        } else {
+            topics = await Topic.find().populate("subject");
+        }
+
+        return topics.map(topic => ({
+            name: topic.name,
+            subject: topic.subject ? topic.subject.name : "No subject"
+        }));
+    } catch (error) {
+        console.error("Error retrieving lobby topic data:", error);
         throw error;
     }
 }

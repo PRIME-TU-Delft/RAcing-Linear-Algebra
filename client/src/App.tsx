@@ -400,6 +400,7 @@ function App() {
         }
 
         function onGetLobbyData(lobbyData: LobbyData) {
+            console.log(lobbyData)
             setLobbyData({...lobbyData})
         }
 
