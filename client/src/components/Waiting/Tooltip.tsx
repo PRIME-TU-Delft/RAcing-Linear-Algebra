@@ -62,6 +62,7 @@ export default function Tooltip() {
     }
 
     const updateAciveTips = () => {
+        console.log("Updating active tips")
         const newLastIndex = getNewTipIndex()
         const newActiveIndices = [activeIndices[activeIndices.length - 3], activeIndices[activeIndices.length - 2], activeIndices[activeIndices.length - 1], newLastIndex]
         setActiveIndices(curr => [...newActiveIndices])
