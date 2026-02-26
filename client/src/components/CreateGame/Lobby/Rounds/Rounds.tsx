@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import "./Rounds.css"
 import Round from "./Round/Round"
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
@@ -7,10 +7,31 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs';
 import { SECONDS } from "react-time-sync";
-import { Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { LobbyTopic } from "../../../../contexts/LobbyDataContext";
+
+/**
+ * Configure per-subject colors here.
+ * Any subject not listed will be assigned a color from SUBJECT_COLOR_PALETTE automatically.
+ */
+const SUBJECT_COLORS: Record<string, string> = {
+    // Example: "Linear Transformations": "#e76f51",
+}
+
+const SUBJECT_COLOR_PALETTE: string[] = [
+    "#e76f51",
+    "#2a9d8f",
+    "#457b9d",
+    "#e9c46a",
+    "#6d6875",
+    "#f4a261",
+    "#264653",
+    "#a8dadc",
+    "#9b2226",
+    "#0077b6",
+];
 
 interface SelectRoundProp {
     topicName: string,
@@ -37,6 +58,21 @@ function Rounds(props: Props) {
     const [enableFilterByStudyProgramme, setEnableFilterByStudyProgramme] = useState<boolean>(false)
     const [hideDurations, setHideDurations] = useState<boolean>(false)
     const [topicSearchQuery, setTopicSearchQuery] = useState<string>("")
+    const [subjectFilter, setSubjectFilter] = useState<string>("All Subjects")
+
+    /** Sorted list of unique subjects across all available rounds. */
+    const subjects = useMemo(() => {
+        return Array.from(new Set(availableRounds.map(r => r.subject))).sort()
+    }, [availableRounds])
+
+    /** Maps each subject to a deterministic color (from SUBJECT_COLORS or the palette). */
+    const subjectColorCache = useMemo(() => {
+        const cache: Record<string, string> = {}
+        subjects.forEach((subject, i) => {
+            cache[subject] = SUBJECT_COLORS[subject] ?? SUBJECT_COLOR_PALETTE[i % SUBJECT_COLOR_PALETTE.length]
+        })
+        return cache
+    }, [subjects])
 
     useEffect(() => {
         console.log("Available rounds updated: ", props.availableRounds)
@@ -52,13 +88,15 @@ function Rounds(props: Props) {
     }, [props.availableRounds])
 
     useEffect(() => {
-        if (topicSearchQuery == "") {
-            setSearchFilteredRounds(curr => [...unselectedRounds])
+        let filtered = [...unselectedRounds]
+        if (subjectFilter !== "All Subjects") {
+            filtered = filtered.filter(topic => topic.subject === subjectFilter)
         }
-        else {
-            setSearchFilteredRounds(curr => unselectedRounds.filter(topic => topic.name.toLowerCase().includes(topicSearchQuery.toLowerCase())))
+        if (topicSearchQuery !== "") {
+            filtered = filtered.filter(topic => topic.name.toLowerCase().includes(topicSearchQuery.toLowerCase()))
         }
-    }, [topicSearchQuery, unselectedRounds])
+        setSearchFilteredRounds(filtered)
+    }, [topicSearchQuery, unselectedRounds, subjectFilter])
 
     useEffect(() => {
         props.onFilterByStudyProgramme(enableFilterByStudyProgramme)
@@ -205,6 +243,7 @@ function Rounds(props: Props) {
                                             }
                                             selected={true}
                                             index={index}
+                                            color={subjectColorCache[round.topic.subject]}
                                         ></Round>
                                     </div>
                                 )}
@@ -253,6 +292,34 @@ function Rounds(props: Props) {
                         style: { height: '2.5rem' }
                     }}
                 />
+                <FormControl size="small" style={{ marginLeft: '1rem', minWidth: '160px' }}>
+                    <InputLabel id="subject-filter-label">Subject</InputLabel>
+                    <Select
+                        labelId="subject-filter-label"
+                        value={subjectFilter}
+                        label="Subject"
+                        onChange={(e) => setSubjectFilter(e.target.value)}
+                        style={{ height: '2.5rem' }}
+                    >
+                        <MenuItem value="All Subjects">All Subjects</MenuItem>
+                        {subjects.map(subject => (
+                            <MenuItem key={subject} value={subject}>
+                                <span
+                                    style={{
+                                        display: 'inline-block',
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: '50%',
+                                        backgroundColor: subjectColorCache[subject],
+                                        marginRight: 8,
+                                        flexShrink: 0,
+                                    }}
+                                />
+                                {subject}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -274,7 +341,7 @@ function Rounds(props: Props) {
 
                             return (
                             <React.Fragment key={roundTopic.name}>
-                                {showHeader && <div className="subject-header" style={{ width: '100%', padding: '10px 0', borderBottom: '1px solid #ccc', marginBottom: '10px', textAlign: 'left' }}>{roundTopic.subject}</div>}
+                                {showHeader && <div className="subject-header" style={{ width: '100%', padding: '10px 0', borderBottom: '1px solid #ccc', marginBottom: '10px', textAlign: 'left', color: "#000000"}}>{roundTopic.subject}</div>}
                                 <Draggable draggableId={roundTopic.name} index={index}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
@@ -286,6 +353,7 @@ function Rounds(props: Props) {
                                                 }}
                                                 selected={false}
                                                 index={index}
+                                                color={subjectColorCache[roundTopic.subject]}
                                             ></Round>
                                         </div>
                                     )}
