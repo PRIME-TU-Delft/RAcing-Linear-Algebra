@@ -29,7 +29,7 @@ function Themes(props: Props) {
         <div className="themes-container">
             <Theme
                 title="Train"
-                description="Face the rails!"
+                description="Train your math skills!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Train")}
                 icon={trainIcon}
@@ -37,7 +37,7 @@ function Themes(props: Props) {
 
             <Theme
                 title="Boat"
-                description="Head to the sea!"
+                description="Sea how you do!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Boat")}
                 icon={boatIcon}
