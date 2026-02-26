@@ -44,10 +44,10 @@ function Round(props: Props) {
     return (
         <div
             className={"round-container " + (isSelected ? "selected" : "")}
-            style={isSelected && props.color ? {borderColor: props.color} : undefined}
+            style={{ "--hover-color": props.color ?? "#00b8c8" } as React.CSSProperties}
             onClick={selectionHandler}
         >
-            <div style={props.color ? { color: props.color } : undefined} className="colum left">
+            <div className="colum left" style={props.color ? {color: props.color} : undefined}>
                 <div className="round-index">{props.index + 1}</div>
                 <p className="img">{imageLetter}</p>
             </div>

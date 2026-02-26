@@ -17,12 +17,11 @@ import { LobbyTopic } from "../../../../contexts/LobbyDataContext";
  * Any subject not listed will be assigned a color from SUBJECT_COLOR_PALETTE automatically.
  */
 const SUBJECT_COLORS: Record<string, string> = {
-    // Example: "Linear Transformations": "#e76f51",
+    "Linear Algebra": "#00B8C8",
+    "Calculus": "#EC6842",
 }
-
+    
 const SUBJECT_COLOR_PALETTE: string[] = [
-    "#e76f51",
-    "#2a9d8f",
     "#457b9d",
     "#e9c46a",
     "#6d6875",
