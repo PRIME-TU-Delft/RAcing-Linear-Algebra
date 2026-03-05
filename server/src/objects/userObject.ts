@@ -14,6 +14,8 @@ export class User {
     disconnected: boolean
     usedUpAttemptsOnLastQuestion: boolean // boolean used to prevent initial bug where multiple new questions are inconsistenly requested
     lastConnectionTime: number // timestamp of the last connection time
+    questionStartTime: number // timestamp of when the current question was presented
+    attemptTimes: number[] // list of elapsed times (ms) from question start to each attempt
 
     /**
      * Constructor for the user object
@@ -29,6 +31,8 @@ export class User {
         this.disconnected = false
         this.usedUpAttemptsOnLastQuestion = false
         this.lastConnectionTime = Date.now() - 60000 // 1 minute ago (to ensure possibility of reconnection initially, refer to socket connection reconnect segment)
+        this.questionStartTime = 0
+        this.attemptTimes = []
     }
 
     getQuestionIds(): number[] {
@@ -148,6 +152,24 @@ export class User {
             return null
     }
 
+    /**
+     * Records the elapsed time from question start to the current attempt
+     */
+    recordAttemptTime() {
+        if (this.questionStartTime > 0) {
+            const elapsed = Date.now() - this.questionStartTime
+            this.attemptTimes.push(elapsed)
+        }
+    }
+
+    /**
+     * Resets the attempt timing state for a new question
+     */
+    startNewQuestionTimer() {
+        this.questionStartTime = Date.now()
+        this.attemptTimes = []
+    }
+
     resetUser() {
         this.questions = new Map()
         this.attempts = 3
@@ -155,6 +177,8 @@ export class User {
         this.isOnMandatory = true
         this.streaks.map((streak: Streak) => streak.resetStreak())
         this.usedUpAttemptsOnLastQuestion = false
+        this.questionStartTime = 0
+        this.attemptTimes = []
     }
 
     resetUserQuestionsAnswered() {

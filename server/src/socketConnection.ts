@@ -25,6 +25,7 @@ import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getRandomVariant, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulatedVariants, updateTopic } from "./controllers/topicVariantsDBController"
+import { saveExerciseStat } from "./controllers/exerciseStatDBController"
 import mongoose, { Mongoose } from "mongoose"
 import { getAllSubjects } from "./controllers/subjectDBController"
 
@@ -399,6 +400,9 @@ module.exports = {
 
                         // socket.emit("get-next-question", question)
                         socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)
+
+                        // Start the timer for tracking attempt times on this question
+                        user.startNewQuestionTimer()
     
                         const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
                         if (usedUpAllQuestionsForDifficulty) {
@@ -421,18 +425,70 @@ module.exports = {
                 }
             })
 
-            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string) => {
+            /**
+             * Records a wrong attempt time for exercise statistics.
+             * Emitted by the frontend on each individual wrong attempt within the Grasple iframe.
+             */
+            socket.on("wrongAttemptMade", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                try {
+                    const game = getGame(lobbyId)
+                    const user = game.users.get(socket.data.userId)
+                    if (user != undefined) {
+                        user.recordAttemptTime()
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            })
+
+            socket.on("questionAnswered", async (answeredCorrectly: boolean, difficulty: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
-                    const score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
 
                     const user = game.users.get(socket.data.userId)
+
+                    // Record the attempt time for the final (resolving) attempt
+                    // For correct answers, this is the correct attempt (wrong ones were already recorded via wrongAttemptMade)
+                    // For wrong answers (all attempts used up), all wrong attempts were already recorded via wrongAttemptMade
+                    if (user != undefined && answeredCorrectly) {
+                        user.recordAttemptTime()
+                    }
+
+                    const score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
+
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
                     
                     if (user != undefined) {
                         user.usedUpAttemptsOnLastQuestion = true
+                    }
+
+                    // Save exercise stat — the question is always resolved at this point
+                    // (frontend only emits questionAnswered when correct or after all attempts are used up)
+                    if (user != null) {
+                        const currentExercise = user.currentQuestion
+                        const topic = game.topics[game.currentTopicIndex]
+                        // Wrong attempts were recorded via wrongAttemptMade events
+                        // For correct answers, the correct attempt was just recorded above
+                        const incorrectAttempts = answeredCorrectly
+                            ? user.attemptTimes.length - 1  // all except the last (correct) one
+                            : user.attemptTimes.length      // all attempts were wrong
+
+                        try {
+                            await saveExerciseStat(
+                                socket.data.userId,
+                                currentExercise._id.toString(),
+                                topic._id.toString(),
+                                user.attemptTimes,
+                                incorrectAttempts,
+                                user.attemptTimes.length,
+                                answeredCorrectly
+                            )
+                        } catch (statError) {
+                            console.error("Failed to save exercise stat:", statError)
+                        }
                     }
 
                     console.log("Answered mandatory: " + game.allMandatoryQuestionsAnswered(socket.data.userId).toString())

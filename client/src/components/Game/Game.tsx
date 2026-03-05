@@ -175,6 +175,9 @@ function Game(props: Props) {
             "Your answer is incorrect! The correct answer is:",
         ])
 
+        // Notify server of each individual wrong attempt for statistics tracking
+        socket.emit("wrongAttemptMade")
+
         if (triesLeft === 0) {
             // setModalType("incorrectAnswer")
             // setModalAnswer("")
