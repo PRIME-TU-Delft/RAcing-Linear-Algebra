@@ -44,7 +44,7 @@ function App() {
     const [lobbyId, setLobbyId] = useState(0)
     const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
-    const [theme, setTheme] = useState("Boat")
+    const [theme, setTheme] = useState("Train")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
