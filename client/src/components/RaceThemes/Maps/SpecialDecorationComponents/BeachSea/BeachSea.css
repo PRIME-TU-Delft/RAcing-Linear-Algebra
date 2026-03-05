@@ -5,6 +5,7 @@
     height: 30%;
     width: 30%;
     transform: translate(-30%, -42%);
+    z-index: -1;
 }
 
 
