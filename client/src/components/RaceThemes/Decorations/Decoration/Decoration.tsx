@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import  { getZIndexValues } from "../../RaceService"
 import { Dimensions, PercentCoordinate } from "../../SharedUtils"
+import { RaceDataContext } from "../../../../contexts/RaceDataContext"
+import "./Decoration.css"
 
 interface Props {
     points: PercentCoordinate[]
@@ -14,6 +16,8 @@ interface Props {
 function Decoration(props: Props) {
     const [decorationHeight, setDecorationHeight] = useState(0)
     const [sprites, setSprites] = useState<string[]>([])
+
+    const theme = useContext(RaceDataContext).theme;
 
     useEffect(() => {
         const sprites = []
@@ -191,6 +195,7 @@ function Decoration(props: Props) {
                     className={props.class + " decoration"}
                 >
                     <img src={sprites[props.points.indexOf(coordinate)]} 
+                    className={theme.toLocaleLowerCase() + "-decoration-sprite"}
                     style={{
                         height: `${decorationHeight}px`,
                         width: `auto`,

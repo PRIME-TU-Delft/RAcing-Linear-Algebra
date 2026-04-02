@@ -12,7 +12,6 @@ interface Props {
 
 function VehicleImage(props: Props) {
     const sizingClass = props.theme === "Boat" ? " boat-sizing" : "train-sizing";
-    console.log(getRaceVehicleSprite(props.theme))
 
     const trainSvgOverlay = (
         <>
@@ -38,7 +37,7 @@ function VehicleImage(props: Props) {
     )
 
     const getVehicleSvgOverlay = (theme: string) => {
-        switch(theme) {
+        switch(theme.toLocaleLowerCase()) {
             case "train":
                 return trainSvgOverlay
 

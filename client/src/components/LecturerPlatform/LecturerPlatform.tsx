@@ -242,7 +242,9 @@ function LecturerPlatform(props: Props) {
                                     _id={topic._id} 
                                     name={topic.name} 
                                     studies={topic.studies} 
-                                    exercises={topic.exercises} 
+                                    exercises={topic.exercises}
+                                    subject={topic.subject}
+                                    allSubjects={topicData.allSubjects} 
                                     onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, topic._id)}
                                     discardNewTopic={() => discardNewTopicHandler(topic._id)}
                                     availableGraspleIds={exerciseGraspleIds}

@@ -44,8 +44,9 @@ function StationDisplay(props: Props) {
                             key={index}
                             className={"station"}
                         >
-                            <div className="row station-info">
-                                <div className={"col-1 connector-container" + (displayIndex == props.activeIndices.length - 1 ? " hide-overflow" : "")}>
+                            <div className="row station-info" onClick={() => props.nextTip()}>
+                                <div 
+                                    className={"col-1 connector-container" + (displayIndex == props.activeIndices.length - 1 ? " hide-overflow" : "")}                                >
                                     <svg
                                         id="Layer_2"
                                         data-name="Layer 2"

@@ -90,8 +90,6 @@ function MainVehicle(props: Props) {
         }
     }
 
-    console.log(dimensions.width)
-
     return(
         <div>
             {/* Displays the main vehicle, representing the team currently playing */}

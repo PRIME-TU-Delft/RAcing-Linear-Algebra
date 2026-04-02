@@ -19,13 +19,15 @@ import { addNewStudy, getAllStudies } from "./controllers/studyDBController"
 import { addNewExercise, addVariant, exerciseExists, findExercise, getAllExercisesWithVariants, removeVariant, updateExercise } from "./controllers/exerciseDBController"
 import type { IStudy } from "./models/studyModel"
 import { Exercise, type IExercise } from "./models/exerciseModel"
-import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName } from "./controllers/topicDBController"
+import { addExercisesToTopic, addNewTopic, addStudiesToTopic, getAllExercisesFromTopic, getAllStudiesFromTopic, getAllTopicNames, getSelectedITopics, getTopicNamesByStudy, updateTopicExercises, updateTopicName, getAllLobbyTopicData } from "./controllers/topicDBController"
 import { createHash } from 'crypto';
 import { User } from "./objects/userObject"
 import { getInterpolatedGhostTeams, getRaceInformation, getRaceTrackEndScore, getRandomVariant, getTeamScoreData } from "./utils/socketUtils"
 import { generateFakeScores, GeneratorOptions } from "./utils/defaultScoresGenerator"
 import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulatedVariants, updateTopic } from "./controllers/topicVariantsDBController"
+import { saveExerciseStat } from "./controllers/exerciseStatDBController"
 import mongoose, { Mongoose } from "mongoose"
+import { getAllSubjects } from "./controllers/subjectDBController"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
@@ -398,6 +400,9 @@ module.exports = {
 
                         // socket.emit("get-next-question", question)
                         socket.emit("get-next-grasple-question", exercise, scoreToGain, user.getQuestionIds().length)
+
+                        // Start the timer for tracking attempt times on this question
+                        user.startNewQuestionTimer()
     
                         const usedUpAllQuestionsForDifficulty = game.checkIfUserAnsweredAllQuestionsOfDifficulty(socket.data.userId, difficulty)
                         if (usedUpAllQuestionsForDifficulty) {
@@ -420,18 +425,70 @@ module.exports = {
                 }
             })
 
-            socket.on("questionAnswered", (answeredCorrectly: boolean, difficulty: string) => {
+            /**
+             * Records a wrong attempt time for exercise statistics.
+             * Emitted by the frontend on each individual wrong attempt within the Grasple iframe.
+             */
+            socket.on("wrongAttemptMade", () => {
+                const lobbyId = socketToLobbyId.get(socket.id)!
+                try {
+                    const game = getGame(lobbyId)
+                    const user = game.users.get(socket.data.userId)
+                    if (user != undefined) {
+                        user.recordAttemptTime()
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            })
+
+            socket.on("questionAnswered", async (answeredCorrectly: boolean, difficulty: string) => {
                 const lobbyId = socketToLobbyId.get(socket.id)!
                 try {
                     console.log("ANswered " + answeredCorrectly.toString())
                     const game = getGame(lobbyId)
-                    const score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
 
                     const user = game.users.get(socket.data.userId)
+
+                    // Record the attempt time for the final (resolving) attempt
+                    // For correct answers, this is the correct attempt (wrong ones were already recorded via wrongAttemptMade)
+                    // For wrong answers (all attempts used up), all wrong attempts were already recorded via wrongAttemptMade
+                    if (user != undefined && answeredCorrectly) {
+                        user.recordAttemptTime()
+                    }
+
+                    const score = game.processUserAnswer(socket.data.userId, answeredCorrectly, difficulty)
+
                     if (user !== undefined) socket.emit("currentStreaks", user.streaks)
                     
                     if (user != undefined) {
                         user.usedUpAttemptsOnLastQuestion = true
+                    }
+
+                    // Save exercise stat — the question is always resolved at this point
+                    // (frontend only emits questionAnswered when correct or after all attempts are used up)
+                    if (user != null) {
+                        const currentExercise = user.currentQuestion
+                        const topic = game.topics[game.currentTopicIndex]
+                        // Wrong attempts were recorded via wrongAttemptMade events
+                        // For correct answers, the correct attempt was just recorded above
+                        const incorrectAttempts = answeredCorrectly
+                            ? user.attemptTimes.length - 1  // all except the last (correct) one
+                            : user.attemptTimes.length      // all attempts were wrong
+
+                        try {
+                            await saveExerciseStat(
+                                socket.data.userId,
+                                currentExercise._id.toString(),
+                                topic._id.toString(),
+                                user.attemptTimes,
+                                incorrectAttempts,
+                                user.attemptTimes.length,
+                                answeredCorrectly
+                            )
+                        } catch (statError) {
+                            console.error("Failed to save exercise stat:", statError)
+                        }
                     }
 
                     console.log("Answered mandatory: " + game.allMandatoryQuestionsAnswered(socket.data.userId).toString())
@@ -830,6 +887,18 @@ module.exports = {
             })
 
             /**
+             * Returns a list of all the subjects (i.e. Calculus, Linear Algebra, etc) stored in the database
+             */
+            socket.on("getAllSubjects", async () => {
+                try {
+                    const allSubjects = await getAllSubjects();
+                    socket.emit("all-subjects", allSubjects);
+                } catch (error) {
+                    socket.emit('error', {message: error.message} )
+                }
+            })
+
+            /**
              * Updates the exercise with the given exerciseId (grasple question ID), or if it does not exist, creates a new one
              */
             socket.on("updateExercise", async(exerciseId: number, updateData: { url: string, difficulty: string, numOfAttempts: number, name: string }) => {
@@ -929,7 +998,8 @@ module.exports = {
                     isMandatory: boolean,
                     variants: { _id: string, exerciseId: number, url: string }[]
                 }[], 
-                studyIds: string[]) => {
+                studyIds: string[],
+                subjectId: string) => {
                     try {
                         const updatedExercises = await Promise.all(exercises.map(async exercise => {
                             const updatedExercise = await updateExercise(exercise.exerciseId, exercise.updateData)
@@ -958,7 +1028,7 @@ module.exports = {
                         }))
 
                         
-                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds);
+                        const updatedTopic = await updateTopic(topicId, name, updatedExercises, studyIds, subjectId);
                         socket.emit("updated-topic", updatedTopic);
                     } catch (error) {
                         socket.emit("error", { message: error.message });
@@ -967,10 +1037,10 @@ module.exports = {
 
             socket.on("getLobbyData", async (study?: string) => {
                 try {
-                    const topicNames = await getTopicNamesByStudy(study)
+                    const topics = await getAllLobbyTopicData(study)
                     const allStudies = await getAllStudies()
                     const lobbyData = {
-                        topics: topicNames,
+                        topics: topics,
                         studies: allStudies.map(study => ({
                             name: study.name,
                             abbreviation: study.abbreviation

@@ -3,7 +3,7 @@ import "./App.css"
 import Home from "./components/Home/Home"
 import CreateGame from "./components/CreateGame/CreateGame"
 import JoinGame from "./components/JoinGame/JoinGame"
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import TestValues from "./utils/testValues"
 import Waiting from "./components/Waiting/Waiting"
 import Login from "./components/CreateGame/Login/Login"
@@ -32,7 +32,7 @@ import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
-import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { Exercise, Study, Subject, Topic } from "./components/LecturerPlatform/SharedUtils"
 import { DefaultTeamsData, TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
@@ -44,7 +44,7 @@ function App() {
     const [lobbyId, setLobbyId] = useState(0)
     const [isPlayer, setIsPlayer] = useState(true)
     const [teamName, setTeamName] = useState("New Team")
-    const [theme, setTheme] = useState("Boat")
+    const [theme, setTheme] = useState("Train")
     const [topic, setTopic] = useState("")
     const [study, setStudy] = useState("")
     const [roundDuration, setRoundDuration] = useState<number>(0)
@@ -63,6 +63,7 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [allSubjects, setAllSubjects] = useState<Subject[]>([])
     const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
@@ -246,7 +247,7 @@ function App() {
         }))
         const studyIds = topicData.studies.map(study => study._id)
 
-        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds, topicData.subject? topicData.subject._id : null)
     }
 
     function onGetUpdatedExercise(updatedExercise: Exercise) {
@@ -399,6 +400,7 @@ function App() {
         }
 
         function onGetLobbyData(lobbyData: LobbyData) {
+            console.log(lobbyData)
             setLobbyData({...lobbyData})
         }
 
@@ -478,6 +480,10 @@ function App() {
             setPlayerPlacement(curr => placement)
             console.log("Received placement: " + placement)
         }
+
+        function onGetAllSubjects(subjects: Subject[]) {
+            setAllSubjects(curr => [...subjects])
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -509,6 +515,7 @@ function App() {
         socket.on("already-in-room", onPlayerAlreadyInLobby)
         socket.on("ready-for-question-request", onReadyForQuestionRequest)
         socket.on("your-placement", onYourPlacementReceived)
+        socket.on("all-subjects", onGetAllSubjects)
     }, [])
 
     // useEffect(() => {
@@ -542,6 +549,7 @@ function App() {
             socket.emit("getAllStudies")	
             socket.emit("getAllExercises")
             socket.emit("getAllDefaultTeams")
+            socket.emit("getAllSubjects")
             navigate("/LecturerPlatform")
             setLoggedIn(false)
         }
@@ -710,7 +718,7 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData}}>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData, allSubjects: allSubjects}}>
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
