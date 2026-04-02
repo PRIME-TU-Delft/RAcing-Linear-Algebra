@@ -8,6 +8,14 @@
     cursor: pointer;
 }
 
+/* Prevent global/framework .container rules from changing step positioning */
+.step > .step-container {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
 .step-title {
     line-height: 1.5em;
     font-weight: bold;
@@ -25,11 +33,16 @@
 
 .step > div:first-child {
     height: 0;
+    width: 2em;
 }
 
 .step > div:not(:first-child) {
     margin-left: 2.5em;
     padding-left: 1em;
+}
+
+.step > div:nth-child(2) {
+    min-width: 0;
 }
 
 .circle {
