@@ -60,3 +60,14 @@ export interface QuestionStatus {
     remainingAttempts: number
     newQuestionEvent: () => void
 }
+
+export function getMinimapPathColorForTheme(themeName: string) {
+    switch (themeName) {
+        case "Train":
+            return "#f8b600a2"
+        case "Boat":
+            return "#00131ba2"
+        default:
+            return "#3d6faf8b600a2ff"
+    }
+}

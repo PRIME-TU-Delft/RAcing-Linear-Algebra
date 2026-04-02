@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText, Snackbar, Typography, MenuItem} from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, ToggleButton, AccordionActions, TextField, List, ListItem, ListItemText, Snackbar, Typography, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import "./TopicElement.css"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +7,7 @@ import StudyEdit from "./StudyEdit/StudyEdit"
 import ExerciseElement from "../ExerciseElement/ExerciseElement"
 import { Store } from 'react-notifications-component'
 import { Tooltip } from "react-tooltip"
-import { Exercise, ExerciseVariant, Study, Topic } from "../SharedUtils"
+import { Exercise, ExerciseVariant, Study, Topic, Subject } from "../SharedUtils"
 import socket from "../../../socket"
 import { DefaultTeamsData, TopicDataContext } from "../../../contexts/TopicDataContext"
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
@@ -24,7 +24,8 @@ interface ExerciseListElement {
 interface TopicChangesState {
     name: boolean,
     studies: boolean,
-    exercises: boolean
+    exercises: boolean,
+    subject: boolean
 }
 
 interface Props {
@@ -32,6 +33,8 @@ interface Props {
     name: string,
     studies: Study[],
     exercises: Exercise[],
+    subject?: Subject,
+    allSubjects: Subject[],
     onUpdateTopic: (topicData: Topic) => void,
     discardNewTopic: () => void,
     availableGraspleIds: number[]
@@ -45,12 +48,14 @@ interface Props {
 function TopicElement(props: Props) {
     const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false)
     const [changingStudies, setChangingStudies] = useState<boolean>(false)
+    const [changingSubject, setChangingSubject] = useState<boolean>(false)
     const [editingExerciseIndex, setEditingExerciseIndex] = useState<number>(-1)
     const [exercisesMode, setExercisesMode] = useState<string>("")
     const [exercises, setExercises] = useState<ExerciseListElement[]>([])
     const [sortedExercises, setSortedExercises] = useState<ExerciseListElement[]>([])
     const [editName, setEditName] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>("")
+    const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>(undefined)
     const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [exerciseToDelete, setExerciseToDelete] = useState<number>(-1)
 
@@ -62,20 +67,23 @@ function TopicElement(props: Props) {
     const [saveChanges, setSaveChanges] = useState<TopicChangesState>({
         name: false,
         studies: false,
-        exercises: false
+        exercises: false,
+        subject: false
     })
 
     const [unsavedChanges, setUnsavedChanges] = useState<TopicChangesState>({
         name: true,
         studies: true,
-        exercises: true
+        exercises: true,
+        subject: true
     })
 
     const [newTopicData, setNewTopicData] = useState<Topic>({
         _id: "",
         name: "",
         studies: [],
-        exercises: []
+        exercises: [],
+        subject: undefined
     })
 
     const [studies, setStudies] = useState<Study[]>([])
@@ -518,6 +526,20 @@ function TopicElement(props: Props) {
     }, [props.defaultTeamsData])
 
     useEffect(() => {
+        setNewTopicData(prevData => ({
+            ...prevData,
+            subject: props.subject
+        }))
+        setSelectedSubject(props.subject)
+
+        // Only enforce selection if creating a fresh topic (no ID and no subject)
+        // If it's an existing topic without a subject, let them choose if/when to add one.
+        if (!props.subject && props._id === "") {
+            setChangingSubject(true)
+        }
+    }, [props.subject])
+
+    useEffect(() => {
         let somethingChanged = false
 
         if (saveChanges.name) {
@@ -553,11 +575,17 @@ function TopicElement(props: Props) {
             somethingChanged = true
         }
 
+        if (saveChanges.subject) {
+            setNewTopicData(curr => ({...curr, subject: selectedSubject}))
+            setChangingSubject(curr => false)
+            somethingChanged = true
+        }
+
         if (somethingChanged) {
             setUnsavedTopicChanges(curr => true)
         }
 
-        if (unsavedTopicChanges && !saveChanges.name && !saveChanges.studies && !saveChanges.exercises) {
+        if (unsavedTopicChanges && !saveChanges.name && !saveChanges.studies && !saveChanges.exercises && !saveChanges.subject) {
             setSaveTopicChanges(curr => true)
         }
     }, [saveChanges, unsavedTopicChanges])
@@ -581,10 +609,17 @@ function TopicElement(props: Props) {
     }, [newTopicData.exercises])
 
     useEffect(() => {
+        console.log("Subject changed:", newTopicData)
+        setUnsavedChanges(curr => ({...curr, subject: false}))
+        setSaveChanges(curr => ({...curr, subject: false}))
+    }, [newTopicData.subject])
+
+    useEffect(() => {
         const unsavedChangesState: TopicChangesState = {
             name: false,
             studies: false,
-            exercises: false
+            exercises: false,
+            subject: false
         }
 
         if (editName) {
@@ -596,12 +631,15 @@ function TopicElement(props: Props) {
         if (exercisesMode != "") {
             unsavedChangesState.exercises = true
         }
+        if (changingSubject) {
+            unsavedChangesState.subject = true
+        }
 
         setUnsavedChanges(unsavedChangesState)
-    }, [editName, changingStudies, exercisesMode])
+    }, [editName, changingStudies, exercisesMode, changingSubject])
 
     useEffect(() => {
-        if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises && saveTopicChanges) {
+        if (!unsavedChanges.name && !unsavedChanges.studies && !unsavedChanges.exercises && !unsavedChanges.subject && saveTopicChanges) {
             props.onUpdateTopic(newTopicData)
             setSaveTopicChanges(curr => false)
             setUnsavedTopicChanges(curr => false)
@@ -621,7 +659,7 @@ function TopicElement(props: Props) {
     }
 
     function saveTopicChangesHandler(): void {
-        setSaveChanges(curr => ({name: true, studies: true, exercises: true}))
+        setSaveChanges(curr => ({name: true, studies: true, exercises: true, subject: true}))
     }
     
     const someDefaultTeamsExist = props.defaultTeamsData != undefined && props.defaultTeamsData.fakeTeamsCount > 0
@@ -687,6 +725,60 @@ function TopicElement(props: Props) {
                     <AccordionActions>
                         <Button size="small" onClick={() => {if (newName != "") setEditName(false)}}>Discard</Button>
                         <Button size="small" onClick={saveNameHandler} variant="contained">Save</Button>
+                    </AccordionActions>
+                )}
+                <Divider/>
+                <AccordionDetails>
+                    <div className="subject-section">
+                        {!changingSubject ? (
+                            <>
+                                <div className="subject-header topic-header">
+                                    Subject
+                                    <FontAwesomeIcon icon={faPen} size="xs" className="edit-subject-icon" style={{marginLeft: "0.5rem"}} onClick={() => setChangingSubject(true)} />
+                                </div>
+                                <div>
+                                    {newTopicData.subject ? newTopicData.subject.name : "Not Selected"} 
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="subject-header topic-header">
+                                    Subject
+                                </div>
+                                <div>
+                                    <Select
+                                        value={selectedSubject ? selectedSubject._id : ""} 
+                                        onChange={(e: SelectChangeEvent) => {
+                                            const selectedId = e.target.value
+                                            const subject = props.allSubjects.find(s => s._id === selectedId)
+                                            setSelectedSubject(subject)
+                                        }}
+                                        variant="outlined"
+                                        size="small"
+                                        displayEmpty
+                                        fullWidth
+                                    >
+                                        <MenuItem value="" disabled>
+                                            Select Subject
+                                        </MenuItem>
+                                        {props.allSubjects.map((subject) => (
+                                            <MenuItem key={subject._id} value={subject._id}>
+                                                {subject.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </AccordionDetails>
+                {changingSubject && (
+                    <AccordionActions>
+                        <Button size="small" onClick={() => {
+                            setSelectedSubject(newTopicData.subject)
+                            setChangingSubject(false)
+                        }}>Discard</Button>
+                        <Button size="small" onClick={() => setSaveChanges(curr => ({...curr, subject: true}))} variant="contained">Save</Button>
                     </AccordionActions>
                 )}
                 <Divider/>

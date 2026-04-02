@@ -43,6 +43,17 @@ export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic>
                 as: 'studies'
             }
         },
+
+        // Populate the subject field
+        {
+            $lookup: {
+                from: 'subjects',
+                localField: 'subject',
+                foreignField: '_id',
+                as: 'subject'
+            }
+        },
+        { $unwind: { path: '$subject', preserveNullAndEmptyArrays: true } },
         
         // Combine mandatory and difficulty exercise IDs into one array for lookup
         {
@@ -88,6 +99,7 @@ export async function getTopicsWithVariants(filter: mongoose.FilterQuery<ITopic>
                 _id: 1,
                 name: 1,
                 studies: 1,
+                subject: 1,
                 exercises: {
                     $map: {
                         input: '$populatedExercises',
@@ -201,12 +213,14 @@ export async function updateTopic(
     topicId: string,
     name: string,
     exercises: { _id: string, isMandatory: boolean }[],
-    studyIds: string[]
+    studyIds: string[],
+    subjectId: string
 ): Promise<ITopicDataWithVariants> {
     try {
        const updateData: any = {};
 
         updateData.name = name;
+        updateData.subject = subjectId;
 
         const mandatoryExercises = exercises.filter(ex => ex.isMandatory).map(ex => ex._id);
         const difficultyExercises = exercises.filter(ex => !ex.isMandatory).map(ex => ex._id);

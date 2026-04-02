@@ -1,8 +1,13 @@
 import { createContext } from "react"
 import { StudyElement } from "../components/RaceThemes/SharedUtils"
 
+export interface LobbyTopic {
+    name: string,
+    subject: string
+}
+
 interface LobbyData {
-    topics: string[],
+    topics: LobbyTopic[],
     studies: StudyElement[]
 }
 

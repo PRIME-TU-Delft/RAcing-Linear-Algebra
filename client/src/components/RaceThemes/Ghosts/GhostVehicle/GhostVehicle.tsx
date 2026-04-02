@@ -9,6 +9,8 @@ import LapCompletedText from "../LapCompletedText/LapCompletedText";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { TimeContext } from "../../../../contexts/TimeContext";
 import { RaceProgressContext } from "../../../../contexts/RaceProgressContext";
+import { getRacePathSizeAndOffsetMargins } from "../../../Game/GameService";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     ghost: Ghost,
@@ -21,12 +23,48 @@ interface Props {
     onGhostScoreUpdate: (newScore: number, ghostIndex: number) => void  // update function for race score
 }
 
+const DESIRED_EXPANDED_SIZE = "2vw";
+const DESIRED_CLOSED_SIZE = "1vw";
+const DESIRED_MINIMAP_SIZE = "1vw";
+const BORDER_WIDTH = "0.2vw";
+
 function GhostVehicle(props: Props) {
     const [startAnimation, setStartAnimation] = useState<boolean>(false)
 
     const usedTime = useContext(TimeContext)
     const stopShowingRace = useContext(RaceProgressContext)
     const animationControls = useAnimationControls()
+
+    const [dimensions, setDimensions] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+
+    const [racePathSizing, setRacePathSizing] = useState(getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height));
+    
+    const scaleX = 1920 / (props.keepClosed ? racePathSizing.width : dimensions.width);
+    const scaleY = 1080 / (props.keepClosed ? racePathSizing.height : dimensions.height);
+    const [ratio, setRatio] = useState(scaleX / scaleY);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            setDimensions({ width, height });
+            setRacePathSizing(getRacePathSizeAndOffsetMargins(width, height));
+
+            const newScaleX = 1920 / (props.keepClosed ? getRacePathSizeAndOffsetMargins(width, height).width : width);
+            const newScaleY = 1080 / (props.keepClosed ? getRacePathSizeAndOffsetMargins(width, height).height : height);
+            setRatio(newScaleX / newScaleY);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [props.keepClosed]);
+
+    useEffect(() => {
+        setRacePathSizing(getRacePathSizeAndOffsetMargins(dimensions.width, dimensions.height));
+    }, [dimensions]);
 
     useEffect(() => 
     {
@@ -99,79 +137,214 @@ function GhostVehicle(props: Props) {
     }, [startAnimation])
 
     return(
-        <motion.div
-            data-testid={`ghost${props.ghost.key}`}
-            key={props.ghost.key}
-            style={{
-                offsetPath: `path("${props.path}")`,
-                zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition
-            }}
-            className={props.keepClosed ? "minimap-ghost-container" :"ghost"}
-            initial={{ offsetDistance: "0%"}}
-            animate={animationControls}
-        >
-            {/* Only show position for ghosts that are open (check function description) */}
-            {props.ghost.isOpen && props.startShowingGhosts && !props.keepClosed ? 
-            (<motion.div 
-                className="position-number"
+        <div>
+            {props.theme !== "Boat" && <motion.div
+                data-testid={`ghost${props.ghost.key}`}
+                key={props.ghost.key}
                 style={{
-                    borderColor: getColorForRaceLap(props.ghost.lapsCompleted), 
-                    zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition + 20  // + 20 to make sure text is always on top of images
-                }}>
-                    <GhostText 
-                        ghost={props.ghost}
-                        showTeamName={props.showTeamNames}
-                    />
-            </motion.div>) : null}
-            <LapCompletedText 
-                lapsCompleted={props.ghost.lapsCompleted}/>
-            {props.keepClosed ? (
-            <div className="minimap-ghost rounded-circle" style={{
-                borderColor: getColorForRaceLap(props.ghost.lapsCompleted),
-                borderWidth: "3px",
-                borderStyle: "solid",
-                backgroundColor: getColorForStudy(props.ghost.study).mainColor
-            }}></div>
-            ) : (
-                <motion.div
-                    initial={{
-                        height: "55px",
-                        width: "55px",
-                    }}
-                    animate={
-                        getGhostStyle(
-                            props.ghost.isOpen, 
-                            getColorForRaceLap(props.ghost.lapsCompleted),
-                            getColorForStudy(props.ghost.study).mainColor
-                        )
-                    }
-                    transition={{
-                        duration: 0.5,
-                        stiffness: 100,
-                        delay: 0.5
-                    }}
-                    className="ghost-vehicle rounded-circle"
-                >
-                    <motion.div 
-                        className="ghost-vehicle-image-container"
-                        animate={{
-                            opacity: props.ghost.isOpen ? "100%" : "0%",
+                    offsetPath: `path("${props.path}")`,
+                    zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition
+                }}
+                className={props.keepClosed ? "minimap-ghost-container" :"ghost"}
+                initial={{ offsetDistance: "0%"}}
+                animate={animationControls}
+            >
+                {/* Only show position for ghosts that are open (check function description) */}
+                {props.ghost.isOpen && props.startShowingGhosts && !props.keepClosed ? 
+                (<motion.div 
+                    className="position-number"
+                    style={{
+                        borderColor: getColorForRaceLap(props.ghost.lapsCompleted), 
+                        zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition + 20  // + 20 to make sure text is always on top of images
+                    }}>
+                        <GhostText 
+                            ghost={props.ghost}
+                            showTeamName={props.showTeamNames}
+                        />
+                </motion.div>) : null}
+                <LapCompletedText 
+                    lapsCompleted={props.ghost.lapsCompleted}/>
+                {props.keepClosed ? (
+                <div className="minimap-ghost rounded-circle" style={{
+                    borderColor: getColorForRaceLap(props.ghost.lapsCompleted),
+                    borderWidth: "3px",
+                    borderStyle: "solid",
+                    backgroundColor: getColorForStudy(props.ghost.study).mainColor
+                }}></div>
+                ) : (
+                    <motion.div
+                        initial={{
+                            height: "55px",
+                            width: "55px",
                         }}
+                        animate={
+                            getGhostStyle(
+                                props.ghost.isOpen, 
+                                getColorForRaceLap(props.ghost.lapsCompleted),
+                                getColorForStudy(props.ghost.study).mainColor
+                            )
+                        }
                         transition={{
-                            duration: 0.2,
+                            duration: 0.5,
                             stiffness: 100,
                             delay: 0.5
-                        }}>
-                        <VehicleImage
-                            theme={props.theme}
-                            colors={{
-                                mainColor: props.ghost.colors.mainColor,
-                                highlightColor: props.ghost.colors.highlightColor
-                            }}/>
+                        }}
+                        className="ghost-vehicle rounded-circle"
+                    >
+                        <motion.div 
+                            className="ghost-vehicle-image-container"
+                            animate={{
+                                opacity: props.ghost.isOpen ? "100%" : "0%",
+                            }}
+                            transition={{
+                                duration: 0.2,
+                                stiffness: 100,
+                                delay: 0.5
+                            }}>
+                            <VehicleImage
+                                theme={props.theme}
+                                colors={{
+                                    mainColor: props.ghost.colors.mainColor,
+                                    highlightColor: props.ghost.colors.highlightColor
+                                }}/>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            )}
-        </motion.div>
+                )}
+            </motion.div>}
+
+            {props.theme === "Boat" && !props.keepClosed &&
+            <svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{zIndex: 9999}}>
+                <path
+                    d={props.path}
+                    fill={"none"}
+                />
+                <foreignObject x="0" y="0" 
+                    width={1920} 
+                    height={1080}
+                    style={{ overflow: 'visible', zIndex: 9000 }}
+                    >
+                    <motion.div
+                        data-testid={`ghost${props.ghost.key}`}
+                        key={props.ghost.key}
+                        style={{
+                            offsetPath: `path("${props.path}")`,
+                            zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition
+                        }}
+                        className={props.keepClosed ? "minimap-ghost-container" :"ghost"}
+                        initial={{ offsetDistance: "0%"}}
+                        animate={animationControls}
+                    >
+                        {props.ghost.isOpen && props.startShowingGhosts && !props.keepClosed ? 
+                        (<motion.div 
+                            className="position-number"
+                            style={{
+                                borderColor: getColorForRaceLap(props.ghost.lapsCompleted), 
+                                zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition,
+                                transform: `scaleX(${ratio})`
+                            }}>
+                                <GhostText 
+                                    ghost={props.ghost}
+                                    showTeamName={props.showTeamNames}
+                                />
+                        </motion.div>) : null}
+                        <div style={{ transform: `scaleX(${ratio})` }}>
+                            <LapCompletedText 
+                                lapsCompleted={props.ghost.lapsCompleted}/>
+                        </div>
+                        <motion.div
+                            initial={{
+                                height: "55px",
+                                width: "55px",
+                            }}
+                            animate={{
+                                ...getGhostStyle(
+                                    props.ghost.isOpen, 
+                                    getColorForRaceLap(props.ghost.lapsCompleted),
+                                    getColorForStudy(props.ghost.study).mainColor
+                                ),
+                                width: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleX})`,
+                                height: `calc(${[props.ghost.isOpen ? DESIRED_EXPANDED_SIZE : DESIRED_CLOSED_SIZE]} * ${scaleY})`,
+                                borderWidth: `calc(${BORDER_WIDTH} * ${scaleX})`
+                            }}
+                            transition={{
+                                duration: 0.5,
+                                stiffness: 100,
+                                delay: 0.5
+                            }}
+                            className="ghost-vehicle rounded-circle"
+                        >
+                            <motion.div 
+                                className="ghost-vehicle-image-container"
+                                animate={{
+                                    opacity: props.ghost.isOpen ? "100%" : "0%",
+                                }}
+                                transition={{
+                                    duration: 0.2,
+                                    stiffness: 100,
+                                    delay: 0.5
+                                }}>
+                                <VehicleImage
+                                    theme={props.theme}
+                                    colors={{
+                                        mainColor: props.ghost.colors.mainColor,
+                                        highlightColor: props.ghost.colors.highlightColor
+                                    }}/>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                </foreignObject>
+            </svg>
+            }
+
+            {props.theme === "Boat" && props.keepClosed &&
+            <svg 
+                className="minimap-svg-path" 
+                viewBox="0 0 1920 1080" 
+                preserveAspectRatio="xMidYMid meet"
+                style={{
+                        width: racePathSizing.width,
+                        height: racePathSizing.height,
+                        marginLeft: racePathSizing.offsetX,
+                        marginTop: racePathSizing.offsetY,
+                        zIndex: 9000
+                    }}>
+                <path
+                    d={props.path}
+                    fill={"none"}
+                />
+                <foreignObject x="0" y="0" 
+                    width={1920} 
+                    height={1080}
+                    style={{ overflow: 'visible', zIndex: 9000 }}
+                    >
+                    <motion.div
+                        data-testid={`ghost${props.ghost.key}`}
+                        key={props.ghost.key}
+                        style={{
+                            offsetPath: `path("${props.path}")`,
+                            zIndex: getZIndexValues().ghostVehicle - props.ghost.racePosition
+                        }}
+                        className={props.keepClosed ? "minimap-ghost-container" :"ghost"}
+                        initial={{ offsetDistance: "0%"}}
+                        animate={animationControls}
+                    >
+                        <div style={{ transform: `scaleX(${ratio})` }}>
+                            <LapCompletedText 
+                                lapsCompleted={props.ghost.lapsCompleted} fontSize={30}/>
+                        </div>
+                        <div className="minimap-ghost rounded-circle" style={{
+                            borderColor: getColorForRaceLap(props.ghost.lapsCompleted),
+                            borderWidth: "3px",
+                            borderStyle: "solid",
+                            backgroundColor: getColorForStudy(props.ghost.study).mainColor,
+                            width: `calc(${DESIRED_MINIMAP_SIZE} * ${scaleX})`,
+                            height: `calc(${DESIRED_MINIMAP_SIZE} * ${scaleY} * ${ratio})`
+                        }}></div>
+                    </motion.div>
+                </foreignObject>
+            </svg>
+            }
+        </div>
     )
 }
 

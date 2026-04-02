@@ -1,52 +1,99 @@
 .wave {
-    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg)
+    background: url(../../../img/maps/boat/wave.png)
         repeat-x;
     position: absolute;
-    width: 6400px;
-    height: 198px;
-    animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+    width: 400%;
+    height: calc(24%);
+    animation: wave 30s linear infinite;
     transform: translate3d(0, 0, 0);
     mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
     opacity: 0.2;
+    z-index: 0;
+}
+.terrain-layout {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.terrain-layout > img {
+    position: absolute;
+    height: 100%;
+    width: 100%; 
+    
+    object-fit: fill; 
+    
+    left: 0;
+    top: 0;
+    z-index: 1;
 }
 
 .waves > div:nth-child(1) {
-    bottom: 85%;
-    animation-delay: 1s;
-    animation-duration: 5s;
+    bottom: 75%;
+    animation-delay: 0.2s;
+    animation-duration: 84.375s;
 }
 
 .waves > div:nth-child(2) {
-    top: 50px;
-    animation-duration: 7s;
+    top: 15%;
+    animation-duration: 70.875s;
 }
 
 .waves > div:nth-child(3) {
-    top: 200px;
+    top: 25%;
     animation-delay: 0.5s;
-    animation-duration: 5s;
+    animation-duration: 101.25s;
 }
 .waves > div:nth-child(4) {
-    top: 350px;
-    animation-delay: 2s;
-    animation-duration: 8s;
+    top: 35%;
+    animation-delay: 0.6s;
+    animation-duration: 77.625s;
 }
 .waves > div:nth-child(5) {
-    top: 500px;
+    top: 45%;
     animation-delay: 0.1s;
-    animation-duration: 7s;
+    animation-duration: 91.125s;
 }
 .waves > div:nth-child(6) {
-    top: 650px;
+    top: 55%;
     animation-delay: 0.3s;
-    animation-duration: 6s;
+    animation-duration: 87.75s;
 }
 
 @keyframes wave {
     0% {
         margin-left: 0;
+        transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
+    }
+    10% {
+        transform: translate3d(0, 0, 0) scaleX(1.15) scaleY(0.85);
+    }
+    20% {
+        transform: translate3d(0, 0, 0) scaleX(1.25) scaleY(0.75);
+    }
+    30% {
+        transform: translate3d(0, 0, 0) scaleX(1.15) scaleY(0.85);
+    }
+    40% {
+        transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
+    }
+    50% {
+        transform: translate3d(0, 0, 0) scaleX(0.85) scaleY(1.15);
+    }
+    60% {
+        transform: translate3d(0, 0, 0) scaleX(0.75) scaleY(1.25);
+    }
+    70% {
+        transform: translate3d(0, 0, 0) scaleX(0.85) scaleY(1.15);
+    }
+    80% {
+        transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
     }
     100% {
-        margin-left: -1600px;
+        margin-left: -300%;
+        transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
     }
 }

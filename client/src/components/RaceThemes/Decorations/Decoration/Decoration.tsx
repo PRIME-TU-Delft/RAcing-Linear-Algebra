@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import  { getZIndexValues } from "../../RaceService"
 import { Dimensions, PercentCoordinate } from "../../SharedUtils"
+import { RaceDataContext } from "../../../../contexts/RaceDataContext"
+import "./Decoration.css"
 
 interface Props {
     points: PercentCoordinate[]
@@ -14,6 +16,8 @@ interface Props {
 function Decoration(props: Props) {
     const [decorationHeight, setDecorationHeight] = useState(0)
     const [sprites, setSprites] = useState<string[]>([])
+
+    const theme = useContext(RaceDataContext).theme;
 
     useEffect(() => {
         const sprites = []
@@ -103,6 +107,51 @@ function Decoration(props: Props) {
                 setDecorationHeight(curr => widthRatio * 16)
                 break
 
+            // Boat Theme
+            case "utrecthDom":
+                setDecorationHeight(curr => widthRatio * 100)
+                break
+
+            case "nieuweKerkBoat":
+                setDecorationHeight(curr => widthRatio * 100)
+                break
+
+            case "thePierBoat":
+                setDecorationHeight(curr => widthRatio * 80)
+                break
+
+            case "rotterdamBridgeBoat":
+                setDecorationHeight(curr => widthRatio * 120)
+                break
+
+            case "skyscraperBoat":
+                setDecorationHeight(curr => widthRatio * 80)
+                break
+
+            case "cruiseBoat":
+                setDecorationHeight(curr => widthRatio * 50)
+                break
+
+            case "amsterdam":
+                setDecorationHeight(curr => widthRatio * 65)
+                break
+            
+            case "cheeseBoat":
+                setDecorationHeight(curr => widthRatio * 23)
+                break
+
+            case "seagullBoat":
+                setDecorationHeight(curr => widthRatio * 20)
+                break
+
+            case "duckBoat":
+                setDecorationHeight(curr => widthRatio * 15)
+                break
+
+            case "grassBoat":
+                setDecorationHeight(curr => widthRatio * 10)
+                break
+
             default:
                 setDecorationHeight(curr => 100)
         }
@@ -146,6 +195,7 @@ function Decoration(props: Props) {
                     className={props.class + " decoration"}
                 >
                     <img src={sprites[props.points.indexOf(coordinate)]} 
+                    className={theme.toLocaleLowerCase() + "-decoration-sprite"}
                     style={{
                         height: `${decorationHeight}px`,
                         width: `auto`,

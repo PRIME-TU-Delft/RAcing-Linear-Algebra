@@ -3,7 +3,7 @@ import "./App.css"
 import Home from "./components/Home/Home"
 import CreateGame from "./components/CreateGame/CreateGame"
 import JoinGame from "./components/JoinGame/JoinGame"
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import TestValues from "./utils/testValues"
 import Waiting from "./components/Waiting/Waiting"
 import Login from "./components/CreateGame/Login/Login"
@@ -12,7 +12,7 @@ import Lecturer from "./components/CreateGame/Lecturer/Lecturer"
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen"
 import Game from "./components/Game/Game"
 import TeamPreview from "./components/RaceThemes/TeamPreview/TeamPreview"
-import { Ghost, GraspleExercise, IQuestion, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
+import { Ghost, GraspleExercise, IQuestion, RaceMap, RoundInformation, ServerGhost, Streak } from "./components/RaceThemes/SharedUtils"
 import { initializeFrontendGhostObjects } from "./components/RaceThemes/Ghosts/GhostService"
 import socket from "./socket"
 import testValues from "./utils/testValues"
@@ -20,6 +20,7 @@ import { TimeContext } from "./contexts/TimeContext"
 import { RaceDataContext } from "./contexts/RaceDataContext"
 import LecturerService from "./components/CreateGame/Lecturer/LecturerService"
 import { trainMaps } from "./components/RaceThemes/Maps/TrainMaps"
+import { boatMaps } from "./components/RaceThemes/Maps/BoatMaps"
 import { ScoreContext } from "./contexts/ScoreContext"
 import Leaderboard from "./components/CreateGame/Lecturer/Leaderboard/Leaderboard"
 import QuestionStatistics from "./components/CreateGame/Lecturer/QuestionStatistics/QuestionStatistics"
@@ -31,7 +32,7 @@ import { StreakContext } from "./contexts/StreakContext"
 import { RaceProgressContext } from "./contexts/RaceProgressContext"
 import { GraspleQuestionContext } from "./contexts/GraspleQuestionContext"
 import LecturerPlatform from "./components/LecturerPlatform/LecturerPlatform"
-import { Exercise, Study, Topic } from "./components/LecturerPlatform/SharedUtils"
+import { Exercise, Study, Subject, Topic } from "./components/LecturerPlatform/SharedUtils"
 import { DefaultTeamsData, TopicDataContext } from "./contexts/TopicDataContext"
 import { LobbyData, LobbyDataContext } from "./contexts/LobbyDataContext"
 import { DifficultyAvailability, DifficultyAvailabilityContext } from "./contexts/DifficultyAvailabilityContext"
@@ -62,9 +63,12 @@ function App() {
     const [allExercises, setAllExercises] = useState<Exercise[]>([])
     const [allTopics, setAllTopics] = useState<Topic[]>([])
     const [allStudies, setAllStudies] = useState<Study[]>([])
+    const [allSubjects, setAllSubjects] = useState<Subject[]>([])
     const [allDefaultTeamData, setAllDefaultTeamData] = useState<DefaultTeamsData[]>([])
     const [lobbyData, setLobbyData] = useState<LobbyData>({topics: [], studies: []})
     const [currentIndividualScore, setCurrentIndividualScore] = useState<number>(0)
+    const [raceMap, setRaceMap] = useState<RaceMap>(trainMaps[1]);
+
     const [difficultyAvailability, setDifficultyAvailability] = useState<DifficultyAvailability>({
         easy: true,
         medium: true,
@@ -172,6 +176,14 @@ function App() {
         }
     }, [roundDuration, startTimer])
 
+    useEffect(() => {
+        if (theme.toLowerCase() === "boat") {
+            setRaceMap(boatMaps[0])
+        } else if (theme.toLowerCase() === "train") {
+            setRaceMap(trainMaps[1])
+        }
+    }, [theme])
+
     const gameStartHandler = () => {
         socket.emit("getAllStudies")
         setStartTimer(curr => true)
@@ -235,7 +247,7 @@ function App() {
         }))
         const studyIds = topicData.studies.map(study => study._id)
 
-        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds)
+        socket.emit("updateTopic", topicData._id, topicData.name, exerciseData, studyIds, topicData.subject? topicData.subject._id : null)
     }
 
     function onGetUpdatedExercise(updatedExercise: Exercise) {
@@ -388,6 +400,7 @@ function App() {
         }
 
         function onGetLobbyData(lobbyData: LobbyData) {
+            console.log(lobbyData)
             setLobbyData({...lobbyData})
         }
 
@@ -467,6 +480,10 @@ function App() {
             setPlayerPlacement(curr => placement)
             console.log("Received placement: " + placement)
         }
+
+        function onGetAllSubjects(subjects: Subject[]) {
+            setAllSubjects(curr => [...subjects])
+        }
  
         socket.on("round-duration", onRoundDuration)
         socket.on("ghost-teams", onGhostTeamsReceived)
@@ -498,6 +515,7 @@ function App() {
         socket.on("already-in-room", onPlayerAlreadyInLobby)
         socket.on("ready-for-question-request", onReadyForQuestionRequest)
         socket.on("your-placement", onYourPlacementReceived)
+        socket.on("all-subjects", onGetAllSubjects)
     }, [])
 
     // useEffect(() => {
@@ -531,6 +549,7 @@ function App() {
             socket.emit("getAllStudies")	
             socket.emit("getAllExercises")
             socket.emit("getAllDefaultTeams")
+            socket.emit("getAllSubjects")
             navigate("/LecturerPlatform")
             setLoggedIn(false)
         }
@@ -621,7 +640,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: raceMap
                             }}>
                                 <ChoosingDifficultyContext.Provider value={{choosingDifficulty: choosingNextQuestionDifficulty, setChoosingDifficulty: setChoosingNextQuestionDifficulty}}>
                                     <DifficultyAvailabilityContext.Provider value={difficultyAvailability}>
@@ -659,7 +678,7 @@ function App() {
                                 theme: theme,
                                 ghostTeams: ghostTeams,
                                 checkpoints: [],
-                                selectedMap: trainMaps[1]
+                                selectedMap: raceMap
                                 }}>
                                     <ScoreContext.Provider value={{currentPoints: currentScore, totalPoints: fullLapScoreValue, teamAveragePoints: averageTeamScore, currentAccuracy: currentAccuracy}}>
                                     <RaceProgressContext.Provider value={stopShowingRace}>
@@ -699,7 +718,7 @@ function App() {
                 <Route
                     path="/LecturerPlatform"
                     element={
-                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData}}>
+                        <TopicDataContext.Provider value={{allStudies: allStudies, allExercises: allExercises, allTopics: allTopics, defaultTeams: allDefaultTeamData, allSubjects: allSubjects}}>
                             <LecturerPlatform 
                                 loggedIn={loggedIn} 
                                 onUpdateExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}

@@ -16,3 +16,10 @@
     font-family: "Electrolize", sans-serif;    
     color: #ff951b;
 }
+
+.boat-theme.topic-text {
+    font-size: 4vw;
+    color: #ebaa30;
+    font-family: "FingerPaint", sans-serif;
+    margin-top: 8vh;
+}

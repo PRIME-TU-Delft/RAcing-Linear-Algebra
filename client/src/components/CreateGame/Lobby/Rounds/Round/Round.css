@@ -64,21 +64,21 @@
 }
 
 .round-container:hover {
-    border: 2px solid #00b8c8;
+    border: 2px solid var(--hover-color);
     transition-duration: 0.3s;
 }
 
 .round-container:hover > .left {
-    color: #00b8c8;
+    color: var(--hover-color);
     transition-duration: 0.3s;
 }
 
 .selected > .left {
-    color: #00b8c8;
+    color: var(--hover-color);
 }
 
 .selected {
-    border: 2px solid #00b8c8;
+    border: 2px solid var(--hover-color);
 }
 
 .round-title {

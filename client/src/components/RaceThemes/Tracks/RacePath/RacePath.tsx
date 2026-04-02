@@ -2,6 +2,7 @@ import React from "react";
 import { Component } from "../../SharedUtils";
 import TracksStyle from "../TracksStyle";
 import "../Tracks.css"
+import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     theme: string,
@@ -41,13 +42,13 @@ function RacePath(props: Props) {
                 ))
             
             case "boat":
-                return (<svg className="svg-path">
+                return (<svg className="svg-path" viewBox="0 0 1920 1080" preserveAspectRatio="none">
                             <path
                                 d={props.svgPath}
                                 fill={"none"}
-                                strokeWidth={4}
+                                strokeWidth={2}
                                 strokeDasharray={"15"}
-                                stroke={"#0C2340"}
+                                stroke={"#3d6fadff"}
                             />
                         </svg>)
         }

@@ -46,6 +46,12 @@ export const topicSchema: mongoose.Schema = new mongoose.Schema({
             default: undefined
         },
     ],
+
+    subject: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Subjects",
+        required: false,
+    }
 })
 
 export const Topic: mongoose.Model<ITopic> = mongoose.model<ITopic>("Topics", topicSchema)

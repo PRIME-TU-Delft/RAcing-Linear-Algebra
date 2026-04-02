@@ -3,6 +3,11 @@
     src: url("../../../fonts/Electrolize-Regular.ttf");
 }
 
+@font-face {
+    font-family: "FingerPaint";
+    src: url("../../../fonts/FingerPaint-Regular.ttf");
+}
+
 .team-preview-body {
     color: #003082;
 }
@@ -31,9 +36,17 @@
 .team-preview-subtitle {
     width: 100%;
     font-size: 1.7vw;
-    font-family: "Electrolize", sans-serif;    
     margin-top: 2.7vh;
+}
+
+.train-theme-subtitle {
     color: #ff951b;
+    font-family: "Electrolize", sans-serif;    
+}
+
+.boat-theme-subtitle {
+    color: #ebaa30;
+    font-family: "FingerPaint", sans-serif;
 }
 
 .team-preview-grid {
@@ -50,6 +63,10 @@
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: center;
+}
+
+.boat-theme.team-preview-grid {
+    margin: 4vh auto;
 }
 
 .team-preview-grid > div {
@@ -83,7 +100,6 @@
     position: relative;
     display: flex;
     margin: auto;
-    justify-content: center;
     width: 2.5vw;
     height: 2.5vw;
 }
@@ -126,7 +142,6 @@
 .main-team-image-container {
     position: relative;
     display: flex;
-    justify-content: center;
     box-shadow: 0px 0px 2vh #F8B700;
     background-color: white;
     height: 17vh;

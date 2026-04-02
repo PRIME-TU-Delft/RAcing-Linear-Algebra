@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./Themes.css"
 import Theme from "./Theme/Theme"
 import boatIcon from "../../../../img/boat-icon.svg"
-import trainIcon from "../../../../img/train-icon.png"
+import trainIcon from "../../../../img/train-icon.svg"
 
 interface Props {
     onSelectTheme: (theme: string) => void
@@ -29,19 +29,19 @@ function Themes(props: Props) {
         <div className="themes-container">
             <Theme
                 title="Train"
-                description="Face the rails!"
+                description="Train your math skills!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Train")}
                 icon={trainIcon}
             ></Theme>
 
-            {/* <Theme
+            <Theme
                 title="Boat"
-                description="Head to the sea!"
+                description="Sea how you do!"
                 onSelectTheme={(theme: string) => themeHandler(theme)}
                 class={themeClassHandler("Boat")}
                 icon={boatIcon}
-            ></Theme> */}
+            ></Theme>
         </div>
     )
 }

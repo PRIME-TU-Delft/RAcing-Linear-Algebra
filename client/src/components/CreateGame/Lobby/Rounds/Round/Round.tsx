@@ -6,6 +6,7 @@ interface Props {
     onSelectRound: (title: string, selected: boolean) => void
     selected: boolean
     index: number
+    color?: string
 }
 
 function Round(props: Props) {
@@ -43,9 +44,10 @@ function Round(props: Props) {
     return (
         <div
             className={"round-container " + (isSelected ? "selected" : "")}
+            style={{ "--hover-color": props.color ?? "#00b8c8" } as React.CSSProperties}
             onClick={selectionHandler}
         >
-            <div className="colum left">
+            <div className="colum left" style={props.color ? {color: props.color} : undefined}>
                 <div className="round-index">{props.index + 1}</div>
                 <p className="img">{imageLetter}</p>
             </div>
