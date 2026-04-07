@@ -26,13 +26,13 @@ function Step(props: Props) {
     return (
         <div className={stepClassHandler()}>
             <div
-                className="container"
+                className="step-container"
                 onClick={() => props.onStepSelected(props.stepNumber)}
             >
                 <div className="circle">{props.stepNumber}</div>
             </div>
             <div
-                className="container"
+                className="step-container"
                 onClick={() => props.onStepSelected(props.stepNumber)}
             >
                 <div className="step-title">{props.stepTitle}</div>
