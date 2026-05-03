@@ -3,7 +3,7 @@ import "./Home.css"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGear } from "@fortawesome/free-solid-svg-icons"
-import { Button, Menu, Modal, TextField } from '@mui/material';
+import { Button, Menu, Modal, TextField } from "@mui/material"
 import { MenuItem } from "@mui/material"
 import socket from "../../socket"
 
@@ -14,16 +14,17 @@ interface Props {
 function Home(props: Props) {
     const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [lecturerLoginModalActive, setLecturerLoginModalActive] = useState<boolean>()
+    const [lecturerLoginModalActive, setLecturerLoginModalActive] =
+        useState<boolean>()
     const [password, setPassword] = useState<string>("")
     const [attemptedLogIn, setAttemptedLogIn] = useState<boolean>(false)
 
     const handleClick = (event: React.MouseEvent<HTMLOrSVGElement>) => {
-        setAnchorEl(event.currentTarget as HTMLElement);
-    };
+        setAnchorEl(event.currentTarget as HTMLElement)
+    }
 
     const closeModalHandler = () => {
-        setLecturerLoginModalActive(curr => false)
+        setLecturerLoginModalActive((curr) => false)
         setAnchorEl(null)
     }
 
@@ -37,13 +38,13 @@ function Home(props: Props) {
             <div className="background"> </div>
             <div className="home">
                 <div className="home-title">
-                    <p>RAcing Linear Algebra</p>
+                    <p>Racing LAB</p>
                 </div>
                 <div className="settings-dropdown">
-                    <FontAwesomeIcon 
-                        icon={faGear} 
-                        size="2xl" 
-                        className="settings-icon" 
+                    <FontAwesomeIcon
+                        icon={faGear}
+                        size="2xl"
+                        className="settings-icon"
                         onClick={handleClick}
                     />
                     <Menu
@@ -53,9 +54,12 @@ function Home(props: Props) {
                         onClose={() => setAnchorEl(null)}
                         autoFocus={false}
                     >
-                        <MenuItem 
-                            onClick={() => setLecturerLoginModalActive(curr => true)}
-                            selected={false}>
+                        <MenuItem
+                            onClick={() =>
+                                setLecturerLoginModalActive((curr) => true)
+                            }
+                            selected={false}
+                        >
                             Lecturer platform
                         </MenuItem>
                     </Menu>
@@ -84,7 +88,10 @@ function Home(props: Props) {
                 disableAutoFocus={true}
             >
                 <div className="lecturer-login-modal rounded">
-                    <p id="lecturer-login-description">Only lecturers have access to the lecturer platform. Please log in with your password.</p>
+                    <p id="lecturer-login-description">
+                        Only lecturers have access to the lecturer platform.
+                        Please log in with your password.
+                    </p>
                     <form>
                         <TextField
                             id="password"
@@ -121,7 +128,7 @@ function Home(props: Props) {
                         color="secondary"
                         onClick={closeModalHandler}
                         fullWidth
-                        style={{ marginTop: '10px' }}
+                        style={{ marginTop: "10px" }}
                     >
                         Back
                     </Button>

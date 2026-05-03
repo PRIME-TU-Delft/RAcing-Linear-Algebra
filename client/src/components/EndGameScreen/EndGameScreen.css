@@ -7,7 +7,7 @@
     font-size: 60px;
     font-family: "Century Gothic";
     font-weight: bold;
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
 .qrCode {
@@ -15,9 +15,8 @@
     margin-bottom: 50px;
     margin-left: 50px;
     margin-right: 50px;
-    width: 250px;
-    height: 250px;
-    border: 1px solid black;
+    width: 500px;
+    height: 500px;
 }
 
 .qrCode:hover {
@@ -43,20 +42,20 @@
     height: 4rem;
     line-height: 4rem;
     font-size: 20px;
-    background-color: #0063D3;
+    background-color: #0063d3;
     color: white;
     margin: auto;
     margin-top: 2rem;
 }
 
 .end-game-home-btn:hover {
-    background-color: #004BA0;
+    background-color: #004ba0;
     transition-duration: 0.3s;
     cursor: pointer;
 }
 
 .end-game-btn-container {
-    border-top: 2px solid #0063D3;
+    border-top: 2px solid #0063d3;
     width: 80%;
     margin: auto;
     margin-top: 2rem;
