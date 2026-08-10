@@ -39,4 +39,4 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.OWNER_LOWERCASE }}/racing-la-frontend:latest
           build-args: |
-            REACT_APP_BACKEND_URL=https://api.racingla.ewi.tudelft.nl
+            REACT_APP_BACKEND_URL=https://api.racinglab.ewi.tudelft.nl

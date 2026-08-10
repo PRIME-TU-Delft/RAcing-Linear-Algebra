@@ -1,6 +1,15 @@
-racingla.ewi.tudelft.nl {
+racinglab.ewi.tudelft.nl {
 	header X-Clacks-Overhead "GNU Terry Pratchett"
 	reverse_proxy frontend:3000
+}
+
+api.racinglab.ewi.tudelft.nl {
+	header X-Clacks-Overhead "GNU Terry Pratchett"
+	reverse_proxy backend:5000
+}
+
+racingla.ewi.tudelft.nl {
+	redir https://racinglab.ewi.tudelft.nl{uri} permanent
 }
 
 api.racingla.ewi.tudelft.nl {
