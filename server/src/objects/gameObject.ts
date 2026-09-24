@@ -346,10 +346,17 @@ export class Game {
         const points = ghostTeamScores.map((x, index) => [index * 30, x])
         const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
         const timePoints = this.getTimePointsForTeam(numberOfTimePoints)
+        const finalScore = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
 
+        // The spline overshoots around plateaus in the score data, so the interpolated scores can dip.
+        // Scores are cumulative, so keep them non-decreasing and never above the final score,
+        // otherwise the ghost teams move backwards on the track
+        let previousScore = 0
         const result = timePoints.map(x => {
             const interpolatedNormalizedScore = interp.getPointAt(x / this.roundDurations[this.currentTopicIndex])[1];
-            const score = Math.max(0, interpolatedNormalizedScore) * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers();
+            const interpolatedScore = Math.max(0, interpolatedNormalizedScore) * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers();
+            const score = Math.min(finalScore, Math.max(previousScore, interpolatedScore))
+            previousScore = score
             return {
                 timePoint: x,
                 score: score
@@ -359,7 +366,7 @@ export class Game {
         // Modify the score of the last element
         const lastElement = result[result.length - 1]
         if (lastElement !== undefined) {
-            lastElement.score = ghostTeamScores[ghostTeamScores.length - 1] * this.roundDurations[this.currentTopicIndex] * this.getNumberOfActiveUsers()
+            lastElement.score = finalScore
             result[result.length - 1] = lastElement
         }
 
