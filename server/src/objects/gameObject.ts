@@ -430,10 +430,12 @@ export class Game {
                 const question = entry[0]
                 const attempts: number = entry[1].attempts
                 const correct: number = entry[1].correct
-                const currentAnswered = res.get(question.id)?.correctlyAnswered ?? 0
-                const currentAttempts = res.get(question.id)?.incorrectlyAnswered ?? 0
+                //Questions are plain objects (not mongoose documents), so the .id virtual is not available
+                const questionKey = question._id.toString()
+                const currentAnswered = res.get(questionKey)?.correctlyAnswered ?? 0
+                const currentAttempts = res.get(questionKey)?.incorrectlyAnswered ?? 0
                 res.set(
-                    question.id,
+                    questionKey,
                     new Statistic(
                         question,
                         question.difficulty,

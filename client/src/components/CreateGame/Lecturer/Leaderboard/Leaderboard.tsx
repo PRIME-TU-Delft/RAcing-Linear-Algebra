@@ -4,7 +4,6 @@ import { Ghost } from "../../../RaceThemes/SharedUtils";
 import { getColorForStudy } from "../../../RaceThemes/Ghosts/GhostService";
 import { a, useTrail } from "react-spring";
 import { useNavigate } from "react-router-dom";
-import socket from "../../../../socket";
 import { PlayerPlacementContext } from "../../../../contexts/PlayerPlacementContext";
 
 interface Props {
@@ -148,7 +147,6 @@ function Leaderboard(props: Props) {
             {props.isLecturer ? (
                 <div className="leaderboard-continue-button" 
                     onClick={() => {
-                        socket.emit("getLecturerStatistics")
                         navigate("/Statistics")
                     }}>
                         Continue
