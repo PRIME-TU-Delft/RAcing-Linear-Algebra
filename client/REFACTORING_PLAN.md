@@ -198,7 +198,7 @@ The tests are about two years stale. Most assert UI that no longer exists, and s
 > - **Password:** the old Login test hardcoded what looks like the real create-game password. The rewrite uses `"test-password"`, but the old value is still in git history (see Appendix D #3).
 > - **Verified:** lint has 0 errors and 604 warnings, all in app code. The deleted tests took 44 warnings with them, and the test files now have none. The bundle hash is unchanged (`main.0b7c949d.js`).
 
-### [ ] 0.4 Characterisation tests for pure logic (`refactor`)
+### [x] 0.4 Characterisation tests for pure logic (`refactor`)
 Pin the **current** behaviour, bugs included, of the logic that later phases will move. Mark known-wrong outputs with `// BUG (Appendix B #n)` so the later `fix` step flips the assertion.
 - `RaceThemes/RaceService.ts`: `getRacePathObject`, `getNewTimeScoreIndex`, `formatRacePositionText`, `getColorForRaceLap`.
 - `RaceThemes/Ghosts/GhostService.ts`: `initializeFrontendGhostObjects`, `getColorForStudy`, `currentGhostIsOpen`, `getGhostStyle`.
@@ -207,6 +207,19 @@ Pin the **current** behaviour, bugs included, of the logic that later phases wil
 - `CreateGame/Lecturer/LecturerService.ts`: `formatTime` and the other helpers.
 - Grasple URL / iframe parsing: extract it verbatim from `ExerciseURLInput.tsx` into a function first, which is a pure move.
 - **Verify:** G1, G3.
+
+> **Note (done 2026-09-29):**
+> - **Suite:** 16 → 17 files, 43 → **155 tests**, all green, and stable over 3 consecutive runs.
+> - **New test files:** `RaceService`, `GhostService`, `PathPosition` (`getCheckpointPosition`), `GameService`, `LecturerService`, `grasple` and `ExerciseURLInput`. Expected values were derived by hand from the code, not copied from its output.
+> - **Grasple parsing moved** into `src/utils/grasple.ts`: `extractIframeSrc`, `isGraspleExerciseUrl` and `extractGraspleExerciseId`. It replaces the inline copies in `ExerciseURLInput.tsx` and `TopicElement.tsx`.
+>   - `extractGraspleExerciseId` returns the raw digits as a string, because `ExerciseURLInput` displays `#007` as written. Callers keep their own `parseInt`.
+>   - The `ExerciseURLInput` render test passes unchanged against **both** the original and the refactored components, which proves the move preserved behaviour. The bundle is 3 B smaller (`main.65997c2d.js`).
+> - **Coverage:** the config no longer excludes all of `src/utils/`, only `mathquill.min.js` and `testValues.ts`.
+> - **New bugs pinned** as `BUG (Appendix B #n)` assertions: #33 to #36 are new, and #13, #22 and #24 are now pinned too.
+> - **Also pinned, as observed behaviour only:**
+>   - `getNewTimeScoreIndex` returns `currentIndex + 1` even before the current time point is reached, and runs past the end of the array once every point has passed. Its callers must be reviewed before deciding whether this is a bug.
+>   - Diagonal path segments are measured by their x distance only. All maps are axis-aligned today.
+> - **Verified:** lint is 0 errors / 604 warnings, unchanged.
 
 ### [ ] 0.5 Format once (`refactor`)
 - Run `pnpm prettier` over `client/` in a **single commit that contains nothing else**.
@@ -711,6 +724,7 @@ Run the parts that are relevant to your change. Run the whole list at the end of
 | After 0.1 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 0 / 29 (runner broken) |
 | After 0.2 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 14 / 29 files, 45 / 85 tests |
 | After 0.3 | 674 kB (identical hash) | app code unchanged | ~40 | 604 (0 errors) | 10 / 10 files, 43 / 43 tests |
+| After 0.4 | 674 kB (−3 B) | ~same (+`utils/grasple.ts`) | ~40 | 604 (0 errors) | 17 / 17 files, 155 / 155 tests |
 | After phase 0 | | | | | |
 | After phase 1 | | | | | |
 | After phase 3 | | | | | |
@@ -745,7 +759,7 @@ Found during the survey. **Do not fix these during `refactor` steps.** Items mar
 | B19 | **Start button styling checks 3 steps,** while `disabled` checks 4 steps plus the player count. | `Lobby/StartGame/StartGame.tsx` (~50-58 vs 162-168) |
 | B20 | **"Select all" never deselects.** | `StudyEdit.tsx` (~30-35) |
 | B21 | **Invalid CSS value** `height: '5remis'`. | `TopicElement.tsx` (~678) |
-| B22 | **Invalid colour** `"#3d6faf8b600a2ff"`, and a breakpoint gap at exactly 800 px. | `Game/GameService.ts` (~25-30, 71) |
+| B22 | **Invalid colour** `"#3d6faf8b600a2ff"`, returned for any theme name except exactly `"Train"`/`"Boat"` (the check is case-sensitive). The height breakpoint gap at exactly 800 px is harmless: the defaults equal the 700–800 branch, as pinned in `GameService.test.ts`. | `Game/GameService.ts` (~25-30, 71) |
 | B23 | **Checkpoint sprite lookup never matches:** it compares with lowercase theme names without normalising. | `Tracks/Tracks.tsx` `getCheckpointSprite` |
 | B24 | **The boat map `rawPath` early return** gives `pathLength: 0` and `components: []`, so path-position helpers don't work on boat. | `RaceService.ts` `getRacePathObject` (~59-65) |
 | B25 | **Round-over accuracy shows NaN** at 0/0. | `Questions/RoundOverModal.tsx` (~57-61) |
@@ -756,6 +770,10 @@ Found during the survey. **Do not fix these during `refactor` steps.** Items mar
 | B30 | **`/LecturerPlatform` has no route guard.** The guard is commented out, and `loggedIn` is reset right after login anyway. A real fix needs server-side auth (Appendix D). | `LecturerPlatform.tsx` (~77-81), `App.tsx` (~546-556) |
 | B31 | (✓) **Two navigation triggers at round end:** the timer's `onExpire` and the `round-ended` listener. | `App.tsx` (~109-116), `Game.tsx` (~261-266) |
 | B32 | **Map decoration positions are random on each page load** (`Math.random` at import). This may be intended; confirm. | `BoatMaps.ts` (~140-143, 177-180) |
+| B33 | (✓) **Wrong ordinal suffixes from 21 on:** "21th", "22th", "23th". This only shows with more than 20 teams. | `RaceService.ts` `formatRacePositionText` |
+| B34 | (✓) **No lap colour after 5 laps:** `getColorForRaceLap(5)` returns `undefined`. | `RaceService.ts` `getColorForRaceLap` |
+| B35 | (✓) **`formatTeamScores` sorts the caller's array in place.** | `Lecturer/LecturerService.ts` `formatTeamScores` |
+| B36 | (✓) **A duplicate exercise URL ends with "Invalid URL" instead of "Exercise already exists".** Clearing the field re-runs validation and overwrites the message. | `ExerciseURLInput.tsx` validation effect |
 
 ---
 
@@ -806,4 +824,5 @@ These were found while surveying the frontend. The frontend refactor cannot fix 
 | 2026-09-29 | Decisions | – | 1.4: delete the legacy question types. 0.2: use Vitest for tests. |
 | 2026-09-29 | 0.1 | `fc1d1d7` | `.nvmrc` 20; `typecheck` + working `lint`; lint baseline 648 warnings, 0 errors |
 | 2026-09-29 | 0.2 | `6220fbf`, `afa4c12` | Vitest replaces Jest; 45/85 tests pass (stale tests, triaged in 0.3) |
-| 2026-09-29 | 0.3 | *(uncommitted)* | 19 stale test files deleted; 10 files / 43 tests green; global socket and fetch mocks; tests included in typecheck |
+| 2026-09-29 | 0.3 | `fcebe99`, `4f131ac` | 19 stale test files deleted; 10 files / 43 tests green; global socket and fetch mocks; tests included in typecheck |
+| 2026-09-29 | 0.4 | *(uncommitted)* | 112 characterisation tests (155 total); Grasple parsing extracted to `utils/grasple.ts`; bugs B33–B36 added |

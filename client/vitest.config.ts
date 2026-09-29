@@ -18,7 +18,8 @@ export default defineConfig({
             exclude: [
                 "src/__tests__/**",
                 "src/test/**",
-                "src/utils/**",
+                "src/utils/mathquill.min.js", // vendored library
+                "src/utils/testValues.ts", // unused fixture, deleted in step 1.2
                 "src/reportWebVitals.ts",
             ],
             reporter: ["text", "lcov", "cobertura"],

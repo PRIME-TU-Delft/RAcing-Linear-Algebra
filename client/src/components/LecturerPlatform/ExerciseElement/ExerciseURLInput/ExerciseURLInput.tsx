@@ -5,6 +5,7 @@ import { ExistingExercisesContext } from "../../ExistingExercisesContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { Exercise } from "../../SharedUtils";
+import { extractGraspleExerciseId, extractIframeSrc, isGraspleExerciseUrl } from "../../../../utils/grasple";
 
 interface Props {
     url: string;
@@ -26,32 +27,25 @@ function ExerciseURLInput(props: Props) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLoading(true);
         setChecked(false);
-        let newValue = e.target.value;
-
-        // If the pasted value includes an iframe snippet, extract the src attribute
-        if (newValue.includes("<iframe")) {
-            const srcMatch = newValue.match(/src="([^"]+)"/);
-            if (srcMatch && srcMatch[1]) {
-                newValue = srcMatch[1];
-            }
-        }
+        // If the pasted value is an iframe snippet, use its src attribute
+        const newValue = extractIframeSrc(e.target.value);
 
         // Set the extracted URL as the textbox value
         setUrlValue(newValue);
     };
 
     const checkIdValue = () => {
-        const idMatch = urlValue.match(/id=(\d+)$/);
-        if (!idMatch) {
+        const idDigits = extractGraspleExerciseId(urlValue);
+        if (idDigits === null) {
             return false;
         } else {
-            setGraspleId(parseInt(idMatch[1]));
+            setGraspleId(parseInt(idDigits));
             return true;
         }
     };
 
     const hasCorrectUrlDomain = () => {
-        return urlValue.includes("embed.grasple.com/exercises");
+        return isGraspleExerciseUrl(urlValue);
     };
 
     const exerciseDoesntAlreadyExist = () => {
@@ -59,8 +53,8 @@ function ExerciseURLInput(props: Props) {
     };
 
     const getIdValue = () => {
-        const idMatch = urlValue.match(/id=(\d+)$/);
-        return idMatch ? `#${idMatch[1]}` : "";
+        const idDigits = extractGraspleExerciseId(urlValue);
+        return idDigits !== null ? `#${idDigits}` : "";
     };
 
     useEffect(() => {

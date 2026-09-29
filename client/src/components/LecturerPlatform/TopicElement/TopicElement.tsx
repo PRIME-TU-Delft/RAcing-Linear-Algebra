@@ -14,6 +14,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautif
 import { ExistingExercisesContext } from "../ExistingExercisesContext"
 import ExerciseURLInput from "../ExerciseElement/ExerciseURLInput/ExerciseURLInput"
 import { getVariantNumberColor } from "../FunctionUtils"
+import { extractGraspleExerciseId, extractIframeSrc, isGraspleExerciseUrl } from "../../../utils/grasple"
 
 
 interface ExerciseListElement {
@@ -170,19 +171,13 @@ function TopicElement(props: Props) {
         const lines = batchText.split('\n').map(line => line.trim()).filter(line => line.length > 0)
         let newExercisesBatch: ExerciseListElement[] = []
         lines.forEach(line => {
-            let extractedUrl = line
-            if (line.includes("<iframe")) {
-                const srcMatch = line.match(/src="([^"]+)"/)
-                if (srcMatch && srcMatch[1]) {
-                    extractedUrl = srcMatch[1]
-                }
-            }
-            if (!extractedUrl.includes("embed.grasple.com/exercises")) return
-      
-            const idMatch = extractedUrl.match(/id=(\d+)$/)
+            const extractedUrl = extractIframeSrc(line)
+            if (!isGraspleExerciseUrl(extractedUrl)) return
+
+            const idDigits = extractGraspleExerciseId(extractedUrl)
             let exerciseId = 0
-            if (idMatch && idMatch[1]) {
-                exerciseId = parseInt(idMatch[1], 10)
+            if (idDigits) {
+                exerciseId = parseInt(idDigits, 10)
             }
 
             if (existingExerciseIds
