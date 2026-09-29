@@ -4,3 +4,4 @@
 /.gitignore
 /.eslintrc.js
 /src/bootstrap/
+/src/utils/mathquill.min.js

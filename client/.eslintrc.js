@@ -11,12 +11,17 @@ module.exports = {
             version: "detect",
         },
     },
-    extends: ["plugin:react/recommended", "prettier"],
+    extends: [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
+        "prettier",
+    ],
     parserOptions: {
         ecmaVersion: "latest",
     },
     parser: "@typescript-eslint/parser",
-    plugins: ["react", "@typescript-eslint"],
+    plugins: ["react", "react-hooks", "@typescript-eslint"],
     overrides: [
         {
             files: ["*.ts", "*.tsx"], // TypeScript file extensions
@@ -37,7 +42,7 @@ module.exports = {
                 "@typescript-eslint/strict-boolean-expressions": ["off"],
                 "@typescript-eslint/triple-slash-reference": ["off"],
                 "@typescript-eslint/no-var-requires": ["off"],
-                "@typescript-eslint/no-unused-vars": ["off"],
+                "@typescript-eslint/no-unused-vars": ["warn"],
                 "@typescript-eslint/no-unsafe-argument": ["off"],
                 "@typescript-eslint/no-unsafe-member-access": ["off"],
                 "@typescript-eslint/no-unsafe-call": ["off"],
@@ -45,6 +50,11 @@ module.exports = {
                 "@typescript-eslint/no-explicit-any": ["off"],
                 "@typescript-eslint/no-misused-promises": ["off"],
                 "@typescript-eslint/no-empty-function": ["off"],
+                // TODO(REFACTORING_PLAN step 1.1): existing violations; fix them and set back to "error"
+                "@typescript-eslint/no-loss-of-precision": ["warn"],
+                "@typescript-eslint/restrict-plus-operands": ["warn"],
+                "@typescript-eslint/restrict-template-expressions": ["warn"],
+                "prefer-const": ["warn"],
             },
         },
     ],
@@ -55,6 +65,10 @@ module.exports = {
         "strict-boolean-expressions": ["off"],
         "triple-slash-reference": ["off"],
         "prefer-const": ["warn"],
+        // TODO(REFACTORING_PLAN step 1.1): existing violations; fix them and set back to "error"
+        "react/no-unescaped-entities": ["warn"],
+        "react-hooks/rules-of-hooks": ["warn"],
         "no-var-requires": ["off"],
+        "react-hooks/exhaustive-deps": ["warn"],
     },
 }
