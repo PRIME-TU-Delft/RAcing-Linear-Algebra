@@ -1,49 +1,43 @@
-import { render, screen } from "@testing-library/react"
-import React, { useState } from "react"
+import { act, screen } from "@testing-library/react"
 import Lobby from "../components/CreateGame/Lobby/Lobby"
-import { BrowserRouter as Router } from "react-router-dom"
+import { listenerCount, serverEmit } from "../test/mockSocket"
+import { renderWithProviders } from "../test/renderWithProviders"
 
-describe("Lobby component tests", () => {
-    const teamNameHandler = (name: string) => {
-        console.log(name)
-    }
-    test("Lobby code displayed correctly", () => {
-        vi.mock(
-            "../components/CreateGame/Lobby/TeamInformation/TeamInformation"
-        )
-        vi.mock("../components/CreateGame/Lobby/Steps/Steps")
+// The setup steps are tested on their own; here they would only add noise.
+vi.mock("../components/CreateGame/Lobby/Steps/Steps", () => ({
+    default: () => null,
+}))
 
-        render(
-            <Router>
-                <Lobby
-                    onThemeSelected={() => null}
-                    lobbyId={1111}
-                    onTeamNameCreated={(name: string) => teamNameHandler(name)}
-                ></Lobby>
-            </Router>
-        )
+function renderLobby(lobbyId: number) {
+    return renderWithProviders(
+        <Lobby
+            lobbyId={lobbyId}
+            onThemeSelected={vi.fn()}
+            onTeamNameCreated={vi.fn()}
+            onStudySelected={vi.fn()}
+        />,
+        { route: "/Lobby" }
+    )
+}
 
-        const lobbyCodeElement = screen.getByText("1111", { exact: false })
-        expect(lobbyCodeElement).toBeInTheDocument()
+describe("Lobby", () => {
+    test.each([
+        [1111, "1111"],
+        [1, "0001"],
+        [42, "0042"],
+    ])("shows lobby id %d as code %s", (lobbyId, code) => {
+        renderLobby(lobbyId)
+
+        expect(screen.getByText(code)).toBeInTheDocument()
     })
 
-    test("Lobby code when padding is necessary displayed correctly", () => {
-        vi.mock(
-            "../components/CreateGame/Lobby/TeamInformation/TeamInformation"
-        )
-        vi.mock("../components/CreateGame/Lobby/Steps/Steps")
+    test("updates the player count when players join", () => {
+        renderLobby(1111)
+        expect(screen.getByText("0 players")).toBeInTheDocument()
+        expect(listenerCount("new-player-joined")).toBe(1)
 
-        render(
-            <Router>
-                <Lobby
-                    lobbyId={1}
-                    onThemeSelected={() => null}
-                    onTeamNameCreated={(name: string) => teamNameHandler(name)}
-                ></Lobby>
-            </Router>
-        )
+        act(() => serverEmit("new-player-joined", 3))
 
-        const lobbyCodeElement = screen.getByText("0001", { exact: false })
-        expect(lobbyCodeElement).toBeInTheDocument()
+        expect(screen.getByText("3 players")).toBeInTheDocument()
     })
 })

@@ -1,29 +1,23 @@
-import { act, render, screen } from "@testing-library/react"
-import React from "react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import Step from "../components/CreateGame/Lobby/Steps/Step/Step"
-import { Simulate } from "react-dom/test-utils"
 
-describe("Step component tests", () => {
-    const mockOnStepSelected = vi.fn((stepNumber: number) => stepNumber)
-
-    test("Step selection on click works correctly", () => {
+describe("Step", () => {
+    test("clicking the step reports its number", () => {
+        const onStepSelected = vi.fn()
         render(
             <Step
                 stepNumber={1}
-                onStepSelected={mockOnStepSelected}
-                stepTitle={"Test"}
-                stepCaption={"Test description"}
-                stepContent={<div></div>}
+                onStepSelected={onStepSelected}
+                stepTitle="Test"
+                stepCaption="Test description"
+                stepContent={<div />}
                 stepActive={true}
                 stepCompleted={false}
-            ></Step>
+            />
         )
 
-        const stepElement = screen.getByText("Test")
-        act(() => {
-            Simulate.click(stepElement)
-        })
+        fireEvent.click(screen.getByText("Test"))
 
-        expect(mockOnStepSelected.mock.calls[0][0]).toBe(1)
+        expect(onStepSelected).toHaveBeenCalledWith(1)
     })
 })

@@ -173,7 +173,7 @@ client/src/
 > - **Verified:** lint is still 0 errors / 648 warnings, and the bundle hash is unchanged (`main.0b7c949d.js`).
 > - **Still open:** `@types/node` is 16 while Vite wants 18 or later. It only produces a peer warning; bump it in 10.2.
 
-### [ ] 0.3 Triage the existing test suite (`refactor`)
+### [x] 0.3 Triage the existing test suite (`refactor`)
 The tests are about two years stale. Most assert UI that no longer exists, and several pass without testing anything because they call un-awaited `findBy*`.
 - **Keep and fix:** `TracksPosition.test.ts`, `TracksStyle.test.ts` (pure logic, highest value), `Step`, `Round`, `TeamInformation`, `Login`, `JoinGame`, `Lobby`, `CheckPoint`, `Home` (update the title text).
 - **Delete** tests for components that are about to be removed or are vacuous: MultipleChoice, TrueFalse, OpenQuestion, RaceTheme, Ghosts, Checkpoints, Tracks, StationDisplay, Tooltip, Waiting, Lecturer, LeaderBoard, Rounds, StartGame, Steps, Studies, Themes, DifficultySelection, Question. Their replacements are written in later phases, when each component is refactored.
@@ -184,6 +184,19 @@ The tests are about two years stale. Most assert UI that no longer exists, and s
 - Remove `socket.io-mock-ts` once no test imports it.
 - **Verify:** G1 (including tests), G3 green.
 - **Done when:** the suite is green, and every remaining test actually asserts something.
+
+> **Note (done 2026-09-29):**
+> - **Suite:** 10 files and 43 tests, all green, with 0 unhandled errors. All 19 test files on the delete list were deleted.
+> - **Kept tests, rewritten with the helpers:**
+>   - Login covers the back button, the password emit, a wrong password, and a correct password → `fetch` → `createLobby` → `/Lobby`.
+>   - JoinGame covers invalid formats, an unknown lobby, and a valid lobby → `joinLobby` → `/Waiting`.
+>   - Also Home, Lobby (the code padding, plus a player count driven by `new-player-joined`), Round, Step and TeamInformation.
+>   - CheckPoint, TracksPosition and TracksStyle are unchanged apart from removed unused imports.
+> - **The mocks are global:** `setupTests.ts` replaces `./socket` for *every* test with `src/test/mockSocket.ts`, which provides `mockSocket`, `serverEmit`, `listenerCount` and `resetMockSocket`. It also replaces `fetch` with a stub that rejects with a clear message unless the test calls `vi.mocked(fetch).mockResolvedValueOnce(...)`. No test can reach a real backend.
+> - **Router and contexts:** `src/test/renderWithProviders.tsx` provides a `MemoryRouter`, optional context providers via `provide(Context, value)`, and `getPathname()` for navigation assertions.
+> - **Typecheck:** `pnpm typecheck` now covers the tests (`tsconfig.typecheck.json` deleted). `socket.io-mock-ts` was removed.
+> - **Password:** the old Login test hardcoded what looks like the real create-game password. The rewrite uses `"test-password"`, but the old value is still in git history (see Appendix D #3).
+> - **Verified:** lint has 0 errors and 604 warnings, all in app code. The deleted tests took 44 warnings with them, and the test files now have none. The bundle hash is unchanged (`main.0b7c949d.js`).
 
 ### [ ] 0.4 Characterisation tests for pure logic (`refactor`)
 Pin the **current** behaviour, bugs included, of the logic that later phases will move. Mark known-wrong outputs with `// BUG (Appendix B #n)` so the later `fix` step flips the assertion.
@@ -697,6 +710,7 @@ Run the parts that are relevant to your change. Run the whole list at the end of
 | Baseline `0e7d99d` | 674 kB | 18,786 | ~40 | n/a (lint broken) | 0 / 29 (runner broken) |
 | After 0.1 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 0 / 29 (runner broken) |
 | After 0.2 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 14 / 29 files, 45 / 85 tests |
+| After 0.3 | 674 kB (identical hash) | app code unchanged | ~40 | 604 (0 errors) | 10 / 10 files, 43 / 43 tests |
 | After phase 0 | | | | | |
 | After phase 1 | | | | | |
 | After phase 3 | | | | | |
@@ -776,7 +790,7 @@ These were found while surveying the frontend. The frontend refactor cannot fix 
    - Any client can emit `updateTopic`, `updateExercise`, `addDefaultTeams`, `deleteDefaultTeams`, `deleteExerciseVariant`, `getAll*`, `createLobby` or `startGame`.
    - `GET /api/lobby/create` is also open.
 2. **The server trusts the client's scoring.** It awards points when it receives `questionAnswered(true, difficulty)`, so any client can claim a correct answer.
-3. **Password handling.**
+3. **Password handling.** The client's old `Login.test.tsx` also contained the plaintext, which is now removed from the working tree but remains in git history.
    - There is one shared password, stored as an unsalted SHA-256 hash hardcoded in `socketConnection.ts`.
    - The plaintext appears to be committed in `server/src/__tests__/socketConnection.test.ts`. **Rotate it.**
 4. **Server README and scripts** also need a documentation pass (`build-broken-for-some-reason` in `package.json`).
@@ -791,4 +805,5 @@ These were found while surveying the frontend. The frontend refactor cannot fix 
 | 2026-09-29 | Plan written | – | Baseline measured at `0e7d99d` |
 | 2026-09-29 | Decisions | – | 1.4: delete the legacy question types. 0.2: use Vitest for tests. |
 | 2026-09-29 | 0.1 | `fc1d1d7` | `.nvmrc` 20; `typecheck` + working `lint`; lint baseline 648 warnings, 0 errors |
-| 2026-09-29 | 0.2 | *(uncommitted)* | Vitest replaces Jest; 45/85 tests pass (stale tests, triaged in 0.3) |
+| 2026-09-29 | 0.2 | `6220fbf`, `afa4c12` | Vitest replaces Jest; 45/85 tests pass (stale tests, triaged in 0.3) |
+| 2026-09-29 | 0.3 | *(uncommitted)* | 19 stale test files deleted; 10 files / 43 tests green; global socket and fetch mocks; tests included in typecheck |

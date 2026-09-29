@@ -1,19 +1,20 @@
-import React from "react"
-import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import TeamInformation from "../components/CreateGame/Lobby/TeamInformation/TeamInformation"
 
-describe("TeamInformation test", () => {
-    test("displays the default team name and player count", () => {
-        const onTeamNameCreatedMock = vi.fn()
-        const playerNumber = 5
-        render(
-            <TeamInformation playerNumber={playerNumber} teamName={"test"} />
-        )
+describe("TeamInformation", () => {
+    test("shows the team name", () => {
+        render(<TeamInformation playerNumber={5} teamName="Vectors" />)
 
-        const teamNameElement = screen.getByText(/Team name:/)
-        const playerCountElement = screen.getByText(`${playerNumber} players`)
+        expect(screen.getByText("Vectors")).toBeInTheDocument()
+    })
 
-        expect(teamNameElement).toBeInTheDocument()
-        expect(playerCountElement).toBeInTheDocument()
+    test.each([
+        [0, "0 players"],
+        [1, "1 player"],
+        [5, "5 players"],
+    ])("shows %d players as %j", (playerNumber, text) => {
+        render(<TeamInformation playerNumber={playerNumber} teamName="Vectors" />)
+
+        expect(screen.getByText(text)).toBeInTheDocument()
     })
 })

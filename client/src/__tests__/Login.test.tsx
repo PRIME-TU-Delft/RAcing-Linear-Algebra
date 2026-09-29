@@ -1,100 +1,67 @@
+import { act, fireEvent, screen, waitFor } from "@testing-library/react"
 import Login from "../components/CreateGame/Login/Login"
-import { render, screen, fireEvent, waitFor } from "@testing-library/react"
-import React from "react"
-import { BrowserRouter as Router } from "react-router-dom"
-import socket from "../socket"
+import { mockSocket, serverEmit } from "../test/mockSocket"
+import { renderWithProviders } from "../test/renderWithProviders"
 
-describe("Login component", () => {
-    const socketMock = {
-        off: () => ({ on: vi.fn() }),
-        on: vi.fn(),
-        emit: vi.fn(),
-    }
-    beforeEach(() => {
-        vi.clearAllMocks()
-        vi.spyOn(React, "useEffect").mockImplementation((effect) => effect())
-        vi.spyOn(socket, "on").mockImplementation(socketMock.on)
-        vi.spyOn(socket, "emit").mockImplementation(socketMock.emit)
+function submitPassword(password: string) {
+    fireEvent.change(screen.getByPlaceholderText("Password"), {
+        target: { value: password },
     })
-    afterEach(() => {
-        vi.restoreAllMocks()
-    })
+    fireEvent.click(screen.getByTestId("login-button"))
+}
 
-    test("navigates to home when back button is clicked", () => {
-        const onLobbyIdCreatedMock = vi.fn()
-        render(
-            <Router>
-                <Login onLobbyIdCreated={onLobbyIdCreatedMock} />
-            </Router>
+describe("Login", () => {
+    test("back button navigates home", () => {
+        const { getPathname } = renderWithProviders(
+            <Login onLobbyIdCreated={vi.fn()} />,
+            { route: "/CreateGame" }
         )
-        // Simulate a click on the back button
-        const backButton = screen.getByText("←")
-        fireEvent.click(backButton)
 
-        // Assert that it navigates to the home route
-        expect(window.location.pathname).toBe("/")
+        fireEvent.click(screen.getByText("←"))
+
+        expect(getPathname()).toBe("/")
     })
 
-    test("login form", () => {
-        const onLobbyIdCreatedMock = vi.fn()
-        render(
-            <Router>
-                <Login onLobbyIdCreated={onLobbyIdCreatedMock} />
-            </Router>
-        )
-        // Assert that the login form is rendered
-        const passwordForm = screen.getByPlaceholderText(/Password/i)
-        expect(passwordForm).toBeInTheDocument()
+    test("clicking login sends the password to the server", () => {
+        renderWithProviders(<Login onLobbyIdCreated={vi.fn()} />)
 
-        // Assert that the login button is rendered
-        const loginButton = screen.getByTestId("login-button")
-        expect(loginButton).toBeInTheDocument()
-        // Simulate password input change
-        fireEvent.change(passwordForm, { target: { value: "matematica123" } })
+        submitPassword("test-password")
 
-        // Simulate login button click
-        fireEvent.click(loginButton)
-        // Assert that the "authenticate" event is emitted with the correct password
-        expect(socketMock.emit).toHaveBeenCalledWith(
+        expect(mockSocket.emit).toHaveBeenCalledWith(
             "authenticate",
-            "matematica123"
+            "test-password"
         )
-        // Mock the "authenticated" event with a true value
-        const authenticatedHandler = socketMock.on.mock.calls.find(
-            ([event]) => event === "authenticated"
-        )[1]
-        authenticatedHandler(true)
-        expect(socketMock.on).toHaveBeenCalledWith(
-            "authenticated",
-            expect.any(Function)
-        )
-        const errorMessage = screen.getByTestId("message")
-        expect(errorMessage).toHaveTextContent("")
     })
-    test("login form, wrong password", async () => {
-        const onLobbyIdCreatedMock = vi.fn()
-        render(
-            <Router>
-                <Login onLobbyIdCreated={onLobbyIdCreatedMock} />
-            </Router>
-        )
-        const passwordForm = screen.getByPlaceholderText(/Password/i)
-        const loginButton = screen.getByTestId("login-button")
-        fireEvent.change(passwordForm, { target: { value: "matematica123" } })
-        fireEvent.click(loginButton)
-        const authenticatedHandler = socketMock.on.mock.calls.find(
-            ([event]) => event === "authenticated"
-        )[1]
-        authenticatedHandler(false)
 
-        expect(socketMock.on).toHaveBeenCalledWith(
-            "authenticated",
-            expect.any(Function)
+    test("shows an error when the server rejects the password", () => {
+        renderWithProviders(<Login onLobbyIdCreated={vi.fn()} />)
+
+        submitPassword("wrong")
+        act(() => serverEmit("authenticated", false))
+
+        expect(screen.getByTestId("message")).toHaveTextContent("Wrong password")
+    })
+
+    test("creates a lobby and opens it when the server accepts the password", async () => {
+        vi.mocked(fetch).mockResolvedValueOnce(
+            new Response(JSON.stringify([1234]))
+        )
+        const onLobbyIdCreated = vi.fn()
+        const { getPathname } = renderWithProviders(
+            <Login onLobbyIdCreated={onLobbyIdCreated} />,
+            { route: "/CreateGame" }
         )
 
-        await waitFor(() => {
-            const errorMessage = screen.getByTestId("message")
-            expect(errorMessage).toHaveTextContent("Wrong password")
-        })
+        submitPassword("test-password")
+        act(() => serverEmit("authenticated", true))
+
+        await waitFor(() => expect(getPathname()).toBe("/Lobby"))
+        expect(fetch).toHaveBeenCalledWith(
+            expect.stringContaining("/api/lobby/create"),
+            expect.anything()
+        )
+        expect(mockSocket.emit).toHaveBeenCalledWith("createLobby", 1234)
+        expect(onLobbyIdCreated).toHaveBeenCalledWith(1234)
+        expect(screen.getByTestId("message")).toHaveTextContent("")
     })
 })
