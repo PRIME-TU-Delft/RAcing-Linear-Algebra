@@ -15,6 +15,18 @@
   - If you find a bug while refactoring, **keep the bug**, add it to [Appendix B](#appendix-b--known-bugs-backlog) and fix it later in its own `fix` step. That way any regression can be traced to a single commit.
 - **Pass the verification gates** (below) before committing. Each step says which gates apply.
 - **Phases are ordered by dependency.** Steps inside a phase can usually be reordered. Phases 0 and 1 must come first. Phase 3 (App.tsx) must come before phases 4 to 7.
+- **Pending branches.** See [Pending branches](#pending-branches). Check that table before steps that rewrite many existing files (phase 1, 2.4, phase 3).
+
+### Pending branches
+
+These were checked on 2026-09-29. Re-check with `git log main..<branch> --oneline -- client` before starting a gated step.
+
+| Branch | Client changes | Decision |
+|---|---|---|
+| `origin/fix-bugs` | 2 lines in `Leaderboard.tsx` and `QuestionStatistics.tsx` | Merge later; **conflicts after 0.5** in both files. Resolve by re-applying the fix on the formatted code: in `Leaderboard.tsx`, delete the `socket` import and the `socket.emit("getLecturerStatistics")` in the Continue `onClick`; in `QuestionStatistics.tsx`, add `socket.emit("getLecturerStatistics")` right after `socket.on("statistics", …)` in the effect. Then run `pnpm format`. |
+| `other-universities` | none (server only) | No conflict with this plan |
+| `origin/add-helping-hand-powerup`, `origin/powerups-and-achievements` | ~1,000–1,300 lines each, mostly new `Game/PowerUps/` files, plus edits to `App.tsx`, `Game.tsx`, `Question.tsx` and `DifficultySelection`/`DifficultyCard`. They are based on a main that is 183 commits old (2025-03-30). | **Not being merged** (owner decision, 2026-09-29). The plan ignores them. |
+
 
 ### Verification gates
 
@@ -221,11 +233,23 @@ Pin the **current** behaviour, bugs included, of the logic that later phases wil
 >   - Diagonal path segments are measured by their x distance only. All maps are axis-aligned today.
 > - **Verified:** lint is 0 errors / 604 warnings, unchanged.
 
-### [ ] 0.5 Format once (`refactor`)
+### [x] 0.5 Format once (`refactor`)
 - Run `pnpm prettier` over `client/` in a **single commit that contains nothing else**.
 - Add that commit hash to a new `.git-blame-ignore-revs` at the repo root.
 - Add a `format:check` script.
 - **Verify:** G1, G2, G3; `git diff --stat` shows only whitespace and formatting changes.
+
+> **Note (done 2026-09-29):**
+> - **Config:** `.prettierignore` now also skips `pnpm-lock.yaml`, `coverage/`, `junit.xml`, the vendored `mathquill.min.js` / `mathquill.css`, and **all Markdown**. With `tabWidth: 4`, prettier re-indents every Markdown list to `-   ` and pads the tables.
+> - **Scripts:** `format` and `format:check` replace the old `prettier` script.
+> - **Result:** 175 files reformatted.
+> - **Behaviour check:** the minified bundle changed by +43 B. Pretty-printing and diffing the before and after bundles showed 39 hunks:
+>   - 37 are JSX text split around line breaks (`" At least "` → `" At least"`, `" "`). Their concatenated text was checked to be identical programmatically.
+>   - The other 2 are the bundle's own file name in the license header and the source-map comment.
+>   - **No behaviour change.**
+> - **Gates:** G1 passes, lint is 0 errors / 604 warnings, 155/155 tests pass, and the build is green.
+> - **Merge check:** test-merging against the formatted tree shows `origin/other-universities` merges cleanly. `origin/fix-bugs` conflicts in its two files; the resolution is in [Pending branches](#pending-branches).
+> - **Commits:** the config (`.prettierignore`, `package.json`) and the reformat should be separate commits. Afterwards add the reformat commit's hash to `.git-blame-ignore-revs`. GitHub applies it automatically; locally, run `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 
 ### [ ] 0.6 End-to-end smoke test (`refactor`, new tooling)
 This is the main guard for phase 3. The app is a multiplayer real-time game, and unit tests cannot catch broken socket or navigation wiring.
@@ -825,4 +849,5 @@ These were found while surveying the frontend. The frontend refactor cannot fix 
 | 2026-09-29 | 0.1 | `fc1d1d7` | `.nvmrc` 20; `typecheck` + working `lint`; lint baseline 648 warnings, 0 errors |
 | 2026-09-29 | 0.2 | `6220fbf`, `afa4c12` | Vitest replaces Jest; 45/85 tests pass (stale tests, triaged in 0.3) |
 | 2026-09-29 | 0.3 | `fcebe99`, `4f131ac` | 19 stale test files deleted; 10 files / 43 tests green; global socket and fetch mocks; tests included in typecheck |
-| 2026-09-29 | 0.4 | *(uncommitted)* | 112 characterisation tests (155 total); Grasple parsing extracted to `utils/grasple.ts`; bugs B33–B36 added |
+| 2026-09-29 | 0.4 | `f41652a` | 112 characterisation tests (155 total); Grasple parsing extracted to `utils/grasple.ts`; bugs B33–B36 added |
+| 2026-09-29 | 0.5 | *(uncommitted)* | Prettier over 175 files; Markdown excluded; bundle text-equivalent; `fix-bugs` will need a 2-file conflict resolution |

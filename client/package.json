@@ -13,7 +13,8 @@
         "eject": "react-scripts eject",
         "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
         "typecheck": "tsc --noEmit",
-        "prettier": "npx prettier -w ."
+        "format": "prettier -w .",
+        "format:check": "prettier --check ."
     },
     "dependencies": {
         "@emotion/react": "^11.11.4",

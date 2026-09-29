@@ -3,3 +3,11 @@
 /.gitlab-ci.yml
 /.gitignore
 /src/bootstrap/
+pnpm-lock.yaml
+/coverage/
+junit.xml
+# vendored third-party files
+/src/utils/mathquill.min.js
+/public/mathquill.css
+# Markdown keeps its hand-written layout (prettier would re-indent lists with tabWidth 4)
+*.md
