@@ -1,10 +1,22 @@
 import { ObjectId } from "mongodb"
 import { Score } from "../models/scoreModel"
-import type { IScore } from "../models/scoreModel"
+import type { IScore, University } from "../models/scoreModel"
 
 const { MongoClient } = require("mongodb")
 const sample = require( '@stdlib/random-sample' );
 const shuffle = require( '@stdlib/random-shuffle' );
+
+/**
+ * Builds the filter that decides which previously played teams a game is compared against.
+ * TU Delft games only see TU Delft scores (including legacy scores without a university),
+ * external games see every score.
+ * @param university the university of the game requesting the scores
+ * @returns a mongo filter to merge into a score query
+ */
+function scorePoolFilter(university: University) {
+    // Matching null also matches documents where the field is missing
+    return university === "tudelft" ? { university: { $in: ["tudelft", null] } } : {}
+}
 
 export interface DefaultTeamsData {
     fakeTeamsCount: number
@@ -20,6 +32,7 @@ export async function saveNewScore(
     roundDuration: number,
     study: string,
     accuracy: number,
+    university: University,
     isFakeTeam?: boolean
 ) {
     const newScore: IScore = new Score({
@@ -30,15 +43,16 @@ export async function saveNewScore(
         roundDuration,
         study,
         accuracy,
+        university,
         isFakeTeam: isFakeTeam != null ? isFakeTeam : false,
     })
     if (scores === null || scores.length === 0) return    
     await Score.create(newScore)
 }
 
-export async function getAllScores(topicId: string): Promise<IScore[]> {
+export async function getAllScores(topicId: string, university: University): Promise<IScore[]> {
     try {
-        const result: IScore[] = await Score.find({ topicId: new ObjectId(topicId) })
+        const result: IScore[] = await Score.find({ topicId: new ObjectId(topicId), ...scorePoolFilter(university) })
         return result
     } catch (error) {
         throw error
@@ -79,14 +93,16 @@ export async function deleteDefaultTeamsForTopic(topicId: string) {
  * This function gets all the checkpoint for a certain round at a certain checkpoint
  * @param topicId the id of the round that is being played
  * @param checkpointIndex the index of the checkpoint we want
+ * @param university the university of the game, determines which teams are compared against
  * @returns all the times at the current checkpoint
  */
 export async function getCheckpoints(
     topicId: string,
-    checkpointIndex: number
+    checkpointIndex: number,
+    university: University
 ): Promise<(string | number)[][]> {
     try {
-        const IScores: IScore[] = await Score.find({ topicId: new ObjectId(topicId) })
+        const IScores: IScore[] = await Score.find({ topicId: new ObjectId(topicId), ...scorePoolFilter(university) })
         const teamnames: string[] = []
         const checkpoints: number[] = []
 
@@ -107,7 +123,7 @@ export async function getCheckpoints(
  * @param topicId the selected round
  * @returns the average score and best score
  */
-async function getBestTeams(topicId: string, numberOfTeams: number) {
+async function getBestTeams(topicId: string, numberOfTeams: number, university: University) {
     try {
         const client = new MongoClient(process.env.MONGO_URL as string)
         await client.connect()
@@ -117,7 +133,7 @@ async function getBestTeams(topicId: string, numberOfTeams: number) {
 
         const bestTeams = await scores.aggregate([
             {
-                $match: { topicId: new ObjectId(topicId) },
+                $match: { topicId: new ObjectId(topicId), ...scorePoolFilter(university) },
             },
             {
               $addFields: {
@@ -145,9 +161,10 @@ async function getBestTeams(topicId: string, numberOfTeams: number) {
  * @param topicId the id of the current round
  * @param numberOfBins number of bins to create
  * @param excludeTeamIds ids of teams to exclude from the bins
+ * @param university the university of the game, determines which teams are binned
  * @returns equally sized bins based on team scores
  */
-async function getBinsOfTeams(topicId: string, numberOfBins: number, excludeTeamIds?: ObjectId[]) {
+async function getBinsOfTeams(topicId: string, numberOfBins: number, university: University, excludeTeamIds?: ObjectId[]) {
     try {
         const client = new MongoClient(process.env.MONGO_URL as string)
             await client.connect()
@@ -159,7 +176,8 @@ async function getBinsOfTeams(topicId: string, numberOfBins: number, excludeTeam
             {
             $match: {
                 topicId: new ObjectId(topicId),
-                _id: { $nin: excludeTeamIds ? excludeTeamIds : [] }
+                _id: { $nin: excludeTeamIds ? excludeTeamIds : [] },
+                ...scorePoolFilter(university)
             }
             },
             {
@@ -187,21 +205,22 @@ async function getBinsOfTeams(topicId: string, numberOfBins: number, excludeTeam
 /**
  * Get ghost teams for current round, by taking the top 3 teams and binning + sampling the rest
  * @param topicId id of the current round
+ * @param university the university of the game, determines which teams can be ghosts
  * @returns ghost teams for current round
  */
-export async function getGhostTeams(topicId: string) {
-    const totalTeams = await Score.countDocuments({ topicId: new ObjectId(topicId) })
+export async function getGhostTeams(topicId: string, university: University) {
+    const totalTeams = await Score.countDocuments({ topicId: new ObjectId(topicId), ...scorePoolFilter(university) })
     if (totalTeams === 0) return []
 
     const numberOfTopTeamsToGet = Math.min(3, totalTeams)
     const numberOfBins = Math.min(5, totalTeams)
 
     const topicIdStr = topicId.toString()
-    const bestTeams = await getBestTeams(topicIdStr, numberOfTopTeamsToGet)
+    const bestTeams = await getBestTeams(topicIdStr, numberOfTopTeamsToGet, university)
     const bestTeamIds = bestTeams.map(x => x._id)
 
     let ghostTeams = bestTeams
-    const teamBins = await getBinsOfTeams(topicIdStr, numberOfBins, bestTeamIds)
+    const teamBins = await getBinsOfTeams(topicIdStr, numberOfBins, university, bestTeamIds)
     
     for (const bin of teamBins) {
       const sampleSize = Math.min(3, bin.documents.length)
@@ -216,11 +235,12 @@ export async function getGhostTeams(topicId: string) {
 /**
  * Retrieves the final score of the best performing team for a given round
  * @param topicId id of the current round
+ * @param university the university of the game, determines which teams are considered
  * @returns the normalized final score of the best team
  */
-export async function getBestTeamFinalScore(topicId: string) {
+export async function getBestTeamFinalScore(topicId: string, university: University) {
     const topicIdStr: string = topicId.toString()
-    const bestTeams = await getBestTeams(topicIdStr, 1)
+    const bestTeams = await getBestTeams(topicIdStr, 1, university)
     if (bestTeams[0] == null || bestTeams[0].lastElement === undefined) {
         return 1
       }
@@ -231,9 +251,10 @@ export async function getBestTeamFinalScore(topicId: string) {
 /**
  * Gets the average score and best score for the chosen round
  * @param topicId the selected round
+ * @param university the university of the game, determines which teams are considered
  * @returns the average score and best score
  */
-export async function getGhostTrainScores(topicId: string) {
+export async function getGhostTrainScores(topicId: string, university: University) {
     try {
         const client = new MongoClient(process.env.MONGO_URL as string)
         await client.connect()
@@ -245,7 +266,7 @@ export async function getGhostTrainScores(topicId: string) {
         const bestScore = await scores
             .aggregate([
                 {
-                    $match: { topicId: new ObjectId(topicId) },
+                    $match: { topicId: new ObjectId(topicId), ...scorePoolFilter(university) },
                 },
                 {
                     $group: {
@@ -260,7 +281,7 @@ export async function getGhostTrainScores(topicId: string) {
         const avgScore = await scores
             .aggregate([
                 {
-                    $match: { topicId: new ObjectId(topicId)},
+                    $match: { topicId: new ObjectId(topicId), ...scorePoolFilter(university) },
                 },
                 {
                     $group: {

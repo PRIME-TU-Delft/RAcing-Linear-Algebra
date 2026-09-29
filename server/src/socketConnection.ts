@@ -28,15 +28,34 @@ import { getAllTopicData, getSelectedITopicsWithVariants, IExerciseWithPopulated
 import { saveExerciseStat } from "./controllers/exerciseStatDBController"
 import mongoose, { Mongoose } from "mongoose"
 import { getAllSubjects } from "./controllers/subjectDBController"
+import type { University } from "./models/scoreModel"
 
 const socketToLobbyId = new Map<string, number>()
 const themes = new Map<number, string>()
+// Keyed by the lobbyId as a string, since lobby ids are not always received as numbers
+const lobbyToUniversity = new Map<string, University>()
+// Password given to TU Delft lecturers, also grants access to the lecturer platform
 const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
+// Password given to lecturers of other universities, only allows creating games
+// TODO: set to the sha256 hash of the external password, an empty string matches no password
+const external_password_hash = ""
 
 function hashString(input: string): string {
     const hash = createHash('sha256')
     hash.update(input)
     return hash.digest('hex')
+}
+
+/**
+ * Determines which university a create game password belongs to
+ * @param password the password entered by the lecturer
+ * @returns the university of the password, or undefined if the password is incorrect
+ */
+function getUniversityForPassword(password: string): University | undefined {
+    const hash = hashString(password)
+    if (hash === password_hash) return "tudelft"
+    if (hash === external_password_hash) return "external"
+    return undefined
 }
 
 module.exports = {
@@ -107,6 +126,8 @@ module.exports = {
              */
             socket.on("createLobby", (lobbyId: number) => {
                 socketToLobbyId.set(socket.id, lobbyId) //Add the lecturer socketID to the map of socketIDs to lobbyIDs
+                // The university is decided by the password used to authenticate, unauthenticated lobbies count as external
+                lobbyToUniversity.set(`${lobbyId}`, socket.data.university ?? "external")
                 void socket.join(`lecturer${lobbyId}`)
             })
 
@@ -324,7 +345,8 @@ module.exports = {
                             return socket?.data.userId as string;
                         }).filter(userId => userId !== undefined)
 
-                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study, allowIndividualPlacements)
+                        const university = lobbyToUniversity.get(`${lobbyId}`) ?? "external"
+                        addGame(selectedTopics, roundDurations, teamName, userIds, lobbyId, study, university, allowIndividualPlacements)
                         const roundDuration = getRoundDuration(lobbyId)
                         io.to(`lecturer${lobbyId}`).emit("round-duration", roundDuration)
                         io.to(`players${lobbyId}`).emit("round-started", roundDuration)
@@ -339,7 +361,7 @@ module.exports = {
                         const topic = game.topics[game.currentTopicIndex]
                         const topicId: string = topic._id
                         game.numberOfPlayersAtStart = io.sockets.adapter.rooms.get(`players${lobbyId}`).size
-                        const ghostTrainScores = await getGhostTrainScores(topicId)
+                        const ghostTrainScores = await getGhostTrainScores(topicId, game.university)
     
                         socket.emit("ghost-trains", ghostTrainScores)
                     } catch (error) {
@@ -571,7 +593,7 @@ module.exports = {
                     game.addCheckpoint(seconds)
 
                     const topic = game.topics[game.currentTopicIndex]
-                    const result = await getCheckpoints(topic._id, game.checkpoints.length - 1)
+                    const result = await getCheckpoints(topic._id, game.checkpoints.length - 1, game.university)
                     socket.emit("get-checkpoints", result)
                 } catch (error) {
                     console.error(error)
@@ -602,11 +624,12 @@ module.exports = {
                         game.topics[game.currentTopicIndex]._id,
                         game.roundDurations[game.currentTopicIndex],
                         game.study,
-                        accuracy
+                        accuracy,
+                        game.university
                     )
                     const currentTopic = game.topics[game.currentTopicIndex]
     
-                    const result = await getAllScores(currentTopic._id)
+                    const result = await getAllScores(currentTopic._id, game.university)
                     socket.emit("get-all-scores", result)
                 }
             })
@@ -758,6 +781,7 @@ module.exports = {
                 if (!continueGame) {
                     io.to(`players${lobbyId}`).emit("end-game")
                     endLobby(lobbyId)
+                    lobbyToUniversity.delete(`${lobbyId}`)
                 }
                 else {
                     const roundDuration = getRoundDuration(lobbyId)
@@ -805,7 +829,7 @@ module.exports = {
                     const topic = game.topics[game.currentTopicIndex]
                     const topicId: string = topic._id
 
-                    const ghostTrainScores = await getGhostTrainScores(topicId)
+                    const ghostTrainScores = await getGhostTrainScores(topicId, game.university)
 
                     socket.emit("ghost-trains", ghostTrainScores)
                 } catch (error) {
@@ -1053,17 +1077,17 @@ module.exports = {
             })
 
             /**
-             * Authentication function that has a hardcoded password
-             * This function is used when trying to create a game so only people who know the password can create them
+             * Authentication function that has hardcoded passwords
+             * This function is used when trying to create a game so only people who know a password can create them
+             * The password used determines whether the game is a TU Delft or an external game
              */
             socket.on("authenticate", (password: string) => {
-                if (hashString(password) === password_hash) {
-                    socket.emit("authenticated", true)
-                } else {
-                    socket.emit("authenticated", false)
-                }
+                const university = getUniversityForPassword(password)
+                socket.data.university = university
+                socket.emit("authenticated", university !== undefined)
             })
 
+            // Only the TU Delft password grants access to the lecturer platform
             socket.on("lecturerPlatformLogin", (password: string) => {
                 if (hashString(password) === password_hash) {
                     socket.emit("access-granted", true)

@@ -7,7 +7,7 @@ export async function getInterpolatedGhostTeams(game: Game) {
     const topic = game.topics[game.currentTopicIndex]
     const topicId: string = topic._id;
 
-    const ghostTeams = await getGhostTeams(topicId)
+    const ghostTeams = await getGhostTeams(topicId, game.university)
     const interpolatedGhostTeams: GameGhostTeam[] = ghostTeams.map(x => ({
         teamName: x.teamname,
         timeScores: game.getGhostTeamTimePointScores(x.scores),
@@ -23,7 +23,7 @@ export async function getRaceTrackEndScore(game: Game) {
     const topic = game.topics[game.currentTopicIndex]
     const topicId: string = topic._id
 
-    const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId)
+    const normalizedHighestFinalScore = await getBestTeamFinalScore(topicId, game.university)
     const halvedHighestFinalScore = Math.floor(
         normalizedHighestFinalScore 
         * game.roundDurations[game.currentTopicIndex] 
