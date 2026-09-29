@@ -12,7 +12,7 @@ describe("Difficulty selection tests", () => {
     beforeEach(() => {
         socket = new SocketServerMock()
         client = socket.clientMock
-        const setOpen = jest.fn()
+        const setOpen = vi.fn()
         render(
             <DifficultySelection
                 setOpen={setOpen}

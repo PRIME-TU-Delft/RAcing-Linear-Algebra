@@ -8,10 +8,10 @@ describe("Lobby component tests", () => {
         console.log(name)
     }
     test("Lobby code displayed correctly", () => {
-        jest.mock(
+        vi.mock(
             "../components/CreateGame/Lobby/TeamInformation/TeamInformation"
         )
-        jest.mock("../components/CreateGame/Lobby/Steps/Steps")
+        vi.mock("../components/CreateGame/Lobby/Steps/Steps")
 
         render(
             <Router>
@@ -28,10 +28,10 @@ describe("Lobby component tests", () => {
     })
 
     test("Lobby code when padding is necessary displayed correctly", () => {
-        jest.mock(
+        vi.mock(
             "../components/CreateGame/Lobby/TeamInformation/TeamInformation"
         )
-        jest.mock("../components/CreateGame/Lobby/Steps/Steps")
+        vi.mock("../components/CreateGame/Lobby/Steps/Steps")
 
         render(
             <Router>

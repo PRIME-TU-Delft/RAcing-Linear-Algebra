@@ -12,7 +12,7 @@ describe("Question component tests", () => {
     beforeEach(() => {
         socket = new SocketServerMock()
         client = socket.clientMock
-        const setQuestionNum = jest.fn()
+        const setQuestionNum = vi.fn()
         render(
             <Router>
                 <OpenQuestion

@@ -4,8 +4,8 @@ import RaceTheme from "../components/RaceThemes/RaceTheme"
 
 describe("Race theme component tests", () => {
     const dimensions = { width: innerWidth, height: innerHeight }
-    const mockSetCheckpoint = jest.fn((data: string) => data)
-    const mockShowCheckpoint = jest.fn()
+    const mockSetCheckpoint = vi.fn((data: string) => data)
+    const mockShowCheckpoint = vi.fn()
 
     const stations = [
         {

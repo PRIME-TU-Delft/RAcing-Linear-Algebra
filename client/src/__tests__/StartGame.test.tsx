@@ -5,7 +5,7 @@ import { Simulate } from "react-dom/test-utils"
 import { deepStrictEqual } from "assert"
 
 describe("Start Game component tests", () => {
-    const mockOnStartGame = jest.fn()
+    const mockOnStartGame = vi.fn()
 
     test("Displays selections correctly when all steps completed", () => {
         render(

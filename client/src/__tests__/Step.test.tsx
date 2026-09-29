@@ -4,7 +4,7 @@ import Step from "../components/CreateGame/Lobby/Steps/Step/Step"
 import { Simulate } from "react-dom/test-utils"
 
 describe("Step component tests", () => {
-    const mockOnStepSelected = jest.fn((stepNumber: number) => stepNumber)
+    const mockOnStepSelected = vi.fn((stepNumber: number) => stepNumber)
 
     test("Step selection on click works correctly", () => {
         render(

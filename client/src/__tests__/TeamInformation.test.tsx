@@ -4,7 +4,7 @@ import TeamInformation from "../components/CreateGame/Lobby/TeamInformation/Team
 
 describe("TeamInformation test", () => {
     test("displays the default team name and player count", () => {
-        const onTeamNameCreatedMock = jest.fn()
+        const onTeamNameCreatedMock = vi.fn()
         const playerNumber = 5
         render(
             <TeamInformation playerNumber={playerNumber} teamName={"test"} />

@@ -22,7 +22,7 @@
 |---|---|---|
 | **G1 Typecheck** | `pnpm typecheck` (added in step 0.1) | now; app code is already clean |
 | **G2 Build** | `pnpm build` | now; it passes |
-| **G3 Unit tests** | `pnpm test --watchAll=false` | step 0.3 |
+| **G3 Unit tests** | `pnpm test` (Vitest, single run; `pnpm test:watch` for watch mode) | step 0.3 |
 | **G4 Lint** | `pnpm lint` (no *new* errors) | step 0.1 |
 | **G5 E2E smoke** | `pnpm e2e` against docker compose | step 0.6 |
 | **G6 Manual smoke** | the [checklist](#manual-smoke-checklist), for the flows the step touches | now |
@@ -147,7 +147,7 @@ client/src/
 > - **Removed `package.json#eslintConfig`.** It was already ignored, since `.eslintrc.js` takes precedence, and the CRA dev-server lint is off via `.env`.
 > - **Verified:** the production bundle hash is unchanged (`main.0b7c949d.js`).
 
-### [ ] 0.2 Make the test runner start (`refactor`)
+### [x] 0.2 Make the test runner start (`refactor`)
 > **Decision (2026-09-29):** use **Vitest** for tests now; do not patch CRA's Jest. The build stays on CRA until step 10.1. Vitest gets its own `vitest.config.ts` (jsdom, `src/setupTests.ts`, CSS and asset imports stubbed). The notes below explain why Jest is broken and which packages to remove.
 
 - **Likely cause:** a conflicting Jest install.
@@ -161,7 +161,17 @@ client/src/
   - Fold `jest.config.js` into the `package.json` `jest` key and delete the file.
 - **If this doesn't make suites start within about an hour, switch plans:** do step 10.1 (Vite + Vitest) now, instead of patching CRA further.
 - **Verify:** the suites *start*. They are allowed to fail on assertions at this point.
-- **Done when:** `pnpm test --watchAll=false` reports real pass/fail counts.
+- **Done when:** `pnpm test` reports real pass/fail counts.
+
+> **Note (done 2026-09-29):**
+> - **Test setup:** `vitest.config.ts` (jsdom, globals, `css: false`, v8 coverage with the old Jest ignore paths), `src/vitest-env.d.ts` (the Vitest global types) and `setupTests.ts` (now imports `@testing-library/jest-dom/vitest`, bumped to v6).
+> - **Scripts:** `test` = `vitest run`, `test:watch` = `vitest`, and `test:ci` adds coverage and JUnit output (`junit.xml`, already gitignored).
+> - **Removed:** `jest`, `jest-junit`, `babel-jest`, `@babel/preset-env`, `@types/jest`, `jest.config.js` and the `package.json#jest` key.
+> - **Tests:** `socket.io-mock-ts` moved to devDependencies until 0.3 deletes the tests that use it. In the tests, `jest.*` was renamed to `vi.*` mechanically.
+> - **Result:** 29/29 files run, 85 tests, **45 pass and 40 fail**, all failures from stale tests. There are also 4 unhandled errors from tests hitting the real socket and `fetch` on `localhost:5000`; 0.3 mocks those.
+> - **Full `tsc` including tests:** 180 → 74 errors.
+> - **Verified:** lint is still 0 errors / 648 warnings, and the bundle hash is unchanged (`main.0b7c949d.js`).
+> - **Still open:** `@types/node` is 16 while Vite wants 18 or later. It only produces a peer warning; bump it in 10.2.
 
 ### [ ] 0.3 Triage the existing test suite (`refactor`)
 The tests are about two years stale. Most assert UI that no longer exists, and several pass without testing anything because they call un-awaited `findBy*`.
@@ -169,8 +179,9 @@ The tests are about two years stale. Most assert UI that no longer exists, and s
 - **Delete** tests for components that are about to be removed or are vacuous: MultipleChoice, TrueFalse, OpenQuestion, RaceTheme, Ghosts, Checkpoints, Tracks, StationDisplay, Tooltip, Waiting, Lecturer, LeaderBoard, Rounds, StartGame, Steps, Studies, Themes, DifficultySelection, Question. Their replacements are written in later phases, when each component is refactored.
 - **Add `src/test/`** with:
   - `renderWithProviders()`, which wraps a component in a router and all contexts with overridable values.
-  - `mockSocket`, a `jest.mock("../api/socket")` factory with an `emit` spy and a `serverEmit(event, ...args)` helper to trigger client listeners.
-- Remove the `src/__tests__` exclusion from `typecheck`.
+  - `mockSocket`, a `vi.mock("../socket")` factory (the path becomes `../api/socket` after 2.3) with an `emit` spy and a `serverEmit(event, ...args)` helper to trigger client listeners.
+- Remove the `src/__tests__` exclusion from `typecheck`: delete `tsconfig.typecheck.json` and point the script at `tsconfig.json`.
+- Remove `socket.io-mock-ts` once no test imports it.
 - **Verify:** G1 (including tests), G3 green.
 - **Done when:** the suite is green, and every remaining test actually asserts something.
 
@@ -613,7 +624,7 @@ Work through [Appendix B](#appendix-b--known-bugs-backlog):
 - **Migrate:**
   - `index.html` moves to the root.
   - `REACT_APP_BACKEND_URL` becomes `VITE_BACKEND_URL`. Update the Dockerfile `ARG`, both compose files and the GitHub workflow `build-args`.
-  - `react-scripts test` becomes `vitest` with jsdom.
+  - Tests already run on Vitest (step 0.2); reuse `vitest.config.ts` as the `test` block of `vite.config.ts`.
   - `.eslintrc` moves to flat config.
 - **Pull this forward to step 0.2** if the CRA Jest conflict can't be fixed quickly.
 - **Verify:** all gates; Docker image builds; `compose-prod.yaml` smoke on a staging URL.
@@ -685,6 +696,7 @@ Run the parts that are relevant to your change. Run the whole list at the end of
 |---|---|---|---|---|---|
 | Baseline `0e7d99d` | 674 kB | 18,786 | ~40 | n/a (lint broken) | 0 / 29 (runner broken) |
 | After 0.1 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 0 / 29 (runner broken) |
+| After 0.2 | 674 kB (identical hash) | 18,786 | ~40 | 648 (0 errors) | 14 / 29 files, 45 / 85 tests |
 | After phase 0 | | | | | |
 | After phase 1 | | | | | |
 | After phase 3 | | | | | |
@@ -778,4 +790,5 @@ These were found while surveying the frontend. The frontend refactor cannot fix 
 |---|---|---|---|
 | 2026-09-29 | Plan written | – | Baseline measured at `0e7d99d` |
 | 2026-09-29 | Decisions | – | 1.4: delete the legacy question types. 0.2: use Vitest for tests. |
-| 2026-09-29 | 0.1 | *(uncommitted)* | `.nvmrc` 20; `typecheck` + working `lint`; lint baseline 648 warnings, 0 errors |
+| 2026-09-29 | 0.1 | `fc1d1d7` | `.nvmrc` 20; `typecheck` + working `lint`; lint baseline 648 warnings, 0 errors |
+| 2026-09-29 | 0.2 | *(uncommitted)* | Vitest replaces Jest; 45/85 tests pass (stale tests, triaged in 0.3) |

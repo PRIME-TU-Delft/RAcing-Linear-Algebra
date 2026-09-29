@@ -5,8 +5,8 @@ import Round from "../components/CreateGame/Lobby/Rounds/Round/Round"
 import { Simulate } from "react-dom/test-utils"
 
 describe("Rounds component tests", () => {
-    const mockOnRoundSelected = jest.fn((rounds: string[]) => rounds)
-    const mockOnStepCompleted = jest.fn((completed: boolean) => completed)
+    const mockOnRoundSelected = vi.fn((rounds: string[]) => rounds)
+    const mockOnStepCompleted = vi.fn((completed: boolean) => completed)
 
     test("Rounds rendered correctly", () => {
         render(
@@ -162,7 +162,7 @@ describe("Rounds component tests", () => {
         const secondRoundElement = screen.getByText("Second")
         const thirdRoundElement = screen.getByText("Third")
         const fourthRoundElement = screen.getByText("Fourth")
-        window.alert = jest.fn()
+        window.alert = vi.fn()
 
         act(() => {
             Simulate.click(firstRoundElement)

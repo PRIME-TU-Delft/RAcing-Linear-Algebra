@@ -7,25 +7,25 @@ import socket from "../socket"
 
 describe("Waiting component", () => {
     const socketMock = {
-        off: () => ({ on: jest.fn() }),
-        on: jest.fn(),
-        emit: jest.fn(),
+        off: () => ({ on: vi.fn() }),
+        on: vi.fn(),
+        emit: vi.fn(),
     }
     beforeEach(() => {
-        jest.clearAllMocks()
-        jest.spyOn(React, "useEffect").mockImplementation((effect) => effect())
-        jest.spyOn(socket, "on").mockImplementation(socketMock.on)
-        jest.spyOn(socket, "emit").mockImplementation(socketMock.emit)
+        vi.clearAllMocks()
+        vi.spyOn(React, "useEffect").mockImplementation((effect) => effect())
+        vi.spyOn(socket, "on").mockImplementation(socketMock.on)
+        vi.spyOn(socket, "emit").mockImplementation(socketMock.emit)
     })
 
     afterEach(() => {
-        jest.restoreAllMocks()
+        vi.restoreAllMocks()
     })
     test("renders train theme", () => {
         const history = createMemoryHistory()
         render(
             <MemoryRouter>
-                <Waiting theme="Train" setTheme={jest.fn()} />
+                <Waiting theme="Train" setTheme={vi.fn()} />
             </MemoryRouter>
         )
 
@@ -42,7 +42,7 @@ describe("Waiting component", () => {
     })
 
     test("renders Boat theme", () => {
-        const setThemeMock = jest.fn()
+        const setThemeMock = vi.fn()
 
         render(
             <MemoryRouter>
@@ -57,8 +57,8 @@ describe("Waiting component", () => {
         expect(setThemeMock).toHaveBeenCalledWith(theme)
     })
     test("navigates to game", () => {
-        jest.useFakeTimers()
-        const setThemeMock = jest.fn()
+        vi.useFakeTimers()
+        const setThemeMock = vi.fn()
         render(
             <MemoryRouter>
                 <Waiting theme="Boat" setTheme={setThemeMock} />
@@ -70,10 +70,10 @@ describe("Waiting component", () => {
         expect(screen.getByTestId("countdown")).toHaveTextContent("-1")
 
         act(() => {
-            jest.advanceTimersByTime(2000)
+            vi.advanceTimersByTime(2000)
         })
         expect(screen.getByTestId("countdown")).toHaveTextContent("1")
 
-        jest.useRealTimers()
+        vi.useRealTimers()
     })
 })

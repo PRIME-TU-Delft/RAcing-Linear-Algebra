@@ -8,19 +8,19 @@ import Lecturer from "../components/CreateGame/Lecturer/Lecturer"
 describe("lecturer component tests", () => {
     // Mock socket implementation
     const socketMock = {
-        on: jest.fn(),
-        emit: jest.fn(),
+        on: vi.fn(),
+        emit: vi.fn(),
     }
-    jest.useFakeTimers()
+    vi.useFakeTimers()
     beforeEach(() => {
-        jest.clearAllMocks()
-        jest.spyOn(React, "useEffect").mockImplementation((effect) => effect())
-        jest.spyOn(socket, "on").mockImplementation(socketMock.on)
-        jest.spyOn(socket, "emit").mockImplementation(socketMock.emit)
+        vi.clearAllMocks()
+        vi.spyOn(React, "useEffect").mockImplementation((effect) => effect())
+        vi.spyOn(socket, "on").mockImplementation(socketMock.on)
+        vi.spyOn(socket, "emit").mockImplementation(socketMock.emit)
     })
 
     afterEach(() => {
-        jest.restoreAllMocks()
+        vi.restoreAllMocks()
     })
 
     test("team name displayed correctly", () => {
@@ -102,28 +102,28 @@ describe("lecturer component tests", () => {
         expect(countdown).toHaveTextContent("3")
         try {
             act(() => {
-                jest.advanceTimersByTime(1000)
+                vi.advanceTimersByTime(1000)
             })
             expect(countdown).toHaveTextContent("2")
             act(() => {
-                jest.advanceTimersByTime(1000)
+                vi.advanceTimersByTime(1000)
             })
             expect(countdown).toHaveTextContent("1")
 
             act(() => {
-                jest.advanceTimersByTime(2000)
+                vi.advanceTimersByTime(2000)
             })
             expect(time).toHaveTextContent("09:59")
             act(() => {
-                jest.advanceTimersByTime(1000)
+                vi.advanceTimersByTime(1000)
             })
             expect(time).toHaveTextContent("09:58")
             act(() => {
-                jest.advanceTimersByTime(598000)
+                vi.advanceTimersByTime(598000)
             })
             expect(time).toHaveTextContent("00:00")
             act(() => {
-                jest.advanceTimersByTime(1000)
+                vi.advanceTimersByTime(1000)
             })
 
             // Assert that socket.emit("endRound") is called
@@ -133,12 +133,12 @@ describe("lecturer component tests", () => {
                 expect.any(Function)
             )
             act(() => {
-                jest.advanceTimersByTime(1000)
+                vi.advanceTimersByTime(1000)
             })
         } catch (error) {
             // Handle any errors or rejections here
             console.error(error)
         }
-        jest.useRealTimers()
+        vi.useRealTimers()
     })
 })

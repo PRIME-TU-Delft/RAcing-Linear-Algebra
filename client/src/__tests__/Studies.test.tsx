@@ -4,8 +4,8 @@ import Studies from "../components/CreateGame/Lobby/Studies/Studies"
 import { Simulate } from "react-dom/test-utils"
 
 describe("Studies component tests", () => {
-    const mockOnSelectStudy = jest.fn((study: string) => study)
-    const mockOnStepCompleted = jest.fn()
+    const mockOnSelectStudy = vi.fn((study: string) => study)
+    const mockOnStepCompleted = vi.fn()
 
     test("Selects study correctly", () => {
         render(

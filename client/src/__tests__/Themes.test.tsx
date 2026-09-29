@@ -4,8 +4,8 @@ import Themes from "../components/CreateGame/Lobby/Themes/Themes"
 import { Simulate, act } from "react-dom/test-utils"
 
 describe("Themes component tests", () => {
-    const mockOnSelectTheme = jest.fn((theme: string) => theme)
-    const mockOnStepCompleted = jest.fn()
+    const mockOnSelectTheme = vi.fn((theme: string) => theme)
+    const mockOnStepCompleted = vi.fn()
 
     test("Selects theme correctly", () => {
         render(

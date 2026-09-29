@@ -3,7 +3,7 @@ import React from "react"
 import Round from "../components/CreateGame/Lobby/Rounds/Round/Round"
 
 describe("Round component tests", () => {
-    const mockOnSelectRound = jest.fn(
+    const mockOnSelectRound = vi.fn(
         (title: string, selected: boolean) => title
     )
 

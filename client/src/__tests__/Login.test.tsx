@@ -6,22 +6,22 @@ import socket from "../socket"
 
 describe("Login component", () => {
     const socketMock = {
-        off: () => ({ on: jest.fn() }),
-        on: jest.fn(),
-        emit: jest.fn(),
+        off: () => ({ on: vi.fn() }),
+        on: vi.fn(),
+        emit: vi.fn(),
     }
     beforeEach(() => {
-        jest.clearAllMocks()
-        jest.spyOn(React, "useEffect").mockImplementation((effect) => effect())
-        jest.spyOn(socket, "on").mockImplementation(socketMock.on)
-        jest.spyOn(socket, "emit").mockImplementation(socketMock.emit)
+        vi.clearAllMocks()
+        vi.spyOn(React, "useEffect").mockImplementation((effect) => effect())
+        vi.spyOn(socket, "on").mockImplementation(socketMock.on)
+        vi.spyOn(socket, "emit").mockImplementation(socketMock.emit)
     })
     afterEach(() => {
-        jest.restoreAllMocks()
+        vi.restoreAllMocks()
     })
 
     test("navigates to home when back button is clicked", () => {
-        const onLobbyIdCreatedMock = jest.fn()
+        const onLobbyIdCreatedMock = vi.fn()
         render(
             <Router>
                 <Login onLobbyIdCreated={onLobbyIdCreatedMock} />
@@ -36,7 +36,7 @@ describe("Login component", () => {
     })
 
     test("login form", () => {
-        const onLobbyIdCreatedMock = jest.fn()
+        const onLobbyIdCreatedMock = vi.fn()
         render(
             <Router>
                 <Login onLobbyIdCreated={onLobbyIdCreatedMock} />
@@ -72,7 +72,7 @@ describe("Login component", () => {
         expect(errorMessage).toHaveTextContent("")
     })
     test("login form, wrong password", async () => {
-        const onLobbyIdCreatedMock = jest.fn()
+        const onLobbyIdCreatedMock = vi.fn()
         render(
             <Router>
                 <Login onLobbyIdCreated={onLobbyIdCreatedMock} />

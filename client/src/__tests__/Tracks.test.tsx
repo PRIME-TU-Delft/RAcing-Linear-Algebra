@@ -4,7 +4,7 @@ import Tracks from "../components/RaceThemes/Tracks/Tracks"
 
 describe("Tracks component tests", () => {
     const dimensions = { width: innerWidth, height: innerHeight }
-    const mockOnSectionComplete = jest.fn()
+    const mockOnSectionComplete = vi.fn()
     const ghosts = [
         { score: 700, teamName: "Devs" },
         {

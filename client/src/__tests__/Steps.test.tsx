@@ -3,8 +3,8 @@ import React from "react"
 import Steps from "../components/CreateGame/Lobby/Steps/Steps"
 
 describe("Steps component tests", () => {
-    const mockOnNameSelected = jest.fn((name: string) => name)
-    const mockStartGameHandler = jest.fn(
+    const mockOnNameSelected = vi.fn((name: string) => name)
+    const mockStartGameHandler = vi.fn(
         (
             selectedRounds: string[],
             selectedStudy: string,
