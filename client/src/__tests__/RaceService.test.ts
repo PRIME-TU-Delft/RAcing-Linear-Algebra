@@ -101,10 +101,30 @@ describe("getRacePathObject", () => {
                 length: c.length,
             }))
         ).toEqual([
-            { start: { x: 0, y: 0 }, end: { x: 100, y: 0 }, direction: "horizontal", length: 100 },
-            { start: { x: 100, y: 0 }, end: { x: 100, y: 50 }, direction: "vertical", length: 50 },
-            { start: { x: 100, y: 50 }, end: { x: 0, y: 50 }, direction: "horizontal", length: 100 },
-            { start: { x: 0, y: 50 }, end: { x: 0, y: 0 }, direction: "vertical", length: 50 },
+            {
+                start: { x: 0, y: 0 },
+                end: { x: 100, y: 0 },
+                direction: "horizontal",
+                length: 100,
+            },
+            {
+                start: { x: 100, y: 0 },
+                end: { x: 100, y: 50 },
+                direction: "vertical",
+                length: 50,
+            },
+            {
+                start: { x: 100, y: 50 },
+                end: { x: 0, y: 50 },
+                direction: "horizontal",
+                length: 100,
+            },
+            {
+                start: { x: 0, y: 50 },
+                end: { x: 0, y: 0 },
+                direction: "vertical",
+                length: 50,
+            },
         ])
     })
 
@@ -171,7 +191,9 @@ describe("getNewTimeScoreIndex", () => {
         // Once every time point has passed, the index runs past the end of the array.
         [0, 100, 3],
     ])("from index %d at t=%d -> %d", (current, usedTime, expected) => {
-        expect(getNewTimeScoreIndex(current, timeScores, usedTime)).toBe(expected)
+        expect(getNewTimeScoreIndex(current, timeScores, usedTime)).toBe(
+            expected
+        )
     })
 
     test("returns -1 when already at the last time score", () => {

@@ -12,7 +12,6 @@ interface Props {
 }
 
 function Checkpoints(props: Props) {
-
     const getCheckpointStyle = (checkpoint: Checkpoint) => {
         return Position.getCheckpointPosition(
             checkpoint,
@@ -27,7 +26,7 @@ function Checkpoints(props: Props) {
                     data-testid={`checkpoint${index}`}
                     key={index}
                     className="checkpoint-element"
-                    style={getCheckpointStyle(checkpoint )}
+                    style={getCheckpointStyle(checkpoint)}
                 >
                     <div className="img-container">
                         <img src={props.sprite} />

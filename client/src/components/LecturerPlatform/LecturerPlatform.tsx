@@ -1,30 +1,37 @@
 import React, { useContext, useEffect, useState } from "react"
 import "./LecturerPlatform.css"
 import { useNavigate } from "react-router-dom"
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import IconButton from '@mui/material/IconButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons'
+import AppBar from "@mui/material/AppBar"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
+import IconButton from "@mui/material/IconButton"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons"
 import TopicElement from "./TopicElement/TopicElement"
 import { Button, InputAdornment, TextField } from "@mui/material"
 import ExerciseElement from "./ExerciseElement/ExerciseElement"
 import { Exercise, Study, Topic } from "./SharedUtils"
-import { DefaultTeamsData, TopicDataContext } from "../../contexts/TopicDataContext"
+import {
+    DefaultTeamsData,
+    TopicDataContext,
+} from "../../contexts/TopicDataContext"
 import { ExistingExercisesContext } from "./ExistingExercisesContext"
 import socket from "../../socket"
-import Pagination from '@mui/material/Pagination'
+import Pagination from "@mui/material/Pagination"
 import { Store } from "react-notifications-component"
 import Instructions from "./Instructions/Instructions"
 
 interface Props {
-    loggedIn: boolean,
+    loggedIn: boolean
     onUpdateExercise: (exerciseData: Exercise) => void
     onUpdateTopic: (topicData: Topic) => void
-    onAddDefaultTeamsForTopic: (topicId: string, fakeTeamsToAddCount: number, avgTimePerQuestion: number) => void
+    onAddDefaultTeamsForTopic: (
+        topicId: string,
+        fakeTeamsToAddCount: number,
+        avgTimePerQuestion: number
+    ) => void
     onDeleteDefaultTeamsForTopic: (topicId: string) => void
     onDeleteVariant: (original_id: string, variantExerciseid: number) => void
 }
@@ -50,18 +57,24 @@ function LecturerPlatform(props: Props) {
     const [topicSearchQuery, setTopicSearchQuery] = useState<string>("")
     const [exerciseSearchQuery, setExerciseSearchQuery] = useState<string>("")
 
-    const handleTopicSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleTopicSearchChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         setTopicSearchQuery(event.target.value)
         setCurrentTopicPage(1)
     }
 
-    const handleExerciseSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleExerciseSearchChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         setExerciseSearchQuery(event.target.value)
         setCurrentExercisePage(1)
     }
 
     useEffect(() => {
-        setExerciseGraspleIds([...exercises.map(exercise => exercise.exerciseId)])
+        setExerciseGraspleIds([
+            ...exercises.map((exercise) => exercise.exerciseId),
+        ])
     }, [exercises])
 
     const navigate = useNavigate()
@@ -86,9 +99,9 @@ function LecturerPlatform(props: Props) {
 
     function discardNewTopicHandler(topicId: string): void {
         const newTopics = [...topics]
-        const index = newTopics.findIndex(topic => topic._id === topicId)
+        const index = newTopics.findIndex((topic) => topic._id === topicId)
         newTopics.splice(index, 1)
-        setTopics(curr => [...newTopics])
+        setTopics((curr) => [...newTopics])
     }
 
     const createNewTopic = () => {
@@ -96,14 +109,22 @@ function LecturerPlatform(props: Props) {
             _id: `new-topic-${Date.now()}`,
             name: "",
             studies: topicData.allStudies,
-            exercises: []
+            exercises: [],
         }
         const newTopics = [newTopic, ...topics]
-        setTopics(curr => [...newTopics])
+        setTopics((curr) => [...newTopics])
     }
 
     const createNewExercise = () => {
-        const newExercise: Exercise = { _id: "", name: "", exerciseId: -1, difficulty: "Easy", url: "", numOfAttempts: 1, isMandatory: false }
+        const newExercise: Exercise = {
+            _id: "",
+            name: "",
+            exerciseId: -1,
+            difficulty: "Easy",
+            url: "",
+            numOfAttempts: 1,
+            isMandatory: false,
+        }
         const newExercises = [newExercise, ...exercises]
         setExercises(newExercises)
     }
@@ -112,10 +133,15 @@ function LecturerPlatform(props: Props) {
         props.onUpdateExercise(exerciseData)
     }
 
-    const discardNewExerciseHandler = (exerciseId: number, deleteExercise: boolean) => {
+    const discardNewExerciseHandler = (
+        exerciseId: number,
+        deleteExercise: boolean
+    ) => {
         if (deleteExercise) {
-            const newExercises = exercises.filter((exercise) => exercise.exerciseId !== exerciseId)
-            setExercises(curr => [...newExercises])
+            const newExercises = exercises.filter(
+                (exercise) => exercise.exerciseId !== exerciseId
+            )
+            setExercises((curr) => [...newExercises])
             return
         }
     }
@@ -127,19 +153,31 @@ function LecturerPlatform(props: Props) {
     const addExerciseToTopic = (topicId: string, exercise: Exercise) => {
         const newTopics = topics.map((topic) => {
             if (topic._id === topicId) {
-                const exerciseExists = topic.exercises.some(ex => ex.exerciseId === exercise.exerciseId)
+                const exerciseExists = topic.exercises.some(
+                    (ex) => ex.exerciseId === exercise.exerciseId
+                )
                 if (!exerciseExists) {
-                    return { ...topic, exercises: [exercise, ...topic.exercises] }
+                    return {
+                        ...topic,
+                        exercises: [exercise, ...topic.exercises],
+                    }
                 }
             }
             return topic
         })
-        setTopics(curr => [...newTopics])
+        setTopics((curr) => [...newTopics])
     }
 
-    const linkExerciseHandler = (topicId: string, exerciseGraspleId: number) => {
-        const exercise = exercises.find(exercise => exercise.exerciseId === exerciseGraspleId)
-        const alreadyContainsExercise = topics.find(topic => topic._id === topicId)?.exercises.some(ex => ex.exerciseId === exerciseGraspleId)
+    const linkExerciseHandler = (
+        topicId: string,
+        exerciseGraspleId: number
+    ) => {
+        const exercise = exercises.find(
+            (exercise) => exercise.exerciseId === exerciseGraspleId
+        )
+        const alreadyContainsExercise = topics
+            .find((topic) => topic._id === topicId)
+            ?.exercises.some((ex) => ex.exerciseId === exerciseGraspleId)
         if (exercise && !alreadyContainsExercise) {
             addExerciseToTopic(topicId, exercise)
             Store.addNotification({
@@ -150,8 +188,8 @@ function LecturerPlatform(props: Props) {
                 container: "top-right",
                 dismiss: {
                     duration: 5000,
-                    onScreen: true
-                }
+                    onScreen: true,
+                },
             })
         } else if (alreadyContainsExercise) {
             Store.addNotification({
@@ -162,34 +200,64 @@ function LecturerPlatform(props: Props) {
                 container: "top-right",
                 dismiss: {
                     duration: 5000,
-                    onScreen: true
-                }
-            })                
+                    onScreen: true,
+                },
+            })
         }
     }
 
-    const handleExercisePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    const handleExercisePageChange = (
+        event: React.ChangeEvent<unknown>,
+        value: number
+    ) => {
         setCurrentExercisePage(value)
     }
 
-    const handleTopicPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    const handleTopicPageChange = (
+        event: React.ChangeEvent<unknown>,
+        value: number
+    ) => {
         setCurrentTopicPage(value)
     }
 
     useEffect(() => {
-        setFilteredExercises(exercises.filter(exercise => exercise.name.toLowerCase().includes(exerciseSearchQuery.toLowerCase()) || exercise.exerciseId.toString().includes(exerciseSearchQuery)))
+        setFilteredExercises(
+            exercises.filter(
+                (exercise) =>
+                    exercise.name
+                        .toLowerCase()
+                        .includes(exerciseSearchQuery.toLowerCase()) ||
+                    exercise.exerciseId.toString().includes(exerciseSearchQuery)
+            )
+        )
     }, [exercises, exerciseSearchQuery])
 
     useEffect(() => {
-        setFilteredTopics(topics.filter(topic => topic.name.toLowerCase().includes(topicSearchQuery.toLowerCase())))
+        setFilteredTopics(
+            topics.filter((topic) =>
+                topic.name
+                    .toLowerCase()
+                    .includes(topicSearchQuery.toLowerCase())
+            )
+        )
     }, [topics, topicSearchQuery])
 
     useEffect(() => {
-        setPaginatedExercises(curr => [...filteredExercises.slice((currentExercisePage - 1) * exercisesPerPage, currentExercisePage * exercisesPerPage)])
+        setPaginatedExercises((curr) => [
+            ...filteredExercises.slice(
+                (currentExercisePage - 1) * exercisesPerPage,
+                currentExercisePage * exercisesPerPage
+            ),
+        ])
     }, [filteredExercises, currentExercisePage, exercisesPerPage])
 
     useEffect(() => {
-        setPaginatedTopics(curr => [...filteredTopics.slice((currentTopicPage - 1) * topicsPerPage, currentTopicPage * topicsPerPage)])
+        setPaginatedTopics((curr) => [
+            ...filteredTopics.slice(
+                (currentTopicPage - 1) * topicsPerPage,
+                currentTopicPage * topicsPerPage
+            ),
+        ])
     }, [filteredTopics, currentTopicPage, topicsPerPage])
 
     return (
@@ -199,17 +267,21 @@ function LecturerPlatform(props: Props) {
                     <Typography variant="h6" component="div">
                         RAcing Linear Algebra
                     </Typography>
-                    <Tabs 
-                        value={activeTab} 
+                    <Tabs
+                        value={activeTab}
                         onChange={handleChange}
                         textColor="inherit"
                         className="lecturer-platform-tabs"
                     >
-                        <Tab value="topics" label="Topics"/>
-                        <Tab value="exercises" label="Exercises"/>
-                        <Tab value="instructions" label="Instructions"/>
+                        <Tab value="topics" label="Topics" />
+                        <Tab value="exercises" label="Exercises" />
+                        <Tab value="instructions" label="Instructions" />
                     </Tabs>
-                    <IconButton color="inherit" onClick={() => navigate("/")} style={{marginLeft: "auto"}}>
+                    <IconButton
+                        color="inherit"
+                        onClick={() => navigate("/")}
+                        style={{ marginLeft: "auto" }}
+                    >
                         <FontAwesomeIcon icon={faHome} />
                     </IconButton>
                 </Toolbar>
@@ -218,50 +290,104 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "topics" && (
                     <>
                         <div className="topics-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="primary" onClick={createNewTopic} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Topic</Button>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={createNewTopic}
+                                sx={{
+                                    alignSelf: "flex-start",
+                                    height: "2.5rem",
+                                    width: "15rem",
+                                }}
+                            >
+                                Create New Topic
+                            </Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search topics"
                                 value={topicSearchQuery}
                                 onChange={handleTopicSearchChange}
-                                sx={{ marginLeft: 2, height: '2.5rem', width: ' 100%' }}
+                                sx={{
+                                    marginLeft: 2,
+                                    height: "2.5rem",
+                                    width: " 100%",
+                                }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <FontAwesomeIcon icon={faSearch} />
                                         </InputAdornment>
                                     ),
-                                    style: { height: '2.5rem' }
+                                    style: { height: "2.5rem" },
                                 }}
                             />
                         </div>
-                        <div style={{marginTop: "1.5rem"}}>
+                        <div style={{ marginTop: "1.5rem" }}>
                             {paginatedTopics.map((topic, index) => (
-                                <TopicElement 
-                                    key={topic._id} 
-                                    _id={topic._id} 
-                                    name={topic.name} 
-                                    studies={topic.studies} 
+                                <TopicElement
+                                    key={topic._id}
+                                    _id={topic._id}
+                                    name={topic.name}
+                                    studies={topic.studies}
                                     exercises={topic.exercises}
                                     subject={topic.subject}
-                                    allSubjects={topicData.allSubjects} 
-                                    onUpdateTopic={(topicData: Topic) => updateTopicHandler(topicData, topic._id)}
-                                    discardNewTopic={() => discardNewTopicHandler(topic._id)}
+                                    allSubjects={topicData.allSubjects}
+                                    onUpdateTopic={(topicData: Topic) =>
+                                        updateTopicHandler(topicData, topic._id)
+                                    }
+                                    discardNewTopic={() =>
+                                        discardNewTopicHandler(topic._id)
+                                    }
                                     availableGraspleIds={exerciseGraspleIds}
-                                    onLinkExercise={(graspleId: number) => linkExerciseHandler(topic._id, graspleId)}
-                                    defaultTeamsData={topicData.defaultTeams.filter((data: DefaultTeamsData) => data.topicId === topic._id)[0]}
-                                    onAddDefaultTeams={(fakeTeamsToAddCount: number, avgTimePerQuestion: number) => props.onAddDefaultTeamsForTopic(topic._id, fakeTeamsToAddCount, avgTimePerQuestion)}
-                                    onDeleteDefaultTeams={() => props.onDeleteDefaultTeamsForTopic(topic._id)}
-                                    onDeleteVariant={(original_id: string, variantExerciseid: number) => props.onDeleteVariant(original_id, variantExerciseid)}
+                                    onLinkExercise={(graspleId: number) =>
+                                        linkExerciseHandler(
+                                            topic._id,
+                                            graspleId
+                                        )
+                                    }
+                                    defaultTeamsData={
+                                        topicData.defaultTeams.filter(
+                                            (data: DefaultTeamsData) =>
+                                                data.topicId === topic._id
+                                        )[0]
+                                    }
+                                    onAddDefaultTeams={(
+                                        fakeTeamsToAddCount: number,
+                                        avgTimePerQuestion: number
+                                    ) =>
+                                        props.onAddDefaultTeamsForTopic(
+                                            topic._id,
+                                            fakeTeamsToAddCount,
+                                            avgTimePerQuestion
+                                        )
+                                    }
+                                    onDeleteDefaultTeams={() =>
+                                        props.onDeleteDefaultTeamsForTopic(
+                                            topic._id
+                                        )
+                                    }
+                                    onDeleteVariant={(
+                                        original_id: string,
+                                        variantExerciseid: number
+                                    ) =>
+                                        props.onDeleteVariant(
+                                            original_id,
+                                            variantExerciseid
+                                        )
+                                    }
                                 />
                             ))}
                         </div>
                         {topics.length > topicsPerPage && (
-                            <Pagination 
-                                count={Math.ceil(topics.length / topicsPerPage)} 
-                                page={currentTopicPage} 
-                                onChange={handleTopicPageChange} 
-                                style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}
+                            <Pagination
+                                count={Math.ceil(topics.length / topicsPerPage)}
+                                page={currentTopicPage}
+                                onChange={handleTopicPageChange}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    marginBottom: "2rem",
+                                }}
                             />
                         )}
                     </>
@@ -269,60 +395,92 @@ function LecturerPlatform(props: Props) {
                 {activeTab === "exercises" && (
                     <>
                         <div className="exercises-controls-container d-flex align-content-center">
-                            <Button variant="outlined" color="primary" onClick={createNewExercise} sx={{ alignSelf: 'flex-start', height: '2.5rem', width: '15rem' }}>Create New Exercise</Button>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={createNewExercise}
+                                sx={{
+                                    alignSelf: "flex-start",
+                                    height: "2.5rem",
+                                    width: "15rem",
+                                }}
+                            >
+                                Create New Exercise
+                            </Button>
                             <TextField
                                 variant="outlined"
                                 placeholder="Search exercises"
                                 value={exerciseSearchQuery}
                                 onChange={handleExerciseSearchChange}
-                                sx={{ marginLeft: 2, height: '2.5rem', width: ' 100%' }}
+                                sx={{
+                                    marginLeft: 2,
+                                    height: "2.5rem",
+                                    width: " 100%",
+                                }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <FontAwesomeIcon icon={faSearch} />
                                         </InputAdornment>
                                     ),
-                                    style: { height: '2.5rem' }
+                                    style: { height: "2.5rem" },
                                 }}
-                            /> 
+                            />
                         </div>
-                        <div style={{marginBottom: "2rem"}}>
+                        <div style={{ marginBottom: "2rem" }}>
                             {paginatedExercises.map((exercise, index) => (
-                                <ExerciseElement 
-                                    key={index} 
-                                    _id={exercise._id} 
-                                    name={exercise.name} 
-                                    exerciseId={exercise.exerciseId} 
-                                    difficulty={exercise.difficulty} 
-                                    url={exercise.url} 
-                                    numOfAttempts={exercise.numOfAttempts} 
-                                    beingEdited={false} 
-                                    closeNotEditing={false} 
+                                <ExerciseElement
+                                    key={index}
+                                    _id={exercise._id}
+                                    name={exercise.name}
+                                    exerciseId={exercise.exerciseId}
+                                    difficulty={exercise.difficulty}
+                                    url={exercise.url}
+                                    numOfAttempts={exercise.numOfAttempts}
+                                    beingEdited={false}
+                                    closeNotEditing={false}
                                     parentSaveChanges={false}
-                                    onFinishEditingExercise={(exerciseData: Exercise) => updateExerciseHandler(exerciseData)}
-                                    onDiscardEditingExercise={(deleteExercise: boolean) => discardNewExerciseHandler(exercise.exerciseId, deleteExercise)}
+                                    onFinishEditingExercise={(
+                                        exerciseData: Exercise
+                                    ) => updateExerciseHandler(exerciseData)}
+                                    onDiscardEditingExercise={(
+                                        deleteExercise: boolean
+                                    ) =>
+                                        discardNewExerciseHandler(
+                                            exercise.exerciseId,
+                                            deleteExercise
+                                        )
+                                    }
                                     onExerciseAlreadyExists={() => {}}
                                     isIndependentElement={true}
                                     isMandatory={false}
                                     currentTopicExerciseIds={[]}
-                                    numberOfVariants={exercise.variants ? exercise.variants.length : 1}
+                                    numberOfVariants={
+                                        exercise.variants
+                                            ? exercise.variants.length
+                                            : 1
+                                    }
                                 />
                             ))}
                         </div>
                         {exercises.length > exercisesPerPage && (
-                            <Pagination 
-                                count={Math.ceil(exercises.length / exercisesPerPage)} 
-                                page={currentExercisePage} 
-                                onChange={handleExercisePageChange} 
-                                style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}
+                            <Pagination
+                                count={Math.ceil(
+                                    exercises.length / exercisesPerPage
+                                )}
+                                page={currentExercisePage}
+                                onChange={handleExercisePageChange}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    marginBottom: "2rem",
+                                }}
                             />
                         )}
                     </>
                 )}
 
-                {activeTab === "instructions" && (
-                    <Instructions />
-                )}
+                {activeTab === "instructions" && <Instructions />}
             </ExistingExercisesContext.Provider>
         </div>
     )

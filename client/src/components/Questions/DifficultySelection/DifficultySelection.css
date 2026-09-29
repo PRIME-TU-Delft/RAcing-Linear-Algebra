@@ -71,7 +71,7 @@
 
 .card-title {
     font-size: 30px;
-    font-family: 'PermanentMarker', sans-serif;
+    font-family: "PermanentMarker", sans-serif;
     text-align: center;
 }
 
@@ -120,8 +120,8 @@
 
 .card-points-text {
     font-size: 30px;
-    font-family: 'Chicle-Regular', sans-serif;
-    color: #FB8500;
+    font-family: "Chicle-Regular", sans-serif;
+    color: #fb8500;
 }
 
 .card-points,

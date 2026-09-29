@@ -76,13 +76,13 @@
 
 .back-btn.train {
     border-color: #003082;
-    background-color: #0063D3;
+    background-color: #0063d3;
     color: white;
 }
 
 .back-btn.train:hover {
     border-color: #003082;
-    background-color: #004BA0;
+    background-color: #004ba0;
     color: white;
 }
 

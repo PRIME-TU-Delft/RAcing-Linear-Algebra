@@ -29,14 +29,14 @@ function MultipleChoice(props: Props) {
     useEffect(() => {
         if (props.answers === undefined) return
         const newShuffling = shuffleArray(props.answers)
-        
+
         newShuffling.forEach((answer, index) => {
             const ref = answerRefs[index].current
             if (ref) {
                 ref.innerHTML = renderLatex(answer)
             }
         })
-        setShuffledAnswers(curr => [...newShuffling])
+        setShuffledAnswers((curr) => [...newShuffling])
     }, [props.answers])
 
     /**
@@ -91,10 +91,9 @@ function MultipleChoice(props: Props) {
                             <button
                                 className="answer"
                                 key={index}
-                                onClick={() =>{
-                                        submitAnswer(shuffledAnswers[index])
-                                }
-                                }
+                                onClick={() => {
+                                    submitAnswer(shuffledAnswers[index])
+                                }}
                                 style={{
                                     pointerEvents: props.disableButton
                                         ? "none"

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import "./LapCompletedText.css"
-import { a, useTransition } from "react-spring";
-import { getColorForRaceLap } from "../../RaceService";
+import { a, useTransition } from "react-spring"
+import { getColorForRaceLap } from "../../RaceService"
 
 interface Props {
-    lapsCompleted: number,
+    lapsCompleted: number
     fontSize?: number
 }
 
@@ -14,12 +14,14 @@ function LapCompletedText(props: Props) {
 
     useEffect(() => {
         if (props.lapsCompleted > 0) {
-            const completedLapColor = getColorForRaceLap(props.lapsCompleted - 1)
-            setColor(curr => completedLapColor)
+            const completedLapColor = getColorForRaceLap(
+                props.lapsCompleted - 1
+            )
+            setColor((curr) => completedLapColor)
 
-            setShow(curr => true)
+            setShow((curr) => true)
             setTimeout(() => {
-                setShow(curr => false)
+                setShow((curr) => false)
             }, 2000)
         }
     }, [props.lapsCompleted])
@@ -28,16 +30,21 @@ function LapCompletedText(props: Props) {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 },
-        delay: 500
+        delay: 500,
     })
 
-    return(
-        <div style={{color: color}}>
-            {lapCompletedTextAnimation((style, display) => display ?  (
-                <a.div className="lap-completed-text" style={{...style, fontSize: props.fontSize || 15}}>
-                    Lap {props.lapsCompleted} completed!
-                </a.div>
-            ) : null)}
+    return (
+        <div style={{ color: color }}>
+            {lapCompletedTextAnimation((style, display) =>
+                display ? (
+                    <a.div
+                        className="lap-completed-text"
+                        style={{ ...style, fontSize: props.fontSize || 15 }}
+                    >
+                        Lap {props.lapsCompleted} completed!
+                    </a.div>
+                ) : null
+            )}
         </div>
     )
 }

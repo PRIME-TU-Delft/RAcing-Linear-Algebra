@@ -1,6 +1,5 @@
 .wave {
-    background: url(../../../img/maps/boat/wave.png)
-        repeat-x;
+    background: url(../../../img/maps/boat/wave.png) repeat-x;
     position: absolute;
     width: 400%;
     height: calc(24%);
@@ -22,10 +21,10 @@
 .terrain-layout > img {
     position: absolute;
     height: 100%;
-    width: 100%; 
-    
-    object-fit: fill; 
-    
+    width: 100%;
+
+    object-fit: fill;
+
     left: 0;
     top: 0;
     z-index: 1;

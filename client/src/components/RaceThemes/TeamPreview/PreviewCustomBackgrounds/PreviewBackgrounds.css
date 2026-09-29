@@ -9,7 +9,6 @@
     transform: translateY(70vh);
 }
 
-
 .preview-sun {
     top: 12vh;
     left: 2vw;
@@ -61,7 +60,8 @@
 }
 
 .boat-preview-background.play-boat-animation {
-    animation: boat-transition-animation 4s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    animation: boat-transition-animation 4s cubic-bezier(0.7, 0, 0.3, 1)
+        forwards;
 }
 
 @keyframes wave-animation {
@@ -146,13 +146,14 @@
     animation: bubble-wobble 1.5s ease-in-out 0.2s infinite;
 }
 
-.rising-bubbles{
-    animation: bubble-rise 3s linear both;    
+.rising-bubbles {
+    animation: bubble-rise 3s linear both;
     animation-delay: 2s;
 }
 
 @keyframes bubble-wobble {
-    0%, 100% {
+    0%,
+    100% {
         margin-left: 0px;
     }
     50% {

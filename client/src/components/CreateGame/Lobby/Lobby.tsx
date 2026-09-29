@@ -8,7 +8,7 @@ import socket from "../../../socket"
 import { a, useSpring } from "react-spring"
 
 interface SelectedRound {
-    topicName: string,
+    topicName: string
     roundDuration: number
 }
 
@@ -21,7 +21,8 @@ interface Props {
 
 function Lobby(props: Props) {
     const [teamName, setTeamName] = useState("New Team")
-    const [allowIndividualPlacements, setAllowIndividualPlacements] = useState(false)
+    const [allowIndividualPlacements, setAllowIndividualPlacements] =
+        useState(false)
     const [playerNumber, setPlayerNumber] = useState(0)
 
     // Entrance animation for the lobby screen
@@ -50,8 +51,8 @@ function Lobby(props: Props) {
         socket.emit(
             "startGame",
             props.lobbyId,
-            selectedRounds.map(x => x.topicName),
-            selectedRounds.map(x => x.roundDuration),
+            selectedRounds.map((x) => x.topicName),
+            selectedRounds.map((x) => x.roundDuration),
             selectedStudy,
             teamName,
             allowIndividualPlacements

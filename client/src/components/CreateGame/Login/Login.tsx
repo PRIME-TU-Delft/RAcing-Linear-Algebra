@@ -37,7 +37,7 @@ function Login(props: Props) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "skip-browser-warning"
+                "ngrok-skip-browser-warning": "skip-browser-warning",
             },
         })
         const resJson = await res.json()

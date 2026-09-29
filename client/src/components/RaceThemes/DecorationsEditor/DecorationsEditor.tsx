@@ -130,7 +130,6 @@ function DecorationsEditor(props: Props) {
 
             result += "]"
             console.log(result)
-
         }
     }
 
@@ -179,7 +178,11 @@ function DecorationsEditor(props: Props) {
                     style={createStyle(decoration)}
                     onClick={() => removeElement(decoration)}
                 >
-                    <img src={decoration.sprite} alt="" style={{ width: '100%', height: '100%' }} />
+                    <img
+                        src={decoration.sprite}
+                        alt=""
+                        style={{ width: "100%", height: "100%" }}
+                    />
                 </div>
             ))}
         </div>

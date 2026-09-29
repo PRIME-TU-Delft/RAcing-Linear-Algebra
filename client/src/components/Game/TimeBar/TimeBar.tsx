@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ProgressBar } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react"
+import { ProgressBar } from "react-bootstrap"
 import "./TimeBar.css"
-import socket from "../../../socket";
-import { TimeContext } from "../../../contexts/TimeContext";
+import socket from "../../../socket"
+import { TimeContext } from "../../../contexts/TimeContext"
 
 interface Props {
     roundDuration: number
 }
 
 function TimeBar(props: Props) {
-    const timeLeft = useContext(TimeContext);
+    const timeLeft = useContext(TimeContext)
     const [timeText, setTimeText] = useState<string>("00:00")
 
     const getMinutes = (currentTimeInSeconds: number) => {
@@ -43,14 +43,19 @@ function TimeBar(props: Props) {
         if (timeLeft < props.roundDuration) {
             const minutes = getMinutes(timeLeft)
             const seconds = getSeconds(timeLeft)
-            setTimeText(curr => minutes + ":" + seconds)
+            setTimeText((curr) => minutes + ":" + seconds)
         }
     }, [timeLeft])
 
-    return(
+    return (
         <div className="time-container">
             <div className="time-title">Time: {timeText}</div>
-            <ProgressBar animated variant={changeTimeBarColorBasedOnTime()} now={(timeLeft / props.roundDuration) * 100} className={getTimeBarStyling()}/>
+            <ProgressBar
+                animated
+                variant={changeTimeBarColorBasedOnTime()}
+                now={(timeLeft / props.roundDuration) * 100}
+                className={getTimeBarStyling()}
+            />
         </div>
     )
 }

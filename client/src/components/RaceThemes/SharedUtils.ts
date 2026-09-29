@@ -14,28 +14,28 @@ class Point {
 }
 
 interface AnimationStatus {
-    pathProgress: number,
-    updateAnimation: boolean, 
-    timeScoreIndex: number 
+    pathProgress: number
+    updateAnimation: boolean
+    timeScoreIndex: number
 }
 
 interface RaceObject {
-    isGhost: boolean,
-    ghostKey?: number,
+    isGhost: boolean
+    ghostKey?: number
     score: number
 }
 
 interface Ghost {
     teamName: string
     key: number
-    colors: { mainColor: string, highlightColor: string}
-    timeScores: { timePoint: number, score: number }[]
+    colors: { mainColor: string; highlightColor: string }
+    timeScores: { timePoint: number; score: number }[]
     checkpoints: number[]
     study: string
     accuracy: number
-    lapsCompleted: number,
-    racePosition: number,
-    isOpen: boolean,
+    lapsCompleted: number
+    racePosition: number
+    isOpen: boolean
     animationStatus: AnimationStatus
 }
 
@@ -57,8 +57,8 @@ interface Dimensions {
 }
 
 interface Streak {
-    questionType: string, 
-    streakValue: number,
+    questionType: string
+    streakValue: number
     streakMultiplier: number
 }
 
@@ -94,22 +94,22 @@ interface RaceMap {
     decorations: DecorationElement[] // list of decorations for the map
     path: PercentCoordinate[] // list of corner points for the tracks of the train theme
     components?: {
-        component: React.ComponentType<any>;
-        props: any;
-    }[];
+        component: React.ComponentType<any>
+        props: any
+    }[]
     checkpoints?: Checkpoint[]
     rawPath?: string
 }
 
-interface ServerGhost { 
-    teamName: string; 
-    timeScores: { 
-        timePoint: number, 
-        score: number 
-    }[]; 
-    checkpoints: number[]; 
-    study: string; 
-    accuracy: number 
+interface ServerGhost {
+    teamName: string
+    timeScores: {
+        timePoint: number
+        score: number
+    }[]
+    checkpoints: number[]
+    study: string
+    accuracy: number
 }
 
 interface IQuestion {
@@ -123,24 +123,24 @@ interface IQuestion {
 }
 
 interface RoundInformation {
-    topic: string,
-    teamName: string,
-    theme: string,
+    topic: string
+    teamName: string
+    theme: string
     study: string
 }
 
 interface GraspleExercise {
-    _id: string,
-    name: string,
-    exerciseId: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
+    _id: string
+    name: string
+    exerciseId: number
+    difficulty: string
+    url: string
+    numOfAttempts: number
     isMandatory: boolean
 }
 
 interface StudyElement {
-    name: string,
+    name: string
     abbreviation: string
 }
 
@@ -160,5 +160,5 @@ export {
     type RoundInformation,
     type Streak,
     type GraspleExercise,
-    type StudyElement
+    type StudyElement,
 }

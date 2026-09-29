@@ -14,7 +14,12 @@ import {
     Dimensions,
     RacePathObject,
 } from "../SharedUtils"
-import {formatRacePositionText, getColorForRaceLap, getRaceVehicleSprite, getZIndexValues} from "../RaceService"
+import {
+    formatRacePositionText,
+    getColorForRaceLap,
+    getRaceVehicleSprite,
+    getZIndexValues,
+} from "../RaceService"
 import Checkpoints from "../Checkpoints/Checkpoints"
 import Ghosts from "../Ghosts/Ghosts"
 import RacePath from "./RacePath/RacePath"
@@ -32,7 +37,7 @@ function Tracks() {
     const racePath = useContext(RacePathContext)
 
     const getCheckpointSprite = () => {
-        switch(raceData.theme) {
+        switch (raceData.theme) {
             case "train":
                 return TrainSprites.trainStation
             case "boat":
@@ -47,7 +52,8 @@ function Tracks() {
             <RacePath
                 theme={raceData.theme}
                 components={racePath.components}
-                svgPath={racePath.svgPath}></RacePath>
+                svgPath={racePath.svgPath}
+            ></RacePath>
 
             {/* <Checkpoints
                 checkpoints={raceData.checkpoints}

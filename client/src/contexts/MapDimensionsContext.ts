@@ -7,7 +7,7 @@ interface MapDimensions {
 
 export const MapDimensionsContext = createContext<MapDimensions>({
     width: 0,
-    height: 0
+    height: 0,
 })
 
 export type { MapDimensions }

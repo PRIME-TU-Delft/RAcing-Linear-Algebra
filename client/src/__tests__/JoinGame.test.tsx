@@ -7,7 +7,10 @@ const INVALID_FORMAT = "The code should be a 4 digit number!"
 
 function renderJoinGame(onLobbyJoined = vi.fn()) {
     return renderWithProviders(
-        <JoinGame onLobbyJoined={onLobbyJoined} reconnectionAvailableTime={0} />,
+        <JoinGame
+            onLobbyJoined={onLobbyJoined}
+            reconnectionAvailableTime={0}
+        />,
         { route: "/JoinGame" }
     )
 }

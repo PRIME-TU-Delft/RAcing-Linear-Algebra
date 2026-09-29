@@ -23,8 +23,8 @@
 
 .main-vehicle-text {
     font-size: 22px;
-    color: #F8B700;
-    background-color: #0021A7;
+    color: #f8b700;
+    background-color: #0021a7;
     font-family: Cherry Bomb, sans-serif;
     font-weight: 200;
     padding: 1px;
@@ -32,7 +32,6 @@
     padding-right: 5px;
 
     border-radius: 20%;
-
 }
 
 .minimap-main-vehicle-text {
@@ -46,7 +45,7 @@
     top: 0;
     margin-top: 15px;
     font-size: 16px;
-    color: #0021A7;
+    color: #0021a7;
     font-family: Cherry Bomb, sans-serif;
 }
 
@@ -54,7 +53,7 @@
     position: absolute;
     margin-left: 52px;
     /* background-color: rgba(255, 255, 255, 0.786); */
-    background-color: #0021A7;
+    background-color: #0021a7;
     top: 0;
 }
 
@@ -68,7 +67,6 @@
 
     background-color: white;
     animation: shadowPulse 2s infinite;
-    
 }
 
 .minimap-vehicle-image-container {
@@ -80,10 +78,10 @@
     width: 50px;
     background-color: white;
     animation: shadowPulse 2s infinite;
-    
 }
 
-.main-vehicle > .vehicle-image-container, .minimap-vehicle-image-container {
+.main-vehicle > .vehicle-image-container,
+.minimap-vehicle-image-container {
     border: 3px solid;
 }
 

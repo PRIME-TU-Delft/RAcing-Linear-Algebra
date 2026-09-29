@@ -28,10 +28,10 @@ import { QuestionStatusContext } from "../../contexts/QuestionStatusContext"
 import { ChoosingDifficultyContext } from "../../contexts/ChoosingDifficultyContext"
 
 interface Props {
-    hideQuestion: boolean,
-    theme: string,
-    infoModalDisplayed: boolean,
-    calculateResponseTime: (startTime: number, endTime: number) => void,
+    hideQuestion: boolean
+    theme: string
+    infoModalDisplayed: boolean
+    calculateResponseTime: (startTime: number, endTime: number) => void
     easyQuestionsOnCooldown: boolean
     pointsToGain: number
     difficultyEmoji: string
@@ -42,13 +42,18 @@ function Question(props: Props) {
     const questionData = useContext(QuestionContext)
     const graspleQuestionData = useContext(GraspleQuestionContext)
     const questionStatusContext = useContext(QuestionStatusContext)
-    const {choosingDifficulty, setChoosingDifficulty} = useContext(ChoosingDifficultyContext)
+    const { choosingDifficulty, setChoosingDifficulty } = useContext(
+        ChoosingDifficultyContext
+    )
 
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
-    const skipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const [showDifficultySelectionDescription, setShowDifficultySelectionDescription] = useState(true)
+    const skipTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const [
+        showDifficultySelectionDescription,
+        setShowDifficultySelectionDescription,
+    ] = useState(true)
 
     const [hasToSelectDifficulty, setHasToSelectDifficulty] = useState(false)
     // Variable to display the difficulty selection screen
@@ -59,15 +64,15 @@ function Question(props: Props) {
     const [showRoundOverModal, setShowRoundOverModal] = useState<boolean>(false)
     // This will be used to disable the submit button for a short period of time when the user submits an answer
     const [disableButton, setDisableButton] = useState<boolean>(false)
-    
-    const [questionStartTime, setQuestionStartTime] = useState<number>(0)
-    const [skipQuestionAvailable, setSkipQuestionAvailable] = useState<boolean>(false)
-    const showDifficultyRef = useRef<boolean>(showDifficulty); // Ref to track the latest value of showDifficulty
 
+    const [questionStartTime, setQuestionStartTime] = useState<number>(0)
+    const [skipQuestionAvailable, setSkipQuestionAvailable] =
+        useState<boolean>(false)
+    const showDifficultyRef = useRef<boolean>(showDifficulty) // Ref to track the latest value of showDifficulty
 
     useEffect(() => {
-        showDifficultyRef.current = showDifficulty;
-    }, [showDifficulty]);
+        showDifficultyRef.current = showDifficulty
+    }, [showDifficulty])
 
     // All the socket events for the questions are handled here
     useEffect(() => {
@@ -87,26 +92,29 @@ function Question(props: Props) {
     }, [props.infoModalDisplayed, hasToSelectDifficulty])
 
     useEffect(() => {
-        setSkipQuestionAvailable(false);
-        if (graspleQuestionData.questionNumber < graspleQuestionData.numberOfMandatory) return;
+        setSkipQuestionAvailable(false)
+        if (
+            graspleQuestionData.questionNumber <
+            graspleQuestionData.numberOfMandatory
+        )
+            return
 
         if (skipTimeoutRef.current) {
-            clearTimeout(skipTimeoutRef.current);
+            clearTimeout(skipTimeoutRef.current)
         }
 
         skipTimeoutRef.current = setTimeout(() => {
-
             if (!showDifficultyRef.current) {
-                setSkipQuestionAvailable(true);
+                setSkipQuestionAvailable(true)
             }
-        }, 20000);
+        }, 20000)
 
         return () => {
             if (skipTimeoutRef.current) {
-                clearTimeout(skipTimeoutRef.current);
+                clearTimeout(skipTimeoutRef.current)
             }
-        };
-    }, [questionStartTime, graspleQuestionData]);
+        }
+    }, [questionStartTime, graspleQuestionData])
 
     const nextQuestionHandler = () => {
         setSkipQuestionAvailable(false)
@@ -182,109 +190,131 @@ function Question(props: Props) {
     )
 
     const difficultySelectedHandler = () => {
-        setShowDifficulty(curr => false)
-        setShowDifficultySelectionDescription(curr => false)
+        setShowDifficulty((curr) => false)
+        setShowDifficultySelectionDescription((curr) => false)
         setQuestionStartTime(Date.now())
     }
 
     return (
-           <animated.div
-                className="question-container"
-                style={bodyAnimation}
-                data-testid="question-container"
-            >
-                <DifficultySelection
-                    open={showDifficulty}
-                    showDescription={showDifficultySelectionDescription}
-                    onDifficultySelected={difficultySelectedHandler}
-                    type={questionData.iQuestion.subject}
-                    easyIsOnCooldown={props.easyQuestionsOnCooldown}
-                ></DifficultySelection>
+        <animated.div
+            className="question-container"
+            style={bodyAnimation}
+            data-testid="question-container"
+        >
+            <DifficultySelection
+                open={showDifficulty}
+                showDescription={showDifficultySelectionDescription}
+                onDifficultySelected={difficultySelectedHandler}
+                type={questionData.iQuestion.subject}
+                easyIsOnCooldown={props.easyQuestionsOnCooldown}
+            ></DifficultySelection>
 
-                <QuestionOverlayBox 
-                    margin={60} 
-                    openOnStart={false} 
-                    closedText= {`${graspleQuestionData.questionNumber}`}
-                    openText={`Question ${graspleQuestionData.questionNumber}`}
-                    show={!questionStatusContext.questionFinished && !showDifficulty}
-                    openOnHover={true}
-                    startOpenDelay={3}/>
+            <QuestionOverlayBox
+                margin={60}
+                openOnStart={false}
+                closedText={`${graspleQuestionData.questionNumber}`}
+                openText={`Question ${graspleQuestionData.questionNumber}`}
+                show={
+                    !questionStatusContext.questionFinished && !showDifficulty
+                }
+                openOnHover={true}
+                startOpenDelay={3}
+            />
 
-                <QuestionOverlayBox 
-                    margin={140} 
-                    openOnStart={false} 
-                    closedText= {`${props.difficultyEmoji}`}
-                    color="#0063D3"
-                    openText={`${String(props.difficultyName).charAt(0).toUpperCase() + String(props.difficultyName).slice(1)} ${props.difficultyEmoji}`}
-                    show={!questionStatusContext.questionFinished && !showDifficulty}
-                    openOnHover={true}
-                    startOpenDelay={3}/>
+            <QuestionOverlayBox
+                margin={140}
+                openOnStart={false}
+                closedText={`${props.difficultyEmoji}`}
+                color="#0063D3"
+                openText={`${
+                    String(props.difficultyName).charAt(0).toUpperCase() +
+                    String(props.difficultyName).slice(1)
+                } ${props.difficultyEmoji}`}
+                show={
+                    !questionStatusContext.questionFinished && !showDifficulty
+                }
+                openOnHover={true}
+                startOpenDelay={3}
+            />
 
-                <QuestionOverlayBox 
-                    margin={220} 
-                    closedText= {`${props.pointsToGain}`}
-                    color="#0063D3"
-                    openText={`Points ${props.pointsToGain}`}
-                    show={!questionStatusContext.questionFinished && !showDifficulty}
-                    openOnHover={true}
-                    startOpenDelay={3}/>
+            <QuestionOverlayBox
+                margin={220}
+                closedText={`${props.pointsToGain}`}
+                color="#0063D3"
+                openText={`Points ${props.pointsToGain}`}
+                show={
+                    !questionStatusContext.questionFinished && !showDifficulty
+                }
+                openOnHover={true}
+                startOpenDelay={3}
+            />
 
-                <QuestionOverlayBox 
-                    isAction={true} 
-                    margin={80} 
-                    closedText=">>"
-                    openText="Next question" 
-                    color="#198754"
-                    staysOpen={questionStatusContext.questionFinished} 
-                    openOnStart={questionStatusContext.questionFinished}
-                    show={(questionStatusContext.questionFinished || skipQuestionAvailable) && !showDifficulty}
-                    openOnHover={true}
-                    startOpenDelay={2}
-                    onBoxClicked={nextQuestionHandler}
-                    />
+            <QuestionOverlayBox
+                isAction={true}
+                margin={80}
+                closedText=">>"
+                openText="Next question"
+                color="#198754"
+                staysOpen={questionStatusContext.questionFinished}
+                openOnStart={questionStatusContext.questionFinished}
+                show={
+                    (questionStatusContext.questionFinished ||
+                        skipQuestionAvailable) &&
+                    !showDifficulty
+                }
+                openOnHover={true}
+                startOpenDelay={2}
+                onBoxClicked={nextQuestionHandler}
+            />
 
-                {!showDifficulty && !disableButton && !props.hideQuestion ? 
-                    <div style={{height: "100%"}}>
-                        <iframe height="100%" src={graspleQuestionData.questionData.url} title={graspleQuestionData.questionData.name} width="80%" allow="clipboard-read; clipboard-write"></iframe>
-                    </div>
-                    // <div>
-                    //     {questionData.iQuestion !== null && (
-                    //         <>
-                    //             {questionData.iQuestion.type === "open" ||
-                    //             questionData.iQuestion.type === "open-infinite" ? (
-                    //                 <OpenQuestion
-                    //                     latex={questionData.iQuestion.question}
-                    //                     questionNum={questionData.questionNumber}
-                    //                     disableButton={disableButton}
-                    //                     theme={props.theme}
-                    //                     questionDifficulty={questionData.iQuestion.difficulty}
-                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                    //                 />
-                    //             ) : questionData.iQuestion.type === "mc" ? (
-                    //                 <MultipleChoice
-                    //                     latex={questionData.iQuestion.question}
-                    //                     answers={questionData.iQuestion.options ? questionData.iQuestion.options : []}
-                    //                     questionNum={questionData.questionNumber}
-                    //                     disableButton={disableButton}
-                    //                     theme={props.theme}
-                    //                     questionDifficulty={questionData.iQuestion.difficulty}
-                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                    //                 />
-                    //             ) : questionData.iQuestion.type === "true/false" ? (
-                    //                 <TrueFalseQuestion
-                    //                     latex={questionData.iQuestion.question}
-                    //                     questionNum={questionData.questionNumber}
-                    //                     disableButton={disableButton}
-                    //                     theme={props.theme}
-                    //                     questionDifficulty={questionData.iQuestion.difficulty}
-                    //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
-                    //                 />
-                    //             ) : null}
-                    //         </>
-                    //     )}
-                    // </div> 
-                : null}
-            </animated.div>
+            {!showDifficulty && !disableButton && !props.hideQuestion ? (
+                <div style={{ height: "100%" }}>
+                    <iframe
+                        height="100%"
+                        src={graspleQuestionData.questionData.url}
+                        title={graspleQuestionData.questionData.name}
+                        width="80%"
+                        allow="clipboard-read; clipboard-write"
+                    ></iframe>
+                </div>
+            ) : // <div>
+            //     {questionData.iQuestion !== null && (
+            //         <>
+            //             {questionData.iQuestion.type === "open" ||
+            //             questionData.iQuestion.type === "open-infinite" ? (
+            //                 <OpenQuestion
+            //                     latex={questionData.iQuestion.question}
+            //                     questionNum={questionData.questionNumber}
+            //                     disableButton={disableButton}
+            //                     theme={props.theme}
+            //                     questionDifficulty={questionData.iQuestion.difficulty}
+            //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+            //                 />
+            //             ) : questionData.iQuestion.type === "mc" ? (
+            //                 <MultipleChoice
+            //                     latex={questionData.iQuestion.question}
+            //                     answers={questionData.iQuestion.options ? questionData.iQuestion.options : []}
+            //                     questionNum={questionData.questionNumber}
+            //                     disableButton={disableButton}
+            //                     theme={props.theme}
+            //                     questionDifficulty={questionData.iQuestion.difficulty}
+            //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+            //                 />
+            //             ) : questionData.iQuestion.type === "true/false" ? (
+            //                 <TrueFalseQuestion
+            //                     latex={questionData.iQuestion.question}
+            //                     questionNum={questionData.questionNumber}
+            //                     disableButton={disableButton}
+            //                     theme={props.theme}
+            //                     questionDifficulty={questionData.iQuestion.difficulty}
+            //                     onAnswerSubmitted={(answerTime: number) => props.calculateResponseTime(questionStartTime, answerTime)}
+            //                 />
+            //             ) : null}
+            //         </>
+            //     )}
+            // </div>
+            null}
+        </animated.div>
     )
 }
 

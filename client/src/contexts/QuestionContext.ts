@@ -1,9 +1,9 @@
-import { createContext } from 'react';
-import { IQuestion } from '../components/RaceThemes/SharedUtils';
+import { createContext } from "react"
+import { IQuestion } from "../components/RaceThemes/SharedUtils"
 
 interface QuestionData {
-    iQuestion: IQuestion,
-    questionNumber: number,
+    iQuestion: IQuestion
+    questionNumber: number
     numberOfMandatory: number
 }
 
@@ -15,8 +15,8 @@ export const QuestionContext = createContext<QuestionData>({
         subject: "",
         type: "",
         options: [],
-        variants: []
+        variants: [],
     },
     questionNumber: 0,
-    numberOfMandatory: 0
+    numberOfMandatory: 0,
 })

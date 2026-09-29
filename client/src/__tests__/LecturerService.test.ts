@@ -1,10 +1,16 @@
 /**
  * Characterisation tests for LecturerService (see REFACTORING_PLAN.md step 0.4).
  */
-import LecturerService, { IScore } from "../components/CreateGame/Lecturer/LecturerService"
+import LecturerService, {
+    IScore,
+} from "../components/CreateGame/Lecturer/LecturerService"
 
-const { transformCheckpointData, formatTeamScores, formatTime, getCheckpointsForTheme } =
-    LecturerService
+const {
+    transformCheckpointData,
+    formatTeamScores,
+    formatTime,
+    getCheckpointsForTheme,
+} = LecturerService
 
 describe("formatTime", () => {
     test.each([
@@ -21,9 +27,12 @@ describe("formatTime", () => {
         [605, "10:00"],
         [659, "10:00"],
         [3601, "60:00"],
-    ])("BUG (Appendix B #13): %d seconds -> %s (seconds dropped from 10 minutes on)", (seconds, text) => {
-        expect(formatTime(seconds)).toBe(text)
-    })
+    ])(
+        "BUG (Appendix B #13): %d seconds -> %s (seconds dropped from 10 minutes on)",
+        (seconds, text) => {
+            expect(formatTime(seconds)).toBe(text)
+        }
+    )
 })
 
 describe("transformCheckpointData", () => {
@@ -43,7 +52,11 @@ describe("transformCheckpointData", () => {
 })
 
 describe("formatTeamScores", () => {
-    const score = (teamname: string, value: number, accuracy: number): IScore => ({
+    const score = (
+        teamname: string,
+        value: number,
+        accuracy: number
+    ): IScore => ({
         teamname,
         score: value,
         accuracy,
@@ -53,7 +66,11 @@ describe("formatTeamScores", () => {
     })
 
     test("returns teams sorted by score, highest first, with an empty checkpoint", () => {
-        const scores = [score("Low", 10, 50), score("High", 90, 75), score("Mid", 40, 60)]
+        const scores = [
+            score("Low", 10, 50),
+            score("High", 90, 75),
+            score("Mid", 40, 60),
+        ]
 
         expect(formatTeamScores(scores, "Train")).toEqual([
             { name: "High", score: 90, accuracy: 75, checkpoint: "" },
@@ -80,7 +97,10 @@ describe("getCheckpointsForTheme", () => {
         ])
     })
 
-    test.each(["Train", "train", "unknown"])("%s has no checkpoints", (theme) => {
-        expect(getCheckpointsForTheme(theme)).toEqual([])
-    })
+    test.each(["Train", "train", "unknown"])(
+        "%s has no checkpoints",
+        (theme) => {
+            expect(getCheckpointsForTheme(theme)).toEqual([])
+        }
+    )
 })

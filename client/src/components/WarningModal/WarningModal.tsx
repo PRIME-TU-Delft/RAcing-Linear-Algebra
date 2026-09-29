@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import "./WarningModal.css"
-import Modal from 'react-bootstrap/Modal';
-import { Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal"
+import { Button } from "react-bootstrap"
 
 interface Props {
     message: string
@@ -11,7 +11,7 @@ interface Props {
 }
 
 function WarningModal(props: Props) {
-    return(
+    return (
         <div>
             <Modal show={true}>
                 <Modal.Header>
@@ -19,12 +19,22 @@ function WarningModal(props: Props) {
                 </Modal.Header>
 
                 <Modal.Body>
-                <p>{props.message}</p>
+                    <p>{props.message}</p>
                 </Modal.Body>
 
                 <Modal.Footer>
-                <Button variant="danger" onClick={() => props.onLeaveGame()}>Quit</Button>
-                <Button variant="primary" onClick={() => props.onCloseModal()}>Cancel</Button>
+                    <Button
+                        variant="danger"
+                        onClick={() => props.onLeaveGame()}
+                    >
+                        Quit
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={() => props.onCloseModal()}
+                    >
+                        Cancel
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>

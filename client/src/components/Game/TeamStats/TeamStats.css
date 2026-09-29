@@ -38,14 +38,14 @@
 }
 
 .individual-score {
-    color: #F8B700;
+    color: #f8b700;
 }
 
 .horizontal-division-bar {
     width: 85%;
     height: 0.5rem;
     margin: auto;
-    background-color: #0063D3;
+    background-color: #0063d3;
 }
 
 .show-stats-btn-container {
@@ -58,7 +58,7 @@
     width: 20rem;
     height: 3.5rem;
     line-height: 3.5rem;
-    background-color: #0063D3;
+    background-color: #0063d3;
 
     font-size: 18px;
     color: white;
@@ -67,7 +67,7 @@
 }
 
 .show-stats-btn:hover {
-    background-color: #004BA0;
+    background-color: #004ba0;
     transition-duration: 0.3s;
     cursor: pointer;
 }
@@ -76,11 +76,11 @@
     .team-stats-score-text {
         font-size: 30px;
     }
-    
+
     .individual-stats-score-text {
         font-size: 20px;
     }
-    
+
     .team-stats-score-value {
         font-size: 20px;
     }
@@ -93,8 +93,8 @@
         width: 15rem;
         height: 2rem;
         line-height: 2rem;
-        background-color: #0063D3;
-    
+        background-color: #0063d3;
+
         font-size: 13px;
         color: white;
         margin: auto;
@@ -110,11 +110,11 @@
     .team-stats-score-text {
         font-size: 50px;
     }
-    
+
     .individual-stats-score-text {
         font-size: 35px;
     }
-    
+
     .team-stats-score-value {
         font-size: 35px;
     }
@@ -127,8 +127,8 @@
         width: 25rem;
         height: 3rem;
         line-height: 3rem;
-        background-color: #0063D3;
-    
+        background-color: #0063d3;
+
         font-size: 16px;
         color: white;
         margin: auto;
@@ -141,11 +141,11 @@
         font-size: 75px;
         margin-top: 2rem;
     }
-    
+
     .individual-stats-score-text {
         font-size: 50px;
     }
-    
+
     .team-stats-score-value {
         font-size: 50px;
     }
@@ -158,8 +158,8 @@
         width: 35rem;
         height: 4rem;
         line-height: 4rem;
-        background-color: #0063D3;
-    
+        background-color: #0063d3;
+
         font-size: 20px;
         color: white;
         margin: auto;

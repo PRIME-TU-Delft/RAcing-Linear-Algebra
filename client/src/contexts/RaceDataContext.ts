@@ -1,9 +1,14 @@
-import { createContext } from 'react';
-import { Checkpoint, Ghost, PercentCoordinate, RaceMap } from '../components/RaceThemes/SharedUtils';
+import { createContext } from "react"
+import {
+    Checkpoint,
+    Ghost,
+    PercentCoordinate,
+    RaceMap,
+} from "../components/RaceThemes/SharedUtils"
 
 interface RaceData {
-    theme: string,
-    ghostTeams: Ghost[],
+    theme: string
+    ghostTeams: Ghost[]
     checkpoints: Checkpoint[]
     selectedMap: RaceMap
 }
@@ -15,6 +20,6 @@ export const RaceDataContext = createContext<RaceData>({
     selectedMap: {
         backgroundColor: "",
         decorations: [],
-        path: []
-    }
-});
+        path: [],
+    },
+})

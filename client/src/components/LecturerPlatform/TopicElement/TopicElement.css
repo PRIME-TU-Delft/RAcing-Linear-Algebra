@@ -49,7 +49,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
-    margin: 0.5rem 0.2rem;  
+    margin: 0.5rem 0.2rem;
     transition-duration: 0.3s;
 }
 
@@ -57,15 +57,32 @@
     font-size: 16px;
 }
 
-.exercise-edit-icon,.exercise-remove-icon,.add-exercise-icon,.link-exercise-icon,.remove-exercises-icon,.edit-exercises-icon,.reorder-exercises-icon,.edit-name-icon:hover, .batch-exercise-icon:hover, .fake-teams-add-icon:hover, .fake-teams-remove-icon:hover, .variant-exercises-icon:hover, .edit-subject-icon:hover {
+.exercise-edit-icon,
+.exercise-remove-icon,
+.add-exercise-icon,
+.link-exercise-icon,
+.remove-exercises-icon,
+.edit-exercises-icon,
+.reorder-exercises-icon,
+.edit-name-icon:hover,
+.batch-exercise-icon:hover,
+.fake-teams-add-icon:hover,
+.fake-teams-remove-icon:hover,
+.variant-exercises-icon:hover,
+.edit-subject-icon:hover {
     cursor: pointer;
 }
 
-.add-exercise-icon, .link-exercise-icon, .reorder-exercises-icon, .batch-exercise-icon, .variant-exercises-icon {
+.add-exercise-icon,
+.link-exercise-icon,
+.reorder-exercises-icon,
+.batch-exercise-icon,
+.variant-exercises-icon {
     margin-left: 1rem;
 }
 
-.remove-exercises-icon, .edit-exercises-icon {
+.remove-exercises-icon,
+.edit-exercises-icon {
     margin-left: 1rem;
 }
 
@@ -78,7 +95,8 @@
     font-size: 16px;
 }
 
-.name-header, .subject-header {
+.name-header,
+.subject-header {
     margin-bottom: 0.5rem;
 }
 

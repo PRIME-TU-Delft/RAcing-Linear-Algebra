@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "./Waiting.css"
 import { useNavigate } from "react-router-dom"
-import Modal from 'react-modal';
+import Modal from "react-modal"
 import Boat from "./Themes/Boat"
 import BoatBackground from "./Themes/BoatBackground"
 import socket from "../../socket"
@@ -21,7 +21,7 @@ function Waiting(props: Props) {
     const [warningModalIsOpen, setWarningModalIsOpen] = useState(false)
 
     const backButtonHandler = () => {
-        setWarningModalIsOpen(curr => true)
+        setWarningModalIsOpen((curr) => true)
     }
 
     const leaveGame = () => {
@@ -51,7 +51,7 @@ function Waiting(props: Props) {
         <div className="waiting">
             {props.theme === "Train" ? (
                 <>
-                    <TrainBackground includeRail={true}/>
+                    <TrainBackground includeRail={true} />
                     <div className="train-container">
                         <Train />
                     </div>
@@ -70,19 +70,31 @@ function Waiting(props: Props) {
                     Waiting for the game to start
                 </div>
             </div>
-            <button className={"back-btn" + (props.theme == "Train" ? " train" : "")} onClick={() => backButtonHandler()}>
-                <p className={"back-arrow" + (props.theme == "Train" ? " train" : "")}>{"\u2190"}</p>
+            <button
+                className={
+                    "back-btn" + (props.theme == "Train" ? " train" : "")
+                }
+                onClick={() => backButtonHandler()}
+            >
+                <p
+                    className={
+                        "back-arrow" + (props.theme == "Train" ? " train" : "")
+                    }
+                >
+                    {"\u2190"}
+                </p>
             </button>
             <Tooltip />
             {warningModalIsOpen ? (
                 <WarningModal
-                message="Are you sure you want to quit the game?"
-                title="Warning"
-                onCloseModal={() => setWarningModalIsOpen(curr => false)}
-                onLeaveGame={() => leaveGame()} />
+                    message="Are you sure you want to quit the game?"
+                    title="Warning"
+                    onCloseModal={() => setWarningModalIsOpen((curr) => false)}
+                    onLeaveGame={() => leaveGame()}
+                />
             ) : null}
         </div>
     )
 }
 
-export default Waiting      
+export default Waiting

@@ -17,7 +17,6 @@
     z-index: 99;
 }
 
-
 .seagull-container img {
     height: 100%;
     width: auto;
@@ -25,9 +24,8 @@
 
 .boat-seagull-container > img {
     height: 100%;
-    width: auto;    
+    width: auto;
 }
-
 
 @keyframes seagullMove {
     0% {

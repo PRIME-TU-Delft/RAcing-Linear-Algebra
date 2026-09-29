@@ -85,7 +85,7 @@
     color: #003082;
 }
 
-.question-statistics-continue  {
+.question-statistics-continue {
     color: white;
     width: 8em;
     height: 3em;
@@ -94,23 +94,23 @@
     position: absolute;
     right: 2em;
     top: 35px;
-    background-color: #0063D3;
-  }
+    background-color: #0063d3;
+}
 
-  .question-statistics-continue:hover {
+.question-statistics-continue:hover {
     cursor: pointer;
-    background-color: #004BA0;
-  }
+    background-color: #004ba0;
+}
 
-  .question-statistics-item {
+.question-statistics-item {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
-  }
+}
 
-  .exercise-name {
+.exercise-name {
     margin-left: 1rem;
     width: 40%;
     text-align: left;
-  }
+}

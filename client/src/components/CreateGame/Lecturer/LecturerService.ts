@@ -51,20 +51,17 @@ const islands = [
     {
         name: "Solitude Island",
         percentage: 150,
-        insideTracks: false
-
+        insideTracks: false,
     },
     {
         name: "Mystic Isle",
         percentage: 300,
-        insideTracks: false
-
+        insideTracks: false,
     },
     {
         name: "Hidden Oasis",
         percentage: 450,
-        insideTracks: false
-
+        insideTracks: false,
     },
 ]
 
@@ -84,23 +81,22 @@ const transformCheckpointData = (
 }
 
 // Formats the data received from the server into a list of team data (including scores)
-    const formatTeamScores = (allScores: IScore[], gameTheme: string) => {
+const formatTeamScores = (allScores: IScore[], gameTheme: string) => {
+    const themeCheckpoints: Checkpoint[] = getCheckpointsForTheme(gameTheme)
 
-        const themeCheckpoints: Checkpoint[] = getCheckpointsForTheme(gameTheme)
+    //sort the scores in descending order of score
+    allScores.sort((a, b) => b.score - a.score)
 
-        //sort the scores in descending order of score
-        allScores.sort((a, b) => b.score - a.score)
-        
-        //handle the data received from server
-        const teamScores: Teams[] = allScores.map(item => ({
-            name: item.teamname,
-            score: item.score,
-            accuracy: item.accuracy,
-            checkpoint: "",
-        }))
+    //handle the data received from server
+    const teamScores: Teams[] = allScores.map((item) => ({
+        name: item.teamname,
+        score: item.score,
+        accuracy: item.accuracy,
+        checkpoint: "",
+    }))
 
-        return teamScores
-    }
+    return teamScores
+}
 
 // Formats time in wanted format (mm:ss)
 const formatTime = (seconds: number) => {
@@ -137,4 +133,9 @@ const getCheckpointsForTheme = (gameTheme: string) => {
     return checkpoints
 }
 
-export default {transformCheckpointData, formatTeamScores, formatTime, getCheckpointsForTheme}
+export default {
+    transformCheckpointData,
+    formatTeamScores,
+    formatTime,
+    getCheckpointsForTheme,
+}

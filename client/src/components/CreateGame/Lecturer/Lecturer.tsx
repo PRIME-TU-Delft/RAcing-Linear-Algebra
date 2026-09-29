@@ -31,7 +31,7 @@ interface Props {
     theme: string
     ghostTeams: Ghost[]
     roundDuration: number
-} 
+}
 
 //data to be displayed
 interface TeamStats {
@@ -82,7 +82,7 @@ function Lecturer(props: Props) {
     //to navigate to another screen
     const navigate = useNavigate()
 
-    const usedTime = useContext(TimeContext);
+    const usedTime = useContext(TimeContext)
     const scores = useContext(ScoreContext)
 
     //show checkpoint leaderboard for 15s
@@ -104,35 +104,36 @@ function Lecturer(props: Props) {
     // Give warning before refreshing page to prevent disconnecting
     useEffect(() => {
         const unloadCallback = (event: BeforeUnloadEvent) => {
-          event.preventDefault();
-          event.returnValue = "";
-          return "";
-        };
-      
-        window.addEventListener("beforeunload", unloadCallback);
-        return () => window.removeEventListener("beforeunload", unloadCallback);
-      }, []);    
+            event.preventDefault()
+            event.returnValue = ""
+            return ""
+        }
+
+        window.addEventListener("beforeunload", unloadCallback)
+        return () => window.removeEventListener("beforeunload", unloadCallback)
+    }, [])
 
     // Timer functionality
     useEffect(() => {
-        if (usedTime >= props.roundDuration && props.roundDuration > 0) 
-            timeUp()
+        if (usedTime >= props.roundDuration && props.roundDuration > 0) timeUp()
     }, [usedTime])
 
     // Socket changes
     useEffect(() => {
-
         socket.on("get-checkpoints", (result: [string, number][]) => {
-            const formattedCheckpointData = LecturerService.transformCheckpointData(result)
-            setCheckpointData(curr => [...formattedCheckpointData])
+            const formattedCheckpointData =
+                LecturerService.transformCheckpointData(result)
+            setCheckpointData((curr) => [...formattedCheckpointData])
         })
 
         socket.on("get-all-scores", (allScores: IScore[]) => {
-            const formattedTeamScores = LecturerService.formatTeamScores(allScores, props.theme)
-            setTeamScores(curr => [...formattedTeamScores])
-            setShowLeaderBoard(curr => true)
+            const formattedTeamScores = LecturerService.formatTeamScores(
+                allScores,
+                props.theme
+            )
+            setTeamScores((curr) => [...formattedTeamScores])
+            setShowLeaderBoard((curr) => true)
         })
-
     }, [socket])
 
     return (
@@ -147,30 +148,29 @@ function Lecturer(props: Props) {
                         <div>Time: {LecturerService.formatTime(usedTime)}</div>
                     </div>
                 </div>
-                
+
                 <div className="col">
                     <div className="total-score text-end">
                         <div>Score: {scores.currentPoints}</div>
                         <div>Accuracy: {scores.currentAccuracy}%</div>
                     </div>
                 </div>
-                
             </div>
             <div
                 style={{ width: "100%", height: `${height - 100}px` }}
                 className="map"
             >
-                    <RaceTheme
-                        mapDimensions ={{
-                            width: width,
-                            height: height - 100 
-                        }}
-                        setCheckpoint={(data: string) =>
-                            setLocation((current) => data)
-                        }
-                        showCheckPoint={() => showCheckPoint()}
-                        roundDuration={props.roundDuration}
-                    ></RaceTheme>
+                <RaceTheme
+                    mapDimensions={{
+                        width: width,
+                        height: height - 100,
+                    }}
+                    setCheckpoint={(data: string) =>
+                        setLocation((current) => data)
+                    }
+                    showCheckPoint={() => showCheckPoint()}
+                    roundDuration={props.roundDuration}
+                ></RaceTheme>
             </div>
             <div className="lecturer-screen-coloration-information">
                 <ColorationInfo></ColorationInfo>
@@ -183,7 +183,10 @@ function Lecturer(props: Props) {
                         location={location}
                         teamName={props.teamName}
                         score={scores.currentPoints}
-                        minutes={10 - Math.ceil((props.roundDuration - usedTime) / 60)}
+                        minutes={
+                            10 -
+                            Math.ceil((props.roundDuration - usedTime) / 60)
+                        }
                         seconds={60 - ((props.roundDuration - usedTime) % 60)}
                         teams={checkpointData}
                     ></CheckPoint>

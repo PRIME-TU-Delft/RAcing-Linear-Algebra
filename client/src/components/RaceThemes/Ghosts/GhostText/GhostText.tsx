@@ -5,12 +5,12 @@ import { getColorForStudy, getRacePositionText } from "../GhostService"
 import { Ghost } from "../../SharedUtils"
 
 interface Props {
-    ghost: Ghost,
+    ghost: Ghost
     showTeamName: boolean
 }
 
 function GhostText(props: Props) {
-    const [activeTextIndex, setActiveTextIndex] = useState<number>(0)   // index = 0 : race position; index = 1 : team name
+    const [activeTextIndex, setActiveTextIndex] = useState<number>(0) // index = 0 : race position; index = 1 : team name
     const [racePositionText, setRacePositionText] = useState<string>("")
 
     const transRef = useSpringRef()
@@ -23,23 +23,32 @@ function GhostText(props: Props) {
     })
 
     useEffect(() => {
-        if (props.showTeamName) setActiveTextIndex(curr => 1)
-        else setActiveTextIndex(curr => 0)
+        if (props.showTeamName) setActiveTextIndex((curr) => 1)
+        else setActiveTextIndex((curr) => 0)
     }, [props.showTeamName])
 
     useEffect(() => {
-        setRacePositionText(curr => getRacePositionText(props.ghost.racePosition))
+        setRacePositionText((curr) =>
+            getRacePositionText(props.ghost.racePosition)
+        )
     }, [props.ghost.racePosition])
 
     useEffect(() => {
         transRef.start()
     }, [activeTextIndex])
 
-    return(
-        <div className={(activeTextIndex == 0 ? "position-text" : "team-name-text")}>
-            {activeTextIndex == 0 ? racePositionText : (
+    return (
+        <div
+            className={
+                activeTextIndex == 0 ? "position-text" : "team-name-text"
+            }
+        >
+            {activeTextIndex == 0 ? (
+                racePositionText
+            ) : (
                 <div>
-                    <span>{props.ghost.study + ":"}</span>{props.ghost.teamName}
+                    <span>{props.ghost.study + ":"}</span>
+                    {props.ghost.teamName}
                 </div>
             )}
         </div>

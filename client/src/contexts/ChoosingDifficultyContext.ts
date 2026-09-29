@@ -1,11 +1,11 @@
-import { createContext } from 'react';
+import { createContext } from "react"
 
 interface ChoosingDifficulty {
-    choosingDifficulty: boolean,
+    choosingDifficulty: boolean
     setChoosingDifficulty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ChoosingDifficultyContext = createContext<ChoosingDifficulty>({
     choosingDifficulty: false,
-    setChoosingDifficulty: () => {}
+    setChoosingDifficulty: () => {},
 })

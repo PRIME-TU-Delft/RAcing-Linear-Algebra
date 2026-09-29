@@ -6,12 +6,10 @@
     z-index: 999;
 }
 
-
 .cruise-container img {
     height: 100%;
     width: auto;
 }
-
 
 @keyframes cruiseFloat {
     0% {

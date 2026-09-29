@@ -38,10 +38,9 @@
     width: 30rem;
     height: 4rem;
     margin-top: 1.5rem;
-    background-color: #CF711F;
+    background-color: #cf711f;
     box-shadow: inset 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
     z-index: 3;
-
 }
 
 .leaderboard-item > div {
@@ -79,9 +78,9 @@
 }
 
 .your-team-item {
-    border: 3px solid #0C2E4F;
+    border: 3px solid #0c2e4f;
 }
 
 .your-team-item > div {
-    color: #0C2E4F;
+    color: #0c2e4f;
 }

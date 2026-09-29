@@ -20,34 +20,39 @@ interface Props {
 }
 
 export default function TrainBackground(props: Props) {
-    const [openDoors, setOpenDoors] = React.useState(true);
+    const [openDoors, setOpenDoors] = React.useState(true)
 
     useEffect(() => {
         if (openDoors) {
             setTimeout(() => {
-                setOpenDoors(false);
-            }, 1500);
+                setOpenDoors(false)
+            }, 1500)
         }
-    }, [openDoors]);
+    }, [openDoors])
 
     useEffect(() => {
         if (props.closeTrainDoors) {
             setTimeout(() => {
-                props.onDoorsClosed && props.onDoorsClosed();
-            }, 2000);
+                props.onDoorsClosed && props.onDoorsClosed()
+            }, 2000)
         }
-    }, [props.closeTrainDoors]);
+    }, [props.closeTrainDoors])
 
     useEffect(() => {
         if (props.moveTrain) {
             setTimeout(() => {
-                props.onTrainMoved && props.onTrainMoved();
-            }, 3500);
+                props.onTrainMoved && props.onTrainMoved()
+            }, 3500)
         }
-    }, [props.moveTrain]);
+    }, [props.moveTrain])
 
     return (
-        <div className={"background-train-screen " + (props.moveTrain ? " move-train" : "")}>
+        <div
+            className={
+                "background-train-screen " +
+                (props.moveTrain ? " move-train" : "")
+            }
+        >
             {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
@@ -80,26 +85,60 @@ export default function TrainBackground(props: Props) {
                     </mask>
                 </defs>
             </svg> */}
-            {props.includeRail ? 
+            {props.includeRail ? (
                 <div>
                     <div className="sliding-background-clouds"></div>
                     <div className="background-train-track-rail"></div>
-                </div> 
-            : null
-            }
+                </div>
+            ) : null}
 
-            {props.isTeamPreview ? 
-                    <div className={"train-theme-overlay " + (props.closeTrainDoors ? "door-closing" : "") + (openDoors ? " door-opening" : "")} style={{ position: 'fixed' }}>
+            {props.isTeamPreview ? (
+                <div
+                    className={
+                        "train-theme-overlay " +
+                        (props.closeTrainDoors ? "door-closing" : "") +
+                        (openDoors ? " door-opening" : "")
+                    }
+                    style={{ position: "fixed" }}
+                >
                     <div className="overlay-background-color"></div>
-                    <img src={TrainWindows} className="train-windows" alt="Train windows" />
-                    <img src={TrainStripe} className="train-stripe" alt="Train stripe" />
-                    <img src={TrainDoorLeft} className={"train-door-left"} alt="Left train door" />
-                    <img src={TrainDoorRight} className="train-door-right" alt="Right train door" />
-                    <img src={ConductorDoor} className="conductor-door" alt="Conductor door" />
-                    <img src={DoorFrame} className="door-frame" alt="Door frame" />
-                    <img src={TrainDisplay} className="train-display" alt="Train display" />
-                </div> 
-            : null}
+                    <img
+                        src={TrainWindows}
+                        className="train-windows"
+                        alt="Train windows"
+                    />
+                    <img
+                        src={TrainStripe}
+                        className="train-stripe"
+                        alt="Train stripe"
+                    />
+                    <img
+                        src={TrainDoorLeft}
+                        className={"train-door-left"}
+                        alt="Left train door"
+                    />
+                    <img
+                        src={TrainDoorRight}
+                        className="train-door-right"
+                        alt="Right train door"
+                    />
+                    <img
+                        src={ConductorDoor}
+                        className="conductor-door"
+                        alt="Conductor door"
+                    />
+                    <img
+                        src={DoorFrame}
+                        className="door-frame"
+                        alt="Door frame"
+                    />
+                    <img
+                        src={TrainDisplay}
+                        className="train-display"
+                        alt="Train display"
+                    />
+                </div>
+            ) : null}
         </div>
     )
 }

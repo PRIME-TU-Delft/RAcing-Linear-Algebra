@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { Checkpoint, Ghost, RaceMap, RacePathObject, ServerGhost } from "./SharedUtils"
+import {
+    Checkpoint,
+    Ghost,
+    RaceMap,
+    RacePathObject,
+    ServerGhost,
+} from "./SharedUtils"
 import socket from "../../socket"
 import { trainMaps } from "./Maps/TrainMaps"
 import { boatMaps } from "./Maps/BoatMaps"
@@ -20,7 +26,7 @@ import { MapDimensionsContext } from "../../contexts/MapDimensionsContext"
 
 interface Props {
     mapDimensions: {
-        height: number,
+        height: number
         width: number
     }
     setCheckpoint: (data: string) => void
@@ -32,13 +38,18 @@ function RaceTheme(props: Props) {
     const raceData = useContext(RaceDataContext)
     const usedTime = useContext(TimeContext)
 
-    const [nextCheckpoint, setNextCheckpoint] = useState(raceData.checkpoints[0]) // next checkpoint to be reached
+    const [nextCheckpoint, setNextCheckpoint] = useState(
+        raceData.checkpoints[0]
+    ) // next checkpoint to be reached
     const [checkpointReached, setCheckpointReached] = useState(false) // boolean indicating whether a checkpoint has been reached
-    
+
     const height = props.mapDimensions.height
     const width = props.mapDimensions.width
 
-    const racePath: RacePathObject = useMemo(() => getRacePathObject(raceData.selectedMap, width, height), [raceData.selectedMap, height, width]) // multiple maps may be used in the future, currently only one exists
+    const racePath: RacePathObject = useMemo(
+        () => getRacePathObject(raceData.selectedMap, width, height),
+        [raceData.selectedMap, height, width]
+    ) // multiple maps may be used in the future, currently only one exists
 
     // Fade animation for changing map sections (entrance and leave animation), created using react-spring
     const fadeSection = useSpring({
@@ -77,36 +88,45 @@ function RaceTheme(props: Props) {
             className="race-map"
             style={{
                 ...fadeSection,
-                backgroundColor:
-                    raceData.selectedMap.backgroundColor,
+                backgroundColor: raceData.selectedMap.backgroundColor,
             }}
         >
-
             <a.div
                 data-testid={"map"}
                 className="map-content"
                 style={{ ...fadeSection }}
             >
                 <RacePathContext.Provider value={racePath}>
-                    <Tracks/>
-                    <RaceStatus keepClosed={false} roundDuration={props.roundDuration}/>
+                    <Tracks />
+                    <RaceStatus
+                        keepClosed={false}
+                        roundDuration={props.roundDuration}
+                    />
                 </RacePathContext.Provider>
 
                 <Decorations
                     mapDimensions={{ width: width, height: height }}
                     decorationsList={raceData.selectedMap.decorations}
-                ></Decorations>                
+                ></Decorations>
             </a.div>
 
-            <MapDimensionsContext.Provider value={{ width: width, height: height }}>
-                {raceData.selectedMap.components?.map((specialComponent, index) => {
-                    const Component = specialComponent.component;
-                    return <Component key={index} {...specialComponent.props} />;
-                })}
+            <MapDimensionsContext.Provider
+                value={{ width: width, height: height }}
+            >
+                {raceData.selectedMap.components?.map(
+                    (specialComponent, index) => {
+                        const Component = specialComponent.component
+                        return (
+                            <Component
+                                key={index}
+                                {...specialComponent.props}
+                            />
+                        )
+                    }
+                )}
             </MapDimensionsContext.Provider>
-            
 
-{/*             
+            {/*             
             <StationDisplay
                         fullRacePoints={averageFinalTeamScore}
                         points={props.currentPoints}

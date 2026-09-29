@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 interface Props {
-    endInfoModal: () => void,
+    endInfoModal: () => void
     setShowInfoModal: React.Dispatch<React.SetStateAction<boolean>>
     showInfoModal: boolean
     modalAnimation: any
@@ -64,7 +64,6 @@ export default function InfoModal(props: Props) {
         setTimeout(() => {
             closeInfoModal()
         }, duration)
-
     }, [showInfoModal])
 
     useEffect(() => {
@@ -94,7 +93,9 @@ export default function InfoModal(props: Props) {
                     }`}
                     style={modalAnimation}
                 >
-                    <div className="exit-info-modal" onClick={closeInfoModal}><FontAwesomeIcon icon={faXmark}/></div>
+                    <div className="exit-info-modal" onClick={closeInfoModal}>
+                        <FontAwesomeIcon icon={faXmark} />
+                    </div>
                     <div className="info-modal-text-container">
                         <p className="info-modal-text1">{modalText[0]}</p>
                         {type === "incorrectAnswer" ||
@@ -117,7 +118,6 @@ export default function InfoModal(props: Props) {
                             </>
                         ) : null}
                     </div>
-
                 </animated.div>
             </div>
         </>

@@ -2,18 +2,18 @@ import { createContext } from "react"
 import { StudyElement } from "../components/RaceThemes/SharedUtils"
 
 export interface LobbyTopic {
-    name: string,
+    name: string
     subject: string
 }
 
 interface LobbyData {
-    topics: LobbyTopic[],
+    topics: LobbyTopic[]
     studies: StudyElement[]
 }
 
 export const LobbyDataContext = createContext<LobbyData>({
     topics: [],
-    studies: []
+    studies: [],
 })
 
 export type { LobbyData }

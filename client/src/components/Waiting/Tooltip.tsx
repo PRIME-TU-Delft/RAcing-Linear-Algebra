@@ -5,7 +5,7 @@ import StationDisplay from "../RaceThemes/StationDisplay/StationDisplay"
 import { title } from "process"
 
 interface Tip {
-    title: string,
+    title: string
     content: string
 }
 
@@ -15,44 +15,54 @@ export default function Tooltip() {
     const tipsArray = [
         {
             title: "Recommended Device",
-            content: "It is recommended to play on a desktop, laptop, or tablet."
+            content:
+                "It is recommended to play on a desktop, laptop, or tablet.",
         },
         {
             title: "First Questions",
-            content: "The beginning of each round is composed of a set of mandatory questions that everyone has to answer."
+            content:
+                "The beginning of each round is composed of a set of mandatory questions that everyone has to answer.",
         },
         {
             title: "Team Score",
-            content: "The team score is the aggregation of all the individual player scores."
+            content:
+                "The team score is the aggregation of all the individual player scores.",
         },
         {
             title: "Choosing Difficulty",
-            content: "After the initial mandatory questions, you can choose the difficulty for your next question."
+            content:
+                "After the initial mandatory questions, you can choose the difficulty for your next question.",
         },
         {
             title: "Streaks",
-            content: "Answering multiple questions correctly in a row will result in a streak, giving you bonus points."
+            content:
+                "Answering multiple questions correctly in a row will result in a streak, giving you bonus points.",
         },
         {
             title: "Collaboration",
-            content: "You are strongly encouraged to help your classmates when solving the questions. Don't overfocus on your individual score; it's the team score that counts!"
+            content:
+                "You are strongly encouraged to help your classmates when solving the questions. Don't overfocus on your individual score; it's the team score that counts!",
         },
         {
             title: "Race Laps",
-            content: "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team."
+            content:
+                "The race laps are color-coded! You can identify a lap based on the color of the outer ring of a team.",
         },
         {
             title: "Question Attempts",
-            content: "The questions have a different number of attempts based on their difficulty. This means you don't always have to be right on the first try!"
+            content:
+                "The questions have a different number of attempts based on their difficulty. This means you don't always have to be right on the first try!",
         },
         {
             title: "Lecturer's Screen",
-            content: "While you will be busy answering the questions, the race will be shown on the lecturer's screen. You will have a minimap on your screen to keep track!"
+            content:
+                "While you will be busy answering the questions, the race will be shown on the lecturer's screen. You will have a minimap on your screen to keep track!",
         },
         {
             title: "The Minimap",
-            content: "While answering questions, you will be able to see a minimap on the right of your screen. This reflects the race progress displayed on the lecturer's screen, but in a simplified manner!"
-        }        
+            content:
+                "While answering questions, you will be able to see a minimap on the right of your screen. This reflects the race progress displayed on the lecturer's screen, but in a simplified manner!",
+        },
     ]
 
     const getNewTipIndex = () => {
@@ -64,8 +74,13 @@ export default function Tooltip() {
     const updateAciveTips = () => {
         console.log("Updating active tips")
         const newLastIndex = getNewTipIndex()
-        const newActiveIndices = [activeIndices[activeIndices.length - 3], activeIndices[activeIndices.length - 2], activeIndices[activeIndices.length - 1], newLastIndex]
-        setActiveIndices(curr => [...newActiveIndices])
+        const newActiveIndices = [
+            activeIndices[activeIndices.length - 3],
+            activeIndices[activeIndices.length - 2],
+            activeIndices[activeIndices.length - 1],
+            newLastIndex,
+        ]
+        setActiveIndices((curr) => [...newActiveIndices])
     }
 
     useEffect(() => {
@@ -99,10 +114,10 @@ export default function Tooltip() {
                     />
                 </div> */}
                 <StationDisplay
-                stations={tipsArray}
-                activeIndices={activeIndices}
-                nextTip={() => updateAciveTips()}
-               ></StationDisplay>
+                    stations={tipsArray}
+                    activeIndices={activeIndices}
+                    nextTip={() => updateAciveTips()}
+                ></StationDisplay>
             </div>
         </>
     )

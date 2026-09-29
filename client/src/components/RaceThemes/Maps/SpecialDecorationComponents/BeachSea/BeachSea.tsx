@@ -1,4 +1,4 @@
-import TrainThemeSprites from "../../../Sprites/TrainThemeSprites";
+import TrainThemeSprites from "../../../Sprites/TrainThemeSprites"
 import "./BeachSea.css"
 
 function BeachSea() {
@@ -21,4 +21,4 @@ function BeachSea() {
     )
 }
 
-export default BeachSea;
+export default BeachSea

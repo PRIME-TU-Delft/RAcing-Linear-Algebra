@@ -53,9 +53,8 @@
     background: linear-gradient(to left, #91c9fa, #ffffff94);
 }
 
-
 .train-theme-container {
-    background-color: #F8B700;
+    background-color: #f8b700;
     color: #003082;
 }
 
@@ -143,12 +142,12 @@
 }
 
 .train-theme-submit {
-    background-color: #0063D3;
+    background-color: #0063d3;
     color: white;
-    border: 1px solid #0063D3;
+    border: 1px solid #0063d3;
 }
 .train-theme-submit:hover {
-    background-color: #004BA0;
+    background-color: #004ba0;
 }
 .boat-theme-submit {
     color: #3db0fd;
@@ -183,7 +182,7 @@
 
 .matrix-container {
     position: relative;
-    overflow:visible;
+    overflow: visible;
     display: flex;
     justify-content: space-between;
 }
@@ -250,7 +249,6 @@
         width: 25rem;
     }
 }
-
 
 @media screen and (max-width: 1370px) {
     .question-text-open {

@@ -7,13 +7,16 @@ interface Props {
 
 function Seagull(props: Props) {
     return (
-        <div className={props.theme ? `${props.theme}-seagull-container` : "seagull-container"}>
-            <img
-                src={TrainThemeSprites.seagull}
-                alt="Seagull"
-            />
+        <div
+            className={
+                props.theme
+                    ? `${props.theme}-seagull-container`
+                    : "seagull-container"
+            }
+        >
+            <img src={TrainThemeSprites.seagull} alt="Seagull" />
         </div>
     )
 }
 
-export default Seagull;
+export default Seagull

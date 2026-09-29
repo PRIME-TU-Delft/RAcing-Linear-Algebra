@@ -1,4 +1,7 @@
-export function getRacePathSizeAndOffsetMargins(viewportWidth: number, viewportHeight: number) {
+export function getRacePathSizeAndOffsetMargins(
+    viewportWidth: number,
+    viewportHeight: number
+) {
     let newWidth = viewportWidth * 0.4
     let newHeight = viewportHeight * 0.4
     let offsetY = viewportHeight * 0.4
@@ -6,7 +9,7 @@ export function getRacePathSizeAndOffsetMargins(viewportWidth: number, viewportH
     const halfScreenWidth = viewportWidth * 0.5
     const widthCenterMargin = (halfScreenWidth - newWidth) / 2
     let offsetX = halfScreenWidth + widthCenterMargin
-    
+
     if (viewportWidth <= 1024) {
         newWidth = viewportWidth * 0.35
         offsetX = viewportWidth * 0.5 + (viewportWidth * 0.6 - newWidth) / 2
@@ -50,7 +53,7 @@ export function getRacePathSizeAndOffsetMargins(viewportWidth: number, viewportH
         width: newWidth,
         height: newHeight,
         offsetX: offsetX,
-        offsetY: offsetY
+        offsetY: offsetY,
     }
 }
 

@@ -1,100 +1,111 @@
-import { TextField } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import { ClipLoader } from "react-spinners";
-import { ExistingExercisesContext } from "../../ExistingExercisesContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { Exercise } from "../../SharedUtils";
-import { extractGraspleExerciseId, extractIframeSrc, isGraspleExerciseUrl } from "../../../../utils/grasple";
+import { TextField } from "@mui/material"
+import React, { useContext, useEffect, useState } from "react"
+import { ClipLoader } from "react-spinners"
+import { ExistingExercisesContext } from "../../ExistingExercisesContext"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons"
+import { Exercise } from "../../SharedUtils"
+import {
+    extractGraspleExerciseId,
+    extractIframeSrc,
+    isGraspleExerciseUrl,
+} from "../../../../utils/grasple"
 
 interface Props {
-    url: string;
-    onURLValueChange: (url: string, grasple_id: number) => void;
-    onExerciseAlreadyExists: (exerciseId: number) => void;
+    url: string
+    onURLValueChange: (url: string, grasple_id: number) => void
+    onExerciseAlreadyExists: (exerciseId: number) => void
     currentTopicExerciseIds: number[]
     autoFocus?: boolean
 }
 
 function ExerciseURLInput(props: Props) {
-    const [urlValue, setUrlValue] = useState<string>(props.url);
-    const [graspleId, setGraspleId] = useState<number>(-1);
-    const [urlErrorMessage, setUrlErrorMessage] = useState<string>("Empty URL");
-    const [loading, setLoading] = useState(false);
-    const [checked, setChecked] = useState(false);
+    const [urlValue, setUrlValue] = useState<string>(props.url)
+    const [graspleId, setGraspleId] = useState<number>(-1)
+    const [urlErrorMessage, setUrlErrorMessage] = useState<string>("Empty URL")
+    const [loading, setLoading] = useState(false)
+    const [checked, setChecked] = useState(false)
 
-    const existingExerciseIds = useContext(ExistingExercisesContext);
+    const existingExerciseIds = useContext(ExistingExercisesContext)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true);
-        setChecked(false);
+        setLoading(true)
+        setChecked(false)
         // If the pasted value is an iframe snippet, use its src attribute
-        const newValue = extractIframeSrc(e.target.value);
+        const newValue = extractIframeSrc(e.target.value)
 
         // Set the extracted URL as the textbox value
-        setUrlValue(newValue);
-    };
+        setUrlValue(newValue)
+    }
 
     const checkIdValue = () => {
-        const idDigits = extractGraspleExerciseId(urlValue);
+        const idDigits = extractGraspleExerciseId(urlValue)
         if (idDigits === null) {
-            return false;
+            return false
         } else {
-            setGraspleId(parseInt(idDigits));
-            return true;
+            setGraspleId(parseInt(idDigits))
+            return true
         }
-    };
+    }
 
     const hasCorrectUrlDomain = () => {
-        return isGraspleExerciseUrl(urlValue);
-    };
+        return isGraspleExerciseUrl(urlValue)
+    }
 
     const exerciseDoesntAlreadyExist = () => {
-        return (!existingExerciseIds.includes(graspleId) && !props.currentTopicExerciseIds.includes(graspleId)) || props.url === urlValue
-    };
+        return (
+            (!existingExerciseIds.includes(graspleId) &&
+                !props.currentTopicExerciseIds.includes(graspleId)) ||
+            props.url === urlValue
+        )
+    }
 
     const getIdValue = () => {
-        const idDigits = extractGraspleExerciseId(urlValue);
-        return idDigits !== null ? `#${idDigits}` : "";
-    };
+        const idDigits = extractGraspleExerciseId(urlValue)
+        return idDigits !== null ? `#${idDigits}` : ""
+    }
 
     useEffect(() => {
         if (checked && graspleId !== -1 && !loading) {
-            props.onURLValueChange(urlValue, graspleId);
+            props.onURLValueChange(urlValue, graspleId)
         }
-    }, [checked, graspleId, props, urlValue, loading]);
+    }, [checked, graspleId, props, urlValue, loading])
 
     useEffect(() => {
-        setUrlValue(props.url);
-    }, [props.url]);
+        setUrlValue(props.url)
+    }, [props.url])
 
     useEffect(() => {
-        const correctDomain = hasCorrectUrlDomain();
-        const correctId = checkIdValue();
-        const isNewExercise = exerciseDoesntAlreadyExist();
+        const correctDomain = hasCorrectUrlDomain()
+        const correctId = checkIdValue()
+        const isNewExercise = exerciseDoesntAlreadyExist()
 
         if (!correctDomain || !correctId) {
-            setUrlErrorMessage("Invalid URL");
+            setUrlErrorMessage("Invalid URL")
         } else if (!isNewExercise) {
-            setUrlErrorMessage("Exercise already exists");
+            setUrlErrorMessage("Exercise already exists")
         }
 
         if (correctDomain && correctId && isNewExercise) {
-            setChecked(true);
+            setChecked(true)
         } else if (correctDomain && correctId) {
-            setChecked(false);
-            props.onExerciseAlreadyExists(graspleId);
-            setUrlValue("");
+            setChecked(false)
+            props.onExerciseAlreadyExists(graspleId)
+            setUrlValue("")
         } else {
-            setChecked(false);
+            setChecked(false)
         }
 
         setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    }, [urlValue, graspleId, props, existingExerciseIds]);
+            setLoading(false)
+        }, 500)
+    }, [urlValue, graspleId, props, existingExerciseIds])
 
     return (
-        <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+        <div
+            className="d-flex row justify-content-start align-items-center"
+            style={{ width: "100%", marginLeft: "0.5rem" }}
+        >
             <TextField
                 autoFocus={props.autoFocus}
                 variant="outlined"
@@ -109,18 +120,28 @@ function ExerciseURLInput(props: Props) {
                     <ClipLoader size={20} color={"#1976D2"} loading={loading} />
                 ) : checked ? (
                     <div>
-                        <FontAwesomeIcon icon={faCheckCircle} color={"#4CAF50"} />
-                        <span style={{ marginLeft: "0.5rem" }}>{getIdValue()}</span>
+                        <FontAwesomeIcon
+                            icon={faCheckCircle}
+                            color={"#4CAF50"}
+                        />
+                        <span style={{ marginLeft: "0.5rem" }}>
+                            {getIdValue()}
+                        </span>
                     </div>
                 ) : (
                     <div>
-                        <FontAwesomeIcon icon={faTimesCircle} color={"#c93737ff"} />
-                        <span style={{ marginLeft: "0.5rem" }}>{urlErrorMessage}</span>
+                        <FontAwesomeIcon
+                            icon={faTimesCircle}
+                            color={"#c93737ff"}
+                        />
+                        <span style={{ marginLeft: "0.5rem" }}>
+                            {urlErrorMessage}
+                        </span>
                     </div>
                 )}
             </div>
         </div>
-    );
+    )
 }
 
-export default ExerciseURLInput;
+export default ExerciseURLInput

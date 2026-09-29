@@ -13,7 +13,9 @@ describe("TeamInformation", () => {
         [1, "1 player"],
         [5, "5 players"],
     ])("shows %d players as %j", (playerNumber, text) => {
-        render(<TeamInformation playerNumber={playerNumber} teamName="Vectors" />)
+        render(
+            <TeamInformation playerNumber={playerNumber} teamName="Vectors" />
+        )
 
         expect(screen.getByText(text)).toBeInTheDocument()
     })

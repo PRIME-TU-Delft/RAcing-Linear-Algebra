@@ -27,13 +27,16 @@ describe("getCheckpointPosition", () => {
         [0.4, false, { left: "45px", bottom: "20px" }],
         [0.4, true, { left: "155px", bottom: "20px" }],
         [0.75, false, { left: "25px", bottom: "-5px" }],
-    ])("at %d of the path (insideTracks=%s)", (percentage, insideTracks, position) => {
-        expect(
-            PathPosition.getCheckpointPosition(
-                { name: "Checkpoint", percentage, insideTracks },
-                pathLength,
-                components
-            )
-        ).toEqual(position)
-    })
+    ])(
+        "at %d of the path (insideTracks=%s)",
+        (percentage, insideTracks, position) => {
+            expect(
+                PathPosition.getCheckpointPosition(
+                    { name: "Checkpoint", percentage, insideTracks },
+                    pathLength,
+                    components
+                )
+            ).toEqual(position)
+        }
+    )
 })

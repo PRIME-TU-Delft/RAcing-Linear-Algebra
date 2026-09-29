@@ -1,15 +1,21 @@
 import TrainThemeSprites from "./Sprites/TrainThemeSprites"
 import BoatThemeSprites from "./Sprites/BoatThemeSprites"
-import { Component, PercentCoordinate, Point, RaceMap, RacePathObject } from "./SharedUtils"
+import {
+    Component,
+    PercentCoordinate,
+    Point,
+    RaceMap,
+    RacePathObject,
+} from "./SharedUtils"
 
 export function formatRacePositionText(position: number) {
     switch (position) {
         case 1:
             return "1st"
-        
+
         case 2:
             return "2nd"
-        
+
         case 3:
             return "3rd"
 
@@ -19,7 +25,7 @@ export function formatRacePositionText(position: number) {
 }
 
 export function getRaceVehicleSprite(theme: string) {
-    switch(theme.toLocaleLowerCase()) {
+    switch (theme.toLocaleLowerCase()) {
         case "train":
             return TrainThemeSprites.train
         case "boat":
@@ -37,12 +43,18 @@ export function getRaceVehicleSprite(theme: string) {
  * @returns color for the race lap the ghost team is in
  */
 export function getColorForRaceLap(lapsCompleted: number) {
-    const raceLapColors = ["#23D851", "#E8E807", "#D81212", "#FF15E9", "#A129FF"]    // colors used to distinguish between the different race laps
+    const raceLapColors = [
+        "#23D851",
+        "#E8E807",
+        "#D81212",
+        "#FF15E9",
+        "#A129FF",
+    ] // colors used to distinguish between the different race laps
     return raceLapColors[lapsCompleted]
 }
 
 /**
- * Gets the base z-index values used for objects of the game, which represent the maximum possible z-index an object will have 
+ * Gets the base z-index values used for objects of the game, which represent the maximum possible z-index an object will have
  * (might be smaller due to layering purposes)
  * @returns object of the base z-index values
  */
@@ -50,17 +62,24 @@ export function getZIndexValues() {
     const values = {
         mainVehicle: 7000,
         decoration: 2000,
-        ghostVehicle: 6000
+        ghostVehicle: 6000,
     }
     return values
 }
 
-export function getRacePathObject(map: RaceMap, containerWidth: number, containerHeight: number, offsetX = 0, offsetY = 0, prioritizeRawPath = true): RacePathObject  {
+export function getRacePathObject(
+    map: RaceMap,
+    containerWidth: number,
+    containerHeight: number,
+    offsetX = 0,
+    offsetY = 0,
+    prioritizeRawPath = true
+): RacePathObject {
     if (prioritizeRawPath && map.rawPath) {
         return {
             svgPath: map.rawPath,
             pathLength: 0,
-            components: []
+            components: [],
         }
     }
 
@@ -78,7 +97,7 @@ export function getRacePathObject(map: RaceMap, containerWidth: number, containe
         )
 
         if (i < trackPoints.length - 1) {
-            if (i != 0 ) svgPath += "L" // L means move to coordinates x y, e.g. L 1 2
+            if (i != 0) svgPath += "L" // L means move to coordinates x y, e.g. L 1 2
             svgPath +=
                 (points[i].x + 20).toString() +
                 " " +
@@ -103,7 +122,7 @@ export function getRacePathObject(map: RaceMap, containerWidth: number, containe
     return {
         svgPath: svgPath,
         pathLength: tracksLength,
-        components: components
+        components: components,
     }
 }
 
@@ -116,17 +135,17 @@ export function getRacePathObject(map: RaceMap, containerWidth: number, containe
  */
 export const getNewTimeScoreIndex = (
     currentTimeScoreIndex: number,
-    timeScores: { timePoint: number, score: number }[],
+    timeScores: { timePoint: number; score: number }[],
     usedTime: number
 ): number => {
-    if (currentTimeScoreIndex >= timeScores.length - 1) return -1;
+    if (currentTimeScoreIndex >= timeScores.length - 1) return -1
 
-    let newIndex = currentTimeScoreIndex;
+    let newIndex = currentTimeScoreIndex
     for (let i = currentTimeScoreIndex; i < timeScores.length; i++) {
-        const timeScore = timeScores[i];
-        if (timeScore && timeScore.timePoint <= usedTime) newIndex = i;
-        else break;
+        const timeScore = timeScores[i]
+        if (timeScore && timeScore.timePoint <= usedTime) newIndex = i
+        else break
     }
 
-    return newIndex + 1;
-};
+    return newIndex + 1
+}

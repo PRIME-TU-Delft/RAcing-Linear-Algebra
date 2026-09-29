@@ -1,39 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import "./PregameCountdown.css"
-import { a, useSpring } from "react-spring";
+import { a, useSpring } from "react-spring"
 
 interface Props {
-    topic: string,
-    seconds: number,
-    theme: string,
+    topic: string
+    seconds: number
+    theme: string
     onCountdownComplete: () => void
 }
 
 function PregameCountdown(props: Props) {
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false)
 
     useEffect(() => {
-        setShow(true);
+        setShow(true)
         const fadeOutTimer = setTimeout(() => {
-            setShow(false);
-        }, props.seconds * 1000);
+            setShow(false)
+        }, props.seconds * 1000)
 
-        return () => clearTimeout(fadeOutTimer);
-    }, [props.seconds]);
+        return () => clearTimeout(fadeOutTimer)
+    }, [props.seconds])
 
     const animation = useSpring({
         opacity: show ? 1 : 0,
         config: { duration: 500 },
         onRest: () => {
             if (!show) {
-                props.onCountdownComplete();
+                props.onCountdownComplete()
             }
         },
-    });
+    })
 
-    return(
+    return (
         <a.div style={animation} className="topic-display-container">
-            <div className={"topic-text " + (props.theme.toLocaleLowerCase() + "-theme")}>{props.topic}</div>
+            <div
+                className={
+                    "topic-text " + (props.theme.toLocaleLowerCase() + "-theme")
+                }
+            >
+                {props.topic}
+            </div>
         </a.div>
     )
 }

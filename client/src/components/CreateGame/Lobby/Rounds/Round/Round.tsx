@@ -12,15 +12,15 @@ interface Props {
 function Round(props: Props) {
     const [isSelected, setIsSelected] = useState(false)
     const [imageLetter, setImmageLetter] = useState("")
-    
+
     useEffect(() => {
         if (props.topic) {
-            setImmageLetter(curr => props.topic.charAt(0).toUpperCase())
+            setImmageLetter((curr) => props.topic.charAt(0).toUpperCase())
         }
     }, [props.topic])
 
     useEffect(() => {
-        setIsSelected(curr => props.selected)
+        setIsSelected((curr) => props.selected)
     }, [props.selected])
 
     // Alerts the parent (list of rounds) that current round has been clicked, and based on current class name ("" or "selected")
@@ -44,10 +44,17 @@ function Round(props: Props) {
     return (
         <div
             className={"round-container " + (isSelected ? "selected" : "")}
-            style={{ "--hover-color": props.color ?? "#00b8c8" } as React.CSSProperties}
+            style={
+                {
+                    "--hover-color": props.color ?? "#00b8c8",
+                } as React.CSSProperties
+            }
             onClick={selectionHandler}
         >
-            <div className="colum left" style={props.color ? {color: props.color} : undefined}>
+            <div
+                className="colum left"
+                style={props.color ? { color: props.color } : undefined}
+            >
                 <div className="round-index">{props.index + 1}</div>
                 <p className="img">{imageLetter}</p>
             </div>

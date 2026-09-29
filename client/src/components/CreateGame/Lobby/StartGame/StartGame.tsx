@@ -20,7 +20,8 @@ interface Props {
 }
 
 function StartGame(props: Props) {
-    const [allowIndividualPlacements, setAllowIndividualPlacements] = useState(true)
+    const [allowIndividualPlacements, setAllowIndividualPlacements] =
+        useState(true)
 
     useEffect(() => {
         props.allowIndividualPlacements(allowIndividualPlacements)
@@ -44,7 +45,7 @@ function StartGame(props: Props) {
         return res
     }
 
-    const requiredPlayersNumber = 1  // minimum number of players required to start a game; currently 1
+    const requiredPlayersNumber = 1 // minimum number of players required to start a game; currently 1
 
     // Determines class for the start game button, based on whether all necessary steps are completed
     const buttonClassHandler = () => {
@@ -116,7 +117,8 @@ function StartGame(props: Props) {
     // Text to display if minimum number of players wasn't achieved
     const notEnoughPlayersText = (
         <div className="incomplete">
-            <FontAwesomeIcon icon={faExclamationTriangle} /> At least {requiredPlayersNumber} player required to start the game.
+            <FontAwesomeIcon icon={faExclamationTriangle} /> At least{" "}
+            {requiredPlayersNumber} player required to start the game.
         </div>
     )
 
@@ -133,7 +135,7 @@ function StartGame(props: Props) {
                 {props.completedSteps[3]
                     ? roundsCompleteText
                     : roundsIncompleteText}
-                {props.playerNumber < requiredPlayersNumber 
+                {props.playerNumber < requiredPlayersNumber
                     ? notEnoughPlayersText
                     : null}
             </div>
@@ -145,7 +147,9 @@ function StartGame(props: Props) {
                             <Switch
                                 checked={allowIndividualPlacements}
                                 onChange={(event) =>
-                                    setAllowIndividualPlacements(event.target.checked)
+                                    setAllowIndividualPlacements(
+                                        event.target.checked
+                                    )
                                 }
                                 name="allowIndividualPlacements"
                             />

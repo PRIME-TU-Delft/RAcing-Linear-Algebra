@@ -39,7 +39,9 @@ describe("Login", () => {
         submitPassword("wrong")
         act(() => serverEmit("authenticated", false))
 
-        expect(screen.getByTestId("message")).toHaveTextContent("Wrong password")
+        expect(screen.getByTestId("message")).toHaveTextContent(
+            "Wrong password"
+        )
     })
 
     test("creates a lobby and opens it when the server accepts the password", async () => {

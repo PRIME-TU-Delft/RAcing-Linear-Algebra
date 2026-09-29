@@ -5,8 +5,8 @@ import socket from "../../../socket"
 import { Streak } from "../../RaceThemes/SharedUtils"
 import FlameAnimation from "../Streak/Flame/Flame"
 import CardCooldownGraphic from "./CardCooldownGraphic/CardCooldownGraphic"
-import 'react-tooltip/dist/react-tooltip.css'
-import { Tooltip } from 'react-tooltip'
+import "react-tooltip/dist/react-tooltip.css"
+import { Tooltip } from "react-tooltip"
 
 import EasyTrainIcon from "../../../img/icons/train-easy.png"
 import MediumTrainIcon from "../../../img/icons/train-medium.png"
@@ -34,8 +34,8 @@ const THEME_DIFFICULTY_ICONS: ThemeDifficultyIcons[] = [
         icons: {
             easy: EasyTrainIcon,
             medium: MediumTrainIcon,
-            hard: HardTrainIcon
-        }
+            hard: HardTrainIcon,
+        },
     },
 
     {
@@ -43,13 +43,15 @@ const THEME_DIFFICULTY_ICONS: ThemeDifficultyIcons[] = [
         icons: {
             easy: EasyBoatIcon,
             medium: MediumBoatIcon,
-            hard: HardBoatIcon
-        }
-    }
+            hard: HardBoatIcon,
+        },
+    },
 ]
 
 const getDifficultyIconsForTheme = (theme: string): DifficultyIcons => {
-    const themeIcons = THEME_DIFFICULTY_ICONS.find(t => t.theme.toLowerCase() === theme.toLowerCase())
+    const themeIcons = THEME_DIFFICULTY_ICONS.find(
+        (t) => t.theme.toLowerCase() === theme.toLowerCase()
+    )
     if (themeIcons) {
         return themeIcons.icons
     } else {
@@ -75,26 +77,23 @@ interface Props {
  * DifficultyCard component that will displyed in the select difficulty modal.
  * This contains the difficulty and the emoji for that difficulty
  */
-export default function  DifficultyCard(props: Props) {
+export default function DifficultyCard(props: Props) {
     const raceData = useContext(RaceDataContext)
-    
+
     const [showStreak, setShowStreak] = useState<boolean>(false)
     const [difficultyCleared, setDifficultyCleared] = useState<boolean>(false)
 
     useEffect(() => {
-        if (props.disableButton && !props.isOnCooldown )
+        if (props.disableButton && !props.isOnCooldown)
             setTimeout(() => {
-                setDifficultyCleared(curr => true)
-            }, 500);
-        else
-            setDifficultyCleared(curr => false)
+                setDifficultyCleared((curr) => true)
+            }, 500)
+        else setDifficultyCleared((curr) => false)
     }, [props.disableButton, props.isOnCooldown])
 
     useEffect(() => {
-        if (props.streak.streakValue > 0)
-            setShowStreak(curr => true)
-        else
-            setShowStreak(curr => false)
+        if (props.streak.streakValue > 0) setShowStreak((curr) => true)
+        else setShowStreak((curr) => false)
     }, [props.streak])
 
     function sendDifficulty() {
@@ -110,7 +109,7 @@ export default function  DifficultyCard(props: Props) {
     const getSpriteForDifficulty = (difficulty: string) => {
         const icons = getDifficultyIconsForTheme(raceData.theme)
 
-        switch(difficulty) {
+        switch (difficulty) {
             case "Easy":
                 return icons.easy
             case "Medium":
@@ -127,77 +126,98 @@ export default function  DifficultyCard(props: Props) {
             <div className="card-flexbox">
                 {props.isOnCooldown ? (
                     <div
-                        data-tooltip-id="cooldown-tooltip" 
-                        data-tooltip-html="It seems that you were spam answering questions and the tracks got damaged!<br /> Don't worry, our team is already on the scene and the problem should be resolved shortly.<br /> In the meantime, try out a different difficulty!">
+                        data-tooltip-id="cooldown-tooltip"
+                        data-tooltip-html="It seems that you were spam answering questions and the tracks got damaged!<br /> Don't worry, our team is already on the scene and the problem should be resolved shortly.<br /> In the meantime, try out a different difficulty!"
+                    >
                         <CardCooldownGraphic></CardCooldownGraphic>
                     </div>
-                ): (
+                ) : (
                     <Card className="difficulty-card">
                         <Card.Body
-                            className={props.disableButton ? "difficulty-card-disabled" : ""}
+                            className={
+                                props.disableButton
+                                    ? "difficulty-card-disabled"
+                                    : ""
+                            }
                             onClick={sendDifficulty}
                         >
                             <Card.Title className="card-title">
                                 {props.difficulty}
                             </Card.Title>
-                            <Card.Text className="emoji"> 
-                                {difficultyCleared ? 
-                                (<div>
-                                    👑
-                                </div>) 
-                                : (<div className="card-icon">
-                                    <img src={getSpriteForDifficulty(props.difficulty)} alt={`${props.difficulty} icon`} />
-                                </div>)}
+                            <Card.Text className="emoji">
+                                {difficultyCleared ? (
+                                    <div>👑</div>
+                                ) : (
+                                    <div className="card-icon">
+                                        <img
+                                            src={getSpriteForDifficulty(
+                                                props.difficulty
+                                            )}
+                                            alt={`${props.difficulty} icon`}
+                                        />
+                                    </div>
+                                )}
                             </Card.Text>
                             <Card.Text>
-                                {difficultyCleared ? 
-                                    (<div className="row justify-content-center card-points-text">
+                                {difficultyCleared ? (
+                                    <div className="row justify-content-center card-points-text">
                                         CLEARED!
-                                    </div>)
-                                    : (
+                                    </div>
+                                ) : (
                                     <div className="row justify-content-center card-points-text">
                                         {Math.floor(props.totalPoints)}
-                                    </div>)
-                                }
-                                        
-                                        {showStreak && !difficultyCleared ? (
-                                            <div className="container">
-                                                <div className="row justify-content-center card-streak">
-                                                    <div className="ms-2 col d-flex justify-content-center">
-                                                        <div className="d-flex justify-content-center align-items-center">
-                                                            <b>{props.streak.streakValue}</b>
-                                                        </div>
-                                                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
-                                                    </div>
-                                                </div>
-                                                
+                                    </div>
+                                )}
 
+                                {showStreak && !difficultyCleared ? (
+                                    <div className="container">
+                                        <div className="row justify-content-center card-streak">
+                                            <div className="ms-2 col d-flex justify-content-center">
+                                                <div className="d-flex justify-content-center align-items-center">
+                                                    <b>
+                                                        {
+                                                            props.streak
+                                                                .streakValue
+                                                        }
+                                                    </b>
+                                                </div>
+                                                <FlameAnimation
+                                                    showAnimation={
+                                                        props.showFlame
+                                                    }
+                                                ></FlameAnimation>
                                             </div>
-                                        
-                                    ) : null}
+                                        </div>
+                                    </div>
+                                ) : null}
                             </Card.Text>
                         </Card.Body>
                     </Card>
                 )}
-                <Tooltip 
-                     id="cooldown-tooltip" 
-                     place="right"
-                     style={{backgroundColor: "#F0C80F", fontSize: "17px", zIndex: 9999}}
+                <Tooltip
+                    id="cooldown-tooltip"
+                    place="right"
+                    style={{
+                        backgroundColor: "#F0C80F",
+                        fontSize: "17px",
+                        zIndex: 9999,
+                    }}
                 />
                 {difficultyCleared ? (
                     <div className="optional-text-diff">
-                        Difficulty cleared. 
+                        Difficulty cleared.
                         <br></br>
                         Try another one!
                     </div>
-                ) : 
-                (<div>
-                    <p className="card-points">{props.pointsText}</p>
-                    <p className="card-points">
-                        Streak multiplier: <b>{props.streak.streakMultiplier}x</b>
-                    </p>
-                </div>)}
-                
+                ) : (
+                    <div>
+                        <p className="card-points">{props.pointsText}</p>
+                        <p className="card-points">
+                            Streak multiplier:{" "}
+                            <b>{props.streak.streakMultiplier}x</b>
+                        </p>
+                    </div>
+                )}
             </div>
         </>
     )

@@ -25,18 +25,24 @@ function JoinGame(props: Props) {
 
     useEffect(() => {
         if (props.reconnectionAvailableTime < Date.now()) return
-        const timeLeft = Math.max(Math.floor((props.reconnectionAvailableTime - Date.now()) / 1000), 1)
+        const timeLeft = Math.max(
+            Math.floor((props.reconnectionAvailableTime - Date.now()) / 1000),
+            1
+        )
         Store.addNotification({
             title: "Reconnection spam detected!",
-            message: "You are trying to reconnect too fast! Please wait " + timeLeft.toString() + " seconds.",
+            message:
+                "You are trying to reconnect too fast! Please wait " +
+                timeLeft.toString() +
+                " seconds.",
             type: "warning",
             insert: "top",
             container: "top-right",
             dismiss: {
-              duration: 5000,
-              onScreen: true
-            }
-        });
+                duration: 5000,
+                onScreen: true,
+            },
+        })
     }, [props.reconnectionAvailableTime])
 
     //validate the lobby code entered
@@ -51,16 +57,13 @@ function JoinGame(props: Props) {
         }
 
         //validate
-        const res = await fetch(
-            `${host}/api/lobby/validate/${lobbyId}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "ngrok-skip-browser-warning": "skip-browser-warning"
-                },
-            }
-        )
+        const res = await fetch(`${host}/api/lobby/validate/${lobbyId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "skip-browser-warning",
+            },
+        })
         const isValid = await res.json()
         if (!isValid) {
             setErrorMessage("Your lobby code is not valid!")

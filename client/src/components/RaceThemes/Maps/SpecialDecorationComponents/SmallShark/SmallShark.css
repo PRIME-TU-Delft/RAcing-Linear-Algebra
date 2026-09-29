@@ -3,11 +3,11 @@
     width: 4.5%;
     height: 4.5%;
     z-index: 999;
-    
+
     /* 4s action + 2s delay = 6s Total Cycle */
     animation: sharkSwimCycle 6s ease-in-out infinite;
     animation-delay: calc(var(--shark-delay, 0s));
-    
+
     /* Performance optimization */
     will-change: transform, opacity;
     opacity: 0; /* Start invisible */
@@ -34,7 +34,7 @@
     /* --- PHASE 2: IDLE & FLIP (1.5s - 2.1s) --- */
     /* "Moves a bit" before flipping */
     30% {
-        transform: translate(25%, -5%) scaleX(1); 
+        transform: translate(25%, -5%) scaleX(1);
     }
     /* The Flip: We compress width to 0 then expand to -1 */
     35% {

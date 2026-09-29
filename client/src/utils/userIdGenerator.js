@@ -1,4 +1,4 @@
-import { v4 as uuidv4, validate as validateUuid } from 'uuid';
+import { v4 as uuidv4, validate as validateUuid } from "uuid"
 
 /**
  * Retrieves the user ID from localStorage. If it doesn't exist,
@@ -7,10 +7,10 @@ import { v4 as uuidv4, validate as validateUuid } from 'uuid';
  * @returns {string} The persistent user ID.
  */
 export function getOrCreateUserId() {
-  let userId = localStorage.getItem("userId");
-  if (!userId || !validateUuid(userId)) {
-    userId = uuidv4();
-    localStorage.setItem("userId", userId);
-  }
-  return userId;
+    let userId = localStorage.getItem("userId")
+    if (!userId || !validateUuid(userId)) {
+        userId = uuidv4()
+        localStorage.setItem("userId", userId)
+    }
+    return userId
 }

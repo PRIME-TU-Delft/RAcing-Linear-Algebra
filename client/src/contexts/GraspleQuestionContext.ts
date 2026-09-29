@@ -1,10 +1,10 @@
-import { createContext } from 'react';
-import { GraspleExercise } from '../components/RaceThemes/SharedUtils';
+import { createContext } from "react"
+import { GraspleExercise } from "../components/RaceThemes/SharedUtils"
 
 interface QuestionData {
-    questionData: GraspleExercise,
-    questionNumber: number,
-    numberOfMandatory: number,
+    questionData: GraspleExercise
+    questionNumber: number
+    numberOfMandatory: number
     pointsToGain: number
 }
 
@@ -16,9 +16,9 @@ export const GraspleQuestionContext = createContext<QuestionData>({
         difficulty: "",
         url: "",
         numOfAttempts: 0,
-        isMandatory: false
+        isMandatory: false,
     },
     questionNumber: 0,
     numberOfMandatory: 0,
-    pointsToGain: 0
+    pointsToGain: 0,
 })

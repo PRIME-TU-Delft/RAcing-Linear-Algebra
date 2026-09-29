@@ -19,7 +19,6 @@
     width: auto;
 }
 
-
 @keyframes duckFloat {
     0% {
         transform: translate(0, 0);

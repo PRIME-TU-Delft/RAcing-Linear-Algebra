@@ -2,24 +2,29 @@ import { formatRacePositionText } from "../RaceService"
 import { Ghost, ServerGhost } from "../SharedUtils"
 
 interface GhostColor {
-    mainColor: string,
+    mainColor: string
     highlightColor: string
 }
 
 /**
-     * Determines whether a ghost is classified as open based on its position.
-     * Currently, ghosts are considered open if they fulfill one of the following conditions:
-     *      - the ghost is in the top 3 in terms of position
-     *      - the ghost is just ahead of the playing team
-     *      - the ghost is just below of the playing team
-     * @param ghostIndex    index of the ghost
-     * @returns whether the ghost is considered open or not
-     */
-export function currentGhostIsOpen(positionIndex: number, mainVehiclePositionIndex: number) {
-    if (positionIndex < 3) return true  // top 3 ghosts are always open
-    else if (positionIndex - 1 == mainVehiclePositionIndex) return true    //  ghost behind main team open
-    else if (positionIndex + 1 == mainVehiclePositionIndex) return true    // ghost ahead of main team is open
-    else return false   
+ * Determines whether a ghost is classified as open based on its position.
+ * Currently, ghosts are considered open if they fulfill one of the following conditions:
+ *      - the ghost is in the top 3 in terms of position
+ *      - the ghost is just ahead of the playing team
+ *      - the ghost is just below of the playing team
+ * @param ghostIndex    index of the ghost
+ * @returns whether the ghost is considered open or not
+ */
+export function currentGhostIsOpen(
+    positionIndex: number,
+    mainVehiclePositionIndex: number
+) {
+    if (positionIndex < 3) return true // top 3 ghosts are always open
+    else if (positionIndex - 1 == mainVehiclePositionIndex)
+        return true //  ghost behind main team open
+    else if (positionIndex + 1 == mainVehiclePositionIndex)
+        return true // ghost ahead of main team is open
+    else return false
 }
 
 /**
@@ -38,7 +43,11 @@ export function getRacePositionText(positionIndex: number) {
  * @param raceLapColor color used for the race lap the ghost team is currently in
  * @returns the css styling to use for the ghost team
  */
-export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor: string) {
+export function getGhostStyle(
+    isOpen: boolean,
+    raceLapColor: string,
+    ghostColor: string
+) {
     if (isOpen) {
         return {
             height: "55px",
@@ -46,7 +55,7 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor:
             borderColor: raceLapColor,
             borderWidth: "3px",
             boxShadow: "0px 0px 5px #000000",
-            backgroundColor: "#ffffff"
+            backgroundColor: "#ffffff",
         }
     } else {
         return {
@@ -55,7 +64,7 @@ export function getGhostStyle(isOpen: boolean, raceLapColor: string, ghostColor:
             borderColor: raceLapColor,
             borderWidth: "4px",
             boxShadow: "0px 0px 5px #000000",
-            backgroundColor: ghostColor
+            backgroundColor: ghostColor,
         }
     }
 }
@@ -79,7 +88,7 @@ function getGhostTeamFacultyColors() {
         "#004c60",
         "#c6aef4",
         "#39ffd9",
-        "#ff7300"
+        "#ff7300",
     ]
 
     const colorsCSE: string[] = [
@@ -100,7 +109,7 @@ function getGhostTeamFacultyColors() {
         "#0084b2",
         "#c6aef4",
         "#39ffd9",
-        "#ff7300"
+        "#ff7300",
     ]
 
     const colorsAE: string[] = [
@@ -121,7 +130,7 @@ function getGhostTeamFacultyColors() {
         "#80d5ff",
         "#c6aef4",
         "#39ffd9",
-        "#0623F9"
+        "#0623F9",
     ]
 
     const colorsMCH: string[] = [
@@ -142,14 +151,14 @@ function getGhostTeamFacultyColors() {
         "#0084b2",
         "#c6aef4",
         "#39ffd9",
-        "#0623f9"
+        "#0623f9",
     ]
 
     return {
         mch: colorsMCH,
         ae: colorsAE,
         mar: colorsMAR,
-        cse: colorsCSE
+        cse: colorsCSE,
     }
 }
 
@@ -172,9 +181,9 @@ function getGhostTeamColors() {
         "#0084b2",
         "#c6aef4",
         "#39ffd9",
-        "#ff7300"
+        "#ff7300",
     ]
-    
+
     return colors
 }
 
@@ -182,47 +191,54 @@ function getShuffledGhotsColors() {
     const colors: string[] = getGhostTeamColors()
 
     // Using the standard implementation of the Fisher-Yates (aka Knuth) Shuffle algorithm
-    let currentIndex = colors.length,  randomIndex;
+    let currentIndex = colors.length,
+        randomIndex
 
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
-  
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [colors[currentIndex], colors[randomIndex]] = [colors[randomIndex], colors[currentIndex]];
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
+
+        // And swap it with the current element.
+        ;[colors[currentIndex], colors[randomIndex]] = [
+            colors[randomIndex],
+            colors[currentIndex],
+        ]
     }
 
     return colors
 }
 
 function getShuffledIndexArray(length: number) {
-    const resultArray: number[] = [];
+    const resultArray: number[] = []
 
     for (let i = 0; i < length; i++) {
-        resultArray.push(i);
+        resultArray.push(i)
     }
 
     // Using the standard implementation of the Fisher-Yates (aka Knuth) Shuffle algorithm
-    let currentIndex = resultArray.length,  randomIndex;
+    let currentIndex = resultArray.length,
+        randomIndex
 
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
         // Pick a remaining element.
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
 
         // And swap it with the current element.
-        [resultArray[currentIndex], resultArray[randomIndex]] = [resultArray[randomIndex], resultArray[currentIndex]];
+        ;[resultArray[currentIndex], resultArray[randomIndex]] = [
+            resultArray[randomIndex],
+            resultArray[currentIndex],
+        ]
     }
 
     return resultArray
 }
 
 export function getColorForStudy(study: string) {
-    switch(study.toLowerCase()) {
+    switch (study.toLowerCase()) {
         case "cse":
             return { mainColor: "#003B91", highlightColor: "#EC40FF" }
         case "ae":
@@ -265,7 +281,7 @@ export function getColorForStudy(study: string) {
 function getHiglightColor(study: string, index: number) {
     const colors = getGhostTeamFacultyColors()
 
-    switch(study) {
+    switch (study) {
         case "cse":
             return colors.cse[index]
         case "ae":
@@ -307,17 +323,19 @@ export function initializeFrontendGhostObjects(ghosts: ServerGhost[]) {
     const initializedGhosts: Ghost[] = ghosts.map((x, i) => ({
         ...x,
         key: i,
-        colors: { mainColor: getColorForStudy(x.study).mainColor, highlightColor: getColorForStudy(x.study).highlightColor },
+        colors: {
+            mainColor: getColorForStudy(x.study).mainColor,
+            highlightColor: getColorForStudy(x.study).highlightColor,
+        },
         lapsCompleted: 0,
         racePosition: -1,
         isOpen: false,
         animationStatus: {
-            pathProgress: 0,    // initialize all ghost to progress of 0%
-            updateAnimation: false,  // transition duration initalized at 1, changes when updating
-            timeScoreIndex: 0   // intialize index to 0, so the ghost first aims to reach its first time score
-        }
+            pathProgress: 0, // initialize all ghost to progress of 0%
+            updateAnimation: false, // transition duration initalized at 1, changes when updating
+            timeScoreIndex: 0, // intialize index to 0, so the ghost first aims to reach its first time score
+        },
     }))
-    
+
     return initializedGhosts
 }
-

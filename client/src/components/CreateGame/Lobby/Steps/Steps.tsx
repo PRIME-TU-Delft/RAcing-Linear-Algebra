@@ -13,7 +13,7 @@ import SelectName from "../SelectName/SelectName"
 import { LobbyDataContext } from "../../../../contexts/LobbyDataContext"
 
 interface SelectedRound {
-    topicName: string,
+    topicName: string
     roundDuration: number
 }
 
@@ -81,13 +81,12 @@ function Steps(props: Props) {
      * @param study     // the study for which the rounds are queried
      */
     const getRoundsByStudy = async (study: string) => {
-        const url =
-            `${host}/api/lobby/getRounds/${study.toUpperCase()}`
+        const url = `${host}/api/lobby/getRounds/${study.toUpperCase()}`
         const res = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "skip-browser-warning"
+                "ngrok-skip-browser-warning": "skip-browser-warning",
             },
         })
         const rounds = await res.json()
@@ -174,13 +173,15 @@ function Steps(props: Props) {
                 stepContent={
                     <Rounds
                         onRoundSelected={(rounds: SelectedRound[]) => {
-                            setSelectedRounds(curr => [...rounds])
+                            setSelectedRounds((curr) => [...rounds])
                         }}
                         onStepCompleted={(completed: boolean) =>
                             stepCompletionHandler(4, completed)
                         }
                         availableRounds={lobbyData.topics}
-                        onFilterByStudyProgramme={(filter: boolean) => topicsFilterHandler(filter)}
+                        onFilterByStudyProgramme={(filter: boolean) =>
+                            topicsFilterHandler(filter)
+                        }
                     ></Rounds>
                 }
                 stepActive={activeStep == 4 ? true : false}
@@ -198,9 +199,11 @@ function Steps(props: Props) {
                         completedSteps={completedSteps}
                         selectedTheme={selectedTheme}
                         selectedStudy={selectedStudy}
-                        selectedRounds={selectedRounds.map(x => x.topicName)}
+                        selectedRounds={selectedRounds.map((x) => x.topicName)}
                         playerNumber={props.playerNumber}
-                        allowIndividualPlacements={props.onAllowIndividualPlacementsChange}
+                        allowIndividualPlacements={
+                            props.onAllowIndividualPlacementsChange
+                        }
                         onStartGame={() =>
                             props.startGameHandler(
                                 selectedRounds,

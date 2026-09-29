@@ -1,8 +1,8 @@
-import BoatThemeSprites from "../../../Sprites/BoatThemeSprites";
+import BoatThemeSprites from "../../../Sprites/BoatThemeSprites"
 import "./Lighthouse.css"
 
 function Lighthouse() {
-    return(
+    return (
         <div className="lighthouse-container">
             <div>
                 <img src={BoatThemeSprites.lighthouse} alt="Lighthouse" />
@@ -12,4 +12,4 @@ function Lighthouse() {
     )
 }
 
-export default Lighthouse;
+export default Lighthouse

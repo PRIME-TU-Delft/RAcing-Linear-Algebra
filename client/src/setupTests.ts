@@ -15,7 +15,9 @@ beforeEach(() => {
     vi.stubGlobal(
         "fetch",
         vi.fn((url: string) =>
-            Promise.reject(new Error(`fetch(${url}) was not mocked in this test`))
+            Promise.reject(
+                new Error(`fetch(${url}) was not mocked in this test`)
+            )
         )
     )
 })

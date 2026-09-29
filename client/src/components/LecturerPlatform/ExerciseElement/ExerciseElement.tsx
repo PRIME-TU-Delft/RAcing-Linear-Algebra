@@ -1,22 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Divider, AccordionActions, Button, TextField, Switch } from '@mui/material';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faPen } from "@fortawesome/free-solid-svg-icons";
-import "./ExerciseElement.css";
-import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput";
-import { url } from "inspector";
-import { Store } from 'react-notifications-component';
-import { Exercise } from "../SharedUtils";
-import { set } from "react-hook-form";
-import { getVariantNumberColor } from "../FunctionUtils";
+import React, { useEffect, useState } from "react"
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    Divider,
+    AccordionActions,
+    Button,
+    TextField,
+    Switch,
+} from "@mui/material"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faGrip, faPen } from "@fortawesome/free-solid-svg-icons"
+import "./ExerciseElement.css"
+import ExerciseURLInput from "./ExerciseURLInput/ExerciseURLInput"
+import { url } from "inspector"
+import { Store } from "react-notifications-component"
+import { Exercise } from "../SharedUtils"
+import { set } from "react-hook-form"
+import { getVariantNumberColor } from "../FunctionUtils"
 
 interface Props {
-    _id: string,
-    name: string,
-    exerciseId: number,
-    difficulty: string,
-    url: string,
-    numOfAttempts: number   
+    _id: string
+    name: string
+    exerciseId: number
+    difficulty: string
+    url: string
+    numOfAttempts: number
     beingEdited: boolean
     closeNotEditing: boolean
     parentSaveChanges: boolean
@@ -31,7 +41,7 @@ interface Props {
 }
 
 function ExerciseElement(props: Props) {
-    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false);
+    const [manuallyExpanded, setManuallyExpanded] = useState<boolean>(false)
     const [newExerciseData, setNewExerciseData] = useState<Exercise>({
         _id: props._id,
         name: props.name,
@@ -39,9 +49,9 @@ function ExerciseElement(props: Props) {
         difficulty: props.difficulty,
         url: props.url,
         numOfAttempts: props.numOfAttempts,
-        isMandatory: props.isMandatory
+        isMandatory: props.isMandatory,
     })
-    const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited);
+    const [beingEdited, setBeingEdited] = useState<boolean>(props.beingEdited)
 
     useEffect(() => {
         setNewExerciseData({
@@ -51,9 +61,16 @@ function ExerciseElement(props: Props) {
             difficulty: props.difficulty,
             url: props.url,
             numOfAttempts: props.numOfAttempts,
-            isMandatory: props.isMandatory
+            isMandatory: props.isMandatory,
         })
-    }, [props._id, props.name, props.exerciseId, props.difficulty, props.url, props.numOfAttempts])
+    }, [
+        props._id,
+        props.name,
+        props.exerciseId,
+        props.difficulty,
+        props.url,
+        props.numOfAttempts,
+    ])
 
     useEffect(() => {
         if (props.parentSaveChanges && beingEdited) {
@@ -62,7 +79,7 @@ function ExerciseElement(props: Props) {
     }, [props.parentSaveChanges])
 
     useEffect(() => {
-        setBeingEdited(props.beingEdited);
+        setBeingEdited(props.beingEdited)
     }, [props.beingEdited])
 
     const saveExerciseHandler = () => {
@@ -75,15 +92,16 @@ function ExerciseElement(props: Props) {
                 container: "bottom-right",
                 dismiss: {
                     duration: 5000,
-                    onScreen: true
-                }
+                    onScreen: true,
+                },
             })
         } else {
             const exerciseData = newExerciseData
             if (exerciseData.name == "") {
-                exerciseData.name = "Exercise " + exerciseData.exerciseId.toString()
+                exerciseData.name =
+                    "Exercise " + exerciseData.exerciseId.toString()
             }
-            props.onFinishEditingExercise(exerciseData);
+            props.onFinishEditingExercise(exerciseData)
             if (props.isIndependentElement) {
                 setBeingEdited(false)
             }
@@ -101,7 +119,11 @@ function ExerciseElement(props: Props) {
     }
 
     const urlChangeHandler = (newUrl: string, newGraspleId: number) => {
-        setNewExerciseData({ ...newExerciseData, url: newUrl, exerciseId: newGraspleId })
+        setNewExerciseData({
+            ...newExerciseData,
+            url: newUrl,
+            exerciseId: newGraspleId,
+        })
     }
 
     useEffect(() => {
@@ -120,7 +142,9 @@ function ExerciseElement(props: Props) {
         }
     }, [props.beingEdited, props.closeNotEditing])
 
-    const nameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const nameInputChangeHandler = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         setNewExerciseData({ ...newExerciseData, name: e.target.value })
     }
 
@@ -131,45 +155,95 @@ function ExerciseElement(props: Props) {
     }
 
     return (
-        <div className={"d-flex col col-11" + (props.closeNotEditing && !props.beingEdited ? " disabled-exercise" : "") + (props.reordering ? " reordering-exercise" : "")} 
-            style={{position: "relative", margin: props.isIndependentElement ? "auto" : "", marginBottom: props.isIndependentElement ? "1rem" : "0.5rem", marginTop: "0.5rem", width: props.isIndependentElement ? "80%" : ""}}>
-            <Accordion 
-                sx={{width: "100%", backgroundColor: props.isIndependentElement ? "#f5f5f5": ""}} 
-                expanded={(!props.closeNotEditing && manuallyExpanded) || props.beingEdited || props._id == "" || (props.isIndependentElement && beingEdited)}
-                onChange={(event: React.SyntheticEvent, expanded: boolean) => setManuallyExpanded(curr => expanded)}
+        <div
+            className={
+                "d-flex col col-11" +
+                (props.closeNotEditing && !props.beingEdited
+                    ? " disabled-exercise"
+                    : "") +
+                (props.reordering ? " reordering-exercise" : "")
+            }
+            style={{
+                position: "relative",
+                margin: props.isIndependentElement ? "auto" : "",
+                marginBottom: props.isIndependentElement ? "1rem" : "0.5rem",
+                marginTop: "0.5rem",
+                width: props.isIndependentElement ? "80%" : "",
+            }}
+        >
+            <Accordion
+                sx={{
+                    width: "100%",
+                    backgroundColor: props.isIndependentElement
+                        ? "#f5f5f5"
+                        : "",
+                }}
+                expanded={
+                    (!props.closeNotEditing && manuallyExpanded) ||
+                    props.beingEdited ||
+                    props._id == "" ||
+                    (props.isIndependentElement && beingEdited)
+                }
+                onChange={(event: React.SyntheticEvent, expanded: boolean) =>
+                    setManuallyExpanded((curr) => expanded)
+                }
             >
                 <AccordionSummary
-                    aria-controls={`panel-content-${props._id}`}    
+                    aria-controls={`panel-content-${props._id}`}
                     id={`panel-header-${props._id}`}
-                    sx={{ height: '2rem'}}
-                    className={(props.reordering ? " reordering-exercise" : "")}
+                    sx={{ height: "2rem" }}
+                    className={props.reordering ? " reordering-exercise" : ""}
                 >
-                    {props.reordering && 
-                    <span
-                        style={{ display: "flex", alignItems: "center", marginRight: "1rem" }}
-                    >
-                        <FontAwesomeIcon icon={faGrip} />
-                    </span>
-                    }
-                    {!props.beingEdited || (props.isIndependentElement && !beingEdited) ? (
+                    {props.reordering && (
+                        <span
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginRight: "1rem",
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faGrip} />
+                        </span>
+                    )}
+                    {!props.beingEdited ||
+                    (props.isIndependentElement && !beingEdited) ? (
                         <div className="exercise-header d-flex row">
-                            <div className={"d-flex col align-items-center " + (props.numberOfVariants ? "col-9" : "col-10")}>
-                                {props.name} 
-                                <span className="exercise-header-id">(#{newExerciseData.exerciseId})</span>
+                            <div
+                                className={
+                                    "d-flex col align-items-center " +
+                                    (props.numberOfVariants
+                                        ? "col-9"
+                                        : "col-10")
+                                }
+                            >
+                                {props.name}
+                                <span className="exercise-header-id">
+                                    (#{newExerciseData.exerciseId})
+                                </span>
                             </div>
 
                             {props.numberOfVariants && (
-                                <div 
+                                <div
                                     className="d-flex col-1 variant-number-badge justify-content-center"
-                                    style={{backgroundColor: getVariantCountBackgroundColor()}}
-                                    >
-                                    {props.numberOfVariants} {props.numberOfVariants == 1 ? "Variant" : "Variants"}
+                                    style={{
+                                        backgroundColor:
+                                            getVariantCountBackgroundColor(),
+                                    }}
+                                >
+                                    {props.numberOfVariants}{" "}
+                                    {props.numberOfVariants == 1
+                                        ? "Variant"
+                                        : "Variants"}
                                 </div>
                             )}
 
-                            {(!props.beingEdited || (props.isIndependentElement && !beingEdited)) && (
+                            {(!props.beingEdited ||
+                                (props.isIndependentElement &&
+                                    !beingEdited)) && (
                                 <div className="d-flex col-2 exercise-difficulty-label justify-content-end">
-                                    {(props.isMandatory ? "Mandatory  |  " + props.difficulty : props.difficulty)}
+                                    {props.isMandatory
+                                        ? "Mandatory  |  " + props.difficulty
+                                        : props.difficulty}
                                 </div>
                             )}
                         </div>
@@ -183,82 +257,156 @@ function ExerciseElement(props: Props) {
                 </AccordionSummary>
                 <Divider></Divider>
                 <AccordionDetails>
-                    <div className={"exercise-details d-flex row " + (props.beingEdited || (props.isIndependentElement && beingEdited) ? "editing-exercise " : "")}>
-                        <div className="d-flex col col-1" style={{flexDirection: "column"}}>
-                            <div>
-                                Name:
-                            </div>
+                    <div
+                        className={
+                            "exercise-details d-flex row " +
+                            (props.beingEdited ||
+                            (props.isIndependentElement && beingEdited)
+                                ? "editing-exercise "
+                                : "")
+                        }
+                    >
+                        <div
+                            className="d-flex col col-1"
+                            style={{ flexDirection: "column" }}
+                        >
+                            <div>Name:</div>
                             {!props.isIndependentElement && (
-                                <div>
-                                    Mandatory:
-                                </div>
+                                <div>Mandatory:</div>
                             )}
-                            <div>
-                                URL:
-                            </div>
-                            <div>
-                                Difficulty:
-                            </div>
+                            <div>URL:</div>
+                            <div>Difficulty:</div>
                             {/* <div>
                                 Attempts:
                             </div> */}
                         </div>
-                        <div className="d-flex col" style={{flexDirection: "column", textAlign: props.isIndependentElement ? "left" : "inherit"}}>
+                        <div
+                            className="d-flex col"
+                            style={{
+                                flexDirection: "column",
+                                textAlign: props.isIndependentElement
+                                    ? "left"
+                                    : "inherit",
+                            }}
+                        >
                             {!props.beingEdited && !beingEdited ? (
-                                <div>
-                                    {props.name}
-                                </div>
+                                <div>{props.name}</div>
                             ) : (
-                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                <div
+                                    className="d-flex row justify-content-start align-items-center"
+                                    style={{
+                                        width: "100%",
+                                        marginLeft: "0.5rem",
+                                    }}
+                                >
                                     <TextField
                                         variant="outlined"
                                         size="small"
-                                        placeholder={"Exercise " + newExerciseData.exerciseId.toString()}
+                                        placeholder={
+                                            "Exercise " +
+                                            newExerciseData.exerciseId.toString()
+                                        }
                                         defaultValue={newExerciseData.name}
-                                        onChange={(e) => nameInputChangeHandler(e)}
-                                        sx={{height: "1rem", fontSize: "13px",  width: "80%"}}
+                                        onChange={(e) =>
+                                            nameInputChangeHandler(e)
+                                        }
+                                        sx={{
+                                            height: "1rem",
+                                            fontSize: "13px",
+                                            width: "80%",
+                                        }}
                                         className="d-flex justify-content-center"
                                     />
                                 </div>
                             )}
-                            {!props.beingEdited && !beingEdited && !props.isIndependentElement ? (
-                                <div>
-                                    {(props.isMandatory ? "Yes" : "No")}
-                                </div>
+                            {!props.beingEdited &&
+                            !beingEdited &&
+                            !props.isIndependentElement ? (
+                                <div>{props.isMandatory ? "Yes" : "No"}</div>
                             ) : !props.isIndependentElement ? (
-                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                <div
+                                    className="d-flex row justify-content-start align-items-center"
+                                    style={{
+                                        width: "100%",
+                                        marginLeft: "0.5rem",
+                                    }}
+                                >
                                     <Switch
                                         checked={newExerciseData.isMandatory}
-                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, isMandatory: e.target.checked })}
-                                        inputProps={{ 'aria-label': 'controlled' }}
+                                        onChange={(e) =>
+                                            setNewExerciseData({
+                                                ...newExerciseData,
+                                                isMandatory: e.target.checked,
+                                            })
+                                        }
+                                        inputProps={{
+                                            "aria-label": "controlled",
+                                        }}
                                     />
                                 </div>
                             ) : null}
                             {!props.beingEdited && !beingEdited ? (
                                 <div>
-                                    <a href={props.url} target="_blank" rel="noreferrer">{props.url}</a>
+                                    <a
+                                        href={props.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {props.url}
+                                    </a>
                                 </div>
-                            )  : (
-                                <ExerciseURLInput 
-                                    url={props.url} 
-                                    onURLValueChange={(newUrl: string, newId: number) => urlChangeHandler(newUrl, newId)}
-                                    onExerciseAlreadyExists={(exerciseId: number) => props.onExerciseAlreadyExists(exerciseId)} 
-                                    currentTopicExerciseIds={props.currentTopicExerciseIds}
+                            ) : (
+                                <ExerciseURLInput
+                                    url={props.url}
+                                    onURLValueChange={(
+                                        newUrl: string,
+                                        newId: number
+                                    ) => urlChangeHandler(newUrl, newId)}
+                                    onExerciseAlreadyExists={(
+                                        exerciseId: number
+                                    ) =>
+                                        props.onExerciseAlreadyExists(
+                                            exerciseId
+                                        )
+                                    }
+                                    currentTopicExerciseIds={
+                                        props.currentTopicExerciseIds
+                                    }
                                 ></ExerciseURLInput>
                             )}
                             {!props.beingEdited && !beingEdited ? (
-                                <div>
-                                    {props.difficulty}
-                                </div>
+                                <div>{props.difficulty}</div>
                             ) : (
-                                <div className="d-flex row justify-content-start align-items-center" style={{ width: "100%", marginLeft: "0.5rem" }}>
+                                <div
+                                    className="d-flex row justify-content-start align-items-center"
+                                    style={{
+                                        width: "100%",
+                                        marginLeft: "0.5rem",
+                                    }}
+                                >
                                     <TextField
                                         select
                                         variant="outlined"
                                         size="small"
-                                        defaultValue={newExerciseData.difficulty == "" ? "Easy" : newExerciseData.difficulty}
-                                        onChange={(e) => setNewExerciseData({ ...newExerciseData, difficulty: e.target.value === "" ? "Easy" : e.target.value })}
-                                        sx={{ height: "1rem", fontSize: "13px", width: "80%" }}
+                                        defaultValue={
+                                            newExerciseData.difficulty == ""
+                                                ? "Easy"
+                                                : newExerciseData.difficulty
+                                        }
+                                        onChange={(e) =>
+                                            setNewExerciseData({
+                                                ...newExerciseData,
+                                                difficulty:
+                                                    e.target.value === ""
+                                                        ? "Easy"
+                                                        : e.target.value,
+                                            })
+                                        }
+                                        sx={{
+                                            height: "1rem",
+                                            fontSize: "13px",
+                                            width: "80%",
+                                        }}
                                         className="d-flex justify-content-center"
                                         SelectProps={{
                                             native: true,
@@ -296,24 +444,31 @@ function ExerciseElement(props: Props) {
                         </div>
                     </div>
                 </AccordionDetails>
-                {(props.beingEdited || (props.isIndependentElement && beingEdited)) && (
+                {(props.beingEdited ||
+                    (props.isIndependentElement && beingEdited)) && (
                     <AccordionActions>
-                        <Button onClick={() => discardExerciseChangesHandler()}>Discard</Button>
-                        <Button onClick={saveExerciseHandler} variant="contained">Save</Button>
+                        <Button onClick={() => discardExerciseChangesHandler()}>
+                            Discard
+                        </Button>
+                        <Button
+                            onClick={saveExerciseHandler}
+                            variant="contained"
+                        >
+                            Save
+                        </Button>
                     </AccordionActions>
                 )}
             </Accordion>
             {props.isIndependentElement && (
-                <FontAwesomeIcon 
-                    icon={faPen} 
-                    className="edit-icon" 
+                <FontAwesomeIcon
+                    icon={faPen}
+                    className="edit-icon"
                     size="sm"
-                    onClick={() => setBeingEdited(true)} 
+                    onClick={() => setBeingEdited(true)}
                 />
             )}
         </div>
-    );
+    )
 }
 
-
-export default ExerciseElement;
+export default ExerciseElement

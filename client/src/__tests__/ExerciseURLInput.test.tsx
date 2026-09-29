@@ -52,11 +52,15 @@ describe("ExerciseURLInput", () => {
     })
 
     test("reports an exercise that already exists and clears the field", async () => {
-        const { onURLValueChange, onExerciseAlreadyExists } = renderInput([77896])
+        const { onURLValueChange, onExerciseAlreadyExists } = renderInput([
+            77896,
+        ])
 
         paste(EMBED_URL)
 
-        await waitFor(() => expect(onExerciseAlreadyExists).toHaveBeenCalledWith(77896))
+        await waitFor(() =>
+            expect(onExerciseAlreadyExists).toHaveBeenCalledWith(77896)
+        )
         expect(screen.getByRole("textbox")).toHaveValue("")
         expect(onURLValueChange).not.toHaveBeenCalled()
     })

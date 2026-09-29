@@ -52,9 +52,8 @@
     z-index: 9999;
 }
 
-
 .overlay-background-color {
-    background-color: #F8B700;
+    background-color: #f8b700;
     position: absolute;
     top: 0;
     height: 100%;
@@ -121,11 +120,14 @@
 }
 
 .door-opening .train-door-right {
-    animation: close-door-right 1.5s cubic-bezier(0.42, 0, 1, 1) reverse forwards;
+    animation: close-door-right 1.5s cubic-bezier(0.42, 0, 1, 1) reverse
+        forwards;
 }
 
-.move-train .train-theme-overlay,   .move-train.train-doors {
-    animation: train-leaves-station 4s cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
+.move-train .train-theme-overlay,
+.move-train.train-doors {
+    animation: train-leaves-station 4s cubic-bezier(0.6, 0.04, 0.98, 0.335)
+        forwards;
 }
 
 .conductor-door {

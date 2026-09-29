@@ -108,18 +108,13 @@ function createComponentStyle(
         if (startPoint.y > endPoint.y) {
             style.height = `${componentHeight - 40}px`
             style.bottom = `${endPoint.y + 40}px`
-        } 
-        
-        else if (!isStartingComponent) {
+        } else if (!isStartingComponent) {
             style.height = `${componentHeight - 40}px`
             style.bottom = `${startPoint.y + 40}px`
         }
 
-
         return style
-    }
-
-    else if (direction == "horizontal") {
+    } else if (direction == "horizontal") {
         const componentWidth = Math.abs(startPoint.x - endPoint.x)
 
         // Assume leftwards
@@ -139,14 +134,10 @@ function createComponentStyle(
         if (startPoint.x > endPoint.x && isEndingComponent) {
             style.width = `${componentWidth - 0}px`
             style.left = `${endPoint.x + 0}px`
-        }
-
-        else if (startPoint.x > endPoint.x) {
+        } else if (startPoint.x > endPoint.x) {
             style.width = `${componentWidth - 40}px`
             style.left = `${endPoint.x + 40}px`
-        } 
-        
-        else if (!isStartingComponent) {
+        } else if (!isStartingComponent) {
             style.width = `${componentWidth - 40}px`
             style.left = `${startPoint.x + 40}px`
         }
@@ -162,7 +153,11 @@ function createFinishLineStyle(startPoint: Point, direction: string) {
         bottom: `${startPoint.y}px`,
         width: "22px",
         height: "40px",
-        backgroundImage: `url(${direction == "vertical" ? Sprites.finishLineVertical : Sprites.finishLineHorizontal})`,
+        backgroundImage: `url(${
+            direction == "vertical"
+                ? Sprites.finishLineVertical
+                : Sprites.finishLineHorizontal
+        })`,
         backgroundSize: "auto 40px",
         backgroundRepeat: "repeat-x",
     } as React.CSSProperties
@@ -177,15 +172,32 @@ function getComponentDirection(startPoint: Point, endPoint: Point) {
 }
 
 function getLapCompletedTextPosition(endComponent: Component) {
-    const direction = getComponentDirection(endComponent.start, endComponent.end)
+    const direction = getComponentDirection(
+        endComponent.start,
+        endComponent.end
+    )
     const style = {
         position: "absolute",
-        left: `${direction == "horizontal" ? endComponent.end.x + 10 :  endComponent.end.x + 50}px`,
-        bottom: `${ direction == "horizontal" ? endComponent.end.y + 50 :  endComponent.end.y + 10}px`,
-        transform: "translate(-50%, 0)"
+        left: `${
+            direction == "horizontal"
+                ? endComponent.end.x + 10
+                : endComponent.end.x + 50
+        }px`,
+        bottom: `${
+            direction == "horizontal"
+                ? endComponent.end.y + 50
+                : endComponent.end.y + 10
+        }px`,
+        transform: "translate(-50%, 0)",
     } as React.CSSProperties
 
     return style
 }
 
-export default { createComponentStyle, createRailTurnComponentStyle, createFinishLineStyle, getComponentDirection, getLapCompletedTextPosition }
+export default {
+    createComponentStyle,
+    createRailTurnComponentStyle,
+    createFinishLineStyle,
+    getComponentDirection,
+    getLapCompletedTextPosition,
+}
