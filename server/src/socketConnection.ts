@@ -37,8 +37,7 @@ const lobbyToUniversity = new Map<string, University>()
 // Password given to TU Delft lecturers, also grants access to the lecturer platform
 const password_hash = "c4cefed12d880cfbdfcf30a2e898ad4686a78948eb8614247291315b033a3883"
 // Password given to lecturers of other universities, only allows creating games
-// TODO: set to the sha256 hash of the external password, an empty string matches no password
-const external_password_hash = ""
+const external_password_hash = "3adc0cd82a71994a2a80ee4405cb2fe3a92a4aa5b5ebefbb1da91dab8b8d3e35"
 
 function hashString(input: string): string {
     const hash = createHash('sha256')
