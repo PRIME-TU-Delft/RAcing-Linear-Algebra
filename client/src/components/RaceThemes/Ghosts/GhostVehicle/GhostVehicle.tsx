@@ -1,5 +1,5 @@
 import { motion, useAnimationControls } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./GhostVehicle.css"
 import { Ghost } from "../../SharedUtils";
 import { getColorForRaceLap, getNewTimeScoreIndex, getZIndexValues } from "../../RaceService";
@@ -34,6 +34,7 @@ function GhostVehicle(props: Props) {
     const usedTime = useContext(TimeContext)
     const stopShowingRace = useContext(RaceProgressContext)
     const animationControls = useAnimationControls()
+    const displayedProgress = useRef(0) // furthest progress the ghost has been animated to
 
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth,
@@ -121,13 +122,12 @@ function GhostVehicle(props: Props) {
             const currentGhostNewScore = props.ghost.timeScores[currentTimeScoreIndex].score
             const progress = (currentGhostNewScore/ props.totalPoints) * 100 // progress determined as the ratio of points and total points
 
-            const currentGhostPreviousScore = props.ghost.timeScores[Math.max(currentTimeScoreIndex - 1, 0)].score
-            const previousProgress = (currentGhostPreviousScore/ props.totalPoints) * 100 
-   
             updateGhostValues(currentTimeScoreIndex, currentGhostNewScore, progress)
 
-            // Prevent possible bug of team going backwards due to miscalculations / incorrect score storing
-            if (progress >= previousProgress && progress > 0) {
+            // Prevent the team from going backwards due to miscalculations / incorrect score storing,
+            // by comparing against where the ghost is actually displayed rather than the previous time score
+            if (progress > displayedProgress.current) {
+                displayedProgress.current = progress
                 animationControls.start({  
                     offsetDistance: progress.toString() + "%",
                     transition: {duration: 2}

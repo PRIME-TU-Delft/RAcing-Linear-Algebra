@@ -1,5 +1,5 @@
 import { clamp, motion, useAnimationControls } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import VehicleImage from "../../VehicleImage/VehicleImage";
 import { formatRacePositionText, getColorForRaceLap, getZIndexValues } from "../../RaceService";
 import { RacePathContext } from "../../../../contexts/RacePathContext";
@@ -18,7 +18,10 @@ interface Props {
 function MainVehicle(props: Props) {
     const raceData = useContext(RaceDataContext)
     const scores = useContext(ScoreContext)
-    const [currentProgress, setCurrentProgress] = useState(0)
+    // Refs instead of state, so that updates arriving during an animation see the values immediately
+    const currentProgress = useRef(0)       // progress the vehicle is heading to within the current lap
+    const latestProgress = useRef(0)        // most recently received progress value
+    const isCompletingLap = useRef(false)   // whether the lap completion animation is playing
 
     const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
@@ -62,31 +65,36 @@ function MainVehicle(props: Props) {
         playAnimation()
     }, [props.progressPercent])
 
-    const playAnimation = () => {
+    const playAnimation = async () => {
+        latestProgress.current = props.progressPercent
+
+        // A lap completion animation is already playing, it continues to the latest progress value once it is done.
+        // Starting another animation now would interrupt it and could move the vehicle backwards
+        if (isCompletingLap.current) return
+
         // Since the team can't move backwards, if the new progress value is smaller than the old, it means we are in a new race lap
-        if (props.progressPercent < currentProgress) {
-            animationControls.start({   // First, complete the lap
+        if (props.progressPercent < currentProgress.current) {
+            isCompletingLap.current = true
+            await animationControls.start({   // First, complete the lap
                 offsetDistance: "100%",
                 transition: { duration: 1.5 }
-            }).then((val) => {
-                animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
-                    offsetDistance: "0%",
-                    transition: { delay: 1000 }
-                })
-            }).then((val) => {
-                animationControls.start({   // Finally, play the animation leading to the new progress value
-                    offsetDistance: (props.progressPercent * 100).toString() + "%",
-                    transition: { duration: 1, delay: 0.5 }
-                })
-                setCurrentProgress(curr => props.progressPercent)
+            })
+            animationControls.set({   // Then, reset the progress to 0 so it doesn't travel from 100 backwards
+                offsetDistance: "0%"
+            })
+            isCompletingLap.current = false
+            currentProgress.current = latestProgress.current
+            animationControls.start({   // Finally, play the animation leading to the latest progress value
+                offsetDistance: (latestProgress.current * 100).toString() + "%",
+                transition: { duration: 1, delay: 0.5 }
             })
         }
         else {
+            currentProgress.current = props.progressPercent
             animationControls.start({   // Else, just update the progress normally
                 offsetDistance: (props.progressPercent * 100).toString() + "%",
                 transition: { duration: 1.5 }
             })
-            setCurrentProgress(curr => props.progressPercent)
         }
     }
 

@@ -36,6 +36,8 @@ function QuestionStatistics(props: Props) {
       const parsedStatistics: Statistic[] = JSON.parse(data);
       setStatistics(parsedStatistics);
     });
+    // Request the statistics only after the listener is registered, so the response is not missed
+    socket.emit("getLecturerStatistics");
     return () => {
       socket.off("statistics");
     };
