@@ -6,6 +6,7 @@ import { checkAnswerEqual } from "../utils/latexParser"
 import { CurveInterpolator } from 'curve-interpolator';
 import type { IExercise } from "../models/exerciseModel"
 import { IExerciseWithPopulatedVariants, ITopicWithPopulatedVariants } from "../controllers/topicVariantsDBController"
+import type { University } from "../models/scoreModel"
 
 export interface GameGhostTeam {
     teamName: string
@@ -32,6 +33,7 @@ export class Game {
     lapEndScore: number // Number of points required to complete a single lap
     numberOfPlayersAtStart: number // Number of players at the start of the game
     allowIndividualPlacements: boolean // Whether individual placements are allowed
+    university: University // Which university created this game, determines which scores it is compared against
 
     /**
      * Constructor for a game object,
@@ -39,8 +41,9 @@ export class Game {
      * @param topics the selected rounds for this game
      * @param teamName the name of the team
      * @param users a map from socketId to User, to store all the players.
+     * @param university the university of the lecturer that created the game
      */
-    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string, allowIndividualPlacements: boolean) {
+    constructor(topics: ITopicWithPopulatedVariants[], roundDurations: number[], teamName: string, users: Map<string, User>, study: string, allowIndividualPlacements: boolean, university: University) {
         this.currentTopicIndex = 0
         this.topics = topics
         this.roundDurations = roundDurations
@@ -54,6 +57,7 @@ export class Game {
         this.correct = 0
         this.incorrect = 0
         this.allowIndividualPlacements = allowIndividualPlacements
+        this.university = university
     }
 
     /**

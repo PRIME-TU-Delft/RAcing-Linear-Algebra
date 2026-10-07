@@ -22,9 +22,10 @@ describe("scoreDBController tests", () => {
         const study = "CSE"
         const accuracy = 0.8
 
-        await saveNewScore(teamname, score, checkpoints, roundId, roundDuration, study, accuracy)
+        await saveNewScore(teamname, score, checkpoints, roundId, roundDuration, study, accuracy, "external")
 
         expect(Score.create).toHaveBeenCalledTimes(1)
+        expect((Score.create as jest.Mock).mock.calls[0][0].university).toBe("external")
     })
 
     test("getAllScores returns correctly", async () => {
@@ -49,7 +50,7 @@ describe("scoreDBController tests", () => {
 
         jest.spyOn(Score, "find").mockResolvedValueOnce(mockScore)
 
-        const results = await getAllScores("123")
+        const results = await getAllScores("123", "tudelft")
         expect(results).not.toBeUndefined()
         if (results) {
             expect(results[0]).toEqual(mockScore[0])
@@ -78,10 +79,23 @@ describe("scoreDBController tests", () => {
         ]
 
         jest.spyOn(Score, "find").mockResolvedValueOnce(mockScore)
-        const results = await getCheckpoints("123", 1)
+        const results = await getCheckpoints("123", 1, "tudelft")
         expect(results).toEqual([
             ["team1", 2],
             ["team2", 2],
         ])
+    })
+
+    test("TU Delft games only compare against TU Delft scores", async () => {
+        const findSpy = jest.spyOn(Score, "find").mockResolvedValueOnce([])
+        await getAllScores("64b7f0c2a1b2c3d4e5f60718", "tudelft")
+        // Scores saved before the university field existed have no value, and count as TU Delft
+        expect((findSpy.mock.lastCall as unknown[])[0]).toMatchObject({ university: { $in: ["tudelft", null] } })
+    })
+
+    test("External games compare against all scores", async () => {
+        const findSpy = jest.spyOn(Score, "find").mockResolvedValueOnce([])
+        await getAllScores("64b7f0c2a1b2c3d4e5f60718", "external")
+        expect((findSpy.mock.lastCall as unknown[])[0]).not.toHaveProperty("university")
     })
 })

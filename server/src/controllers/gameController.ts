@@ -5,6 +5,7 @@ import { User } from "../objects/userObject"
 import type { Request, Response } from "express"
 import { Router } from "express"
 import { ITopicWithPopulatedVariants } from "./topicVariantsDBController"
+import type { University } from "../models/scoreModel"
 
 //number as key did not work for some reason
 export const games: Map<string, Game> = new Map()
@@ -17,6 +18,7 @@ export const gameRouter = Router()
  * @param teamName the name of the team
  * @param socketIds the socketIds of the players that are in the game
  * @param lobbyId the id of the lobby
+ * @param university the university of the lecturer that created the game
  */
 export function addGame(
     topics: ITopicWithPopulatedVariants[],
@@ -25,11 +27,12 @@ export function addGame(
     userIds: string[],
     lobbyId: number,
     study: string,
+    university: University,
     allowIndividualPlacements?: boolean
 ) {
     const map: Map<string, User> = new Map()
     for (const userId of userIds) map.set(userId, new User())
-    const game: Game = new Game(topics, roundDurations, teamName, map, study,  allowIndividualPlacements ?? false)
+    const game: Game = new Game(topics, roundDurations, teamName, map, study, allowIndividualPlacements ?? false, university)
     games.set(`${lobbyId}`, game)
 }
 

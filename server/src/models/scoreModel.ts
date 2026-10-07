@@ -1,5 +1,8 @@
 import mongoose from "mongoose"
 
+// TU Delft games are the reference pool; games created with any other password are "external"
+export type University = "tudelft" | "external"
+
 export interface IScore extends mongoose.Document {
     teamname: string
     scores: number[]
@@ -9,6 +12,7 @@ export interface IScore extends mongoose.Document {
     study: string
     accuracy: number
     isFakeTeam: boolean
+    university: University
 }
 
 export const scoreSchema: mongoose.Schema = new mongoose.Schema({
@@ -49,6 +53,14 @@ export const scoreSchema: mongoose.Schema = new mongoose.Schema({
         type: Boolean,
         required: false,
         default: false,
+    },
+    // Which kind of lecturer created the game. Scores saved before this field existed have no
+    // value and are treated as TU Delft scores.
+    university: {
+        type: String,
+        enum: ["tudelft", "external"],
+        required: false,
+        default: "tudelft",
     },
 })
 export const Score: mongoose.Model<IScore> = mongoose.model<IScore>("Score", scoreSchema)
