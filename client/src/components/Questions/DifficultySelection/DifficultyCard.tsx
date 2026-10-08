@@ -155,26 +155,18 @@ export default function  DifficultyCard(props: Props) {
                                         CLEARED!
                                     </div>)
                                     : (
-                                    <div className="row justify-content-center card-points-text">
-                                        {Math.floor(props.totalPoints)}
+                                    <div className="card-points-row">
+                                        <span className="card-points-text">
+                                            {Math.floor(props.totalPoints)}
+                                        </span>
+                                        {showStreak ? (
+                                            <span className="card-streak">
+                                                <b>{props.streak.streakValue}</b>
+                                                <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
+                                            </span>
+                                        ) : null}
                                     </div>)
                                 }
-                                        
-                                        {showStreak && !difficultyCleared ? (
-                                            <div className="container">
-                                                <div className="row justify-content-center card-streak">
-                                                    <div className="ms-2 col d-flex justify-content-center">
-                                                        <div className="d-flex justify-content-center align-items-center">
-                                                            <b>{props.streak.streakValue}</b>
-                                                        </div>
-                                                        <FlameAnimation showAnimation={props.showFlame}></FlameAnimation>
-                                                    </div>
-                                                </div>
-                                                
-
-                                            </div>
-                                        
-                                    ) : null}
                             </Card.Text>
                         </Card.Body>
                     </Card>

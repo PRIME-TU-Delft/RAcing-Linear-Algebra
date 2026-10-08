@@ -12,7 +12,7 @@ import QuestionBoatBackground from "../Questions/Themes/QuestionBoatBackground";
 import "./Game.css"
 import Question from "../Questions/Question";
 import { getRacePathObject } from "../RaceThemes/RaceService";
-import { Checkpoint, RacePathObject } from "../RaceThemes/SharedUtils";
+import { RacePathObject } from "../RaceThemes/SharedUtils";
 import { RaceDataContext } from "../../contexts/RaceDataContext";
 import useWindowDimensions from "../RaceThemes/Tracks/WindowDimensions";
 import RaceStatus from "../RaceThemes/RaceStatus/RaceStatus";
@@ -26,7 +26,6 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 import { GraspleQuestionContext } from "../../contexts/GraspleQuestionContext";
 import { QuestionStatusContext } from "../../contexts/QuestionStatusContext";
-import CheckpointNotification from "./CheckpointNotification/CheckpointNotification";
 
 interface Props {
     theme: string
@@ -59,7 +58,6 @@ function Game(props: Props) {
     const [showPopup, setShowPopup] = useState(false)
 
     const [countdown, setCountdown] = useState(-1)
-    const [checkpointPassed, setCheckpointPassed] = useState<Checkpoint | null>(null)
 
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth,
@@ -486,11 +484,6 @@ function Game(props: Props) {
         },
     })
 
-    const checkpointPassedHandler = (checkpoint: Checkpoint) => {
-        console.log("Checkpoint passed: " + checkpoint.name)
-        setCheckpointPassed(checkpoint)
-    }
-
     const modalAnimationRef = useSpringRef()
     const modalAnimation = useSpring({
         ref: modalAnimationRef,
@@ -563,7 +556,6 @@ function Game(props: Props) {
                     </QuestionStatusContext.Provider>    
                 </div>
                  <div className="game-right-container">
-                    {checkpointPassed && <CheckpointNotification checkpointName={checkpointPassed.name} />}
                     <TeamStats buttonTopOffset={racePathSizing.height + racePathSizing.offsetY * 0.2} playerScore={score}></TeamStats>
                     <div className="coloration-information-element">
                         <ColorationInfo></ColorationInfo>
@@ -600,7 +592,7 @@ function Game(props: Props) {
                         marginLeft: racePathSizing.offsetX,
                         marginTop: racePathSizing.offsetY
                     }}>
-                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration} onCheckpointPassed={checkpointPassedHandler}/>
+                        <RaceStatus keepClosed={true} roundDuration={props.roundDuration}/>
                     </div>
                     <svg 
                         className="minimap-svg-path"

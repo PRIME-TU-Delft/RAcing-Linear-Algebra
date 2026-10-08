@@ -125,12 +125,25 @@
 }
 
 .card-points,
-.card-attempts,
-.card-streak {
+.card-attempts {
     font-family: Century Gothic, sans-serif;
     font-style: bold;
     text-align: center;
     margin: 5px;
+}
+
+.card-points-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.card-streak {
+    display: inline-flex;
+    align-items: center;
+    font-family: Century Gothic, sans-serif;
+    font-size: 16px;
 }
 
 .optional-text-diff {
