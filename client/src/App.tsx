@@ -39,6 +39,7 @@ import { DifficultyAvailability, DifficultyAvailabilityContext } from "./context
 import { ChoosingDifficultyContext } from "./contexts/ChoosingDifficultyContext"
 import { StudiesContext } from "./contexts/StudiesContext"
 import { PlayerPlacementContext } from "./contexts/PlayerPlacementContext"
+import Demo from "./components/Demo/Demo"
 
 function App() {
     const [lobbyId, setLobbyId] = useState(0)
@@ -731,6 +732,7 @@ function App() {
                     }
                 ></Route>
                 <Route path="/endGame" element={<EndGameScreen />}></Route>
+                <Route path="/demo" element={<Demo />}></Route>
                 <Route path="/Statistics" element={<QuestionStatistics onContinue={() => nextRoundHandler()}/>}></Route>
             </Routes>
         </div>

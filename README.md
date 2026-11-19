@@ -21,6 +21,22 @@ For detailed information about the frontend, including installation instructions
 
 For detailed information about the backend, including installation instructions and usage, please refer to the [Backend README](server/README.md).
 
+## Offline demo (conferences, open days)
+
+A self-contained, single-player demo lives at `/demo`. It needs no backend, database, Grasple or internet connection: questions, ghost teams and scoring all run in the browser.
+
+```bash
+cd client
+pnpm install          # once, while online
+pnpm start            # then open http://localhost:3000/demo
+```
+
+- A round lasts 2 minutes: a warm-up question, then the player picks easy / medium / hard questions (10 / 50 / 150 points, streak multipliers up to 1.5x) and races 5 simulated ghost teams.
+- "Lecture-hall screen" (or the `L` key) shows the full projector map that a lecturer would put on screen.
+- The results screen lists what the full game offers lecturers and returns to the start screen after 60 seconds.
+- Optional URL parameters: `/demo?duration=90&lap=300` (round length in seconds, points per lap).
+- The ⛶ button on the start screen toggles fullscreen.
+
 ## Authors and acknowledgement
 
 ### Team Members

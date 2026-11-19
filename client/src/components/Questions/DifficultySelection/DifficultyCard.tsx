@@ -70,6 +70,8 @@ interface Props {
     disableButton: boolean
     showFlame: boolean
     isOnCooldown: boolean
+    /** Optional local handler (used by the offline demo); when given, no socket request is made */
+    onDifficultyChosen?: (difficulty: string) => void
 }
 /**
  * DifficultyCard component that will displyed in the select difficulty modal.
@@ -101,7 +103,8 @@ export default function  DifficultyCard(props: Props) {
         if (props.disableButton) return
 
         props.onDifficultySelected()
-        socket.emit("getNewQuestion", props.difficulty.toLowerCase())
+        if (props.onDifficultyChosen) props.onDifficultyChosen(props.difficulty.toLowerCase())
+        else socket.emit("getNewQuestion", props.difficulty.toLowerCase())
         if (props.difficulty === "Easy") {
             props.onEasyCardClick() // Call the click handler only for "Easy" DifficultyCard
         }

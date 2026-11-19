@@ -90,3 +90,19 @@
     color: red;
     margin-top: 5px;
 }
+.home-demo-link {
+    display: block;
+    margin: 1.5em auto 0;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #0b2a6f;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.home-demo-link:hover {
+    background: white;
+}

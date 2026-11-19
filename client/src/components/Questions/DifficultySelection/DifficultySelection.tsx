@@ -32,6 +32,8 @@ interface Props {
     type: string
     onDifficultySelected: () => void
     easyIsOnCooldown: boolean
+    /** Optional local handler (used by the offline demo); when given, no socket request is made */
+    onDifficultyChosen?: (difficulty: string) => void
 }
 
 /**
@@ -250,6 +252,7 @@ export default function DifficultySelection(props: Props) {
                                     disableButton={getDifficultyStatus(index)}
                                     showFlame={showFlameAnimation}
                                     isOnCooldown={item.difficulty.toLowerCase() === "easy" ? props.easyIsOnCooldown : false}
+                                    onDifficultyChosen={props.onDifficultyChosen}
                                 ></DifficultyCard>
                             </animated.div>
                         ))}

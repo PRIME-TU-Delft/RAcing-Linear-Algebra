@@ -79,6 +79,12 @@ function Home(props: Props) {
                         <p>Join Game</p>
                     </button>
                 </div>
+                <button
+                    className="home-demo-link"
+                    onClick={() => navigate("/demo")}
+                >
+                    Try a 2-minute offline demo ▶
+                </button>
             </div>
             <Modal
                 open={Boolean(lecturerLoginModalActive)}

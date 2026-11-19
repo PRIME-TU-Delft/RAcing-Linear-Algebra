@@ -1,0 +1,673 @@
+@font-face {
+    font-family: "Kanit";
+    src: url("../../fonts/Kanit-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Century Gothic";
+    src: url("../../fonts/CenturyGothic.ttf");
+}
+
+@font-face {
+    font-family: "Righteous";
+    src: url("../../fonts/Righteous-Regular.ttf");
+}
+
+/* ---------- Shared screens (intro / results) ---------- */
+
+.demo-screen {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(160deg, #0b2a6f 0%, #00a6d6 100%);
+    font-family: "Century Gothic", sans-serif;
+    color: #10213f;
+}
+
+.demo-fullscreen-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.demo-fullscreen-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.demo-intro-card,
+.demo-results-card,
+.demo-lecturer-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    padding: 36px 44px;
+}
+
+.demo-intro-card {
+    width: min(760px, 100%);
+    text-align: center;
+}
+
+.demo-title {
+    font-family: "Kanit", sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: #0b2a6f;
+}
+
+.demo-subtitle {
+    font-size: 21px;
+    margin: 12px 0 26px;
+}
+
+.demo-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 26px;
+    text-align: left;
+}
+
+.demo-step {
+    display: flex;
+    gap: 10px;
+    background: #eef6fc;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.demo-step-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.demo-step-text {
+    font-size: 14px;
+    color: #44536b;
+    margin-top: 2px;
+}
+
+.demo-label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 6px;
+    text-align: left;
+}
+
+.demo-name-input {
+    width: 100%;
+    font-size: 22px;
+    padding: 10px 14px;
+    border: 2px solid #c8d4e3;
+    border-radius: 10px;
+    outline: none;
+}
+
+.demo-name-input:focus {
+    border-color: #0063d3;
+}
+
+.demo-theme-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.demo-theme-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 10px;
+    border: 3px solid #c8d4e3;
+    border-radius: 12px;
+    background: white;
+    font-family: "Kanit", sans-serif;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.demo-theme-option img {
+    height: 54px;
+}
+
+.demo-theme-selected {
+    border-color: #0063d3;
+    background: #e6f0fd;
+}
+
+.demo-start-btn,
+.demo-secondary-btn {
+    margin-top: 24px;
+    padding: 14px 40px;
+    font-family: "Kanit", sans-serif;
+    font-size: 28px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.demo-start-btn {
+    background: #198754;
+    color: white;
+    box-shadow: 0 6px 0 #0f5c38;
+}
+
+.demo-start-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #0f5c38;
+}
+
+.demo-secondary-btn {
+    background: #e6ecf3;
+    color: #10213f;
+}
+
+.demo-footnote {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #5d6b80;
+}
+
+/* ---------- Results ---------- */
+
+.demo-results-layout {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    width: min(1200px, 100%);
+}
+
+.demo-results-card {
+    flex: 3;
+    text-align: center;
+}
+
+.demo-lecturer-card {
+    flex: 2;
+    background: #fffbea;
+    text-align: left;
+}
+
+.demo-lecturer-card-title {
+    font-family: "Kanit", sans-serif;
+    font-size: 30px;
+    color: #0b2a6f;
+    margin-bottom: 10px;
+}
+
+.demo-lecturer-card ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.demo-lecturer-card li {
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+.demo-results-headline {
+    font-family: "Kanit", sans-serif;
+    font-size: 38px;
+    color: #0b2a6f;
+}
+
+.demo-results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 18px 0 8px;
+}
+
+.demo-results-laps {
+    font-size: 18px;
+    margin-bottom: 14px;
+}
+
+.demo-leaderboard {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.demo-leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.demo-leaderboard-row:nth-child(odd) {
+    background: #f3f6fa;
+}
+
+.demo-leaderboard-player {
+    background: #ffe48a !important;
+    font-weight: bold;
+}
+
+.demo-leaderboard-pos {
+    width: 44px;
+    font-family: "Kanit", sans-serif;
+}
+
+.demo-leaderboard-name {
+    flex: 1;
+}
+
+.demo-ghost-tag {
+    margin-left: 8px;
+    font-size: 12px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: #d9e2ee;
+    color: #44536b;
+    font-weight: normal;
+}
+
+.demo-results-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+/* ---------- Stats boxes (shared) ---------- */
+
+.demo-stat {
+    background: white;
+    border-radius: 12px;
+    padding: 8px 16px;
+    min-width: 110px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    text-align: center;
+}
+
+.demo-stat-label {
+    font-size: 14px;
+    color: #5d6b80;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.demo-stat-value {
+    font-family: "Kanit", sans-serif;
+    font-size: 34px;
+    line-height: 1.1;
+    color: #0b2a6f;
+}
+
+.demo-stat-sub {
+    font-size: 18px;
+    color: #5d6b80;
+}
+
+/* ---------- In-game ---------- */
+
+.demo-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    background: rgba(11, 42, 111, 0.85);
+    color: white;
+    z-index: 50;
+    font-family: "Kanit", sans-serif;
+    font-size: 22px;
+}
+
+.demo-badge {
+    background: #f8b700;
+    color: #0b2a6f;
+    border-radius: 6px;
+    padding: 0 8px;
+    margin-right: 6px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.demo-topbar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.demo-topbar-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 6px 14px;
+    background: white;
+    color: #0b2a6f;
+    font-family: "Century Gothic", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.demo-topbar-quit {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.demo-game-container {
+    padding-top: 76px;
+}
+
+.demo-question-area {
+    position: relative;
+    margin-top: 1.5rem;
+    min-height: 420px;
+}
+
+.demo-question-area .diff-modal-wrapper {
+    padding-left: 1rem;
+}
+
+.demo-question-card {
+    margin: 0 auto;
+    width: 88%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    padding: 24px 30px;
+    font-family: "Century Gothic", sans-serif;
+    text-align: left;
+}
+
+.demo-question-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.demo-chip {
+    background: #0b2a6f;
+    color: white;
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.demo-chip-blue {
+    background: #0063d3;
+}
+
+.demo-chip-light {
+    background: #e6ecf3;
+    color: #10213f;
+}
+
+.demo-question-prompt {
+    font-size: 22px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.demo-question-prompt .katex {
+    font-size: 1.1em;
+}
+
+.demo-mc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.demo-mc-option {
+    padding: 14px;
+    font-size: 22px;
+    font-family: "Kanit", sans-serif;
+    border: 2px solid #c8d4e3;
+    border-radius: 12px;
+    background: #f7f9fc;
+    cursor: pointer;
+}
+
+.demo-mc-option:hover:not(:disabled) {
+    border-color: #0063d3;
+    background: #e6f0fd;
+}
+
+.demo-mc-wrong {
+    background: #fde2e2 !important;
+    border-color: #dc3545 !important;
+    text-decoration: line-through;
+}
+
+.demo-mc-right {
+    background: #d4f4e2 !important;
+    border-color: #198754 !important;
+}
+
+.demo-numeric-form {
+    display: flex;
+    gap: 12px;
+}
+
+.demo-numeric-input {
+    flex: 1;
+    font-size: 24px;
+    padding: 10px 14px;
+    border: 2px solid #c8d4e3;
+    border-radius: 12px;
+    outline: none;
+}
+
+.demo-numeric-input:focus {
+    border-color: #0063d3;
+}
+
+.demo-submit-btn {
+    padding: 10px 26px;
+    font-family: "Kanit", sans-serif;
+    font-size: 22px;
+    border: none;
+    border-radius: 12px;
+    background: #198754;
+    color: white;
+    cursor: pointer;
+}
+
+.demo-submit-btn:disabled {
+    background: #9fb8aa;
+    cursor: default;
+}
+
+.demo-feedback-area {
+    min-height: 60px;
+    margin-top: 16px;
+}
+
+.demo-feedback {
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 19px;
+    animation: demo-pop 0.25s ease-out;
+}
+
+.demo-feedback-correct {
+    background: #d4f4e2;
+    color: #0f5c38;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.demo-feedback-retry {
+    background: #fff3cd;
+    color: #7a5b00;
+}
+
+.demo-feedback-failed {
+    background: #fde2e2;
+    color: #7a1c24;
+}
+
+.demo-feedback-failed .demo-submit-btn {
+    margin-top: 10px;
+}
+
+.demo-explanation {
+    margin-top: 6px;
+    color: #44536b;
+}
+
+.demo-stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 0.5rem;
+}
+
+.demo-ghost-hint {
+    margin: 12px auto 0;
+    width: fit-content;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-family: "Century Gothic", sans-serif;
+    font-size: 15px;
+}
+
+/* ---------- Countdown ---------- */
+
+.demo-countdown-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.demo-countdown-number {
+    font-family: "Kanit", sans-serif;
+    font-size: 180px;
+    color: white;
+    text-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    animation: demo-pop 0.4s ease-out;
+}
+
+@keyframes demo-pop {
+    from {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ---------- Lecture-hall (projector) view ---------- */
+
+.demo-lecturer-view {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: white;
+    overflow: hidden;
+}
+
+.demo-lecturer-header {
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0 20px;
+    background: #0b2a6f;
+    color: white;
+    font-family: "Century Gothic", sans-serif;
+}
+
+.demo-lecturer-title {
+    font-family: "Kanit", sans-serif;
+    font-size: 26px;
+}
+
+.demo-lecturer-sub {
+    font-size: 15px;
+    opacity: 0.85;
+}
+
+.demo-lecturer-numbers {
+    display: flex;
+    gap: 22px;
+    font-family: "Kanit", sans-serif;
+    font-size: 24px;
+}
+
+.demo-lecturer-map {
+    position: relative;
+    width: 100%;
+}
+
+@media only screen and (max-width: 1100px) {
+    .demo-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .demo-results-layout {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-height: 800px) {
+    .demo-intro-card {
+        padding: 22px 36px;
+    }
+
+    .demo-title {
+        font-size: 50px;
+    }
+
+    .demo-subtitle {
+        font-size: 18px;
+        margin: 6px 0 14px;
+    }
+
+    .demo-steps {
+        margin-bottom: 12px;
+    }
+
+    .demo-step {
+        padding: 8px 10px;
+    }
+
+    .demo-start-btn {
+        margin-top: 16px;
+    }
+
+    .demo-footnote {
+        margin-top: 10px;
+    }
+
+    .demo-question-prompt {
+        font-size: 19px;
+    }
+
+    .demo-stat-value {
+        font-size: 28px;
+    }
+}
